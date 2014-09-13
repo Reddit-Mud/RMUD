@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace RMUD
 {
-    internal class ClientCommand : PendingAction
+    internal class ClientCommand : Action
     {
         internal Client Executor;
         internal String RawCommand;
@@ -19,8 +19,15 @@ namespace RMUD
 
         public override void Execute(MudCore core)
         {
-			var obj = core.Database.LoadObject(RawCommand);
-			core.SendMessage(Executor, obj.Path, true);
+			try
+			{
+				var obj = core.Database.LoadObject(RawCommand);
+				core.SendMessage(Executor, obj.Path, true);
+			}
+			catch (Exception e)
+			{
+				core.SendMessage(Executor, e.Message, true);
+			}
         }
     }
 }

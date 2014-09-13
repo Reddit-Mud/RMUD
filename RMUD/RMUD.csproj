@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="ClientCommand.cs" />
+    <Compile Include="Action.cs" />
     <Compile Include="Database.cs" />
     <None Include="database\static\dummy.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

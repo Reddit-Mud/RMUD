@@ -6,15 +6,10 @@ using System.Threading;
 
 namespace RMUD
 {
-    internal class PendingAction
-    {
-        public virtual void Execute(MudCore core) { }
-    }
-
     public partial class MudCore
     {
         Mutex CommandLock = new Mutex();
-        LinkedList<PendingAction> PendingActions = new LinkedList<PendingAction>();
+        LinkedList<Action> PendingActions = new LinkedList<Action>();
         Thread ActionExecutionThread;
         public Database Database { get; private set; }
         internal List<Client> ConnectedClients = new List<Client>();
@@ -24,7 +19,7 @@ namespace RMUD
         {
         }
 
-        internal void EnqueuAction(PendingAction action)
+        internal void EnqueuAction(Action action)
         {
             CommandLock.WaitOne();
             PendingActions.AddLast(action);
