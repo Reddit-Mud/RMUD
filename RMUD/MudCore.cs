@@ -3,54 +3,63 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Reflection;
 
 namespace RMUD
 {
-    public partial class MudCore
+    public static class MudCore
     {
-        Mutex CommandLock = new Mutex();
-        LinkedList<Action> PendingActions = new LinkedList<Action>();
-        Thread ActionExecutionThread;
-        public Database Database { get; private set; }
-        internal List<Client> ConnectedClients = new List<Client>();
-        internal Mutex DatabaseLock = new Mutex();
-
-        public MudCore()
-        {
-        }
-
-        internal void EnqueuAction(Action action)
+        private static Mutex CommandLock = new Mutex();
+        private static LinkedList<Action> PendingActions = new LinkedList<Action>();
+        private static Thread ActionExecutionThread;
+        public static Database Database { get; private set; }
+        private static List<Client> ConnectedClients = new List<Client>();
+        private static Mutex DatabaseLock = new Mutex();
+		private static CommandParser Parser = new CommandParser();
+		internal static List<Message> PendingMessages = new List<Message>();
+		
+        internal static void EnqueuAction(Action Action)
         {
             CommandLock.WaitOne();
-            PendingActions.AddLast(action);
+            PendingActions.AddLast(Action);
             CommandLock.ReleaseMutex();
         }
 
-        public void EnqueuClientCommand(Client Client, String RawCommand)
+        internal static void EnqueuClientCommand(Client Client, String RawCommand)
         {
-            EnqueuAction(new ClientCommand(Client, RawCommand));
+			EnqueuAction(() => { HandleClientCommand(Client, RawCommand); });
         }
 
-        public void ClientDisconnected(Client client)
-        {
-            //Console.WriteLine("Lost client " + (client.logged_on ? client.player.GetProperty("@path").ToString() : "null") + "\n");
-            if (client.logged_on)
-            {
-                DatabaseLock.WaitOne();
-                ConnectedClients.Remove(client);
-                DatabaseLock.ReleaseMutex();
-            }
-            //EnqueuAction(new InvokeSystemAction(client, "handle-lost-client", 0.0f));
-        }
+		public static void ClientDisconnected(Client client)
+		{
+			DatabaseLock.WaitOne();
+			ConnectedClients.Remove(client);
+			DatabaseLock.ReleaseMutex();
+			EnqueuAction(() => { });
+		}
 
-        public void ClientConnected(Client client)
+        public static void ClientConnected(Client client)
         {
-            //EnqueuAction(new InvokeSystemAction(client, "handle-new-client", 0.0f));
+			client.Player = new Actor();
+			client.Player.Location = "dummy";
+			client.Player.ConnectedClient = client;
+			DatabaseLock.WaitOne();
             ConnectedClients.Add(client);
+			DatabaseLock.ReleaseMutex();
         }
 
-        public bool Start(String basePath)
+        public static bool Start(String basePath)
         {
+			//Iterate over all types, find ICommandFactories, Create commands
+			foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
+			{
+				if (type.IsSubclassOf(typeof(CommandFactory)))
+				{
+					var instance = Activator.CreateInstance(type) as CommandFactory;
+					instance.Create(Parser);
+				}
+			}
+
             try
             {
                 Database = new Database(basePath);
@@ -70,7 +79,7 @@ namespace RMUD
             return true;
         }
 
-        public void Join()
+        public static void Join()
         {
             ActionExecutionThread.Join();
         }
@@ -81,9 +90,8 @@ namespace RMUD
             public String Data;
         }
 
-        internal List<Message> PendingMessages = new List<Message>();
 
-        public void SendMessage(Client Client, String Data, bool Immediate)
+        public static void SendMessage(Client Client, String Data, bool Immediate = false)
         {
             DatabaseLock.WaitOne();
             if (Immediate) Client.Send(Data);
@@ -91,7 +99,7 @@ namespace RMUD
             DatabaseLock.ReleaseMutex();
         }
 
-        public void CommandProcessingThread()
+        public static void CommandProcessingThread()
         {
             while (true)
             {
@@ -99,23 +107,40 @@ namespace RMUD
 
 				while (PendingActions.Count > 0)
 				{
+					CommandLock.WaitOne();
 					var PendingCommand = PendingActions.First.Value;
 					PendingActions.RemoveFirst();
+					CommandLock.ReleaseMutex();
 
                     DatabaseLock.WaitOne();
-                    PendingCommand.Execute(this);
+                    PendingCommand();
                     SendPendingMessages();
                     DatabaseLock.ReleaseMutex();
                 }
             }
         }
 
-        internal void SendPendingMessages()
+        internal static void SendPendingMessages()
         {
             foreach (var Message in PendingMessages)
                 Message.Client.Send(Message.Data);
             PendingMessages.Clear();
         }
 
+		internal static void HandleClientCommand(Client Executor, String RawCommand)
+        {
+            try
+			{
+				var matchedCommand = Parser.ParseCommand(RawCommand, Executor.Player);
+				if (matchedCommand != null)
+					matchedCommand.Command.Processor.Perform(matchedCommand.Match, Executor.Player);
+				else
+					SendMessage(Executor, "huh?", true);
+			}
+			catch (Exception e)
+			{
+				SendMessage(Executor, e.Message, true);
+			}
+        }
     }
 }

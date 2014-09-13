@@ -47,40 +47,59 @@ namespace RMUD
             return ReLoadObject(path);
         }
 
-        public MudObject ReLoadObject(String path)
-        {
-			Console.WriteLine("Loading object " + StaticPath + path + ".");
-			var staticObjectPath = StaticPath + path + ".cs";
+		public Assembly CompileScript(String Path)
+		{
+			Console.WriteLine("Compiling " + Path);
 
-			if (System.IO.File.Exists(staticObjectPath))
+			if (!System.IO.File.Exists(Path))
 			{
-				var source = System.IO.File.ReadAllText(staticObjectPath);
-
-				CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
-
-				var parameters = new CompilerParameters();
-				parameters.GenerateInMemory = true;
-				parameters.GenerateExecutable = false;
-				parameters.OutputAssembly = Guid.NewGuid().ToString();
-				parameters.ReferencedAssemblies.Add("RMUD.exe");
-				CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, source);
-				if (compilationResults.Errors.Count > 0)
-					throw new InvalidOperationException("Error loading object " + staticObjectPath);
-
-				var objectLeafName = System.IO.Path.GetFileNameWithoutExtension(path);
-				var newMudObject = compilationResults.CompiledAssembly.CreateInstance(objectLeafName) as MudObject;
-				if (newMudObject != null)
-				{
-					newMudObject.Path = path;
-					NamedObjects.Upsert(path, newMudObject);
-					return newMudObject;
-				}
-				else
-					throw new InvalidOperationException("Error loading object " + staticObjectPath);
+				Console.WriteLine("Could not find file " + Path);
+				return null;
 			}
-			else
-				throw new InvalidOperationException("File does not exist - " + staticObjectPath);
+
+			var source = System.IO.File.ReadAllText(Path);
+
+			CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
+
+			var parameters = new CompilerParameters();
+			parameters.GenerateInMemory = true;
+			parameters.GenerateExecutable = false;
+			parameters.OutputAssembly = Guid.NewGuid().ToString();
+			parameters.ReferencedAssemblies.Add("RMUD.exe");
+			CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, source);
+			if (compilationResults.Errors.Count > 0)
+			{
+				foreach (var error in compilationResults.Errors)
+					Console.WriteLine(error.ToString());
+				Console.WriteLine(compilationResults.Errors.Count.ToString() + " errors in " + Path);
+				return null;
+			}
+
+			Console.WriteLine("Success.");
+			return compilationResults.CompiledAssembly;
 		}
 
+        public MudObject ReLoadObject(String Path)
+        {
+			Console.WriteLine("Loading object " + StaticPath + Path + ".");
+
+			var staticObjectPath = StaticPath + Path + ".cs";
+			var assembly = CompileScript(staticObjectPath);
+			if (assembly == null) return null;
+
+			var objectLeafName = System.IO.Path.GetFileNameWithoutExtension(Path);
+			var newMudObject = assembly.CreateInstance(objectLeafName) as MudObject;
+			if (newMudObject != null)
+			{
+				newMudObject.Path = Path;
+				NamedObjects.Upsert(Path, newMudObject);
+				return newMudObject;
+			}
+			else
+			{
+				Console.WriteLine("Object " + objectLeafName + " not found in script " + staticObjectPath);
+				return null;
+			}
+		}
     }
 }

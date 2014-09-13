@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 
 namespace RMUD
 {
-    internal class Action
+    public interface ICommandProcessor
     {
-        public virtual void Execute(MudCore core) { }
+		void Perform(PossibleMatch Match, Actor Actor);
     }
 }

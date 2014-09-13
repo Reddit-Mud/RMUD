@@ -44,10 +44,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
-    <Compile Include="ClientCommand.cs" />
-    <Compile Include="Action.cs" />
+    <Compile Include="Commands\Examine.cs" />
+    <Compile Include="Commands\Look.cs" />
+    <Compile Include="Lib\Actor.cs" />
+    <Compile Include="Links.cs" />
+    <Compile Include="Parser\CommandParser.cs" />
+    <Compile Include="Parser\ICommandFactory.cs" />
+    <Compile Include="Parser\ICommandProcessor.cs" />
+    <Compile Include="Parser\ICommandTokenMatcher.cs" />
+    <Compile Include="Parser\Matchers\ObjectMatcher.cs" />
+    <Compile Include="Parser\Matchers\KeywordMatcher.cs" />
+    <Compile Include="Parser\Matchers\SequenceMatcher.cs" />
+    <Compile Include="Parser\PossibleMatch.cs" />
+    <Compile Include="Lib\Room.cs" />
+    <Compile Include="Lib\Thing.cs" />
     <Compile Include="Database.cs" />
     <None Include="database\static\dummy.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\foo.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="MudCore.cs" />

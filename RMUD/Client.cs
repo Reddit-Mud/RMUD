@@ -10,8 +10,8 @@ namespace RMUD
         public virtual void ImplementSend(String message) { }
         public virtual void Disconnect() { }
 
-        public MudObject player;
-        public bool logged_on;
+        public Actor Player;
+		public bool IsLoggedOn { get { return Player != null; } }
 
         public void Send(String message)
         {
@@ -34,8 +34,12 @@ namespace RMUD
                     if (p >= message.Length) break;
                     realMessage.Append((new String(message[p], 1)).ToUpperInvariant());
                 }
-                else
-                    realMessage.Append(message[p]);
+				else if (message[p] == '\n')
+				{
+					realMessage.Append("\n\r");
+				}
+				else
+					realMessage.Append(message[p]);
 
                 ++p;
             }

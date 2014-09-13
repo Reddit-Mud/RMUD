@@ -12,11 +12,10 @@ namespace RMUD
     {
 		static void Main(string[] args)
 		{
-			var mudCore = new MudCore();
-			if (mudCore.Start("database/"))
+			if (MudCore.Start("database/"))
 			{
 				var telnetListener = new TelnetClientSource();
-				telnetListener.Listen(mudCore);
+				telnetListener.Listen();
 			}
 		}
     }

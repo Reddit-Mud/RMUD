@@ -39,16 +39,13 @@ namespace RMUD
     {
         public int Port = 8669;
 
-        MudCore MudCore;
         System.Net.Sockets.Socket ListenSocket = null;
 
         static System.Threading.Mutex ClientLock = new System.Threading.Mutex();
         static LinkedList<TelnetClient> Clients = new LinkedList<TelnetClient>();
 
-        public void Listen(MudCore MudCore)
+        public void Listen()
         {
-            this.MudCore = MudCore;
-
             ListenSocket = new System.Net.Sockets.Socket(
                 System.Net.Sockets.AddressFamily.InterNetwork,
                 System.Net.Sockets.SocketType.Stream,
