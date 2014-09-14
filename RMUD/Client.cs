@@ -11,7 +11,7 @@ namespace RMUD
         public virtual void Disconnect() { }
 
         public Actor Player;
-		public bool IsLoggedOn { get { return Player != null; } }
+		public IClientCommandHandler CommandHandler;
 
         public void Send(String message)
         {

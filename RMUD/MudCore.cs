@@ -15,7 +15,10 @@ namespace RMUD
         public static Database Database { get; private set; }
         private static List<Client> ConnectedClients = new List<Client>();
         private static Mutex DatabaseLock = new Mutex();
-		private static CommandParser Parser = new CommandParser();
+
+		private static ParserCommandHandler ParserCommandHandler;
+		public static CommandParser Parser { get { return ParserCommandHandler.Parser; } }
+
 		internal static List<Message> PendingMessages = new List<Message>();
 		
         internal static void EnqueuAction(Action Action)
@@ -27,7 +30,7 @@ namespace RMUD
 
         internal static void EnqueuClientCommand(Client Client, String RawCommand)
         {
-			EnqueuAction(() => { HandleClientCommand(Client, RawCommand); });
+			EnqueuAction(() => { Client.CommandHandler.HandleCommand(Client, RawCommand); });
         }
 
 		public static void ClientDisconnected(Client client)
@@ -43,6 +46,7 @@ namespace RMUD
 			client.Player = new Actor();
 			client.Player.Location = "dummy";
 			client.Player.ConnectedClient = client;
+			client.CommandHandler = ParserCommandHandler;
 			DatabaseLock.WaitOne();
             ConnectedClients.Add(client);
 			DatabaseLock.ReleaseMutex();
@@ -50,15 +54,7 @@ namespace RMUD
 
         public static bool Start(String basePath)
         {
-			//Iterate over all types, find ICommandFactories, Create commands
-			foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-			{
-				if (type.IsSubclassOf(typeof(CommandFactory)))
-				{
-					var instance = Activator.CreateInstance(type) as CommandFactory;
-					instance.Create(Parser);
-				}
-			}
+			ParserCommandHandler = new ParserCommandHandler();
 
             try
             {
@@ -127,20 +123,5 @@ namespace RMUD
             PendingMessages.Clear();
         }
 
-		internal static void HandleClientCommand(Client Executor, String RawCommand)
-        {
-            try
-			{
-				var matchedCommand = Parser.ParseCommand(RawCommand, Executor.Player);
-				if (matchedCommand != null)
-					matchedCommand.Command.Processor.Perform(matchedCommand.Match, Executor.Player);
-				else
-					SendMessage(Executor, "huh?", true);
-			}
-			catch (Exception e)
-			{
-				SendMessage(Executor, e.Message, true);
-			}
-        }
     }
 }
