@@ -52,6 +52,7 @@
     <Compile Include="Parser\ICommandFactory.cs" />
     <Compile Include="Parser\ICommandProcessor.cs" />
     <Compile Include="Parser\ICommandTokenMatcher.cs" />
+    <Compile Include="Parser\Matchers\OrMatcher.cs" />
     <Compile Include="Parser\Matchers\ObjectMatcher.cs" />
     <Compile Include="Parser\Matchers\KeywordMatcher.cs" />
     <Compile Include="Parser\Matchers\SequenceMatcher.cs" />

@@ -10,7 +10,11 @@ namespace RMUD.Commands
 		public override void Create(CommandParser Parser)
 		{
 			Parser.AddCommand(
-				new Sequence(new KeyWord("LOOK", false),
+				new Sequence(
+					new Or(
+						new KeyWord("LOOK", false),
+						new KeyWord("EXAMINE", false),
+						new KeyWord("X", false)),
 					new KeyWord("AT", true),
 					new ObjectMatcher("TARGET"))
 				, new ExamineProcessor());
