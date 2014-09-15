@@ -81,7 +81,7 @@ namespace RMUD
 
         public MudObject ReLoadObject(String Path)
         {
-			Console.WriteLine("Loading object " + StaticPath + Path + ".");
+			Console.WriteLine("Loading object " + StaticPath + Path);
 
 			var staticObjectPath = StaticPath + Path + ".cs";
 			var assembly = CompileScript(staticObjectPath);

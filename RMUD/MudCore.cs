@@ -20,7 +20,7 @@ namespace RMUD
 		public static CommandParser Parser { get { return ParserCommandHandler.Parser; } }
 		internal static LoginCommandHandler LoginCommandHandler;
 
-		internal static List<Message> PendingMessages = new List<Message>();
+		internal static List<EventMessage> PendingMessages = new List<EventMessage>();
 		
         internal static void EnqueuAction(Action Action)
         {
@@ -81,18 +81,16 @@ namespace RMUD
             ActionExecutionThread.Join();
         }
 
-        internal class Message
+        public static void SendImmediateMessage(Client Client, String Data)
         {
-            public Client Client;
-            public String Data;
-        }
+			Client.Send(Data);
 
+		}
 
-        public static void SendMessage(Client Client, String Data, bool Immediate = false)
-        {
+		public static void SendEventMessage(Actor TriggeredBy, EventMessageScope Scope, String Message)
+		{
             DatabaseLock.WaitOne();
-            if (Immediate) Client.Send(Data);
-            else PendingMessages.Add(new Message { Client = Client, Data = Data });
+			PendingMessages.Add(new EventMessage(TriggeredBy, Scope, Message));
             DatabaseLock.ReleaseMutex();
         }
 
@@ -119,8 +117,35 @@ namespace RMUD
 
         internal static void SendPendingMessages()
         {
-            foreach (var Message in PendingMessages)
-                Message.Client.Send(Message.Data);
+			foreach (var eventMessage in PendingMessages)
+			{
+				switch (eventMessage.Scope)
+				{
+					//Send message only to the player
+					case EventMessageScope.Private:
+						if (eventMessage.TriggeredBy == null) continue;
+						if (eventMessage.TriggeredBy.ConnectedClient == null) continue;
+						eventMessage.TriggeredBy.ConnectedClient.Send(eventMessage.FormatMessage(eventMessage.TriggeredBy));
+						break;
+
+					//Send message to everyone in the same location as the player
+					case EventMessageScope.Locality:
+						{
+							if (eventMessage.TriggeredBy == null) continue;
+							var location = Database.LoadObject(eventMessage.TriggeredBy.Location) as Room;
+							if (location == null) return;
+							foreach (var thing in location.Contents)
+							{
+								var actor = thing as Actor;
+								if (actor == null) continue;
+								if (actor.ConnectedClient == null) continue;
+								actor.ConnectedClient.Send(eventMessage.FormatMessage(actor));
+							}
+						}
+						break;
+
+				}
+			}
             PendingMessages.Clear();
         }
 

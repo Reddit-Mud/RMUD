@@ -32,11 +32,11 @@ namespace RMUD
 				if (matchedCommand != null)
 					matchedCommand.Command.Processor.Perform(matchedCommand.Match, Client.Player);
 				else
-					MudCore.SendMessage(Client, "I do not understand.", true);
+					MudCore.SendImmediateMessage(Client, "I do not understand.");
 			}
 			catch (Exception e)
 			{
-				MudCore.SendMessage(Client, e.Message, true);
+				MudCore.SendImmediateMessage(Client, e.Message);
 			}
 		}
 	}

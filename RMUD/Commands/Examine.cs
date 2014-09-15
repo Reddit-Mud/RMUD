@@ -26,11 +26,9 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["TARGET"] as Thing;
-			
+
 			if (Actor.ConnectedClient != null)
-			{
-				MudCore.SendMessage(Actor.ConnectedClient, target.Long + "\n", false);
-			}
+				MudCore.SendEventMessage(Actor, EventMessageScope.Private, target.Long + "\n");
 		}
 	}
 }

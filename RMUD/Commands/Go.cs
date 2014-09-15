@@ -26,7 +26,7 @@ namespace RMUD.Commands
 			var link = location.Links.FirstOrDefault(l => l.Direction == direction.Value);
 
 			if (link == null)
-				MudCore.SendMessage(Actor.ConnectedClient, "You can't go that way.\n", false);
+				MudCore.SendEventMessage(Actor, EventMessageScope.Private, "You can't go that way.\n");
 			else
 			{
 				Actor.Location = link.Destination;

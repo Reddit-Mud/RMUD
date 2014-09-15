@@ -22,23 +22,25 @@ namespace RMUD.Commands
 
 			if (Actor.ConnectedClient != null)
 			{
-				//Send main room description
-				MudCore.SendMessage(Actor.ConnectedClient, location.Short + "\n" + location.Long + "\n\n", false);
-			
+				var builder = new StringBuilder();
+
+				builder.Append(location.Short);
+				builder.AppendLine();
+				builder.Append(location.Long);
+				builder.AppendLine();
+
 				//Display objects in room
 				if (location.Contents.Count > 0)
-					MudCore.SendMessage(Actor.ConnectedClient, 
-						"Also here: " + String.Join(",", location.Contents.Select(t => t.Short)) + "\n", false);
+					builder.Append("Also here: " + String.Join(",", location.Contents.Select(t => t.Short)));
 				else
-					MudCore.SendMessage(Actor.ConnectedClient, "There is nothing here.\n");
+					builder.Append("There is nothing here.");
+				builder.AppendLine();
 
 				//Display exits from room
 				if (location.Links.Count > 0)
-				{
-					MudCore.SendMessage(Actor.ConnectedClient,
-						"Obvious exits: " + String.Join(",", location.Links.Select(l => l.Direction.ToString())) + "\n",
-						false);
-				}
+					builder.Append("Obvious exits: " + String.Join(",", location.Links.Select(l => l.Direction.ToString())));
+
+				MudCore.SendEventMessage(Actor, EventMessageScope.Private, builder.ToString());
 			}
 		}
 	}

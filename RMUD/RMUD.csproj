@@ -47,6 +47,7 @@
     <Compile Include="Commands\Go.cs" />
     <Compile Include="Commands\Examine.cs" />
     <Compile Include="Commands\Look.cs" />
+    <Compile Include="EventMessage.cs" />
     <Compile Include="LoginCommandHandler.cs" />
     <Compile Include="IClientCommandHandler.cs" />
     <Compile Include="Lib\Actor.cs" />
