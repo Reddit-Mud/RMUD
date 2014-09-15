@@ -16,8 +16,9 @@ namespace RMUD
         private static List<Client> ConnectedClients = new List<Client>();
         private static Mutex DatabaseLock = new Mutex();
 
-		private static ParserCommandHandler ParserCommandHandler;
+		internal static ParserCommandHandler ParserCommandHandler;
 		public static CommandParser Parser { get { return ParserCommandHandler.Parser; } }
+		internal static LoginCommandHandler LoginCommandHandler;
 
 		internal static List<Message> PendingMessages = new List<Message>();
 		
@@ -44,9 +45,8 @@ namespace RMUD
         public static void ClientConnected(Client client)
         {
 			client.Player = new Actor();
-			client.Player.Location = "dummy";
 			client.Player.ConnectedClient = client;
-			client.CommandHandler = ParserCommandHandler;
+			client.CommandHandler = LoginCommandHandler;
 			DatabaseLock.WaitOne();
             ConnectedClients.Add(client);
 			DatabaseLock.ReleaseMutex();
@@ -55,6 +55,7 @@ namespace RMUD
         public static bool Start(String basePath)
         {
 			ParserCommandHandler = new ParserCommandHandler();
+			LoginCommandHandler = new LoginCommandHandler();
 
             try
             {

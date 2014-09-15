@@ -3,6 +3,6 @@
 	public foo()
 	{
 		Short = "foo";
-		OpenLink(RMUD.Direction.North, "dummy");
+		OpenLink(RMUD.Direction.NORTH, "dummy");
 	}
 }

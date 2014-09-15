@@ -44,8 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Commands\Go.cs" />
     <Compile Include="Commands\Examine.cs" />
     <Compile Include="Commands\Look.cs" />
+    <Compile Include="LoginCommandHandler.cs" />
     <Compile Include="IClientCommandHandler.cs" />
     <Compile Include="Lib\Actor.cs" />
     <Compile Include="Links.cs" />
@@ -54,6 +56,8 @@
     <Compile Include="Parser\ICommandFactory.cs" />
     <Compile Include="Parser\ICommandProcessor.cs" />
     <Compile Include="Parser\ICommandTokenMatcher.cs" />
+    <Compile Include="Parser\Matchers\CardinalMatcher.cs" />
+    <Compile Include="Parser\Matchers\SingleWordMatcher.cs" />
     <Compile Include="Parser\Matchers\OrMatcher.cs" />
     <Compile Include="Parser\Matchers\ObjectMatcher.cs" />
     <Compile Include="Parser\Matchers\KeywordMatcher.cs" />

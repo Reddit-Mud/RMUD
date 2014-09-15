@@ -4,7 +4,7 @@
 	{
 		Short = "dummy";
 		Long = "This is a dummy room. It exists for testing purposes only.";
-		OpenLink(RMUD.Direction.South, "foo");
+		OpenLink(RMUD.Direction.SOUTH, "foo");
 
 		var thing = new RMUD.Thing();
 		thing.Short = "a dummy thing";

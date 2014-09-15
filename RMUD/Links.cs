@@ -7,18 +7,18 @@ namespace RMUD
 {
 	public enum Direction
 	{
-		North,
-		NorthEast,
-		East,
-		SouthEast,
-		South,
-		SouthWest,
-		West,
-		NorthWest,
-		Up,
-		Down,
-		In,
-		Out
+		NORTH,
+		NORTHEAST,
+		EAST,
+		SOUTHEAST,
+		SOUTH,
+		SOUTHWEST,
+		WEST,
+		NORTHWEST,
+		UP,
+		DOWN,
+		IN,
+		OUT
 	}
 
 	public class Link
