@@ -20,7 +20,13 @@ namespace RMUD
 		public static CommandParser Parser { get { return ParserCommandHandler.Parser; } }
 		internal static LoginCommandHandler LoginCommandHandler;
 
-		internal static List<EventMessage> PendingMessages = new List<EventMessage>();
+		internal struct RawPendingMessage
+		{
+			public Client Destination;
+			public String Message;
+		}
+
+		internal static List<RawPendingMessage> PendingMessages = new List<RawPendingMessage>();
 		
         internal static void EnqueuAction(Action Action)
         {
@@ -87,10 +93,55 @@ namespace RMUD
 
 		}
 
-		public static void SendEventMessage(Actor TriggeredBy, EventMessageScope Scope, String Message)
+		public static void SendEventMessage(Actor Actor, EventMessageScope Scope, String Message, params Object[] Arguments)
 		{
             DatabaseLock.WaitOne();
-			PendingMessages.Add(new EventMessage(TriggeredBy, Scope, Message));
+
+			var args = new List<Object>();
+			args.Add(Actor);
+			args.AddRange(Arguments);
+
+			switch (Scope)
+			{
+				//Send message only to the player
+				case EventMessageScope.Private:
+					{
+						if (Actor == null) break;
+						if (Actor.ConnectedClient == null) break;
+						args[0] = "you";
+						PendingMessages.Add(new RawPendingMessage
+						{
+							Destination = Actor.ConnectedClient,
+							Message = String.Format(Message, args)
+						});
+					}
+					break;
+
+				//Send message to everyone in the same location as the player
+				case EventMessageScope.Locality:
+					{
+						if (Actor == null) break;
+						var location = Database.LoadObject(Actor.Location) as Room;
+						if (location == null) break;
+						foreach (var thing in location.Contents)
+						{
+							var other = thing as Actor;
+							if (other == null) continue;
+							if (other.ConnectedClient == null) continue;
+							if (Object.ReferenceEquals(Actor, other))
+								args[0] = "you";
+							else
+								args[0] = Actor;
+							PendingMessages.Add(new RawPendingMessage
+							{
+								Destination = other.ConnectedClient,
+								Message = String.Format(Message, args)
+							});
+						}
+					}
+					break;
+			}
+
             DatabaseLock.ReleaseMutex();
         }
 
@@ -118,36 +169,14 @@ namespace RMUD
         internal static void SendPendingMessages()
         {
 			foreach (var eventMessage in PendingMessages)
-			{
-				switch (eventMessage.Scope)
-				{
-					//Send message only to the player
-					case EventMessageScope.Private:
-						if (eventMessage.TriggeredBy == null) continue;
-						if (eventMessage.TriggeredBy.ConnectedClient == null) continue;
-						eventMessage.TriggeredBy.ConnectedClient.Send(eventMessage.FormatMessage(eventMessage.TriggeredBy));
-						break;
-
-					//Send message to everyone in the same location as the player
-					case EventMessageScope.Locality:
-						{
-							if (eventMessage.TriggeredBy == null) continue;
-							var location = Database.LoadObject(eventMessage.TriggeredBy.Location) as Room;
-							if (location == null) return;
-							foreach (var thing in location.Contents)
-							{
-								var actor = thing as Actor;
-								if (actor == null) continue;
-								if (actor.ConnectedClient == null) continue;
-								actor.ConnectedClient.Send(eventMessage.FormatMessage(actor));
-							}
-						}
-						break;
-
-				}
-			}
+				eventMessage.Destination.Send(eventMessage.Message);
             PendingMessages.Clear();
         }
+
+		internal static void ClearPendingMessages()
+		{
+			PendingMessages.Clear();
+		}
 
     }
 }

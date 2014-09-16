@@ -12,5 +12,10 @@ namespace RMUD
 		public String IndefiniteArticle = "a";
 		public List<String> Adjectives = new List<string>();
 		public List<String> Nouns = new List<string>();
+
+		public override string ToString()
+		{
+			return Short;
+		}
 	}
 }

@@ -25,20 +25,23 @@ namespace RMUD.Commands
 				var builder = new StringBuilder();
 
 				builder.Append(location.Short);
-				builder.AppendLine();
+				builder.Append("\r\n");
 				builder.Append(location.Long);
-				builder.AppendLine();
+				builder.Append("\r\n");
 
 				//Display objects in room
 				if (location.Contents.Count > 0)
 					builder.Append("Also here: " + String.Join(",", location.Contents.Select(t => t.Short)));
 				else
 					builder.Append("There is nothing here.");
-				builder.AppendLine();
+				builder.Append("\r\n");
 
 				//Display exits from room
 				if (location.Links.Count > 0)
+				{
 					builder.Append("Obvious exits: " + String.Join(",", location.Links.Select(l => l.Direction.ToString())));
+					builder.AppendLine("\r\n");
+				}
 
 				MudCore.SendEventMessage(Actor, EventMessageScope.Private, builder.ToString());
 			}

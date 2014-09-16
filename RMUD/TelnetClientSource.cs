@@ -13,7 +13,7 @@ namespace RMUD
 
         private static byte[] SendBuffer = new byte[1024];
 
-        override public void ImplementSend(String message)
+        override public void Send(String message)
         {
             int bytesSent = 0;
 

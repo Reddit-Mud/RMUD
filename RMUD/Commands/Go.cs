@@ -29,6 +29,7 @@ namespace RMUD.Commands
 				MudCore.SendEventMessage(Actor, EventMessageScope.Private, "You can't go that way.\n");
 			else
 			{
+				MudCore.SendEventMessage(Actor, EventMessageScope.Locality, "{0} went {1}", direction);
 				Actor.Location = link.Destination;
 				MudCore.EnqueuClientCommand(Actor.ConnectedClient, "look");
 			}
