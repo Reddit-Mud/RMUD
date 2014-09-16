@@ -33,11 +33,12 @@ namespace RMUD
 				if (matchedCommand != null)
 					matchedCommand.Command.Processor.Perform(matchedCommand.Match, Client.Player);
 				else
-					Mud.SendImmediateMessage(Client, "I do not understand.");
+					Client.Send("I do not understand.");
 			}
 			catch (Exception e)
 			{
-				Mud.SendImmediateMessage(Client, e.Message);
+				Mud.ClearPendingMessages();
+				Client.Send(e.Message);
 			}
 		}
 	}

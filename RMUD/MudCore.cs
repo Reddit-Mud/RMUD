@@ -86,12 +86,6 @@ namespace RMUD
             ActionExecutionThread.Join();
         }
 
-        public static void SendImmediateMessage(Client Client, String Data)
-        {
-			Client.Send(Data);
-
-		}
-
 		public static void SendEventMessage(Actor Actor, EventMessageScope Scope, String Message, params Object[] Arguments)
 		{
             DatabaseLock.WaitOne();
