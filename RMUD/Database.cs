@@ -8,26 +8,26 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public class Database
+    public static partial class Mud
     {
-        public String StaticPath { get; private set; }
-        public String SerializedPath { get; private set; }
-        private Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
+        public static String StaticPath { get; private set; }
+        public static String SerializedPath { get; private set; }
+        private static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
 
-        public Database(String basePath)
+        internal static void InitializeDatabase(String basePath)
         {
-            this.StaticPath = basePath + "static/";
-            this.SerializedPath = basePath + "serialized/";
+            StaticPath = basePath + "static/";
+            SerializedPath = basePath + "serialized/";
         }
 
-        public MudObject CreateObject(String path)
+        public static MudObject CreateObject(String path)
         {
             if (LoadObject(path) != null) return null;
             NamedObjects.Upsert(path, new MudObject{Path = path});
             return NamedObjects[path];
         }
 
-        public MudObject CreateUniquelyNamedObject(String basePath)
+        public static MudObject CreateUniquelyNamedObject(String basePath)
         {
             while (true)
             {
@@ -41,13 +41,13 @@ namespace RMUD
             }
         }
 
-        public MudObject LoadObject(String path)
+        public static MudObject LoadObject(String path)
         {
             if (NamedObjects.ContainsKey(path)) return NamedObjects[path];
             return ReLoadObject(path);
         }
 
-		public Assembly CompileScript(String Path)
+		public static Assembly CompileScript(String Path)
 		{
 			Console.WriteLine("Compiling " + Path);
 
@@ -79,7 +79,7 @@ namespace RMUD
 			return compilationResults.CompiledAssembly;
 		}
 
-        public MudObject ReLoadObject(String Path)
+        public static MudObject ReLoadObject(String Path)
         {
 			Console.WriteLine("Loading object " + StaticPath + Path);
 

@@ -66,7 +66,7 @@ namespace RMUD
             var NewClient = new TelnetClient { Socket = ClientSocket };
             ClientSocket.BeginReceive(NewClient.Storage, 0, 1024, System.Net.Sockets.SocketFlags.Partial, OnData, NewClient);
             Console.WriteLine("New standard client: " + ClientSocket.RemoteEndPoint.ToString());
-            MudCore.ClientConnected(NewClient);
+            Mud.ClientConnected(NewClient);
         }
 
         private static string ValidCharacters = "@=|^\\;?:#.,!\"'$*<>/()[]{}-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
@@ -82,7 +82,7 @@ namespace RMUD
 
                 if (DataSize == 0 || Error != System.Net.Sockets.SocketError.Success)
                 {
-                    MudCore.ClientDisconnected(Client);
+                    Mud.ClientDisconnected(Client);
                 }
                 else
                 {
@@ -94,7 +94,7 @@ namespace RMUD
                             {
                                 String Command = Client.CommandQueue;
                                 Client.CommandQueue = "";
-                                MudCore.EnqueuClientCommand(Client, Command);
+                                Mud.EnqueuClientCommand(Client, Command);
                             }
                         }
                         else if (Client.Storage[i] == '\b')
@@ -111,7 +111,7 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                MudCore.ClientDisconnected(Client);
+                Mud.ClientDisconnected(Client);
             }
         }
     }

@@ -26,14 +26,14 @@ namespace RMUD.Commands
 			var link = location.Links.FirstOrDefault(l => l.Direction == direction.Value);
 
 			if (link == null)
-				MudCore.SendEventMessage(Actor, EventMessageScope.Private, "You can't go that way.\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.Private, "You can't go that way.\r\n");
 			else
 			{
-				MudCore.SendEventMessage(Actor, EventMessageScope.Locality, "{0} went {1}", direction);
-				var destination = MudCore.Database.LoadObject(link.Destination) as Room;
+				Mud.SendEventMessage(Actor, EventMessageScope.Locality, "{0} went {1}\r\n", direction);
+				var destination = Mud.LoadObject(link.Destination) as Room;
 				if (destination == null) throw new InvalidOperationException("Link does not lead to room.");
 				MudObject.Move(Actor, destination);
-				MudCore.EnqueuClientCommand(Actor.ConnectedClient, "look");
+				Mud.EnqueuClientCommand(Actor.ConnectedClient, "look");
 			}
 		}
 	}

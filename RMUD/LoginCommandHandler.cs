@@ -19,8 +19,9 @@ namespace RMUD
 				new CommandProcessorWrapper((m, a) =>
 				{
 					a.Short = m.Arguments["NAME"].ToString();
-					a.ConnectedClient.CommandHandler = MudCore.ParserCommandHandler;
-					MudObject.Move(a, MudCore.Database.LoadObject("dummy"));
+					a.ConnectedClient.CommandHandler = Mud.ParserCommandHandler;
+					MudObject.Move(a, Mud.LoadObject("dummy"));
+					Mud.EnqueuClientCommand(a.ConnectedClient, "look");
 				}));
 		}
 
@@ -32,11 +33,11 @@ namespace RMUD
 				if (matchedCommand != null)
 					matchedCommand.Command.Processor.Perform(matchedCommand.Match, Client.Player);
 				else
-					MudCore.SendImmediateMessage(Client, "I do not understand.");
+					Mud.SendImmediateMessage(Client, "I do not understand.");
 			}
 			catch (Exception e)
 			{
-				MudCore.SendImmediateMessage(Client, e.Message);
+				Mud.SendImmediateMessage(Client, e.Message);
 			}
 		}
 	}

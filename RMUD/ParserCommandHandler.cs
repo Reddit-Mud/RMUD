@@ -33,12 +33,12 @@ namespace RMUD
 				if (matchedCommand != null)
 					matchedCommand.Command.Processor.Perform(matchedCommand.Match, Client.Player);
 				else
-					MudCore.SendImmediateMessage(Client, "huh?");
+					Mud.SendImmediateMessage(Client, "huh?");
 			}
 			catch (Exception e)
 			{
-				MudCore.ClearPendingMessages();
-				MudCore.SendImmediateMessage(Client, e.Message);
+				Mud.ClearPendingMessages();
+				Mud.SendImmediateMessage(Client, e.Message);
 			}
 		}
 	}

@@ -7,12 +7,11 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public static class MudCore
+    public static partial class Mud
     {
         private static Mutex CommandLock = new Mutex();
         private static LinkedList<Action> PendingActions = new LinkedList<Action>();
         private static Thread ActionExecutionThread;
-        public static Database Database { get; private set; }
         private static List<Client> ConnectedClients = new List<Client>();
         private static Mutex DatabaseLock = new Mutex();
 
@@ -60,14 +59,14 @@ namespace RMUD
 
         public static bool Start(String basePath)
         {
-			ParserCommandHandler = new ParserCommandHandler();
-			LoginCommandHandler = new LoginCommandHandler();
-
             try
             {
-                Database = new Database(basePath);
+				InitializeDatabase(basePath);
 
-                ActionExecutionThread = new Thread(CommandProcessingThread);
+				ParserCommandHandler = new ParserCommandHandler();
+				LoginCommandHandler = new LoginCommandHandler();
+				
+				ActionExecutionThread = new Thread(CommandProcessingThread);
                 ActionExecutionThread.Start();
 
                 Console.WriteLine("Engine ready with path " + basePath + ".");
