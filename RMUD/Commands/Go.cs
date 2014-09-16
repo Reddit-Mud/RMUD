@@ -22,7 +22,7 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var direction = Match.Arguments["DIRECTION"] as Direction?;
-			var location = MudCore.Database.LoadObject(Actor.Location) as Room;
+			var location = Actor.Location as Room;
 			var link = location.Links.FirstOrDefault(l => l.Direction == direction.Value);
 
 			if (link == null)
@@ -30,7 +30,9 @@ namespace RMUD.Commands
 			else
 			{
 				MudCore.SendEventMessage(Actor, EventMessageScope.Locality, "{0} went {1}", direction);
-				Actor.Location = link.Destination;
+				var destination = MudCore.Database.LoadObject(link.Destination) as Room;
+				if (destination == null) throw new InvalidOperationException("Link does not lead to room.");
+				MudObject.Move(Actor, destination);
 				MudCore.EnqueuClientCommand(Actor.ConnectedClient, "look");
 			}
 		}

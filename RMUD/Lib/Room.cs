@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Room : MudObject
+	public class Room : MudObject, IContainer
 	{
 		public String Short;
 		public String Long;
@@ -17,6 +17,18 @@ namespace RMUD
 		{
 			Links.RemoveAll((l) => l.Direction == Direction);
 			Links.Add(new Link { Direction = Direction, Destination = Destination });
+		}
+
+		void IContainer.Remove(MudObject Object)
+		{
+			var Thing = Object as Thing;
+			if (Thing != null) Contents.Remove(Thing);
+		}
+
+		void IContainer.Add(MudObject Object)
+		{
+			var Thing = Object as Thing;
+			if (Thing != null) Contents.Add(Thing);
 		}
 	}
 }

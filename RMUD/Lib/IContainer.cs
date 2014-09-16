@@ -5,8 +5,9 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Actor : Thing
+	public interface IContainer
 	{
-		public Client ConnectedClient;
+		void Remove(MudObject Object);
+		void Add(MudObject Object);
 	}
 }

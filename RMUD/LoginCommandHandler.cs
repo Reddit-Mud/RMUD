@@ -20,7 +20,7 @@ namespace RMUD
 				{
 					a.Short = m.Arguments["NAME"].ToString();
 					a.ConnectedClient.CommandHandler = MudCore.ParserCommandHandler;
-					a.Location = "dummy";
+					MudObject.Move(a, MudCore.Database.LoadObject("dummy"));
 				}));
 		}
 

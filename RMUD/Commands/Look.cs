@@ -18,7 +18,8 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var location = MudCore.Database.LoadObject(Actor.Location) as Room;
+			var location = Actor.Location as Room;
+			if (location == null) throw new InvalidOperationException("Error: Actor not in room.");
 
 			if (Actor.ConnectedClient != null)
 			{

@@ -37,6 +37,7 @@ namespace RMUD
 			}
 			catch (Exception e)
 			{
+				MudCore.ClearPendingMessages();
 				MudCore.SendImmediateMessage(Client, e.Message);
 			}
 		}

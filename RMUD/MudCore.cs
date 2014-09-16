@@ -112,7 +112,7 @@ namespace RMUD
 						PendingMessages.Add(new RawPendingMessage
 						{
 							Destination = Actor.ConnectedClient,
-							Message = String.Format(Message, args)
+							Message = String.Format(Message, args.ToArray())
 						});
 					}
 					break;
@@ -121,7 +121,7 @@ namespace RMUD
 				case EventMessageScope.Locality:
 					{
 						if (Actor == null) break;
-						var location = Database.LoadObject(Actor.Location) as Room;
+						var location = Actor.Location as Room;
 						if (location == null) break;
 						foreach (var thing in location.Contents)
 						{
@@ -135,7 +135,7 @@ namespace RMUD
 							PendingMessages.Add(new RawPendingMessage
 							{
 								Destination = other.ConnectedClient,
-								Message = String.Format(Message, args)
+								Message = String.Format(Message, args.ToArray())
 							});
 						}
 					}

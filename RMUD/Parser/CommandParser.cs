@@ -44,7 +44,7 @@ namespace RMUD
 				{
 					if (CachedObjectsInScope != null) return CachedObjectsInScope;
 					CachedObjectsInScope = new List<Thing>();
-					var location = MudCore.Database.LoadObject(ExecutingActor.Location) as Room;
+					var location = ExecutingActor.Location as Room;
 					if (location != null)
 						CachedObjectsInScope.AddRange(location.Contents);
 						
@@ -52,7 +52,6 @@ namespace RMUD
 				}
 			}
 		}
-
 
         internal MatchedCommand ParseCommand(String Command, Actor Actor)
         {
