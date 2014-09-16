@@ -44,10 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Commands\Inspect.cs" />
     <Compile Include="Commands\Go.cs" />
     <Compile Include="Commands\Examine.cs" />
     <Compile Include="Commands\Look.cs" />
+    <None Include="database\static\settings.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="EventMessage.cs" />
+    <Compile Include="Lib\Settings.cs" />
     <Compile Include="Lib\IContainer.cs" />
     <Compile Include="LoginCommandHandler.cs" />
     <Compile Include="IClientCommandHandler.cs" />
