@@ -30,5 +30,15 @@ namespace RMUD
 			var Thing = Object as Thing;
 			if (Thing != null) Contents.Add(Thing);
 		}
+
+		IEnumerator<MudObject> IEnumerable<MudObject>.GetEnumerator()
+		{
+			return Contents.GetEnumerator();
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return (Contents as System.Collections.IEnumerable).GetEnumerator();
+		}
 	}
 }

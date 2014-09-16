@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public interface IContainer
+	public interface IContainer : IEnumerable<MudObject>
 	{
 		void Remove(MudObject Object);
 		void Add(MudObject Object);

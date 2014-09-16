@@ -53,7 +53,7 @@ namespace RMUD
 			client.Player.ConnectedClient = client;
 			client.CommandHandler = LoginCommandHandler;
 
-			var settings = LoadObject("settings") as Settings;
+			var settings = GetObject("settings") as Settings;
 			client.Send(settings.Banner);
 			client.Send(settings.MessageOfTheDay);
 
@@ -67,7 +67,7 @@ namespace RMUD
             try
             {
 				InitializeDatabase(basePath);
-				var settings = LoadObject("settings") as Settings;
+				var settings = GetObject("settings") as Settings;
 				if (settings == null) throw new InvalidProgramException("No settings object is defined in the database!");
 
 				ParserCommandHandler = new ParserCommandHandler();

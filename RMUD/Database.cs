@@ -22,7 +22,7 @@ namespace RMUD
 
         public static MudObject CreateObject(String path)
         {
-            if (LoadObject(path) != null) return null;
+			if (GetObject(path) != null) return null;
             NamedObjects.Upsert(path, new MudObject{Path = path});
             return NamedObjects[path];
         }
@@ -33,7 +33,7 @@ namespace RMUD
             {
                 var randomPart = Guid.NewGuid();
                 var path = basePath + "/" + randomPart.ToString();
-                if (LoadObject(path) == null)
+				if (GetObject(path) == null)
                 {
 					NamedObjects.Upsert(path, new MudObject { Path = path });
                     return NamedObjects[path];
@@ -41,10 +41,17 @@ namespace RMUD
             }
         }
 
-        public static MudObject LoadObject(String path)
+        public static MudObject GetObject(String Path)
         {
-            if (NamedObjects.ContainsKey(path)) return NamedObjects[path];
-            return ReLoadObject(path);
+            if (NamedObjects.ContainsKey(Path)) return NamedObjects[Path];
+			
+			var result = LoadObject(Path);
+			if (result != null)
+			{
+				NamedObjects.Upsert(Path, result);
+				result.Initialize();
+			}
+			return result;
         }
 
 		public static Assembly CompileScript(String Path)
@@ -79,7 +86,7 @@ namespace RMUD
 			return compilationResults.CompiledAssembly;
 		}
 
-        public static MudObject ReLoadObject(String Path)
+        private static MudObject LoadObject(String Path)
         {
 			Console.WriteLine("Loading object " + StaticPath + Path);
 
@@ -92,8 +99,6 @@ namespace RMUD
 			if (newMudObject != null)
 			{
 				newMudObject.Path = Path;
-				NamedObjects.Upsert(Path, newMudObject);
-				newMudObject.Initialize();
 				return newMudObject;
 			}
 			else
@@ -101,6 +106,28 @@ namespace RMUD
 				Console.WriteLine("Object " + objectLeafName + " not found in script " + staticObjectPath);
 				return null;
 			}
+		}
+
+		private static MudObject ReloadObject(String Path)
+		{
+			if (NamedObjects.ContainsKey(Path))
+			{
+				var existing = NamedObjects[Path];
+				var newObject = LoadObject(Path);
+				NamedObjects.Upsert(Path, newObject);
+				newObject.Initialize();
+				if (existing is IContainer && newObject is IContainer)
+				{
+					foreach (var thing in (existing as IContainer))
+					{
+						(newObject as IContainer).Add(thing);
+						thing.Location = newObject;
+					}
+				}
+				return newObject;
+			}
+			else
+				return GetObject(Path);
 		}
     }
 }
