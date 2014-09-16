@@ -64,6 +64,7 @@
     <Compile Include="Parser\ICommandProcessor.cs" />
     <Compile Include="Parser\ICommandTokenMatcher.cs" />
     <Compile Include="Parser\Matchers\CardinalMatcher.cs" />
+    <Compile Include="Parser\Matchers\RankGate.cs" />
     <Compile Include="Parser\Matchers\SingleWordMatcher.cs" />
     <Compile Include="Parser\Matchers\OrMatcher.cs" />
     <Compile Include="Parser\Matchers\ObjectMatcher.cs" />

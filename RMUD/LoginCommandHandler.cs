@@ -20,6 +20,7 @@ namespace RMUD
 				{
 					a.Short = m.Arguments["NAME"].ToString();
 					a.ConnectedClient.CommandHandler = Mud.ParserCommandHandler;
+					a.Rank = 500; //Everyone is a wizard! 
 					MudObject.Move(a, Mud.LoadObject("dummy"));
 					Mud.EnqueuClientCommand(a.ConnectedClient, "look");
 				}));

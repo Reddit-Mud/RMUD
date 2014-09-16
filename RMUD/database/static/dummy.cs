@@ -1,6 +1,6 @@
 ﻿public class dummy : RMUD.Room
 {
-	public dummy()
+	public override void Initialize()
 	{
 		Short = "dummy";
 		Long = "This is a dummy room. It exists for testing purposes only.";

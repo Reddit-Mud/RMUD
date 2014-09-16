@@ -11,6 +11,7 @@ namespace RMUD.Commands
 		{
 			Parser.AddCommand(
 				new Sequence(
+					new RankGate(500),
 					new Or(
 						new KeyWord("INSPECT", false),
 						new KeyWord("INS", false),

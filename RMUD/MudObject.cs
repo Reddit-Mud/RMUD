@@ -10,6 +10,8 @@ namespace RMUD
 		public String Path { get; internal set; }
 		public MudObject Location;
 
+		public virtual void Initialize() { }
+
 		public static void Move(MudObject Thing, MudObject Destination)
 		{
 			if (Thing.Location != null)

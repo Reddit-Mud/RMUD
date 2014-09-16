@@ -8,5 +8,6 @@ namespace RMUD
 	public class Actor : Thing
 	{
 		public Client ConnectedClient;
+		public int Rank = 0;
 	}
 }

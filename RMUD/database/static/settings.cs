@@ -1,6 +1,6 @@
 ﻿public class settings : RMUD.Settings
 {
-	public settings()
+	public override void Initialize()
 	{
 		Banner = "~~== REDDIT MUD ==~~";
 		MessageOfTheDay = "Prototype by Blecki";

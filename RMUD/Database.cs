@@ -93,6 +93,7 @@ namespace RMUD
 			{
 				newMudObject.Path = Path;
 				NamedObjects.Upsert(Path, newMudObject);
+				newMudObject.Initialize();
 				return newMudObject;
 			}
 			else
