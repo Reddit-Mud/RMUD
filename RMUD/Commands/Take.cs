@@ -19,14 +19,32 @@ namespace RMUD.Commands
 		}
 	}
 
+	public interface ITakeRules
+	{
+		bool CanTake(Actor Actor);
+	}
+
 	internal class TakeProcessor : ICommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["TARGET"] as Thing;
+			if (target == null)
+			{
+				if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("Take what again?\r\n");
+			}
+			else
+			{
+				var takeRules = target as ITakeRules;
+				if (takeRules != null && !takeRules.CanTake(Actor))
+				{
+					Actor.ConnectedClient.Send("You can't take that.\r\n");
+					return;
+				}
 
-			if (Actor.ConnectedClient != null)
-				Mud.SendEventMessage(Actor, EventMessageScope.Private, target.Long + "\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.Locality, "{0} takes {1}.\r\n", target);
+				MudObject.Move(target, Actor);
+			}
 		}
 	}
 }

@@ -19,16 +19,20 @@ namespace RMUD
 			Links.Add(new Link { Direction = Direction, Destination = Destination });
 		}
 
-		void IContainer.Remove(MudObject Object)
+		public void Remove(MudObject Object)
 		{
 			var Thing = Object as Thing;
 			if (Thing != null) Contents.Remove(Thing);
 		}
 
-		void IContainer.Add(MudObject Object)
+		public void Add(MudObject Object)
 		{
 			var Thing = Object as Thing;
-			if (Thing != null) Contents.Add(Thing);
+			if (Thing != null)
+			{
+				Contents.Add(Thing);
+				Thing.Location = this;
+			}
 		}
 
 		IEnumerator<MudObject> IEnumerable<MudObject>.GetEnumerator()

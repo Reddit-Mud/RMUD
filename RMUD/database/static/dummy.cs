@@ -12,6 +12,6 @@
 		thing.Adjectives.Add("dummy");
 		thing.Nouns.Add("thing");
 
-		Contents.Add(thing);
+		Add(thing);
 	}
 }

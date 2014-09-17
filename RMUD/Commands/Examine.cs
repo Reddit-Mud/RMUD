@@ -27,7 +27,7 @@ namespace RMUD.Commands
 						new KeyWord("X", false)),
 					new KeyWord("AT", true),
 					new Rest())
-				, new ReportError("I don't see that here."));
+				, new ReportError("I don't see that here.\r\n"));
 		}
 	}
 
@@ -38,7 +38,7 @@ namespace RMUD.Commands
 			var target = Match.Arguments["TARGET"] as Thing;
 
 			if (Actor.ConnectedClient != null)
-				Mud.SendEventMessage(Actor, EventMessageScope.Private, target.Long + "\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.Private, target.Long + "\r\n");
 		}
 	}
 }
