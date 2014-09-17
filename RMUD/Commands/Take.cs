@@ -5,33 +5,21 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Examine : CommandFactory
+	internal class Take : CommandFactory
 	{
 		public override void Create(CommandParser Parser)
 		{
 			Parser.AddCommand(
 				new Sequence(
 					new Or(
-						new KeyWord("LOOK", false),
-						new KeyWord("EXAMINE", false),
-						new KeyWord("X", false)),
-					new KeyWord("AT", true),
+						new KeyWord("GET", false),
+						new KeyWord("TAKE", false)),
 					new ObjectMatcher("TARGET"))
-				, new ExamineProcessor());
-
-			Parser.AddCommand(
-				new Sequence(
-					new Or(
-						new KeyWord("LOOK", false),
-						new KeyWord("EXAMINE", false),
-						new KeyWord("X", false)),
-					new KeyWord("AT", true),
-					new Rest())
-				, new ReportError("I don't see that here."));
+				, new TakeProcessor());
 		}
 	}
 
-	internal class ExamineProcessor : ICommandProcessor
+	internal class TakeProcessor : ICommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
