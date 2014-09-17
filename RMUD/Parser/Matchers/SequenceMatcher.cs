@@ -24,6 +24,7 @@ namespace RMUD
                 foreach (var Match in Matches)
                     NextMatches.AddRange(Matcher.Match(Match, Context));
                 Matches = NextMatches;
+				if (Matches.Count == 0) return Matches; //Shortcircuit for when no matches are found.
             }
             return Matches;
         }
