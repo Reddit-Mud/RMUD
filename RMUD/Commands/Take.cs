@@ -15,7 +15,8 @@ namespace RMUD.Commands
 						new KeyWord("GET", false),
 						new KeyWord("TAKE", false)),
 					new ObjectMatcher("TARGET"))
-				, new TakeProcessor());
+				, new TakeProcessor(),
+				"Take something");
 		}
 	}
 

@@ -11,13 +11,14 @@ namespace RMUD
 		{
 			internal ICommandTokenMatcher Matcher;
 			internal ICommandProcessor Processor;
+			internal String HelpText;
 		}
 
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
 
-        public void AddCommand(ICommandTokenMatcher Matcher, ICommandProcessor Processor)
+        public void AddCommand(ICommandTokenMatcher Matcher, ICommandProcessor Processor, String HelpText)
         {
-            var Entry = new CommandEntry { Matcher = Matcher, Processor = Processor };
+            var Entry = new CommandEntry { Matcher = Matcher, Processor = Processor, HelpText = HelpText };
 			Commands.Add(Entry);
         }
 

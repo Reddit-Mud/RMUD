@@ -15,7 +15,8 @@ namespace RMUD.Commands
 						new KeyWord("SAY", false),
 						new KeyWord("'", false)),
 					new Rest("SPEECH")),
-				new SayProcessor(SayProcessor.EmoteTypes.Speech));
+				new SayProcessor(SayProcessor.EmoteTypes.Speech),
+				"Say something.");
 
 			Parser.AddCommand(
 				new Sequence(
@@ -23,7 +24,8 @@ namespace RMUD.Commands
 						new KeyWord("EMOTE", false),
 						new KeyWord("\"", false)),
 					new Rest("SPEECH")),
-				new SayProcessor(SayProcessor.EmoteTypes.Emote));
+				new SayProcessor(SayProcessor.EmoteTypes.Emote),
+				"Emote something.");
 		}
 	}
 

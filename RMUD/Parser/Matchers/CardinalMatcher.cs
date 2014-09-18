@@ -26,5 +26,7 @@ namespace RMUD
 			}
 			return r;
         }
+
+		public String Emit() { return "[CARDINAL]"; }
     }
 }

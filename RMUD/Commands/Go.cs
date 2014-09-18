@@ -13,7 +13,8 @@ namespace RMUD.Commands
 				new Sequence(
 					new KeyWord("GO", true),
 					new Cardinal("DIRECTION")),
-				new GoProcessor());
+				new GoProcessor(),
+				"Move between rooms.");
 		}
 	}
 

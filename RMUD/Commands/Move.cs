@@ -16,7 +16,8 @@ namespace RMUD.Commands
 					new ObjectMatcher("TARGET"),
 					new KeyWord("TO", true),
 					new Path("DESTINATION"))
-				, new MoveProcessor());
+				, new MoveProcessor(),
+				"Teleport an object to a new location. Bypasses take rules.");
 		}
 	}
 

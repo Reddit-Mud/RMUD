@@ -22,5 +22,7 @@ namespace RMUD
 			R.Add(possibleMatch);
 			return R;
         }
+
+		public String Emit() { return "[TEXT]"; }
     }
 }

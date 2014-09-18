@@ -28,6 +28,9 @@ namespace RMUD
             }
             return Matches;
         }
+
+		public String Emit() { return String.Join(" ", Matchers.Select(m => m.Emit())); }
+
     }
 
 }

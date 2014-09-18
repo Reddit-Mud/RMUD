@@ -21,5 +21,7 @@ namespace RMUD
 				R.Add(State);
 			return R;
         }
+
+		public String Emit() { return "<Rank must be >= " + RequiredRank + ">"; }
     }
 }

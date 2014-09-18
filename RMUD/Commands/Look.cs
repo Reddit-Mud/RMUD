@@ -9,8 +9,10 @@ namespace RMUD.Commands
 	{
 		public override void Create(CommandParser Parser)
 		{
-			var matcher = new KeyWord("LOOK", false);
-			Parser.AddCommand(matcher, new LookProcessor());
+			Parser.AddCommand(
+				new KeyWord("LOOK", false),
+				new LookProcessor(),
+				"Look around at your suroundings.");
 		}
 	}
 

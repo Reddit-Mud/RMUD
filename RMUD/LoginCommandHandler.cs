@@ -23,7 +23,8 @@ namespace RMUD
 					a.Rank = 500; //Everyone is a wizard! 
 					MudObject.Move(a, Mud.GetObject("dummy"));
 					Mud.EnqueuClientCommand(a.ConnectedClient, "look");
-				}));
+				}),
+				"Login to an existing account.");
 		}
 
 		public void HandleCommand(Client Client, String Command)

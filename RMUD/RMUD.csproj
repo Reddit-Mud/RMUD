@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\Say.cs" />
     <Compile Include="Commands\ReportError.cs" />
     <Compile Include="Commands\Take.cs" />
@@ -82,9 +83,9 @@
     <Compile Include="Lib\Room.cs" />
     <Compile Include="Lib\Thing.cs" />
     <Compile Include="Database.cs" />
-    <None Include="database\static\dummy.cs">
+    <Compile Include="database\static\dummy.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Compile>
     <None Include="database\static\foo.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -93,7 +94,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TelnetClientSource.cs" />
-    <Compile Include="Upsert.cs" />
+    <Compile Include="HelperExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

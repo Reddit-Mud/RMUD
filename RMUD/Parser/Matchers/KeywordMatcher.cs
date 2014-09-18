@@ -25,5 +25,7 @@ namespace RMUD
                 R.Add(new PossibleMatch(State.Arguments, State.Next));
             return R;
         }
+
+		public String Emit() { return Optional ? (Word.ToLower() + "?") : Word.ToLower(); }
     }
 }

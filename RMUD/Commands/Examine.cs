@@ -17,7 +17,8 @@ namespace RMUD.Commands
 						new KeyWord("X", false)),
 					new KeyWord("AT", true),
 					new ObjectMatcher("TARGET"))
-				, new ExamineProcessor());
+				, new ExamineProcessor(),
+				"Look closely at an object.");
 
 			Parser.AddCommand(
 				new Sequence(
@@ -27,7 +28,8 @@ namespace RMUD.Commands
 						new KeyWord("X", false)),
 					new KeyWord("AT", true),
 					new Rest("ERROR"))
-				, new ReportError("I don't see that here.\r\n"));
+				, new ReportError("I don't see that here.\r\n"),
+				"Error reporting command");
 		}
 	}
 

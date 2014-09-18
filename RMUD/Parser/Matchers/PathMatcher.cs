@@ -25,5 +25,7 @@ namespace RMUD
 			}
 			return R;
         }
+
+		public String Emit() { return "[PATH]"; }
     }
 }
