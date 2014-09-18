@@ -42,7 +42,7 @@ namespace RMUD.Commands
 				//Display exits from room
 				if (location.Links.Count > 0)
 				{
-					builder.Append("Obvious exits: " + String.Join(",", location.Links.Select(l => l.Direction.ToString())));
+					builder.Append("Obvious exits: " + String.Join(", ", location.Links.Select(l => l.Direction.ToString().ToLower())));
 					builder.AppendLine("\r\n");
 				}
 

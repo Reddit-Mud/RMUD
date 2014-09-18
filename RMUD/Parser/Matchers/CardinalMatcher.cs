@@ -17,11 +17,10 @@ namespace RMUD
         public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
         {
             var r = new List<PossibleMatch>();
-			var parsedDirection = Direction.NORTH;
-			if (Enum.TryParse<Direction>(State.Next.Value.ToUpper(), out parsedDirection))
+			if (Link.IsCardinal(State.Next.Value.ToUpper()))
 			{
 				var match = new PossibleMatch(State.Arguments, State.Next.Next);
-				match.Arguments.Upsert(ArgumentName, parsedDirection);
+				match.Arguments.Upsert(ArgumentName, Link.ToCardinal(State.Next.Value.ToUpper()));
 				r.Add(match);
 			}
 			return r;
