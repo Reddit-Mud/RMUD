@@ -44,7 +44,7 @@ namespace RMUD.Commands
 					builder.AppendLine("\r\n");
 				}
 
-				Mud.SendEventMessage(Actor, EventMessageScope.Private, builder.ToString());
+				Mud.SendEventMessage(Actor, EventMessageScope.Single, builder.ToString());
 			}
 		}
 	}

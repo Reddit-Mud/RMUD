@@ -38,7 +38,7 @@ namespace RMUD.Commands
 			var target = Match.Arguments["TARGET"] as Thing;
 
 			if (Actor.ConnectedClient != null)
-				Mud.SendEventMessage(Actor, EventMessageScope.Private, target.Long + "\r\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.Single, target.Long + "\r\n");
 		}
 	}
 }

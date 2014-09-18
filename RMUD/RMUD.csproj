@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Commands\Say.cs" />
     <Compile Include="Commands\ReportError.cs" />
     <Compile Include="Commands\Take.cs" />
     <Compile Include="Commands\Move.cs" />

@@ -42,7 +42,8 @@ namespace RMUD.Commands
 					return;
 				}
 
-				Mud.SendEventMessage(Actor, EventMessageScope.Locality, "{0} takes {1}.\r\n", target);
+				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You take " + target.Short + "\r\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " takes " + target.Short + "\r\n");
 				MudObject.Move(target, Actor);
 			}
 		}

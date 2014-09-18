@@ -7,9 +7,10 @@ namespace RMUD
 {
 	public enum EventMessageScope
 	{
-		Private,
-		Locality,
-		Broadcast
+		Single,
+		Local,
+		External,
+		AllConnectedPlayers,
 	}
 
 }

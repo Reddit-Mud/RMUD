@@ -26,10 +26,11 @@ namespace RMUD.Commands
 			var link = location.Links.FirstOrDefault(l => l.Direction == direction.Value);
 
 			if (link == null)
-				Mud.SendEventMessage(Actor, EventMessageScope.Private, "You can't go that way.\r\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You can't go that way.\r\n");
 			else
 			{
-				Mud.SendEventMessage(Actor, EventMessageScope.Locality, "{0} went {1}\r\n", direction);
+				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You went " + direction.Value.ToString().ToLower() + ".\r\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " went " + direction.Value.ToString().ToLower() + "\r\n");
 				var destination = Mud.GetObject(link.Destination) as Room;
 				if (destination == null) throw new InvalidOperationException("Link does not lead to room.");
 				MudObject.Move(Actor, destination);

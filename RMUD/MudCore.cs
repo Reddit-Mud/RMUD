@@ -23,6 +23,12 @@ namespace RMUD
 		{
 			public Client Destination;
 			public String Message;
+
+			public RawPendingMessage(Client Destination, String Message)
+			{
+				this.Destination = Destination;
+				this.Message = Message;
+			}
 		}
 
 		internal static List<RawPendingMessage> PendingMessages = new List<RawPendingMessage>();
@@ -93,32 +99,23 @@ namespace RMUD
             ActionExecutionThread.Join();
         }
 
-		public static void SendEventMessage(Actor Actor, EventMessageScope Scope, String Message, params Object[] Arguments)
+		public static void SendEventMessage(Actor Actor, EventMessageScope Scope, String Message)
 		{
             DatabaseLock.WaitOne();
-
-			var args = new List<Object>();
-			args.Add(Actor);
-			args.AddRange(Arguments);
 
 			switch (Scope)
 			{
 				//Send message only to the player
-				case EventMessageScope.Private:
+				case EventMessageScope.Single:
 					{
 						if (Actor == null) break;
 						if (Actor.ConnectedClient == null) break;
-						args[0] = "you";
-						PendingMessages.Add(new RawPendingMessage
-						{
-							Destination = Actor.ConnectedClient,
-							Message = String.Format(Message, args.ToArray())
-						});
+						PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, Message));
 					}
 					break;
 
 				//Send message to everyone in the same location as the player
-				case EventMessageScope.Locality:
+				case EventMessageScope.Local:
 					{
 						if (Actor == null) break;
 						var location = Actor.Location as Room;
@@ -128,15 +125,24 @@ namespace RMUD
 							var other = thing as Actor;
 							if (other == null) continue;
 							if (other.ConnectedClient == null) continue;
-							if (Object.ReferenceEquals(Actor, other))
-								args[0] = "you";
-							else
-								args[0] = Actor;
-							PendingMessages.Add(new RawPendingMessage
-							{
-								Destination = other.ConnectedClient,
-								Message = String.Format(Message, args.ToArray())
-							});
+							PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Message));
+						}
+					}
+					break;
+
+				//Send message to everyone in the same location EXCEPT the player.
+				case EventMessageScope.External:
+					{
+						if (Actor == null) break;
+						var location = Actor.Location as Room;
+						if (location == null) break;
+						foreach (var thing in location.Contents)
+						{
+							var other = thing as Actor;
+							if (other == null) continue;
+							if (Object.ReferenceEquals(other, Actor)) continue;
+							if (other.ConnectedClient == null) continue;
+							PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Message));
 						}
 					}
 					break;
