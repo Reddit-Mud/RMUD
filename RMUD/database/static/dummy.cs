@@ -14,18 +14,14 @@ public class dummy : RMUD.Room
 			var builder = new StringBuilder();
 			builder.Append("You've looked at this room ");
 			builder.Append(TimesViewed);
-			builder.Append(" times.");
+			builder.Append(" times.\r\n");
+
+			builder.Append("This room is a hub between multiple demonstration areas. Travel in any direction to reach a demo area.");
 
 			return builder.ToString();
 		});
 			
-		OpenLink(RMUD.Direction.SOUTH, "foo");
+		OpenLink(RMUD.Direction.SOUTH, "blecki-demo/area");
 
-		var thing = new RMUD.Thing();
-		thing.Short = "dummy thing";
-		thing.Long = "This thing exists just to test commands.";
-		thing.Nouns.Add("dummy", "thing");
-
-		Add(thing);
 	}
 }

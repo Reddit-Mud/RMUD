@@ -56,6 +56,33 @@
     <None Include="database\static\settings.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="database\static\blecki-demo\area.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\blecki-demo\bluff.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\blecki-demo\cabin.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\blecki-demo\lighthouse_balcony.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\blecki-demo\lighthouse_stairway.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\blecki-demo\lighthouse_lobby.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\blecki-demo\shack.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\blecki-demo\deck.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\blecki-demo\shoreline.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="DescriptiveText.cs" />
     <Compile Include="EventMessage.cs" />
     <Compile Include="Lib\Settings.cs" />
@@ -86,9 +113,6 @@
     <Compile Include="database\static\dummy.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <None Include="database\static\foo.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Compile Include="MudCore.cs" />
     <Compile Include="MudObject.cs" />
     <Compile Include="Program.cs" />
