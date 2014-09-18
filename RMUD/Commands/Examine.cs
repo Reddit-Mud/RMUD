@@ -26,7 +26,7 @@ namespace RMUD.Commands
 						new KeyWord("EXAMINE", false),
 						new KeyWord("X", false)),
 					new KeyWord("AT", true),
-					new Rest())
+					new Rest("ERROR"))
 				, new ReportError("I don't see that here.\r\n"));
 		}
 	}
