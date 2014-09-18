@@ -8,7 +8,7 @@ namespace RMUD
 	public class Room : MudObject, IContainer
 	{
 		public String Short;
-		public String Long;
+		public DescriptiveText Long;
 
 		public List<Thing> Contents = new List<Thing>();
 		public List<Link> Links = new List<Link>();

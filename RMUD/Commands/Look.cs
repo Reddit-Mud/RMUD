@@ -27,7 +27,7 @@ namespace RMUD.Commands
 
 				builder.Append(location.Short);
 				builder.Append("\r\n");
-				builder.Append(location.Long);
+				builder.Append(location.Long.Expand(Actor, location));
 				builder.Append("\r\n");
 
 				//Display objects in room

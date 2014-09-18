@@ -1,9 +1,24 @@
-﻿public class dummy : RMUD.Room
+﻿using System.Text;
+
+public class dummy : RMUD.Room
 {
+	private int TimesViewed = 0;
+
 	public override void Initialize()
 	{
 		Short = "dummy";
-		Long = "This is a dummy room. It exists for testing purposes only.";
+		Long = new RMUD.DescriptiveText((v, o) =>
+		{
+			TimesViewed += 1;
+
+			var builder = new StringBuilder();
+			builder.Append("You've looked at this room ");
+			builder.Append(TimesViewed);
+			builder.Append(" times.");
+
+			return builder.ToString();
+		});
+			
 		OpenLink(RMUD.Direction.SOUTH, "foo");
 
 		var thing = new RMUD.Thing();
