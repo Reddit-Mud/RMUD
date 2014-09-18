@@ -22,10 +22,9 @@ public class dummy : RMUD.Room
 		OpenLink(RMUD.Direction.SOUTH, "foo");
 
 		var thing = new RMUD.Thing();
-		thing.Short = "a dummy thing";
+		thing.Short = "dummy thing";
 		thing.Long = "This thing exists just to test commands.";
-		thing.Adjectives.Add("dummy");
-		thing.Nouns.Add("thing");
+		thing.Nouns.Add("dummy", "thing");
 
 		Add(thing);
 	}

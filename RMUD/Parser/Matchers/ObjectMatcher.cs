@@ -40,12 +40,15 @@ namespace RMUD
 			foreach (var thing in Context.ObjectsInScope)
 			{
 				var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
-				while (possibleMatch.Next != null && thing.Adjectives.Contains(possibleMatch.Next.Value))
-					possibleMatch.Next = possibleMatch.Next.Next;
-				if (possibleMatch.Next == null) continue;
-				if (thing.Nouns.Contains(possibleMatch.Next.Value))
+				bool matched = false;
+				while (possibleMatch.Next != null && thing.Nouns.Contains(possibleMatch.Next.Value))
 				{
+					matched = true;
 					possibleMatch.Next = possibleMatch.Next.Next;
+				}
+
+				if (matched)
+				{
 					possibleMatch.Arguments.Upsert(CaptureName, thing);
 					R.Add(possibleMatch);
 				}
