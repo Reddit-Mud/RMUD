@@ -17,7 +17,7 @@ namespace RMUD.Commands
 						new KeyWord("INS", false),
 						new KeyWord("P", false)),
 					new Or(
-						new ObjectMatcher("TARGET"),
+						new ObjectMatcher("TARGET", new InScopeObjectSource()),
 						new KeyWord("HERE", false)))
 				, new InspectProcessor(),
 				"Inspect internal properties of an object.");

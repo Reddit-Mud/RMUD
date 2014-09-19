@@ -5,9 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Scenery
+	public class Scenery : IDescribed, IMatchable
 	{
-		public List<String> Nouns = new List<String>();
-		public String Long;
+		public List<String> Nouns { get; set; }
+		public String Long { get; set; }
+
+		public Scenery()
+		{
+			Nouns = new List<string>();
+		}
 	}
 }

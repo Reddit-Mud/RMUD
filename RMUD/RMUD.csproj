@@ -85,6 +85,8 @@
     </Compile>
     <Compile Include="DescriptiveText.cs" />
     <Compile Include="EventMessage.cs" />
+    <Compile Include="Lib\IMatchable.cs" />
+    <Compile Include="Lib\IDescribed.cs" />
     <Compile Include="Lib\Scenery.cs" />
     <Compile Include="Lib\Settings.cs" />
     <Compile Include="Lib\IContainer.cs" />

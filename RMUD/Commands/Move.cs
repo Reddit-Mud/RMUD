@@ -13,7 +13,7 @@ namespace RMUD.Commands
 				new Sequence(
 					new RankGate(500),
 					new KeyWord("MOVE", false),
-					new ObjectMatcher("TARGET"),
+					new ObjectMatcher("TARGET", new InScopeObjectSource()),
 					new KeyWord("TO", true),
 					new Path("DESTINATION"))
 				, new MoveProcessor(),

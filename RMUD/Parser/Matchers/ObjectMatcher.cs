@@ -12,14 +12,39 @@ namespace RMUD
 		UnderstandMe = 1
 	}
 
+	public interface IObjectSource
+	{
+		List<IMatchable> GetObjects(PossibleMatch State, CommandParser.MatchContext Context);
+	}
+
+	public class InScopeObjectSource : IObjectSource
+	{
+		public List<IMatchable> GetObjects(PossibleMatch State, CommandParser.MatchContext Context)
+		{
+			return new List<IMatchable>(Context.ObjectsInScope.Select(t => t as IMatchable));
+		}
+	}
+
+	public class SceneryObjectSource : IObjectSource
+	{
+		public List<IMatchable> GetObjects(PossibleMatch State, CommandParser.MatchContext Context)
+		{
+			var room = Context.ExecutingActor.Location as Room;
+			if (room == null) return new List<IMatchable>();
+			return new List<IMatchable>(room.Scenery.Select(s => s as IMatchable));
+		}
+	}
+
     public class ObjectMatcher : ICommandTokenMatcher
     {
 		public String CaptureName;
 		public ObjectMatcherSettings Settings;
+		public IObjectSource ObjectSource;
 
-		public ObjectMatcher(String CaptureName, ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
+		public ObjectMatcher(String CaptureName, IObjectSource ObjectSource, ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
 		{
 			this.CaptureName = CaptureName;
+			this.ObjectSource = ObjectSource;
 			this.Settings = Settings;
 		}
 
@@ -37,7 +62,7 @@ namespace RMUD
 				}
 			}
 
-			foreach (var thing in Context.ObjectsInScope)
+			foreach (var thing in ObjectSource.GetObjects(State, Context))
 			{
 				var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
 				bool matched = false;

@@ -5,14 +5,18 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Thing : MudObject
+	public class Thing : MudObject, IDescribed, IMatchable
 	{
 		public String Short;
-		public String Long;
+		public String Long { get; set; }
 		public String IndefiniteArticle = "a";
-		public List<String> Nouns = new List<string>();
-
+		public List<String> Nouns { get; set; }
 		public MudObject Location;
+
+		public Thing()
+		{
+			Nouns = new List<string>();
+		}
 
 		public static void Move(Thing Thing, MudObject Destination)
 		{

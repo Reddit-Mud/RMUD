@@ -16,8 +16,10 @@ namespace RMUD.Commands
 						new KeyWord("EXAMINE", false),
 						new KeyWord("X", false)),
 					new KeyWord("AT", true),
-					new ObjectMatcher("TARGET"))
-				, new ExamineProcessor(),
+					new Or (
+						new ObjectMatcher("TARGET", new InScopeObjectSource()),
+						new ObjectMatcher("TARGET", new SceneryObjectSource()))),
+				new ExamineProcessor(),
 				"Look closely at an object.");
 
 			Parser.AddCommand(
@@ -37,10 +39,15 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as Thing;
+			var target = Match.Arguments["TARGET"] as IDescribed;
 
 			if (Actor.ConnectedClient != null)
-				Mud.SendEventMessage(Actor, EventMessageScope.Single, target.Long + "\r\n");
+			{
+				if (target == null)
+					Mud.SendEventMessage(Actor, EventMessageScope.Single, "That object is indescribeable.\r\n");
+				else
+					Mud.SendEventMessage(Actor, EventMessageScope.Single, target.Long + "\r\n");
+			}
 		}
 	}
 }

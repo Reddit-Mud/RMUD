@@ -14,7 +14,7 @@ namespace RMUD.Commands
 					new Or(
 						new KeyWord("GET", false),
 						new KeyWord("TAKE", false)),
-					new ObjectMatcher("TARGET"))
+					new ObjectMatcher("TARGET", new InScopeObjectSource()))
 				, new TakeProcessor(),
 				"Take something");
 		}
