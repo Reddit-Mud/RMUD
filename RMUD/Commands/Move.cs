@@ -25,11 +25,11 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as MudObject;
+			var target = Match.Arguments["TARGET"] as Thing;
 			var destination = Match.Arguments["DESTINATION"].ToString();
 			var room = Mud.GetObject(destination);
 			if (room != null)
-				MudObject.Move(target, room);
+				Thing.Move(target, room);
 		}
 	}
 }

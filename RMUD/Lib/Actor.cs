@@ -16,23 +16,19 @@ namespace RMUD
 			return false;
 		}
 
-		public void Remove(MudObject Object)
+		public void Remove(Thing Thing)
 		{
-			var Thing = Object as Thing;
-			if (Thing != null) Inventory.Remove(Thing);
+			Inventory.Remove(Thing);
+			Thing.Location = null;
 		}
 
-		public void Add(MudObject Object)
+		public void Add(Thing Thing)
 		{
-			var Thing = Object as Thing;
-			if (Thing != null)
-			{
-				Inventory.Add(Thing);
-				Thing.Location = this;
-			}
+			Inventory.Add(Thing);
+			Thing.Location = this;
 		}
 
-		IEnumerator<MudObject> IEnumerable<MudObject>.GetEnumerator()
+		IEnumerator<Thing> IEnumerable<Thing>.GetEnumerator()
 		{
 			return Inventory.GetEnumerator();
 		}

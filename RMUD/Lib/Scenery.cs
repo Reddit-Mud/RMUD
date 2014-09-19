@@ -5,9 +5,9 @@ using System.Text;
 
 namespace RMUD
 {
-	public interface IContainer : IEnumerable<Thing>
+	public class Scenery
 	{
-		void Remove(Thing Object);
-		void Add(Thing Object);
+		public List<String> Nouns = new List<String>();
+		public String Long;
 	}
 }

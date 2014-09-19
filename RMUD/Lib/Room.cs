@@ -12,6 +12,7 @@ namespace RMUD
 
 		public List<Thing> Contents = new List<Thing>();
 		public List<Link> Links = new List<Link>();
+		public List<Scenery> Scenery = new List<Scenery>();
 
 		public void OpenLink(Direction Direction, String Destination)
 		{
@@ -19,23 +20,19 @@ namespace RMUD
 			Links.Add(new Link { Direction = Direction, Destination = Destination });
 		}
 
-		public void Remove(MudObject Object)
+		public void Remove(Thing Thing)
 		{
-			var Thing = Object as Thing;
-			if (Thing != null) Contents.Remove(Thing);
+			Contents.Remove(Thing);
+			Thing.Location = null;
 		}
 
-		public void Add(MudObject Object)
+		public void Add(Thing Thing)
 		{
-			var Thing = Object as Thing;
-			if (Thing != null)
-			{
-				Contents.Add(Thing);
-				Thing.Location = this;
-			}
+			Contents.Add(Thing);
+			Thing.Location = this;
 		}
 
-		IEnumerator<MudObject> IEnumerable<MudObject>.GetEnumerator()
+		IEnumerator<Thing> IEnumerable<Thing>.GetEnumerator()
 		{
 			return Contents.GetEnumerator();
 		}
