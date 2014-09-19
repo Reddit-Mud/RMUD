@@ -66,6 +66,9 @@
     <Compile Include="database\static\blecki-demo\cabin.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="database\static\blecki-demo\lighthouse_key.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="database\static\blecki-demo\lighthouse_balcony.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
