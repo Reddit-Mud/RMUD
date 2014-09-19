@@ -5,10 +5,10 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Room : MudObject, IContainer
+	public class Room : MudObject, IContainer, IDescribed
 	{
 		public String Short;
-		public DescriptiveText Long;
+		public DescriptiveText Long { get; set; }
 
 		public List<Thing> Contents = new List<Thing>();
 		public List<Link> Links = new List<Link>();
