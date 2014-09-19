@@ -66,7 +66,7 @@ namespace RMUD
 			{
 				var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
 				bool matched = false;
-				while (possibleMatch.Next != null && thing.Nouns.Contains(possibleMatch.Next.Value))
+				while (possibleMatch.Next != null && thing.Nouns.Contains(possibleMatch.Next.Value.ToUpper()))
 				{
 					matched = true;
 					possibleMatch.Next = possibleMatch.Next.Next;

@@ -7,6 +7,6 @@ namespace RMUD
 {
 	public interface IDescribed
 	{
-		String Long { get; set; }
+		DescriptiveText Long { get; set; }
 	}
 }

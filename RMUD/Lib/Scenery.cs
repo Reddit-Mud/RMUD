@@ -8,7 +8,7 @@ namespace RMUD
 	public class Scenery : IDescribed, IMatchable
 	{
 		public List<String> Nouns { get; set; }
-		public String Long { get; set; }
+		public DescriptiveText Long { get; set; }
 
 		public Scenery()
 		{

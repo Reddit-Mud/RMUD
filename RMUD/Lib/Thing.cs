@@ -8,7 +8,7 @@ namespace RMUD
 	public class Thing : MudObject, IDescribed, IMatchable
 	{
 		public String Short;
-		public String Long { get; set; }
+		public DescriptiveText Long { get; set; }
 		public String IndefiniteArticle = "a";
 		public List<String> Nouns { get; set; }
 		public MudObject Location;
