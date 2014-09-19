@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Commands\Drop.cs" />
     <Compile Include="Commands\Inventory.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\Say.cs" />
