@@ -25,16 +25,6 @@ namespace RMUD
 		}
 	}
 
-	public class SceneryObjectSource : IObjectSource
-	{
-		public List<IMatchable> GetObjects(PossibleMatch State, CommandParser.MatchContext Context)
-		{
-			var room = Context.ExecutingActor.Location as Room;
-			if (room == null) return new List<IMatchable>();
-			return new List<IMatchable>(room.Scenery.Select(s => s as IMatchable));
-		}
-	}
-
     public class ObjectMatcher : ICommandTokenMatcher
     {
 		public String CaptureName;

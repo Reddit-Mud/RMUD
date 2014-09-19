@@ -38,7 +38,7 @@ namespace RMUD
             "NORTHWEST", "NW", 
             "UP", "U",
             "DOWN", "D" ,
-			"IN", "I",
+			"IN", "IN",		//'I' cannot be used as it is shorthand for the inventory command.
 			"OUT", "O"
         };
 

@@ -38,16 +38,22 @@ namespace RMUD
 		{
 			public Actor ExecutingActor;
 
-			private List<Thing> CachedObjectsInScope = null;
-			public List<Thing> ObjectsInScope
+			private List<IMatchable> CachedObjectsInScope = null;
+			public List<IMatchable> ObjectsInScope
 			{
 				get
 				{
 					if (CachedObjectsInScope != null) return CachedObjectsInScope;
-					CachedObjectsInScope = new List<Thing>();
+					CachedObjectsInScope = new List<IMatchable>();
+
+					CachedObjectsInScope.AddRange(ExecutingActor.Inventory);
+
 					var location = ExecutingActor.Location as Room;
 					if (location != null)
+					{
 						CachedObjectsInScope.AddRange(location.Contents);
+						CachedObjectsInScope.AddRange(location.Scenery);
+					}
 						
 					return CachedObjectsInScope;
 				}

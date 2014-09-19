@@ -16,9 +16,7 @@ namespace RMUD.Commands
 						new KeyWord("EXAMINE", false),
 						new KeyWord("X", false)),
 					new KeyWord("AT", true),
-					new Or (
-						new ObjectMatcher("TARGET", new InScopeObjectSource()),
-						new ObjectMatcher("TARGET", new SceneryObjectSource()))),
+					new ObjectMatcher("TARGET", new InScopeObjectSource())),
 				new ExamineProcessor(),
 				"Look closely at an object.");
 
