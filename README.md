@@ -1,6 +1,6 @@
 # RMUD *(title pending)*
 
----
+
 ### A Brief History
 *RMUD* is an open-source, community project initially conceptualized on the [MUD subreddi]t(http://reddit.com/r/MUD) in 2014. Garnering enough interest, several now core members came together and work began on creating a game that was something different from all the high-fantasy in the genre, opting for the less popularized [Fantastique](http://en.wikipedia.org/wiki/Fantastique).
 
