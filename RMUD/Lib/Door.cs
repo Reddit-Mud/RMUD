@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Door : Thing, IOpenable, Commands.ITakeRules
+	public class Door : Thing, IOpenableRules, ITakeRules
 	{
 		public Door()
 		{
@@ -16,43 +16,29 @@ namespace RMUD
 
 		public bool Open { get; set; }
 
-		bool IOpenable.CanOpen(Actor Actor)
+		bool IOpenableRules.CanOpen(Actor Actor)
 		{
 			return !Open;
 		}
 
-		bool IOpenable.CanClose(Actor Actor)
+		bool IOpenableRules.CanClose(Actor Actor)
 		{
 			return Open;
 		}
 
-		void IOpenable.HandleOpen(Actor Actor)
+		void IOpenableRules.HandleOpen(Actor Actor)
 		{
-			if (!Open)
-			{
-				if (Actor.ConnectedClient != null)
-					Mud.SendEventMessage(Actor, EventMessageScope.Single, "You open the door.\r\n");
-				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " opens the door.\r\n");
-			}
-
 			Open = true;
 		}
 
-		void IOpenable.HandleClose(Actor Actor)
+		void IOpenableRules.HandleClose(Actor Actor)
 		{
-			if (Open)
-			{
-				if (Actor.ConnectedClient != null)
-					Mud.SendEventMessage(Actor, EventMessageScope.Single, "You close the door.\r\n");
-				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " closes the door.\r\n");
-			}
-
 			Open = false;
 		}
 
 		#endregion
 
-		bool Commands.ITakeRules.CanTake(Actor Actor)
+		bool ITakeRules.CanTake(Actor Actor)
 		{
 			return false;
 		}

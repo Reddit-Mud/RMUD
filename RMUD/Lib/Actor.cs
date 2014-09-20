@@ -5,13 +5,13 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Actor : Thing, Commands.ITakeRules, IContainer
+	public class Actor : Thing, ITakeRules, IContainer
 	{
 		public Client ConnectedClient;
 		public int Rank = 0;
 		public List<Thing> Inventory = new List<Thing>();
 
-		bool Commands.ITakeRules.CanTake(Actor Actor)
+		bool ITakeRules.CanTake(Actor Actor)
 		{
 			return false;
 		}
