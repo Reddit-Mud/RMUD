@@ -34,7 +34,7 @@ namespace RMUD.Commands
 
 				//Display objects in room
 				if (location.Contents.Count > 0)
-					builder.Append("Also here: " + String.Join(",", location.Contents.Select(t => t.Short)));
+					builder.Append("Also here: " + String.Join(", ", location.Contents.Select(t => t.Indefinite)));
 				else
 					builder.Append("There is nothing here.");
 				builder.Append("\r\n");
@@ -53,7 +53,7 @@ namespace RMUD.Commands
 						if (l.Door != null)
 						{
 							builder.Append(" [through ");
-							builder.Append(l.Door.Short);
+							builder.Append(l.Door.Definite);
 							builder.Append("]");
 						}
 

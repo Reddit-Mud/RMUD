@@ -27,14 +27,14 @@ namespace RMUD.Commands
 
 			var builder = new StringBuilder();
 
-			if (Actor.Inventory.Count == 0) builder.Append("You have nothing.");
+			if (Actor.Inventory.Count == 0) builder.Append("You have nothing.\r\n");
 			else
 			{
 				builder.Append("You are carrying..\r\n");
 				foreach (var item in Actor.Inventory)
 				{
 					builder.Append("  ");
-					builder.Append(item.Short);
+					builder.Append(item.Indefinite);
 					builder.Append("\r\n");
 				}
 			}

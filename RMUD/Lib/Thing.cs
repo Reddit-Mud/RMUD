@@ -9,7 +9,8 @@ namespace RMUD
 	{
 		public String Short;
 		public DescriptiveText Long { get; set; }
-		public String IndefiniteArticle = "a";
+		public virtual String Indefinite { get { return "a " + Short; } }
+		public virtual String Definite { get { return "the " + Short; } }
 		public List<String> Nouns { get; set; }
 		public MudObject Location;
 

@@ -42,8 +42,8 @@ namespace RMUD.Commands
 				{
 					if (thing != null)
 					{
-						Mud.SendEventMessage(Actor, EventMessageScope.Single, "You open " + thing.Short + "\r\n");
-						Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " opens " + thing.Short + "\r\n");
+						Mud.SendEventMessage(Actor, EventMessageScope.Single, "You open " + thing.Definite + "\r\n");
+						Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " opens " + thing.Definite + "\r\n");
 						target.HandleOpen(Actor);
 					}
 				}
@@ -72,8 +72,8 @@ namespace RMUD.Commands
 				{
 					if (thing != null)
 					{
-						Mud.SendEventMessage(Actor, EventMessageScope.Single, "You close " + thing.Short + "\r\n");
-						Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " closes " + thing.Short + "\r\n");
+						Mud.SendEventMessage(Actor, EventMessageScope.Single, "You close " + thing.Definite + "\r\n");
+						Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " closes " + thing.Definite + "\r\n");
 						target.HandleClose(Actor);
 					}
 				}

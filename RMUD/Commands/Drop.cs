@@ -42,8 +42,8 @@ namespace RMUD.Commands
 					return;
 				}
 
-				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You drop " + target.Short + "\r\n");
-				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " drops " + target.Short + "\r\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You drop " + target.Indefinite + "\r\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " drops " + target.Indefinite + "\r\n");
 				Thing.Move(target, Actor.Location);
 			}
 		}
