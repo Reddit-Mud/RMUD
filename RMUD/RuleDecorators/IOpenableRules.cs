@@ -8,7 +8,7 @@ namespace RMUD
 	/// <summary>
 	/// Decorates an object that can be open or closed, and interactive with the open and close commands.
 	/// </summary>
-	public interface IOpenable
+	public interface IOpenableRules
 	{
 		bool Open { get; }
 		bool CanOpen(Actor Actor);

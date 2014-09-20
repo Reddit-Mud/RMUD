@@ -20,11 +20,6 @@ namespace RMUD.Commands
 		}
 	}
 
-	public interface ITakeRules
-	{
-		bool CanTake(Actor Actor);
-	}
-
 	internal class TakeProcessor : ICommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)

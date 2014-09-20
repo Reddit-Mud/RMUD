@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Commands\OpenClose.cs" />
     <Compile Include="Commands\Drop.cs" />
     <Compile Include="Commands\Inventory.cs" />
     <Compile Include="Commands\Help.cs" />
@@ -94,7 +95,8 @@
     <Compile Include="DescriptiveText.cs" />
     <Compile Include="EventMessage.cs" />
     <Compile Include="Lib\Door.cs" />
-    <Compile Include="Lib\IOpenable.cs" />
+    <Compile Include="RuleDecorators\IDropRules.cs" />
+    <Compile Include="RuleDecorators\IOpenableRules.cs" />
     <Compile Include="Lib\IMatchable.cs" />
     <Compile Include="Lib\IDescribed.cs" />
     <Compile Include="Lib\Scenery.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="Lib\MudObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleDecorators\ITakeRules.cs" />
     <Compile Include="TelnetClientSource.cs" />
     <Compile Include="HelperExtensions.cs" />
   </ItemGroup>

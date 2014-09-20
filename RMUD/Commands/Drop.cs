@@ -18,11 +18,6 @@ namespace RMUD.Commands
 		}
 	}
 
-	public interface IDropRules
-	{
-		bool CanDrop(Actor Actor);
-	}
-
 	internal class DropProcessor : ICommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
