@@ -17,9 +17,12 @@ namespace RMUD
         public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
         {
             var R = new List<PossibleMatch>();
-			var possibleMatch = new PossibleMatch(State.Arguments, null);
-			possibleMatch.Arguments.Upsert(ArgumentName, State.Next);
-			R.Add(possibleMatch);
+			if (State.Next != null)
+			{
+				var possibleMatch = new PossibleMatch(State.Arguments, null);
+				possibleMatch.Arguments.Upsert(ArgumentName, State.Next);
+				R.Add(possibleMatch);
+			}
 			return R;
         }
 

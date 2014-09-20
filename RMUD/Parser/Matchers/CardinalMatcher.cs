@@ -17,6 +17,8 @@ namespace RMUD
         public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
         {
             var r = new List<PossibleMatch>();
+			if (State.Next == null) return r;
+
 			if (Link.IsCardinal(State.Next.Value.ToUpper()))
 			{
 				var match = new PossibleMatch(State.Arguments, State.Next.Next);
