@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Scenery : MudObject, IDescribed, IMatchable, Commands.ITakeRules
+	public class Scenery : MudObject, IDescribed, IMatchable, ITakeRules
 	{
 		public List<String> Nouns { get; set; }
 		public DescriptiveText Long { get; set; }
@@ -15,7 +15,7 @@ namespace RMUD
 			Nouns = new List<string>();
 		}
 
-		bool Commands.ITakeRules.CanTake(Actor Actor)
+		bool ITakeRules.CanTake(Actor Actor)
 		{
 			return false;
 		}
