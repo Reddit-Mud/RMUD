@@ -14,10 +14,10 @@ namespace RMUD
 		public List<Link> Links = new List<Link>();
 		public List<Scenery> Scenery = new List<Scenery>();
 
-		public void OpenLink(Direction Direction, String Destination)
+		public void OpenLink(Direction Direction, String Destination, Door Door = null)
 		{
 			Links.RemoveAll((l) => l.Direction == Direction);
-			Links.Add(new Link { Direction = Direction, Destination = Destination });
+			Links.Add(new Link { Direction = Direction, Destination = Destination, Door = Door });
 		}
 
 		public void AddScenery(String Description, params String[] Nouns)

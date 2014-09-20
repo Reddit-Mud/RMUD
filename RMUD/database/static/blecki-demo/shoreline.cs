@@ -13,7 +13,7 @@
 
 		OpenLink(RMUD.Direction.WEST, "blecki-demo/deck");
 		OpenLink(RMUD.Direction.NORTH, "blecki-demo/bluff");
-		OpenLink(RMUD.Direction.EAST, "blecki-demo/lighthouse_lobby");
+		OpenLink(RMUD.Direction.EAST, "blecki-demo/lighthouse_lobby", RMUD.Mud.GetObject("blecki-demo/lighthouse_door") as RMUD.Door);
 		OpenLink(RMUD.Direction.SOUTH, "blecki-demo/shack");
 	}
 }

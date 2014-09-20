@@ -67,6 +67,9 @@
     <Compile Include="database\static\blecki-demo\cabin.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="database\static\blecki-demo\lighthouse_door.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="database\static\blecki-demo\lighthouse_key.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
@@ -90,6 +93,8 @@
     </Compile>
     <Compile Include="DescriptiveText.cs" />
     <Compile Include="EventMessage.cs" />
+    <Compile Include="Lib\Door.cs" />
+    <Compile Include="Lib\IOpenable.cs" />
     <Compile Include="Lib\IMatchable.cs" />
     <Compile Include="Lib\IDescribed.cs" />
     <Compile Include="Lib\Scenery.cs" />

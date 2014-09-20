@@ -41,6 +41,7 @@ namespace RMUD
 		public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
 		{
 			var R = new List<PossibleMatch>();
+			if (State.Next == null) return R;
 
 			if ((Settings & ObjectMatcherSettings.UnderstandMe) == ObjectMatcherSettings.UnderstandMe)
 			{
