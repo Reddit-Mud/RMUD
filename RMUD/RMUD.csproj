@@ -92,6 +92,39 @@
     <Compile Include="database\static\blecki-demo\shoreline.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+    <None Include="database\static\trevoke-demo\area.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\bluff.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\cabin.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\deck.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\lighthouse_balcony.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\lighthouse_door.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\lighthouse_key.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\lighthouse_lobby.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\lighthouse_stairway.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\shack.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\trevoke-demo\shoreline.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="DescriptiveText.cs" />
     <Compile Include="EventMessage.cs" />
     <Compile Include="Lib\Door.cs" />
