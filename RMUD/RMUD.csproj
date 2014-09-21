@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Commands\LockUnlock.cs" />
     <Compile Include="Commands\OpenClose.cs" />
     <Compile Include="Commands\Drop.cs" />
     <Compile Include="Commands\Inventory.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="DescriptiveText.cs" />
     <Compile Include="EventMessage.cs" />
     <Compile Include="Lib\Door.cs" />
+    <Compile Include="RuleDecorators\ILockableRules.cs" />
     <Compile Include="RuleDecorators\IDropRules.cs" />
     <Compile Include="RuleDecorators\IOpenableRules.cs" />
     <Compile Include="Lib\IMatchable.cs" />
