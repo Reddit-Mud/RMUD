@@ -56,6 +56,36 @@
     <Compile Include="Commands\Go.cs" />
     <Compile Include="Commands\Examine.cs" />
     <Compile Include="Commands\Look.cs" />
+    <None Include="database\static\devrw-demo\area.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\devrw-demo\boat_cabin.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\devrw-demo\boat_deck.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\devrw-demo\boat_helm.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\devrw-demo\lighthouse.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\devrw-demo\lighthouse_balcony.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\devrw-demo\lighthouse_stairs.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\devrw-demo\rockybluff.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\devrw-demo\shack.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\devrw-demo\shoreline.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="database\static\piggy-demo\balcony.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -198,16 +228,6 @@
     <Compile Include="RuleDecorators\ITakeRules.cs" />
     <Compile Include="TelnetClientSource.cs" />
     <Compile Include="HelperExtensions.cs" />
-    <Compile Include="database\static\devrw-demo\area.cs" />
-    <Compile Include="database\static\devrw-demo\shoreline.cs" />
-    <Compile Include="database\static\devrw-demo\boat_deck.cs" />
-    <Compile Include="database\static\devrw-demo\boat_helm.cs" />
-    <Compile Include="database\static\devrw-demo\boat_cabin.cs" />
-    <Compile Include="database\static\devrw-demo\shack.cs" />
-    <Compile Include="database\static\devrw-demo\rockybluff.cs" />
-    <Compile Include="database\static\devrw-demo\lighthouse.cs" />
-    <Compile Include="database\static\devrw-demo\lighthouse_stairs.cs" />
-    <Compile Include="database\static\devrw-demo\lighthouse_balcony.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -217,7 +237,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="database\static\devrw-demo\" />
-  </ItemGroup>
 </Project>

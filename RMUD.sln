@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMUD", "RMUD\RMUD.csproj", "{A0AF04AB-7049-44B0-9496-7B2297AEE262}"
 EndProject
 Global
@@ -17,6 +17,9 @@ Global
 		{A0AF04AB-7049-44B0-9496-7B2297AEE262}.Release|Any CPU.ActiveCfg = Release|x86
 		{A0AF04AB-7049-44B0-9496-7B2297AEE262}.Release|x86.ActiveCfg = Release|x86
 		{A0AF04AB-7049-44B0-9496-7B2297AEE262}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = RMUD\RMUD.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
