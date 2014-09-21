@@ -58,6 +58,26 @@ namespace RMUD
 			return Cardinal.ToString().ToLower();
 		}
 
+		public static Direction Opposite(Direction Of)
+		{
+			switch (Of)
+			{
+				case Direction.NORTH: return Direction.SOUTH;
+				case Direction.NORTHEAST: return Direction.SOUTHWEST;
+				case Direction.EAST: return Direction.WEST;
+				case Direction.SOUTHEAST: return Direction.NORTHWEST;
+				case Direction.SOUTH: return Direction.NORTH;
+				case Direction.SOUTHWEST: return Direction.NORTHEAST;
+				case Direction.WEST: return Direction.EAST;
+				case Direction.NORTHWEST: return Direction.SOUTHEAST;
+				case Direction.UP: return Direction.DOWN;
+				case Direction.DOWN: return Direction.UP;
+				case Direction.IN: return Direction.OUT;
+				case Direction.OUT: return Direction.IN;
+				default: return Direction.NORTH;
+			}
+		}
+
 	}
 
 }
