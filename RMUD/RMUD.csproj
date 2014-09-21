@@ -11,7 +11,6 @@
     <RootNamespace>RMUD</RootNamespace>
     <AssemblyName>RMUD</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -26,7 +25,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -199,6 +197,16 @@
     <Compile Include="RuleDecorators\ITakeRules.cs" />
     <Compile Include="TelnetClientSource.cs" />
     <Compile Include="HelperExtensions.cs" />
+    <Compile Include="database\static\devrw-demo\area.cs" />
+    <Compile Include="database\static\devrw-demo\shoreline.cs" />
+    <Compile Include="database\static\devrw-demo\boat_deck.cs" />
+    <Compile Include="database\static\devrw-demo\boat_helm.cs" />
+    <Compile Include="database\static\devrw-demo\boat_cabin.cs" />
+    <Compile Include="database\static\devrw-demo\shack.cs" />
+    <Compile Include="database\static\devrw-demo\rockybluff.cs" />
+    <Compile Include="database\static\devrw-demo\lighthouse.cs" />
+    <Compile Include="database\static\devrw-demo\lighthouse_stairs.cs" />
+    <Compile Include="database\static\devrw-demo\lighthouse_balcony.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -208,4 +216,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="database\static\devrw-demo\" />
+  </ItemGroup>
 </Project>
