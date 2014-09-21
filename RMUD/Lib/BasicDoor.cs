@@ -5,9 +5,9 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Door : Thing, IOpenableRules, ITakeRules
+	public class BasicDoor : Thing, IOpenableRules, ITakeRules
 	{
-		public Door()
+		public BasicDoor()
 		{
 			this.Nouns.Add("DOOR");
 		}

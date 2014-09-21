@@ -11,10 +11,15 @@ namespace RMUD
 		public int Rank = 0;
 		public List<Thing> Inventory = new List<Thing>();
 
+		public override string Definite { get { return Short; } }
+		public override string Indefinite { get { return Short; } }
+
 		bool ITakeRules.CanTake(Actor Actor)
 		{
 			return false;
 		}
+
+		#region IContainer
 
 		public void Remove(Thing Thing)
 		{
@@ -37,5 +42,7 @@ namespace RMUD
 		{
 			return (Inventory as System.Collections.IEnumerable).GetEnumerator();
 		}
+
+		#endregion
 	}
 }

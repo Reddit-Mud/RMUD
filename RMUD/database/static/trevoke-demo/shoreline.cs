@@ -15,7 +15,7 @@
 
                 OpenLink(RMUD.Direction.WEST, "trevoke-demo/deck");
                 OpenLink(RMUD.Direction.NORTH, "trevoke-demo/bluff");
-                OpenLink(RMUD.Direction.EAST, "trevoke-demo/lighthouse_lobby", RMUD.Mud.GetObject("trevoke-demo/lighthouse_door") as RMUD.Door);
+                OpenLink(RMUD.Direction.EAST, "trevoke-demo/lighthouse_lobby", RMUD.Mud.GetObject("trevoke-demo/lighthouse_door"));
                 OpenLink(RMUD.Direction.SOUTH, "trevoke-demo/shack");
         }
 }

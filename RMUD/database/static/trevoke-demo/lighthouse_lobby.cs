@@ -10,7 +10,7 @@
 
                 AddScenery("Cobwebs. ... Okay, fine. There are also spiders and flies that got caught. And they look like no one's been here to clean them in a while. Then again, this is an abandoned lighthouse. Savvy?", "cobwebs");
 
-                OpenLink(RMUD.Direction.WEST, "trevoke-demo/shoreline", RMUD.Mud.GetObject("trevoke-demo/lighthouse_door") as RMUD.Door);
+                OpenLink(RMUD.Direction.WEST, "trevoke-demo/shoreline", RMUD.Mud.GetObject("trevoke-demo/lighthouse_door"));
                 OpenLink(RMUD.Direction.UP, "trevoke-demo/lighthouse_stairway");
         }
 }

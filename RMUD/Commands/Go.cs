@@ -32,19 +32,34 @@ namespace RMUD.Commands
 			{
 				if (link.Door != null)
 				{
-					if (!link.Door.Open)
+					var openable = link.Door as IOpenableRules;
+					if (openable != null && !openable.Open)
 					{
-						Mud.SendEventMessage(Actor, EventMessageScope.Single, "The door is closed.");
+						Mud.SendEventMessage(Actor, EventMessageScope.Single, "The door is closed.\r\n");
 						return;
 					}
 				}
 
 				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You went " + direction.Value.ToString().ToLower() + ".\r\n");
-				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " went " + direction.Value.ToString().ToLower() + "\r\n");
+				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".\r\n");
 				var destination = Mud.GetObject(link.Destination) as Room;
-				if (destination == null) throw new InvalidOperationException("Link does not lead to room.");
+				if (destination == null) throw new InvalidOperationException("[ERROR] Link does not lead to room.\r\n");
 				Thing.Move(Actor, destination);
 				Mud.EnqueuClientCommand(Actor.ConnectedClient, "look");
+
+				var arriveMessage = "";
+				if (direction.Value == Direction.DOWN)
+					arriveMessage = " arrives from above.\r\n";
+				else if (direction.Value == Direction.UP)
+					arriveMessage = " arrives from below.\r\n";
+				else if (direction.Value == Direction.IN)
+					arriveMessage = " arrives from outside.\r\n";
+				else if (direction.Value == Direction.OUT)
+					arriveMessage = " arrives from inside.\r\n";
+				else
+					arriveMessage = " arrives from the " + Link.Opposite(direction.Value).ToString().ToLower() + ".\r\n";
+
+				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + arriveMessage);
 			}
 		}
 	}
