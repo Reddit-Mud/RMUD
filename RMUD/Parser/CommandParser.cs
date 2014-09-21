@@ -77,6 +77,23 @@ namespace RMUD
 			}
             return null;
         }
-        
+
+		internal List<MatchedCommand> FindAllGoodMatches(String Command, Actor Actor)
+		{
+			var tokens = new LinkedList<String>(Command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
+			var rootMatch = new PossibleMatch(tokens.First);
+
+			var matchContext = new MatchContext { ExecutingActor = Actor };
+
+			var r = new List<MatchedCommand>();
+
+			foreach (var command in Commands)
+			{
+				var matches = command.Matcher.Match(rootMatch, matchContext);
+				r.AddRange(matches.Where(m => m.Next == null).Select(m => new MatchedCommand(command, m)));
+			}
+
+			return r;
+		}
     }
 }

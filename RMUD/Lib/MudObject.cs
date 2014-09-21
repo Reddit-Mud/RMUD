@@ -12,5 +12,10 @@ namespace RMUD
 
 		public virtual void Initialize() { }
 
+		public override string ToString()
+		{
+			return Path;
+		}
+
 	}
 }
