@@ -49,8 +49,14 @@ namespace RMUD
 		{
 			DatabaseLock.WaitOne();
 			ConnectedClients.Remove(client);
+			if (client.Player != null) client.Player.ConnectedClient = null;
 			DatabaseLock.ReleaseMutex();
-			EnqueuAction(() => { });
+			EnqueuAction(() => {
+				if (client.Player != null)
+				{
+					Thing.Move(client.Player, null);
+				}			
+			});
 		}
 
         public static void ClientConnected(Client client)

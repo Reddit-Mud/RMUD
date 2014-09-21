@@ -15,23 +15,35 @@ namespace RMUD
 
         override public void Send(String message)
         {
-            int bytesSent = 0;
+			if (Socket == null) return;
 
-            if (!String.IsNullOrEmpty(CommandQueue)) message = "\r" + message + CommandQueue;
-			
-            while (bytesSent < message.Length)
-            {
-                int thisChunk = 0;
-                for (int i = bytesSent; i < message.Length && thisChunk < 1024; ++i, ++thisChunk)
-                    SendBuffer[thisChunk] = (byte)message[i];
-                if (Socket != null && Socket.Connected) Socket.Send(SendBuffer, thisChunk, System.Net.Sockets.SocketFlags.None);
-                bytesSent += thisChunk;
-            }
+			try
+			{
+				int bytesSent = 0;
+
+				if (!String.IsNullOrEmpty(CommandQueue)) message = "\r" + message + CommandQueue;
+
+				while (bytesSent < message.Length)
+				{
+					int thisChunk = 0;
+					for (int i = bytesSent; i < message.Length && thisChunk < 1024; ++i, ++thisChunk)
+						SendBuffer[thisChunk] = (byte)message[i];
+					if (Socket != null && Socket.Connected) Socket.Send(SendBuffer, thisChunk, System.Net.Sockets.SocketFlags.None);
+					bytesSent += thisChunk;
+				}
+			}
+			catch (Exception e)
+			{
+				this.Socket = null;
+				Mud.ClientDisconnected(this);
+			}
         }
 
         override public void Disconnect()
         {
             if (Socket != null) Socket.Close();
+			Socket = null;
+			Mud.ClientDisconnected(this);
         }
     }
 
