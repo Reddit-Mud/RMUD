@@ -71,7 +71,7 @@ namespace RMUD
 			var parameters = new CompilerParameters();
 			parameters.GenerateInMemory = true;
 			parameters.GenerateExecutable = false;
-			parameters.OutputAssembly = Guid.NewGuid().ToString();
+			//parameters.OutputAssembly = Guid.NewGuid().ToString();
 			parameters.ReferencedAssemblies.Add("RMUD.exe");
 			CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, source);
 			if (compilationResults.Errors.Count > 0)
