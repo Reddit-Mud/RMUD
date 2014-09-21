@@ -12,8 +12,9 @@ namespace RMUD
         private static Mutex CommandLock = new Mutex();
         private static LinkedList<Action> PendingActions = new LinkedList<Action>();
         private static Thread ActionExecutionThread;
-        private static List<Client> ConnectedClients = new List<Client>();
-        private static Mutex DatabaseLock = new Mutex();
+        internal static List<Client> ConnectedClients = new List<Client>();
+        internal static Mutex DatabaseLock = new Mutex();
+		private static bool ShuttingDown = false;
 
 		internal static ParserCommandHandler ParserCommandHandler;
 		public static CommandParser Parser { get { return ParserCommandHandler.Parser; } }
@@ -100,9 +101,9 @@ namespace RMUD
             return true;
         }
 
-        public static void Join()
+        public static void Shutdown()
         {
-            ActionExecutionThread.Join();
+			ShuttingDown = true;
         }
 
 		public static void SendEventMessage(Actor Actor, EventMessageScope Scope, String Message)
@@ -159,7 +160,7 @@ namespace RMUD
 
         public static void CommandProcessingThread()
         {
-            while (true)
+            while (!ShuttingDown)
             {
                 System.Threading.Thread.Sleep(10);
 

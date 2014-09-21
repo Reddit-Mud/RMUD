@@ -11,6 +11,15 @@ namespace RMUD
         public String CommandQueue = "";
         public byte[] Storage = new byte[1024];
 
+		public override string ConnectionDescription
+		{
+			get
+			{
+				if (Socket != null) return Socket.RemoteEndPoint.ToString();
+				return "NOT CONNECTED";
+			}
+		}
+
         private static byte[] SendBuffer = new byte[1024];
 
         override public void Send(String message)
@@ -34,6 +43,9 @@ namespace RMUD
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine("Lost telnet client: " + this.Socket.RemoteEndPoint.ToString());
+				Console.WriteLine(e.Message);
+
 				this.Socket = null;
 				Mud.ClientDisconnected(this);
 			}
@@ -41,7 +53,11 @@ namespace RMUD
 
         override public void Disconnect()
         {
-            if (Socket != null) Socket.Close();
+			if (Socket != null)
+			{
+				Console.WriteLine("Telnet client left gracefully : " + Socket.RemoteEndPoint.ToString());
+				Socket.Close();
+			}
 			Socket = null;
 			Mud.ClientDisconnected(this);
         }
@@ -70,6 +86,11 @@ namespace RMUD
             Console.WriteLine("Listening on port " + Port);
         }
 
+		public void Shutdown()
+		{
+			ListenSocket.Close();
+		}
+
         void OnNewClient(IAsyncResult _asyncResult)
         {
             System.Net.Sockets.Socket ClientSocket = ListenSocket.EndAccept(_asyncResult);
@@ -77,7 +98,7 @@ namespace RMUD
 
             var NewClient = new TelnetClient { Socket = ClientSocket };
             ClientSocket.BeginReceive(NewClient.Storage, 0, 1024, System.Net.Sockets.SocketFlags.Partial, OnData, NewClient);
-            Console.WriteLine("New standard client: " + ClientSocket.RemoteEndPoint.ToString());
+            Console.WriteLine("New telnet client: " + ClientSocket.RemoteEndPoint.ToString());
             Mud.ClientConnected(NewClient);
         }
 
@@ -94,6 +115,7 @@ namespace RMUD
 
                 if (DataSize == 0 || Error != System.Net.Sockets.SocketError.Success)
                 {
+					Console.WriteLine("Lost telnet client: " + Client.Socket.RemoteEndPoint.ToString());
                     Mud.ClientDisconnected(Client);
                 }
                 else
@@ -123,6 +145,8 @@ namespace RMUD
             }
             catch (Exception e)
             {
+				Console.WriteLine("Lost telnet client: " + Client.Socket.RemoteEndPoint.ToString());
+				Console.WriteLine(e.Message);
                 Mud.ClientDisconnected(Client);
             }
         }
