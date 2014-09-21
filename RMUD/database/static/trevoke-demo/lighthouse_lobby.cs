@@ -4,7 +4,7 @@
         {
                 Short = "Lighthouse Lobby";
 
-                Long = "Impossibly, there is a single electric lightbulb illuminating the room. The stark light shows cobwebs, a spiraling staircase, and a hanging painting."
+				Long = "Impossibly, there is a single electric lightbulb illuminating the room. The stark light shows cobwebs, a spiraling staircase, and a hanging painting.";
 
                 AddScenery("The painting is of a man posing in the old-fashioned way. He is grinning with all his teeth and his eyes are wide open. The effect is a little disturbing.", "painting", "hanging painting");
 

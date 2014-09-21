@@ -19,7 +19,7 @@ public class area : RMUD.Room
                 Long = "Go IN to visit Trevoke's demo area.";
 
                 OpenLink(RMUD.Direction.IN, "trevoke-demo/shoreline");
-                OpenLink(RMUD.Direction.NORTH, "dummy");
+                OpenLink(RMUD.Direction.SOUTH, "dummy");
         }
 
 }
