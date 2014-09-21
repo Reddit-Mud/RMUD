@@ -2,7 +2,7 @@
 {
 	public override void Initialize()
 	{
-		Short = "DevRW's Demo Map";
+		Short = "DevRW's Demo Map (incomplete)";
 		Long = "A portal stands here, its inviting light shimmering brightly. Whispers echo ominously in the air...\n" +
 			"\"Go in, my child. Go in.";
 

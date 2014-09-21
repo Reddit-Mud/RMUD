@@ -1,17 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RMUD\database\static\devrw-demo\lighthouse.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RMUD\database\static\devrw-demo\area.cs">
     <Files>
-      <File FileName="RMUD\database\static\devrw-demo\lighthouse.cs" Line="63" Column="63" />
+      <File FileName="RMUD\database\static\devrw-demo\area.cs" Line="3" Column="3" />
+      <File FileName="RMUD\database\static\devrw-demo\lighthouse.cs" Line="1" Column="1" />
       <File FileName="RMUD\database\static\devrw-demo\lighthouse_balcony.cs" Line="1" Column="1" />
-      <File FileName="RMUD\database\static\devrw-demo\lighthouse_stairs.cs" Line="58" Column="58" />
-      <File FileName="RMUD\database\static\devrw-demo\rockybluff.cs" Line="22" Column="22" />
-      <File FileName="RMUD\database\static\devrw-demo\shack.cs" Line="12" Column="12" />
-      <File FileName="RMUD\database\static\devrw-demo\boat_cabin.cs" Line="112" Column="112" />
-      <File FileName="RMUD\database\static\devrw-demo\boat_deck.cs" Line="18" Column="18" />
-      <File FileName="RMUD\database\static\devrw-demo\area.cs" Line="1" Column="1" />
-      <File FileName="RMUD\database\static\devrw-demo\boat_helm.cs" Line="18" Column="18" />
-      <File FileName="RMUD\database\static\devrw-demo\shoreline.cs" Line="31" Column="31" />
+      <File FileName="RMUD\database\static\devrw-demo\lighthouse_stairs.cs" Line="1" Column="1" />
+      <File FileName="RMUD\database\static\devrw-demo\rockybluff.cs" Line="1" Column="1" />
+      <File FileName="RMUD\database\static\devrw-demo\shack.cs" Line="1" Column="1" />
+      <File FileName="RMUD\database\static\devrw-demo\boat_cabin.cs" Line="1" Column="1" />
+      <File FileName="RMUD\database\static\devrw-demo\boat_deck.cs" Line="1" Column="1" />
+      <File FileName="RMUD\database\static\devrw-demo\boat_helm.cs" Line="1" Column="1" />
+      <File FileName="RMUD\database\static\devrw-demo\shoreline.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
