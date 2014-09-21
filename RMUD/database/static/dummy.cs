@@ -23,6 +23,7 @@ public class dummy : RMUD.Room
 			
 		OpenLink(RMUD.Direction.SOUTH, "blecki-demo/area");
 		OpenLink(RMUD.Direction.NORTH, "trevoke-demo/area");
+		OpenLink(RMUD.Direction.WEST, "piggy-demo/area");
 
 	}
 }
