@@ -50,10 +50,10 @@ namespace RMUD.Commands
 
 						builder.Append(l.Direction.ToString().ToLower());
 
-						if (l.Door != null)
+						if (l.Door != null && l.Door is Thing)
 						{
 							builder.Append(" [through ");
-							builder.Append(l.Door.Definite);
+							builder.Append((l.Door as Thing).Definite);
 							builder.Append("]");
 						}
 

@@ -1,4 +1,4 @@
-﻿public class lighthouse_door : RMUD.Door
+﻿public class lighthouse_door : RMUD.BasicDoor
 {
         public override void Initialize()
         {

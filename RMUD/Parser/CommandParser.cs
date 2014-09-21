@@ -52,7 +52,7 @@ namespace RMUD
 					if (location != null)
 					{
 						CachedObjectsInScope.AddRange(location.Contents);
-						CachedObjectsInScope.AddRange(location.Links.Where(l => l.Door != null).Select(l => l.Door));
+						CachedObjectsInScope.AddRange(location.Links.Where(l => (l.Door != null && l.Door is IMatchable)).Select(l => l.Door as IMatchable));
 						CachedObjectsInScope.AddRange(location.Scenery);
 					}
 						

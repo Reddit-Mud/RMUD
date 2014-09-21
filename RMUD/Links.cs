@@ -25,7 +25,7 @@ namespace RMUD
 	{
 		public Direction Direction;
 		public String Destination;
-		public Door Door;
+		public MudObject Door;
 
 		private static List<String> Names = new List<String>
         { 
