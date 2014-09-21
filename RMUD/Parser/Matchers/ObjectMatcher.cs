@@ -17,24 +17,22 @@ namespace RMUD
 		List<IMatchable> GetObjects(PossibleMatch State, CommandParser.MatchContext Context);
 	}
 
-	public class InScopeObjectSource : IObjectSource
-	{
-		public List<IMatchable> GetObjects(PossibleMatch State, CommandParser.MatchContext Context)
-		{
-			return new List<IMatchable>(Context.ObjectsInScope.Select(t => t as IMatchable));
-		}
-	}
-
     public class ObjectMatcher : ICommandTokenMatcher
     {
 		public String CaptureName;
 		public ObjectMatcherSettings Settings;
 		public IObjectSource ObjectSource;
+		public Func<IMatchable, int> ScoreResults = null;
 
-		public ObjectMatcher(String CaptureName, IObjectSource ObjectSource, ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
+		public ObjectMatcher(
+			String CaptureName,
+			IObjectSource ObjectSource, 
+			Func<IMatchable,int> ScoreResults = null,
+			ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
 		{
 			this.CaptureName = CaptureName;
 			this.ObjectSource = ObjectSource;
+			this.ScoreResults = ScoreResults;
 			this.Settings = Settings;
 		}
 
@@ -66,7 +64,24 @@ namespace RMUD
 				if (matched)
 				{
 					possibleMatch.Arguments.Upsert(CaptureName, thing);
-					R.Add(possibleMatch);
+
+					if (ScoreResults != null)
+					{
+						var score = ScoreResults(thing);
+						possibleMatch.Arguments.Upsert("SCORE", score);
+
+						var insertIndex = 0;
+						for (insertIndex = 0; insertIndex < R.Count; ++insertIndex)
+						{
+							if (score > (R[insertIndex].Arguments["SCORE"] as int?).Value) break;
+						}
+
+						R.Insert(insertIndex, possibleMatch);
+					}
+					else
+					{
+						R.Add(possibleMatch);
+					}
 				}
 			}
 			return R;
