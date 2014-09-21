@@ -155,7 +155,8 @@
     </None>
     <Compile Include="DescriptiveText.cs" />
     <Compile Include="EventMessage.cs" />
-    <Compile Include="Lib\Door.cs" />
+    <Compile Include="Lib\BasicDoor.cs" />
+    <Compile Include="Lib\LockedDoor.cs" />
     <Compile Include="RuleDecorators\ILockableRules.cs" />
     <Compile Include="RuleDecorators\IDropRules.cs" />
     <Compile Include="RuleDecorators\IOpenableRules.cs" />
