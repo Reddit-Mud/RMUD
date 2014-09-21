@@ -9,6 +9,7 @@ namespace RMUD
     {
         public virtual void Send(String message) { }
         public virtual void Disconnect() { }
+		public virtual String ConnectionDescription { get { throw new NotImplementedException(); } }
 
         public Actor Player;
 		public IClientCommandHandler CommandHandler;
