@@ -31,6 +31,12 @@ namespace RMUD.Commands
 			}
 			else
 			{
+				if (Actor.Contains(target))
+				{
+					Actor.ConnectedClient.Send("You are already holding that.\r\n");
+					return;
+				}
+
 				var takeRules = target as ITakeRules;
 				if (takeRules != null && !takeRules.CanTake(Actor))
 				{
