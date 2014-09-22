@@ -58,6 +58,16 @@ namespace RMUD
 						Client.Send(builder.ToString());
 					}
 				}
+				else if (tokens[0].ToUpper() == "@TIME")
+				{
+					var startTime = DateTime.Now;
+					var match = Parser.ParseCommand(Command.Substring(6), Client.Player);
+					var endTime = DateTime.Now;
+
+					var elapsedTime = endTime - startTime;
+
+					Client.Send(String.Format("Command matching took {0:n0} milliseconds.\r\n", elapsedTime.TotalMilliseconds));
+				}
 				else
 				{
 					Client.Send("I don't recognize that debugging command.");

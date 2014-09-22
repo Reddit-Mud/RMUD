@@ -19,28 +19,7 @@ namespace RMUD
             StaticPath = basePath + "static/";
             SerializedPath = basePath + "serialized/";
         }
-
-        public static MudObject CreateObject(String path)
-        {
-			if (GetObject(path) != null) return null;
-            NamedObjects.Upsert(path, new MudObject{Path = path});
-            return NamedObjects[path];
-        }
-
-        public static MudObject CreateUniquelyNamedObject(String basePath)
-        {
-            while (true)
-            {
-                var randomPart = Guid.NewGuid();
-                var path = basePath + "/" + randomPart.ToString();
-				if (GetObject(path) == null)
-                {
-					NamedObjects.Upsert(path, new MudObject { Path = path });
-                    return NamedObjects[path];
-                }
-            }
-        }
-
+		
         public static MudObject GetObject(String Path)
         {
             if (NamedObjects.ContainsKey(Path)) return NamedObjects[Path];
