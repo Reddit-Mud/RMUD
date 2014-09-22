@@ -45,6 +45,8 @@ namespace RMUD.Commands
 				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You drop " + target.Indefinite + "\r\n");
 				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " drops " + target.Indefinite + "\r\n");
 				Thing.Move(target, Actor.Location);
+
+				if (dropRules != null) dropRules.HandleDrop(Actor);
 			}
 		}
 	}

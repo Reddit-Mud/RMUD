@@ -49,6 +49,8 @@ namespace RMUD
 			return false;
 		}
 
+		void ITakeRules.HandleTake(Actor Actor) { }
+
 		#region ILockableRules
 
 		public bool Locked { get; set; }

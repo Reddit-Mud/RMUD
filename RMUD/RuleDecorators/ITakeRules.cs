@@ -8,5 +8,6 @@ namespace RMUD
 	public interface ITakeRules
 	{
 		bool CanTake(Actor Actor);
+		void HandleTake(Actor Actor);
 	}
 }

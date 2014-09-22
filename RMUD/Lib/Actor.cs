@@ -19,6 +19,8 @@ namespace RMUD
 			return false;
 		}
 
+		void ITakeRules.HandleTake(Actor Actor) { }
+
 		#region IContainer
 
 		public void Remove(Thing Thing)

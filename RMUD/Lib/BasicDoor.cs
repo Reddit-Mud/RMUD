@@ -42,5 +42,7 @@ namespace RMUD
 		{
 			return false;
 		}
+
+		void ITakeRules.HandleTake(Actor Actor) { }
 	}
 }
