@@ -108,14 +108,18 @@ namespace RMUD
 			}
 		}
 
-		private static MudObject ReloadObject(String Path)
+		internal static MudObject ReloadObject(String Path)
 		{
 			if (NamedObjects.ContainsKey(Path))
 			{
 				var existing = NamedObjects[Path];
 				var newObject = LoadObject(Path);
+				if (newObject == null) return null;
+
 				NamedObjects.Upsert(Path, newObject);
 				newObject.Initialize();
+
+				//Preserve contents
 				if (existing is IContainer && newObject is IContainer)
 				{
 					foreach (var thing in (existing as IContainer))
@@ -124,6 +128,17 @@ namespace RMUD
 						thing.Location = newObject;
 					}
 				}
+
+				//Preserve location
+				if (existing is Thing && newObject is Thing)
+				{
+					if ((existing as Thing).Location != null)
+					{
+						Thing.Move(newObject as Thing, (existing as Thing).Location);
+						Thing.Move(existing as Thing, null);
+					}
+				}
+
 				return newObject;
 			}
 			else

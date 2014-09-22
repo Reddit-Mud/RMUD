@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="CommandLine.cs" />
+    <Compile Include="Commands\Reload.cs" />
     <Compile Include="Commands\LockUnlock.cs" />
     <Compile Include="Commands\OpenClose.cs" />
     <Compile Include="Commands\Drop.cs" />
