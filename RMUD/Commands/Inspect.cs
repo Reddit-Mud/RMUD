@@ -37,6 +37,14 @@ namespace RMUD.Commands
 			var data = new StringBuilder();
 			data.Append(target.GetType().Name);
 			data.Append("\r\n");
+
+			foreach (var @interface in target.GetType().GetInterfaces())
+			{
+				data.Append("Implements ");
+				data.Append(@interface.Name);
+				data.Append("\r\n");
+			}
+
 			foreach (var field in target.GetType().GetFields())
 			{
 				data.Append(field.FieldType.Name);
@@ -46,6 +54,30 @@ namespace RMUD.Commands
 				var value = field.GetValue(target);
 				if (value == null) data.Append("null");
 				else data.Append(value.ToString());
+				data.Append("\r\n");
+			}
+
+			foreach (var property in target.GetType().GetProperties())
+			{
+				if (!property.CanWrite) data.Append("readonly ");
+				data.Append(property.PropertyType.Name);
+				data.Append(" ");
+				data.Append(property.Name);
+				if (property.CanRead)
+				{
+					data.Append(" = ");
+					try
+					{
+						var value = property.GetValue(target, null);
+						if (value == null) data.Append("null");
+						else data.Append(value.ToString());
+					}
+					catch (Exception e)
+					{
+						data.Append("[Error retrieving value]");
+					}
+				}
+
 				data.Append("\r\n");
 			}
 
