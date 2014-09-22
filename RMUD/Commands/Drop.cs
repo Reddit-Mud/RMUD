@@ -12,7 +12,7 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("DROP", false),
-					new ObjectMatcher("TARGET", new InScopeObjectSource())),
+					new ObjectMatcher("TARGET", new InScopeObjectSource(), ObjectMatcher.PreferHeld)),
 				new DropProcessor(),
 				"Drop something");
 		}
@@ -29,7 +29,7 @@ namespace RMUD.Commands
 			}
 			else
 			{
-				if (!Object.ReferenceEquals(target.Location, Actor))
+				if (!Actor.Contains(target))
 				{
 					Actor.ConnectedClient.Send("You aren't holding that.\r\n");
 					return;
