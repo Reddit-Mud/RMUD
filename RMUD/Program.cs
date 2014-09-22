@@ -5,6 +5,9 @@ using System.Text;
 using System.Net.Sockets;
 using System.IO;
 using System.Net;
+using Raven.Abstractions.Extensions;
+using Raven.Client;
+using Raven.Database.Server.Responders;
 
 namespace RMUD
 {
@@ -44,34 +47,54 @@ namespace RMUD
 
 			while (true)
 			{
-				var command = Console.ReadLine();
+				var command = Console.ReadLine().ToUpper();
 
-				if (command.ToUpper() == "STOP")
-					break;
-				else if (command.ToUpper() == "CLIENTS")
-				{
-					Mud.DatabaseLock.WaitOne();
+			    if (!String.IsNullOrWhiteSpace(command))
+			    {
+			        Console.WriteLine(command); // Echo
 
-					foreach (var client in Mud.ConnectedClients)
-					{
-						Console.Write(client.ConnectionDescription);
-						if (client.Player != null)
-						{
-							Console.Write(" -- ");
-							Console.Write(client.Player.Short);
-						}
-						Console.WriteLine();
-					}
 
-					Mud.DatabaseLock.ReleaseMutex();
-				}
-				else if (command.ToUpper() == "MEMORY")
-				{
-					var mem = System.GC.GetTotalMemory(false);
-					var kb = mem / 1024.0f;
-					Console.WriteLine("Memory usage: " + String.Format("{0:n0}", kb) + " kb");
-					Console.WriteLine("Named objects loaded: " + Mud.NamedObjects.Count);
-				}
+			        if (command == "STOP")
+			            break;
+			        else if (command == "CLIENTS")
+			        {
+			            Mud.DatabaseLock.WaitOne();
+
+			            foreach (var client in Mud.ConnectedClients)
+			            {
+			                Console.Write(client.ConnectionDescription);
+			                if (client.Player != null)
+			                {
+			                    Console.Write(" -- ");
+			                    Console.Write(client.Player.Short);
+			                }
+			                Console.WriteLine();
+			            }
+
+			            Mud.DatabaseLock.ReleaseMutex();
+			        }
+			        else if (command == "MEMORY")
+			        {
+			            var mem = System.GC.GetTotalMemory(false);
+			            var kb = mem/1024.0f;
+			            Console.WriteLine("Memory usage: " + String.Format("{0:n0}", kb) + " kb");
+			            Console.WriteLine("Named objects loaded: " + Mud.NamedObjects.Count);
+			        }
+			        else if (command == "SAVE")
+			        {
+			            Console.WriteLine("Saving {0} NamedObjects", Mud.NamedObjects.Count);
+			            Mud.DatabaseLock.WaitOne();
+			            using (var session = Mud.PersistentStore.BulkInsert())
+			            {
+			                foreach (var obj in Mud.NamedObjects)
+			                {
+			                    Console.WriteLine("Saving {0}", obj.Value.Id);
+			                    session.Store(obj.Value);
+			                }
+			            }
+			            Mud.DatabaseLock.ReleaseMutex();
+			        }
+			    }
 
 			}
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Raven.Client;
 
 namespace RMUD
 {
@@ -50,5 +51,17 @@ namespace RMUD
 		{
 			return (Contents as System.Collections.IEnumerable).GetEnumerator();
 		}
+
+        public override void Save()
+        {
+            base.Save();
+            using (IDocumentSession session = Mud.PersistentStore.OpenSession())
+            {
+                //Thing existingStore = session.Load<Thing>(this.Id);
+                session.Store(this);
+                session.SaveChanges();
+            }
+
+        }
 	}
 }

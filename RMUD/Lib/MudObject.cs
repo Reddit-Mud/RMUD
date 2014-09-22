@@ -7,15 +7,17 @@ namespace RMUD
 {
 	public class MudObject
 	{
-		public String Path { get; internal set; }
-		public bool Is(String other) { return Path == other; }
+		public String Id { get; internal set; }
+        public bool Is(String other) { return Id == other; }
 
 		public virtual void Initialize() { }
 
 		public override string ToString()
 		{
-			return Path;
+            return Id;
 		}
+
+        public virtual void Save() { }
 
 	}
 }

@@ -5,50 +5,56 @@ using System.Text;
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.Reflection;
+using Raven.Client.Embedded;
 
 namespace RMUD
 {
     public static partial class Mud
     {
         public static String StaticPath { get; private set; }
+        public static String PersistentPath { get; private set; }
         public static String SerializedPath { get; private set; }
         internal static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
+        public static EmbeddableDocumentStore PersistentStore { get; private set; }
 
         internal static void InitializeDatabase(String basePath)
         {
             StaticPath = basePath + "static/";
             SerializedPath = basePath + "serialized/";
+            PersistentPath = basePath + "persistent/";
+            PersistentStore = new EmbeddableDocumentStore();// { DataDirectory = PersistentPath.Replace("\\","/") };
+            PersistentStore.Initialize();
         }
 
-        public static MudObject CreateObject(String path)
+        public static MudObject CreateObject(String id)
         {
-			if (GetObject(path) != null) return null;
-            NamedObjects.Upsert(path, new MudObject{Path = path});
-            return NamedObjects[path];
+			if (GetObject(id) != null) return null;
+            NamedObjects.Upsert(id, new MudObject{Id = id});
+            return NamedObjects[id];
         }
 
-        public static MudObject CreateUniquelyNamedObject(String basePath)
+        public static MudObject CreateUniquelyNamedObject(String baseId)
         {
             while (true)
             {
                 var randomPart = Guid.NewGuid();
-                var path = basePath + "/" + randomPart.ToString();
-				if (GetObject(path) == null)
+                var id = baseId + "/" + randomPart.ToString();
+				if (GetObject(id) == null)
                 {
-					NamedObjects.Upsert(path, new MudObject { Path = path });
-                    return NamedObjects[path];
+					NamedObjects.Upsert(id, new MudObject { Id = id });
+                    return NamedObjects[id];
                 }
             }
         }
 
-        public static MudObject GetObject(String Path)
+        public static MudObject GetObject(String id)
         {
-            if (NamedObjects.ContainsKey(Path)) return NamedObjects[Path];
+            if (NamedObjects.ContainsKey(id)) return NamedObjects[id];
 			
-			var result = LoadObject(Path);
+			var result = LoadObject(id);
 			if (result != null)
 			{
-				NamedObjects.Upsert(Path, result);
+				NamedObjects.Upsert(id, result);
 				result.Initialize();
 			}
 			return result;
@@ -98,7 +104,7 @@ namespace RMUD
 			var newMudObject = assembly.CreateInstance(objectLeafName) as MudObject;
 			if (newMudObject != null)
 			{
-				newMudObject.Path = Path;
+				newMudObject.Id = Path;
 				return newMudObject;
 			}
 			else
@@ -108,15 +114,15 @@ namespace RMUD
 			}
 		}
 
-		internal static MudObject ReloadObject(String Path)
+		internal static MudObject ReloadObject(String id)
 		{
-			if (NamedObjects.ContainsKey(Path))
+			if (NamedObjects.ContainsKey(id))
 			{
-				var existing = NamedObjects[Path];
-				var newObject = LoadObject(Path);
+				var newObject = LoadObject(id);
 				if (newObject == null) return null;
+                var existing = NamedObjects[id];
 
-				NamedObjects.Upsert(Path, newObject);
+				NamedObjects.Upsert(id, newObject);
 				newObject.Initialize();
 
 				//Preserve contents
@@ -142,7 +148,7 @@ namespace RMUD
 				return newObject;
 			}
 			else
-				return GetObject(Path);
+				return GetObject(id);
 		}
     }
 }

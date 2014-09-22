@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Raven.Client;
 
 namespace RMUD
 {
@@ -37,5 +38,17 @@ namespace RMUD
 				Thing.Location = Destination;
 			}
 		}
+
+	    public override void Save()
+	    {
+	        base.Save();
+            using (IDocumentSession session = Mud.PersistentStore.OpenSession())
+            {
+                //Thing existingStore = session.Load<Thing>(this.Id);
+                session.Store(this);
+                session.SaveChanges();
+            }
+            
+	    }
 	}
 }
