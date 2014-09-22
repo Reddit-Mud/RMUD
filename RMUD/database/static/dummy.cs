@@ -6,7 +6,7 @@ public class dummy : RMUD.Room
 
 	public override void Initialize()
 	{
-		Short = "dummy";
+		Short = "Demo Hub";
 		Long = new RMUD.DescriptiveText((v, o) =>
 		{
 			TimesViewed += 1;
@@ -24,6 +24,7 @@ public class dummy : RMUD.Room
 		OpenLink(RMUD.Direction.SOUTH, "blecki-demo/area");
 		OpenLink(RMUD.Direction.NORTH, "trevoke-demo/area");
 		OpenLink(RMUD.Direction.WEST, "piggy-demo/area");
+		OpenLink (RMUD.Direction.EAST, "devrw-demo/area");
 
 	}
 }
