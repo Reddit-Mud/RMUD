@@ -12,7 +12,7 @@ namespace RMUD
     {
         public static String StaticPath { get; private set; }
         public static String SerializedPath { get; private set; }
-        private static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
+        internal static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
 
         internal static void InitializeDatabase(String basePath)
         {

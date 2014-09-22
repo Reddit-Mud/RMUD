@@ -65,6 +65,14 @@ namespace RMUD
 
 					Mud.DatabaseLock.ReleaseMutex();
 				}
+				else if (command.ToUpper() == "MEMORY")
+				{
+					var mem = System.GC.GetTotalMemory(false);
+					var kb = mem / 1024.0f;
+					Console.WriteLine("Memory usage: " + String.Format("{0:n0}", kb) + " kb");
+					Console.WriteLine("Named objects loaded: " + Mud.NamedObjects.Count);
+				}
+
 			}
 
 			telnetListener.Shutdown();
