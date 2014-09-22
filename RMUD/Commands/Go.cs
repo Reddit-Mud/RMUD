@@ -42,7 +42,11 @@ namespace RMUD.Commands
 
 				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You went " + direction.Value.ToString().ToLower() + ".\r\n");
 				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".\r\n");
-				var destination = Mud.GetObject(link.Destination) as Room;
+				var destination = Mud.GetObject(link.Destination, s =>
+				{
+					if (Actor.ConnectedClient != null)
+						Actor.ConnectedClient.Send(s + "\r\n");
+				}) as Room;
 				if (destination == null) throw new InvalidOperationException("[ERROR] Link does not lead to room.\r\n");
 				Thing.Move(Actor, destination);
 				Mud.EnqueuClientCommand(Actor.ConnectedClient, "look");

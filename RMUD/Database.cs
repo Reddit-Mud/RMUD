@@ -26,32 +26,11 @@ namespace RMUD
             PersistentStore.Initialize();
         }
 
-        public static MudObject CreateObject(String id)
-        {
-			if (GetObject(id) != null) return null;
-            NamedObjects.Upsert(id, new MudObject{Id = id});
-            return NamedObjects[id];
-        }
-
-        public static MudObject CreateUniquelyNamedObject(String baseId)
-        {
-            while (true)
-            {
-                var randomPart = Guid.NewGuid();
-                var id = baseId + "/" + randomPart.ToString();
-				if (GetObject(id) == null)
-                {
-					NamedObjects.Upsert(id, new MudObject { Id = id });
-                    return NamedObjects[id];
-                }
-            }
-        }
-
-        public static MudObject GetObject(String id)
+        public static MudObject GetObject(String id, Action<String> ReportErrors = null)
         {
             if (NamedObjects.ContainsKey(id)) return NamedObjects[id];
 			
-			var result = LoadObject(id);
+			var result = LoadObject(id, ReportErrors);
 			if (result != null)
 			{
 				NamedObjects.Upsert(id, result);
@@ -60,13 +39,14 @@ namespace RMUD
 			return result;
         }
 
-		public static Assembly CompileScript(String Path)
+		public static Assembly CompileScript(String Path, Action<String> ReportErrors)
 		{
 			Console.WriteLine("Compiling " + Path);
 
 			if (!System.IO.File.Exists(Path))
 			{
 				Console.WriteLine("Could not find file " + Path);
+				if (ReportErrors != null) ReportErrors("Could not find file " + Path);
 				return null;
 			}
 
@@ -83,7 +63,10 @@ namespace RMUD
 			if (compilationResults.Errors.Count > 0)
 			{
 				foreach (var error in compilationResults.Errors)
+				{
 					Console.WriteLine(error.ToString());
+					if (ReportErrors != null) ReportErrors(error.ToString());
+				}
 				Console.WriteLine(compilationResults.Errors.Count.ToString() + " errors in " + Path);
 				return null;
 			}
@@ -92,19 +75,19 @@ namespace RMUD
 			return compilationResults.CompiledAssembly;
 		}
 
-        private static MudObject LoadObject(String Path)
+        private static MudObject LoadObject(String id, Action<String> ReportErrors)
         {
-			Console.WriteLine("Loading object " + StaticPath + Path);
+			Console.WriteLine("Loading object " + StaticPath + id);
 
-			var staticObjectPath = StaticPath + Path + ".cs";
-			var assembly = CompileScript(staticObjectPath);
+			var staticObjectPath = StaticPath + id + ".cs";
+			var assembly = CompileScript(staticObjectPath, ReportErrors);
 			if (assembly == null) return null;
 
-			var objectLeafName = System.IO.Path.GetFileNameWithoutExtension(Path);
+			var objectLeafName = System.IO.Path.GetFileNameWithoutExtension(id);
 			var newMudObject = assembly.CreateInstance(objectLeafName) as MudObject;
 			if (newMudObject != null)
 			{
-				newMudObject.Id = Path;
+				newMudObject.Id = id;
 				return newMudObject;
 			}
 			else
@@ -114,11 +97,11 @@ namespace RMUD
 			}
 		}
 
-		internal static MudObject ReloadObject(String id)
+		internal static MudObject ReloadObject(String id, Action<String> ReportErrors)
 		{
 			if (NamedObjects.ContainsKey(id))
 			{
-				var newObject = LoadObject(id);
+				var newObject = LoadObject(id, ReportErrors);
 				if (newObject == null) return null;
                 var existing = NamedObjects[id];
 
@@ -148,7 +131,7 @@ namespace RMUD
 				return newObject;
 			}
 			else
-				return GetObject(id);
+				return GetObject(id, ReportErrors);
 		}
     }
 }

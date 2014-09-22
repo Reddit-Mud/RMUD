@@ -21,7 +21,7 @@ namespace RMUD
 					a.Short = m.Arguments["NAME"].ToString();
 					a.ConnectedClient.CommandHandler = Mud.ParserCommandHandler;
 					a.Rank = 500; //Everyone is a wizard! 
-					Thing.Move(a, Mud.GetObject("dummy"));
+					Thing.Move(a, Mud.GetObject("dummy", s => a.ConnectedClient.Send(s + "\r\n")));
 					Mud.EnqueuClientCommand(a.ConnectedClient, "look");
 				}),
 				"Login to an existing account.");

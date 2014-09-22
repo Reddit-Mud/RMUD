@@ -24,7 +24,11 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["TARGET"].ToString();
-			var newObject = Mud.ReloadObject(target);
+			var newObject = Mud.ReloadObject(target, s =>
+				{
+					if (Actor.ConnectedClient != null)
+						Actor.ConnectedClient.Send(s + "\r\n");
+				});
 
 			if (Actor.ConnectedClient == null) return;
 
