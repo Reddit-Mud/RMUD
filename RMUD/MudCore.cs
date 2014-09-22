@@ -66,7 +66,7 @@ namespace RMUD
 			client.Player.ConnectedClient = client;
 			client.CommandHandler = LoginCommandHandler;
 
-			var settings = GetObject("settings") as Settings;
+			var settings = GetObject("settings", s => client.Send(s + "\r\n")) as Settings;
 			client.Send(settings.Banner);
 			client.Send(settings.MessageOfTheDay);
 

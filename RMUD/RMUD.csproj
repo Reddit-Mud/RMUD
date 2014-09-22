@@ -114,39 +114,39 @@
     <None Include="database\static\settings.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="database\static\blecki-demo\area.cs">
+    <None Include="database\static\blecki-demo\area.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\bluff.cs">
+    </None>
+    <None Include="database\static\blecki-demo\bluff.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\cabin.cs">
+    </None>
+    <None Include="database\static\blecki-demo\cabin.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\lighthouse_door.cs">
+    </None>
+    <None Include="database\static\blecki-demo\lighthouse_door.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\lighthouse_key.cs">
+    </None>
+    <None Include="database\static\blecki-demo\lighthouse_key.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\lighthouse_balcony.cs">
+    </None>
+    <None Include="database\static\blecki-demo\lighthouse_balcony.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\lighthouse_stairway.cs">
+    </None>
+    <None Include="database\static\blecki-demo\lighthouse_stairway.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\lighthouse_lobby.cs">
+    </None>
+    <None Include="database\static\blecki-demo\lighthouse_lobby.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\shack.cs">
+    </None>
+    <None Include="database\static\blecki-demo\shack.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\deck.cs">
+    </None>
+    <None Include="database\static\blecki-demo\deck.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\blecki-demo\shoreline.cs">
+    </None>
+    <None Include="database\static\blecki-demo\shoreline.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <None Include="database\static\trevoke-demo\area.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
