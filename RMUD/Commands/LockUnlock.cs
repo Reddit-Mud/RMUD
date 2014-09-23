@@ -12,9 +12,14 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("LOCK", false),
-					new ObjectMatcher("TARGET", new InScopeObjectSource()),
+					new ObjectMatcher("TARGET", new InScopeObjectSource(), 
+                        (actor, matchable) => {
+                            if (matchable is ILockableRules && !(matchable as ILockableRules).Locked)
+                                return 1;
+                            return -1;
+                        }),
 					new KeyWord("WITH", true),
-					new ObjectMatcher("KEY", new InScopeObjectSource())),
+					new ObjectMatcher("KEY", new InScopeObjectSource(), ObjectMatcher.PreferHeld)),
 				new LockProcessor(),
 				"Lock something with something");
 
@@ -23,9 +28,15 @@ namespace RMUD.Commands
 					new Or(
 						new KeyWord("UNLOCK", false),
 						new KeyWord("OPEN", false)),
-					new ObjectMatcher("TARGET", new InScopeObjectSource()),
-					new KeyWord("WITH", true),
-					new ObjectMatcher("KEY", new InScopeObjectSource())),
+                    new ObjectMatcher("TARGET", new InScopeObjectSource(),
+                        (actor, matchable) =>
+                        {
+                            if (matchable is ILockableRules && (matchable as ILockableRules).Locked)
+                                return 1;
+                            return -1;
+                        }), 
+                    new KeyWord("WITH", true),
+					new ObjectMatcher("KEY", new InScopeObjectSource(), ObjectMatcher.PreferHeld)),
 				new UnlockProcessor(),
 				"Unlock something with something");
 		}
