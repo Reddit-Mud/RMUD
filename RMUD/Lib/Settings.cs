@@ -9,5 +9,6 @@ namespace RMUD
 	{
 		public String Banner;
 		public String MessageOfTheDay;
+        public String NewPlayerStartRoom;
 	}
 }
