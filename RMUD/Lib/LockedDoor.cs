@@ -7,7 +7,7 @@ namespace RMUD
 {
 	public class LockedDoor : Thing, IOpenableRules, ITakeRules, ILockableRules
 	{
-		public String Key;
+        public Func<Thing, bool> IsMatchingKey;
 
 		public LockedDoor()
 		{
@@ -59,14 +59,14 @@ namespace RMUD
 		{
 			if (Open) return false;
 			if (Locked) return false;
-			return Key.Is(this.Key);
+            return IsMatchingKey(Key);
 		}
 
 		bool ILockableRules.CanUnlock(Actor Actor, Thing Key)
 		{
 			if (Open) return false;
 			if (!Locked) return false;
-			return Key.Is(this.Key);
+            return IsMatchingKey(Key);
 		}
 
 		void ILockableRules.HandleLock(Actor Actor, Thing Key)

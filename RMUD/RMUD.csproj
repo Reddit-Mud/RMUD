@@ -183,6 +183,9 @@
     <None Include="database\static\piggy-demo\area.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="database\static\testing\disambig.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="DescriptiveText.cs" />
     <Compile Include="EventMessage.cs" />
     <Compile Include="Lib\BasicDoor.cs" />
