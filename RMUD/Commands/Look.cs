@@ -32,9 +32,11 @@ namespace RMUD.Commands
 				builder.Append(location.Long.Expand(Actor, location));
 				builder.Append("\r\n");
 
+                var visibleThings = new List<Thing>(location.Contents.Where(t => !Object.ReferenceEquals(t, Actor)));
+
 				//Display objects in room
-				if (location.Contents.Count > 0)
-					builder.Append("Also here: " + String.Join(", ", location.Contents.Select(t => t.Indefinite)));
+				if (visibleThings.Count > 0)
+					builder.Append("Also here: " + String.Join(", ", visibleThings.Select(t => t.Indefinite)));
 				else
 					builder.Append("There is nothing here.");
 				builder.Append("\r\n");

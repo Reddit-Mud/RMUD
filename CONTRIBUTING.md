@@ -1,4 +1,5 @@
 # @Trevoke - Founding Father
-# @DevRW - Wordsmith
+# @DevRW - Litterateur
 # @piggybankcowboy - Dire Lore Hound
 # @Blecki - Artificer
+# @ConstableBrew - Indefatigable Codemancer
