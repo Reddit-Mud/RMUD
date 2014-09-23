@@ -40,22 +40,25 @@ namespace RMUD
 					Client.Send("Matches: " + matches.Count + "\r\n");
 					foreach (var match in matches)
 					{
-						var builder = new StringBuilder();
-						builder.Append(match.Command.Processor.GetType().Name);
-						builder.Append(" - ");
+                        foreach (var args in match.Matches)
+                        {
+                            var builder = new StringBuilder();
+                            builder.Append(match.Command.Processor.GetType().Name);
+                            builder.Append(" - ");
 
-						foreach (var arg in match.Match.Arguments)
-						{
-							builder.Append("[");
-							builder.Append(arg.Key);
-							builder.Append(" : ");
-							builder.Append(arg.Value.ToString());
-							builder.Append("] ");
-						}
+                            foreach (var arg in args.Arguments)
+                            {
+                                builder.Append("[");
+                                builder.Append(arg.Key);
+                                builder.Append(" : ");
+                                builder.Append(arg.Value.ToString());
+                                builder.Append("] ");
+                            }
 
-						builder.Append("\r\n");
+                            builder.Append("\r\n");
 
-						Client.Send(builder.ToString());
+                            Client.Send(builder.ToString());
+                        }
 					}
 				}
 				else if (tokens[0].ToUpper() == "@TIME")
@@ -80,7 +83,7 @@ namespace RMUD
 			{
 				var matchedCommand = Parser.ParseCommand(Command, Client.Player);
 				if (matchedCommand != null)
-					matchedCommand.Command.Processor.Perform(matchedCommand.Match, Client.Player);
+					matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], Client.Player);
 				else
 					Client.Send("huh?\r\n");
 			}

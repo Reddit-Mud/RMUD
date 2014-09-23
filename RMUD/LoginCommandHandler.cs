@@ -36,7 +36,7 @@ namespace RMUD
 			{
 				var matchedCommand = Parser.ParseCommand(Command, Client.Player);
 				if (matchedCommand != null)
-					matchedCommand.Command.Processor.Perform(matchedCommand.Match, Client.Player);
+					matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], Client.Player);
 				else
 					Client.Send("I do not understand.");
 			}

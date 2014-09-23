@@ -25,12 +25,12 @@ namespace RMUD
 		internal class MatchedCommand
 		{
 			public CommandEntry Command;
-			public PossibleMatch Match;
+			public List<PossibleMatch> Matches;
 
-			public MatchedCommand(CommandEntry Command, PossibleMatch Match)
+			public MatchedCommand(CommandEntry Command, IEnumerable<PossibleMatch> Matches)
 			{
 				this.Command = Command;
-				this.Match = Match;
+				this.Matches = new List<PossibleMatch>(Matches);
 			}
 		}
 
@@ -71,9 +71,12 @@ namespace RMUD
 
 			foreach (var command in Commands)
 			{
-				var matches = command.Matcher.Match(rootMatch, matchContext);
-				var firstGoodMatch = matches.Find(m => m.Next == null);
-				if (firstGoodMatch != null) return new MatchedCommand(command, firstGoodMatch);
+                //Only accept matches that consumed all of the input.
+                var matches = command.Matcher.Match(rootMatch, matchContext).Where(m => m.Next == null);
+
+                //If we did, however, consume all of the input, we will assume this match is successful.
+                if (matches.Count() > 0)
+                    return new MatchedCommand(command, matches);
 			}
             return null;
         }
@@ -90,7 +93,7 @@ namespace RMUD
 			foreach (var command in Commands)
 			{
 				var matches = command.Matcher.Match(rootMatch, matchContext);
-				r.AddRange(matches.Where(m => m.Next == null).Select(m => new MatchedCommand(command, m)));
+                r.Add(new MatchedCommand(command, matches));
 			}
 
 			return r;
