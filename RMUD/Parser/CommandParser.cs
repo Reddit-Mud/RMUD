@@ -76,27 +76,30 @@ namespace RMUD
 
                 //If we did, however, consume all of the input, we will assume this match is successful.
                 if (matches.Count() > 0)
-                    return new MatchedCommand(command, matches);
+                {
+                    var highestScoreFound = Int32.MinValue;
+                    foreach (var match in matches)
+                    {
+                        var score = GetScore(match);
+                        if (score > highestScoreFound) highestScoreFound = score;
+                    }
+
+                    //Only return matches with the highest score.
+                    return new MatchedCommand(command, matches.Where(m => highestScoreFound == GetScore(m)));
+                }
 			}
             return null;
         }
 
-		internal List<MatchedCommand> FindAllGoodMatches(String Command, Actor Actor)
-		{
-			var tokens = new LinkedList<String>(Command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
-			var rootMatch = new PossibleMatch(tokens.First);
+        private static int GetScore(PossibleMatch Match)
+        {
+            if (Match.Arguments.ContainsKey("SCORE"))
+            {
+                var argScore = Match.Arguments["SCORE"] as int?;
+                if (argScore.HasValue) return argScore.Value;
+            }
 
-			var matchContext = new MatchContext { ExecutingActor = Actor };
-
-			var r = new List<MatchedCommand>();
-
-			foreach (var command in Commands)
-			{
-				var matches = command.Matcher.Match(rootMatch, matchContext);
-                r.Add(new MatchedCommand(command, matches));
-			}
-
-			return r;
-		}
+            return 0; //If there is no score, the match is neutral.
+        }
     }
 }
