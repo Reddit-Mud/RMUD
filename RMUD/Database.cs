@@ -33,6 +33,35 @@ namespace RMUD
 			return result;
         }
 
+		public static MudObject GetOrCreateInstance(String Path, String InstanceName, Action<String> ReportErrors = null)
+		{
+			var baseObject = GetObject(Path, ReportErrors);
+
+			//We can't make an instance of nothing; this means that the base object has an error of some kind.
+			if (baseObject == null) return null;
+
+			//Create the new instance of the same class as the base type.
+			var assembly = baseObject.GetType().Assembly;
+			var newMudObject = Activator.CreateInstance(baseObject.GetType()) as MudObject;
+
+			//It should not be possible for newMudObject to be null.
+			if (newMudObject != null)
+			{
+				newMudObject.Path = Path;
+
+				//The 'Get' part of GetOrCreate is some database magic - if this instance exists in the database,
+				//automatically hook up to it. If not, the database should create a new entry for it.
+				newMudObject.Instance = InstanceName;
+
+				newMudObject.Initialize();
+				return newMudObject;
+			}
+			else
+			{
+				throw new InvalidProgramException();
+			}
+		}
+
 		public static Assembly CompileScript(String Path, Action<String> ReportErrors)
 		{
 			Console.WriteLine("Compiling " + Path);
