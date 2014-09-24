@@ -11,7 +11,7 @@ namespace RMUD
 
 		public LockedDoor()
 		{
-			this.Nouns.Add("DOOR");
+			this.Nouns.Add("DOOR", "CLOSED");
 			Open = false;
 			Locked = true;
 		}
@@ -34,12 +34,16 @@ namespace RMUD
 		void IOpenableRules.HandleOpen(Actor Actor)
 		{
 			Open = true;
+            Nouns.RemoveAll(n => n == "CLOSED");
+            Nouns.Add("OPEN");
 		}
 
 		void IOpenableRules.HandleClose(Actor Actor)
 		{
 			Open = false;
 			Locked = false;
+            Nouns.RemoveAll(n => n == "OPEN");
+            Nouns.Add("CLOSED");
 		}
 
 		#endregion

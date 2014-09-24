@@ -9,7 +9,8 @@ namespace RMUD
 	{
 		public BasicDoor()
 		{
-			this.Nouns.Add("DOOR");
+			this.Nouns.Add("DOOR", "CLOSED");
+            Open = false;
 		}
 
 		#region IOpenable
@@ -29,11 +30,15 @@ namespace RMUD
 		void IOpenableRules.HandleOpen(Actor Actor)
 		{
 			Open = true;
+            Nouns.RemoveAll(n => n == "CLOSED");
+            Nouns.Add("OPEN");
 		}
 
 		void IOpenableRules.HandleClose(Actor Actor)
 		{
 			Open = false;
+            Nouns.RemoveAll(n => n == "OPEN");
+            Nouns.Add("CLOSED");
 		}
 
 		#endregion
