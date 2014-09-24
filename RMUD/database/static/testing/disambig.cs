@@ -30,6 +30,8 @@ public class demo_door : RMUD.LockedDoor
         this.IsMatchingKey = (k) => { return k.GetType() == typeof(demo_key); };
 
         this.Short = Adjective + " door";
+
+        Long = new RMUD.DescriptiveText((actor, owner) => { throw new System.InvalidOperationException("Testing critical error logging."); });
     }
 
     public override void Initialize()

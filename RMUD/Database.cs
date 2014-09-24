@@ -11,13 +11,11 @@ namespace RMUD
     public static partial class Mud
     {
         public static String StaticPath { get; private set; }
-        public static String SerializedPath { get; private set; }
         internal static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
 
         internal static void InitializeDatabase(String basePath)
         {
             StaticPath = basePath + "static/";
-            SerializedPath = basePath + "serialized/";
         }
 		
         public static MudObject GetObject(String Path, Action<String> ReportErrors = null)
@@ -64,12 +62,10 @@ namespace RMUD
 
 		public static Assembly CompileScript(String Path, Action<String> ReportErrors)
 		{
-			Console.WriteLine("Compiling " + Path);
-
 			if (!System.IO.File.Exists(Path))
 			{
-				Console.WriteLine("Could not find file " + Path);
-				if (ReportErrors != null) ReportErrors("Could not find file " + Path);
+                LogError(String.Format("Could not find {0}", Path));
+				if (ReportErrors != null) ReportErrors("Could not find " + Path);
 				return null;
 			}
 
@@ -85,24 +81,26 @@ namespace RMUD
 			CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, source);
 			if (compilationResults.Errors.Count > 0)
 			{
+                var errorString = new StringBuilder();
+                errorString.AppendLine(String.Format("{0} errors in {1}", compilationResults.Errors.Count, Path));
+
 				foreach (var error in compilationResults.Errors)
 				{
-					Console.WriteLine(error.ToString());
 					if (ReportErrors != null) ReportErrors(error.ToString());
+                    errorString.Append(error.ToString());
+                    errorString.AppendLine();
 				}
-				Console.WriteLine(compilationResults.Errors.Count.ToString() + " errors in " + Path);
+		        LogError(errorString.ToString());
 				return null;
 			}
 
-			Console.WriteLine("Success.");
+            LogError(String.Format("Compiled {0}", Path));
 			return compilationResults.CompiledAssembly;
 		}
 
         private static MudObject LoadObject(String Path, Action<String> ReportErrors)
         {
-			Console.WriteLine("Loading object " + StaticPath + Path);
-
-			var staticObjectPath = StaticPath + Path + ".cs";
+            var staticObjectPath = StaticPath + Path + ".cs";
 			var assembly = CompileScript(staticObjectPath, ReportErrors);
 			if (assembly == null) return null;
 
@@ -115,7 +113,7 @@ namespace RMUD
 			}
 			else
 			{
-				Console.WriteLine("Object " + objectLeafName + " not found in script " + staticObjectPath);
+                LogError(String.Format("Type {0} not found in {1}", objectLeafName, staticObjectPath));
 				return null;
 			}
 		}
