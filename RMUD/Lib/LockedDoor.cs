@@ -53,7 +53,7 @@ namespace RMUD
 			return false;
 		}
 
-		void ITakeRules.HandleTake(Actor Actor) { }
+        RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 
 		#region ILockableRules
 

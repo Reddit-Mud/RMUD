@@ -5,9 +5,15 @@ using System.Text;
 
 namespace RMUD
 {
+    public enum RuleHandlerFollowUp
+    {
+        Stop,
+        Continue,
+    }
+
 	public interface ITakeRules
 	{
 		bool CanTake(Actor Actor);
-		void HandleTake(Actor Actor);
+		RuleHandlerFollowUp HandleTake(Actor Actor);
 	}
 }

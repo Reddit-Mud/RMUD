@@ -32,31 +32,35 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["SUBJECT"] as Thing;
-			if (target == null)
-			{
-				if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("Take what again?\r\n");
-			}
-			else
-			{
-				if (Actor.Contains(target))
-				{
-					Actor.ConnectedClient.Send("You are already holding that.\r\n");
-					return;
-				}
+            if (target == null)
+            {
+                if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("Take what again?\r\n");
+            }
+            else
+            {
+                if (Actor.Contains(target))
+                {
+                    Actor.ConnectedClient.Send("You are already holding that.\r\n");
+                    return;
+                }
 
-				var takeRules = target as ITakeRules;
-				if (takeRules != null && !takeRules.CanTake(Actor))
-				{
-					Actor.ConnectedClient.Send("You can't take that.\r\n");
-					return;
-				}
+                var takeRules = target as ITakeRules;
+                if (takeRules != null && !takeRules.CanTake(Actor))
+                {
+                    Actor.ConnectedClient.Send("You can't take that.\r\n");
+                    return;
+                }
 
-				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You take " + target.Indefinite + "\r\n");
-				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " takes " + target.Indefinite + "\r\n");
-				Thing.Move(target, Actor);
+                var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
+                if (takeRules != null) handleRuleFollowUp = takeRules.HandleTake(Actor);
 
-				if (takeRules != null) takeRules.HandleTake(Actor);
-			}
+                if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
+                {
+                    Mud.SendEventMessage(Actor, EventMessageScope.Single, "You take " + target.Indefinite + "\r\n");
+                    Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " takes " + target.Indefinite + "\r\n");
+                    Thing.Move(target, Actor);
+                }
+            }
 		}
 	}
 }
