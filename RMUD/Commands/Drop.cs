@@ -12,9 +12,10 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("DROP", false),
-					new ObjectMatcher("TARGET", new InScopeObjectSource(), ObjectMatcher.PreferHeld)),
+					new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld, "SUBJECTSCORE")),
 				new DropProcessor(),
-				"Drop something");
+				"Drop something",
+                "SUBJECTSCORE");
 		}
 	}
 
@@ -22,7 +23,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as Thing;
+			var target = Match.Arguments["SUBJECT"] as Thing;
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("Drop what again?\r\n");

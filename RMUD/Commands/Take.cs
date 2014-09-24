@@ -14,9 +14,16 @@ namespace RMUD.Commands
 					new Or(
 						new KeyWord("GET", false),
 						new KeyWord("TAKE", false)),
-					new ObjectMatcher("TARGET", new InScopeObjectSource(), ObjectMatcher.PreferNotHeld))
-				, new TakeProcessor(),
-				"Take something");
+					new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
+                        (actor, thing) => {
+                            if (actor.Contains(thing)) return -2;
+                            if (thing is ITakeRules && !(thing as ITakeRules).CanTake(actor))
+                                return -1;
+                            return 0;
+                        }, "SUBJECTSCORE")),
+                new TakeProcessor(),
+				"Take something",
+                "SUBJECTSCORE");
 		}
 	}
 
@@ -24,7 +31,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as Thing;
+			var target = Match.Arguments["SUBJECT"] as Thing;
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("Take what again?\r\n");

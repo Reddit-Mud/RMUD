@@ -13,7 +13,7 @@ namespace RMUD.Commands
 				new Sequence(
 					new RankGate(500),
 					new KeyWord("MOVE", false),
-					new ObjectMatcher("TARGET", new InScopeObjectSource()),
+					new ObjectMatcher("OBJECT", new InScopeObjectSource()),
 					new KeyWord("TO", true),
 					new Path("DESTINATION"))
 				, new MoveProcessor(),
@@ -25,7 +25,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as Thing;
+			var target = Match.Arguments["OBJECT"] as Thing;
 			var destination = Match.Arguments["DESTINATION"].ToString();
 			var room = Mud.GetObject(destination);
 			if (room != null)

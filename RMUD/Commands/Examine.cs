@@ -16,7 +16,7 @@ namespace RMUD.Commands
 						new KeyWord("EXAMINE", false),
 						new KeyWord("X", false)),
 					new KeyWord("AT", true),
-					new ObjectMatcher("TARGET", new InScopeObjectSource())),
+					new ObjectMatcher("OBJECT", new InScopeObjectSource())),
 				new ExamineProcessor(),
 				"Look closely at an object.");
 
@@ -37,7 +37,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as IDescribed;
+			var target = Match.Arguments["OBJECT"] as IDescribed;
 
 			if (Actor.ConnectedClient != null)
 			{

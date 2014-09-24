@@ -17,7 +17,7 @@ namespace RMUD.Commands
 						new KeyWord("INS", false),
 						new KeyWord("P", false)),
 					new Or(
-						new ObjectMatcher("TARGET", new InScopeObjectSource()),
+						new ObjectMatcher("OBJECT", new InScopeObjectSource()),
 						new KeyWord("HERE", false)))
 				, new InspectProcessor(),
 				"Inspect internal properties of an object.");
@@ -31,7 +31,7 @@ namespace RMUD.Commands
 			if (Actor.ConnectedClient == null) return;
 
 			Object target = null;
-			if (Match.Arguments.ContainsKey("TARGET")) target = Match.Arguments["TARGET"];
+			if (Match.Arguments.ContainsKey("OBJECT")) target = Match.Arguments["OBJECT"];
 			else target = Actor.Location;
 
 			var data = new StringBuilder();

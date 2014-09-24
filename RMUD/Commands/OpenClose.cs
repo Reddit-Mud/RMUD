@@ -12,16 +12,29 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("OPEN", false),
-					new ObjectMatcher("TARGET", new InScopeObjectSource())),
+					new ObjectMatcher("OBJECT", new InScopeObjectSource(),
+                         (actor, openable) => {
+                             if (openable is IOpenableRules && !(openable as IOpenableRules).Open)
+                                 return 1;
+                            return -1;
+                        }, "SUBJECTSCORE")),
 				new OpenProcessor(),
-				"Open something");
+				"Open something",
+                "SUBJECTSCORE");
 
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("CLOSE", false),
-					new ObjectMatcher("TARGET", new InScopeObjectSource())),
+					new ObjectMatcher("OBJECT", new InScopeObjectSource(),
+                        (actor, openable) =>
+                        {
+                            if (openable is IOpenableRules && (openable as IOpenableRules).Open)
+                                return 1;
+                            return -1;
+                        }, "SUBJECTSCORE")),
 				new CloseProcessor(),
-				"Close something");
+				"Close something",
+                "SUBJECTSCORE");
 		}
 	}
 	
@@ -29,7 +42,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as IOpenableRules;
+			var target = Match.Arguments["SUBJECT"] as IOpenableRules;
 			var thing = target as Thing;
 			if (target == null)
 			{
@@ -59,7 +72,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as IOpenableRules;
+			var target = Match.Arguments["SUBJECT"] as IOpenableRules;
 			var thing = target as Thing;
 			if (target == null)
 			{

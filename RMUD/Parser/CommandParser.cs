@@ -10,15 +10,16 @@ namespace RMUD
 		public class CommandEntry
 		{
 			internal ICommandTokenMatcher Matcher;
+            internal List<String> ScoreArguments;
 			internal ICommandProcessor Processor;
 			internal String HelpText;
 		}
 
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
 
-        public void AddCommand(ICommandTokenMatcher Matcher, ICommandProcessor Processor, String HelpText)
+        public void AddCommand(ICommandTokenMatcher Matcher, ICommandProcessor Processor, String HelpText, params String[] ScoreArguments)
         {
-            var Entry = new CommandEntry { Matcher = Matcher, Processor = Processor, HelpText = HelpText };
+            var Entry = new CommandEntry { Matcher = Matcher, Processor = Processor, HelpText = HelpText, ScoreArguments = new List<string>(ScoreArguments) };
 			Commands.Add(Entry);
         }
 
@@ -77,25 +78,32 @@ namespace RMUD
                 //If we did, however, consume all of the input, we will assume this match is successful.
                 if (matches.Count() > 0)
                 {
-                    var highestScoreFound = Int32.MinValue;
-                    foreach (var match in matches)
+                    if (command.ScoreArguments != null)
                     {
-                        var score = GetScore(match);
-                        if (score > highestScoreFound) highestScoreFound = score;
+                        foreach (var scoreArgumentName in command.ScoreArguments)
+                        {
+                            var highestScoreFound = Int32.MinValue;
+                            foreach (var match in matches)
+                            {
+                                var score = GetScore(match, scoreArgumentName);
+                                if (score > highestScoreFound) highestScoreFound = score;
+                            }
+                            matches = matches.Where(m => highestScoreFound == GetScore(m, scoreArgumentName));
+                        }
                     }
 
-                    //Only return matches with the highest score.
-                    return new MatchedCommand(command, matches.Where(m => highestScoreFound == GetScore(m)));
+                    System.Diagnostics.Debug.Assert(matches.Count() > 0);
+                    return new MatchedCommand(command, matches);
                 }
 			}
             return null;
         }
 
-        private static int GetScore(PossibleMatch Match)
+        private static int GetScore(PossibleMatch Match, String ScoreArgumentName)
         {
-            if (Match.Arguments.ContainsKey("SCORE"))
+            if (Match.Arguments.ContainsKey(ScoreArgumentName))
             {
-                var argScore = Match.Arguments["SCORE"] as int?;
+                var argScore = Match.Arguments[ScoreArgumentName] as int?;
                 if (argScore.HasValue) return argScore.Value;
             }
 

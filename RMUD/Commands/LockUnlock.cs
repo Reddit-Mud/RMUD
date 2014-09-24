@@ -12,33 +12,39 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("LOCK", false),
-					new ObjectMatcher("TARGET", new InScopeObjectSource(), 
+					new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
                         (actor, matchable) => {
                             if (matchable is ILockableRules && !(matchable as ILockableRules).Locked)
                                 return 1;
                             return -1;
-                        }),
+                        }, "SUBJECTSCORE"),
 					new KeyWord("WITH", true),
-					new ObjectMatcher("KEY", new InScopeObjectSource(), ObjectMatcher.PreferHeld)),
+					new ObjectMatcher("OBJECT", new InScopeObjectSource(), 
+                        ObjectMatcher.PreferHeld, "OBJECTSCORE")),
 				new LockProcessor(),
-				"Lock something with something");
+				"Lock something with something",
+                "SUBJECTSCORE",
+                "OBJECTSCORE");
 
 			Parser.AddCommand(
 				new Sequence(
 					new Or(
 						new KeyWord("UNLOCK", false),
 						new KeyWord("OPEN", false)),
-                    new ObjectMatcher("TARGET", new InScopeObjectSource(),
+                    new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                         (actor, matchable) =>
                         {
                             if (matchable is ILockableRules && (matchable as ILockableRules).Locked)
                                 return 1;
                             return -1;
-                        }), 
+                        }, "SUBJECTSCORE"), 
                     new KeyWord("WITH", true),
-					new ObjectMatcher("KEY", new InScopeObjectSource(), ObjectMatcher.PreferHeld)),
+					new ObjectMatcher("OBJECT", new InScopeObjectSource(), 
+                        ObjectMatcher.PreferHeld, "OBJECTSCORE")),
 				new UnlockProcessor(),
-				"Unlock something with something");
+				"Unlock something with something",
+                "SUBJECTSCORE",
+                "OBJECTSCORE");
 		}
 	}
 	
@@ -46,8 +52,8 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as ILockableRules;
-			var key = Match.Arguments["KEY"] as Thing;
+			var target = Match.Arguments["SUBJECT"] as ILockableRules;
+			var key = Match.Arguments["OBJECT"] as Thing;
 			
 			if (target == null)
 			{
@@ -90,8 +96,8 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["TARGET"] as ILockableRules;
-			var key = Match.Arguments["KEY"] as Thing;
+			var target = Match.Arguments["SUBJECT"] as ILockableRules;
+			var key = Match.Arguments["OBJECT"] as Thing;
 
 			if (target == null)
 			{

@@ -20,6 +20,8 @@ namespace RMUD
     public class ObjectMatcher : ICommandTokenMatcher
     {
 		public String CaptureName;
+        public String ScoreName;
+
 		public ObjectMatcherSettings Settings;
 		public IObjectSource ObjectSource;
 		public Func<Actor, IMatchable, int> ScoreResults = null;
@@ -39,17 +41,31 @@ namespace RMUD
 		public ObjectMatcher(
 			String CaptureName,
 			IObjectSource ObjectSource, 
-			Func<Actor, IMatchable,int> ScoreResults = null,
 			ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
 		{
 			this.CaptureName = CaptureName;
 			this.ObjectSource = ObjectSource;
-			this.ScoreResults = ScoreResults;
 			this.Settings = Settings;
 		}
 
+        public ObjectMatcher(
+            String CaptureName,
+            IObjectSource ObjectSource,
+            Func<Actor, IMatchable, int> ScoreResults,
+            String ScoreName,
+            ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
+        {
+            this.CaptureName = CaptureName;
+            this.ObjectSource = ObjectSource;
+            this.ScoreResults = ScoreResults;
+            this.ScoreName = ScoreName;
+            this.Settings = Settings;
+        }
+
 		public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
 		{
+            var useObjectScoring = ScoreResults != null;
+
 			var R = new List<PossibleMatch>();
 			if (State.Next == null) return R;
 
@@ -77,15 +93,15 @@ namespace RMUD
 				{
 					possibleMatch.Arguments.Upsert(CaptureName, thing);
 
-					if (ScoreResults != null)
+					if (useObjectScoring)
 					{
 						var score = ScoreResults(Context.ExecutingActor, thing);
-						possibleMatch.Arguments.Upsert("SCORE", score);
+						possibleMatch.Arguments.Upsert(ScoreName, score);
 
 						var insertIndex = 0;
 						for (insertIndex = 0; insertIndex < R.Count; ++insertIndex)
 						{
-							if (score > (R[insertIndex].Arguments["SCORE"] as int?).Value) break;
+							if (score > (R[insertIndex].Arguments[ScoreName] as int?).Value) break;
 						}
 
 						R.Insert(insertIndex, possibleMatch);
