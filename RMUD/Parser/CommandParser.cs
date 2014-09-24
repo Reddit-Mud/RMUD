@@ -7,7 +7,7 @@ namespace RMUD
 {
     public partial class CommandParser
     {
-		internal class CommandEntry
+		public class CommandEntry
 		{
 			internal ICommandTokenMatcher Matcher;
 			internal ICommandProcessor Processor;
@@ -22,7 +22,7 @@ namespace RMUD
 			Commands.Add(Entry);
         }
 
-		internal class MatchedCommand
+		public class MatchedCommand
 		{
 			public CommandEntry Command;
 			public List<PossibleMatch> Matches;

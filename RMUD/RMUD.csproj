@@ -67,6 +67,7 @@
     <Compile Include="EventMessage.cs" />
     <Compile Include="Lib\BasicDoor.cs" />
     <Compile Include="Lib\LockedDoor.cs" />
+    <Compile Include="DisambigCommandHandler.cs" />
     <Compile Include="Parser\Matchers\InScopeObjectSource.cs" />
     <Compile Include="RuleDecorators\ILockableRules.cs" />
     <Compile Include="RuleDecorators\IDropRules.cs" />

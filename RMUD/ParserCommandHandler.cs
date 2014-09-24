@@ -31,6 +31,8 @@ namespace RMUD
 
             if (Command[0] == '@')
             {
+                #region Handle debug command
+
                 var tokens = Command.Split(' ');
                 if (tokens.Length == 0) return;
 
@@ -66,12 +68,19 @@ namespace RMUD
                     Client.Send("I don't recognize that debugging command.");
                 }
 
+                #endregion
+
                 return;
             }
 
             var matchedCommand = Parser.ParseCommand(Command, Client.Player);
             if (matchedCommand != null)
-                matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], Client.Player);
+            {
+                if (matchedCommand.Matches.Count > 1)
+                    Client.CommandHandler = new DisambigCommandHandler(Client, matchedCommand, this);
+                else
+                    matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], Client.Player);
+            }
             else
                 Client.Send("huh?\r\n");
         }

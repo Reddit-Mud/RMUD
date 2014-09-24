@@ -7,18 +7,29 @@
         OpenLink(RMUD.Direction.WEST, "testing/disambig", new demo_door("red"));
         OpenLink(RMUD.Direction.EAST, "testing/disambig", new demo_door("blue"));
 
-        RMUD.Thing.Move(new demo_key(), this);
+        RMUD.Thing.Move(new demo_key_a(), this);
+        RMUD.Thing.Move(new demo_key_b(), this);
 	}
 }
 
-public class demo_key : RMUD.Thing
+public class demo_key_a : RMUD.Thing
 {
-    public demo_key()
+    public demo_key_a()
     {
-        Short = "key";
-        Nouns.Add("KEY");
+        Short = "barrel key";
+        Nouns.Add("KEY", "BARREL");
     }
 }
+
+public class demo_key_b : RMUD.Thing
+{
+    public demo_key_b()
+    {
+        Short = "spade key";
+        Nouns.Add("KEY", "SPADE");
+    }
+}
+
 
 public class demo_door : RMUD.LockedDoor
 {
@@ -27,7 +38,7 @@ public class demo_door : RMUD.LockedDoor
         this.Nouns.Add(Adjective);
         this.Open = false;
         this.Locked = true;
-        this.IsMatchingKey = (k) => { return k.GetType() == typeof(demo_key); };
+        this.IsMatchingKey = (k) => { return k.GetType() == typeof(demo_key_a); };
 
         this.Short = Adjective + " door";
 
