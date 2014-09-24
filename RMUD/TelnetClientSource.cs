@@ -107,15 +107,22 @@ namespace RMUD
         void OnData(IAsyncResult _asyncResult)
         {
             var Client = _asyncResult.AsyncState as TelnetClient;
+            System.Net.EndPoint remoteEndPoint = null;
 
             try
             {
+                remoteEndPoint = Client.Socket.RemoteEndPoint;
+
                 System.Net.Sockets.SocketError Error;
                 int DataSize = Client.Socket.EndReceive(_asyncResult, out Error);
 
                 if (DataSize == 0 || Error != System.Net.Sockets.SocketError.Success)
                 {
-					Console.WriteLine("Lost telnet client: " + Client.Socket.RemoteEndPoint.ToString());
+                    if (remoteEndPoint != null)
+                        Console.WriteLine("Lost telnet client: " + remoteEndPoint.ToString());
+                    else
+                        Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
+
                     Mud.ClientDisconnected(Client);
                 }
                 else
@@ -145,7 +152,10 @@ namespace RMUD
             }
             catch (Exception e)
             {
-				Console.WriteLine("Lost telnet client: " + Client.Socket.RemoteEndPoint.ToString());
+                if (remoteEndPoint != null)
+                    Console.WriteLine("Lost telnet client: " + remoteEndPoint.ToString());
+                else
+                    Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 				Console.WriteLine(e.Message);
                 Mud.ClientDisconnected(Client);
             }
