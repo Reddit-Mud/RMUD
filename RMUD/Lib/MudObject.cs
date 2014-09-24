@@ -28,7 +28,7 @@ namespace RMUD
 
 		public override string ToString()
 		{
-			return Path;
+            return this.GetType().Name + " -- " + Path;
 		}
 
 	}

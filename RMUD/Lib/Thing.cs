@@ -37,5 +37,10 @@ namespace RMUD
 				Thing.Location = Destination;
 			}
 		}
+
+        public override string ToString()
+        {
+            return base.ToString() + "[" + Short + "]";
+        }
 	}
 }

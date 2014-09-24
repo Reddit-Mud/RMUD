@@ -39,6 +39,4 @@ public class demo_door : RMUD.LockedDoor
 
 
     }
-
-    public override System.String ToString() { return Short; }
 }
