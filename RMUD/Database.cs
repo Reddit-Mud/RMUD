@@ -154,5 +154,43 @@ namespace RMUD
 			else
 				return GetObject(Path, ReportErrors);
 		}
+
+        internal static bool ResetObject(String Path, Action<String> ReportErrors)
+        {
+            if (NamedObjects.ContainsKey(Path))
+            {
+                var existing = NamedObjects[Path];
+
+                var newObject = Activator.CreateInstance(existing.GetType()) as MudObject;
+                NamedObjects.Upsert(Path, newObject);
+                newObject.Initialize();
+
+                //Preserve the location of actors, and actors only.
+                if (existing is IContainer)
+                {
+                    foreach (var thing in (existing as IContainer))
+                    {
+                        if (thing is Actor)
+                        {
+                            //Can't use Thing.Move - it will change the list we are iterating.
+                            (newObject as IContainer).Add(thing);
+                            thing.Location = newObject;
+                        }
+                    }
+                }
+
+                if (existing is Thing && (existing as Thing).Location != null)
+                {
+                    Thing.Move(newObject as Thing, (existing as Thing).Location);
+                    Thing.Move(existing as Thing, null);
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
