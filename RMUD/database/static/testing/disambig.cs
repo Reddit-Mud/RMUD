@@ -2,9 +2,9 @@
 {
 	public override void Initialize()
 	{
-		Short = "Test disambiguation";
+		Short = "Hall of  Disambiguation";
 
-        OpenLink(RMUD.Direction.WEST, "testing/disambig", new demo_door("red"));
+        OpenLink(RMUD.Direction.WEST, "testing/library", new demo_door("red"));
         OpenLink(RMUD.Direction.EAST, "testing/disambig", new demo_door("blue"));
 
         RMUD.Thing.Move(new demo_key_a(), this);

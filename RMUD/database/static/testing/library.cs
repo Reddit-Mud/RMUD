@@ -6,8 +6,10 @@ public class library : Room
 {
 	public override void Initialize()
 	{
-		Short = "The ancient library of Kuz";
+		Short = "The Ancient Library of Kuz";
         Thing.Move(new kuz_shelf(), this);
+
+        OpenLink(RMUD.Direction.EAST, "testing/disambig");
 	}
 }
 
