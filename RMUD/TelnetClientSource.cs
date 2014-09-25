@@ -10,6 +10,7 @@ namespace RMUD
         public System.Net.Sockets.Socket Socket = null;
         public String CommandQueue = "";
         public byte[] Storage = new byte[1024];
+        internal bool WasRejected = false;
 
 		public override string ConnectionDescription
 		{
@@ -19,6 +20,18 @@ namespace RMUD
 				return "NOT CONNECTED";
 			}
 		}
+
+        public override string IPString
+        {
+            get
+            {
+                //Why the fuck can't I get the IP address of a remote end point?
+                var desc = ConnectionDescription;
+                var split = desc.IndexOf(':');
+                if (split == -1) return "0.0.0.0";
+                return desc.Substring(0, split);
+            }
+        }
 
         private static byte[] SendBuffer = new byte[1024];
 
@@ -47,7 +60,7 @@ namespace RMUD
 				Console.WriteLine(e.Message);
 
 				this.Socket = null;
-				Mud.ClientDisconnected(this);
+                if (!WasRejected) Mud.ClientDisconnected(this);
 			}
         }
 
@@ -59,7 +72,7 @@ namespace RMUD
 				Socket.Close();
 			}
 			Socket = null;
-			Mud.ClientDisconnected(this);
+            if (!WasRejected) Mud.ClientDisconnected(this);
         }
     }
 
@@ -97,12 +110,15 @@ namespace RMUD
             ListenSocket.BeginAccept(OnNewClient, null);
 
             var NewClient = new TelnetClient { Socket = ClientSocket };
-            ClientSocket.BeginReceive(NewClient.Storage, 0, 1024, System.Net.Sockets.SocketFlags.Partial, OnData, NewClient);
-            Console.WriteLine("New telnet client: " + ClientSocket.RemoteEndPoint.ToString());
             if (Mud.ClientConnected(NewClient) == Mud.ClientAcceptanceStatus.Rejected)
             {
-                Console.WriteLine("Rejected client.");
+                NewClient.WasRejected = true;
                 ClientSocket.Close();
+            }
+            else
+            {
+                ClientSocket.BeginReceive(NewClient.Storage, 0, 1024, System.Net.Sockets.SocketFlags.Partial, OnData, NewClient);
+                Console.WriteLine("New telnet client: " + ClientSocket.RemoteEndPoint.ToString());
             }
         }
 
@@ -127,7 +143,7 @@ namespace RMUD
                     else
                         Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 
-                    Mud.ClientDisconnected(Client);
+                    if (!Client.WasRejected) Mud.ClientDisconnected(Client);
                 }
                 else
                 {
@@ -161,7 +177,7 @@ namespace RMUD
                 else
                     Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 				Console.WriteLine(e.Message);
-                Mud.ClientDisconnected(Client);
+                if (!Client.WasRejected) Mud.ClientDisconnected(Client);
             }
         }
     }

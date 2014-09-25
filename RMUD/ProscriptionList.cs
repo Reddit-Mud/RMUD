@@ -45,7 +45,7 @@ namespace RMUD
                 while (!proscriptionFile.EndOfStream)
                 {
                     var line = proscriptionFile.ReadLine();
-                    var split = line.IndexOf(':');
+                    var split = line.IndexOf('|');
                     if (split == -1) continue;
 
                     var glob = line.Substring(0, split);
@@ -100,7 +100,7 @@ namespace RMUD
         {
             File.WriteLine();
             File.Write(Proscription.Glob);
-            File.Write(":");
+            File.Write("|");
             File.Write(Proscription.Reason);
         }
 

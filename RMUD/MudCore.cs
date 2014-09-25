@@ -57,8 +57,11 @@ namespace RMUD
 		{
 			DatabaseLock.WaitOne();
 			ConnectedClients.Remove(client);
-			if (client.Player != null) client.Player.ConnectedClient = null;
-            Thing.Move(client.Player, null);
+            if (client.Player != null)
+            {
+                client.Player.ConnectedClient = null;
+                Thing.Move(client.Player, null);
+            }
 			DatabaseLock.ReleaseMutex();
 		}
 
@@ -70,6 +73,13 @@ namespace RMUD
 
         public static ClientAcceptanceStatus ClientConnected(Client client)
         {
+            var ban = ProscriptionList.IsBanned(client.IPString);
+            if (ban.Banned)
+            {
+                LogError("Rejected connection from " + client.IPString + ". Matched ban " + ban.SourceBan.Glob + " Reason: " + ban.SourceBan.Reason );
+                return ClientAcceptanceStatus.Rejected;
+            }
+
             DatabaseLock.WaitOne();
             client.Player = new Actor();
             client.Player.ConnectedClient = client;
