@@ -7,12 +7,15 @@
 	}
 }
 
-public class kuz_shelf : RMUD.Thing, RMUD.ITakeRules
+public class kuz_shelf : RMUD.Thing, RMUD.ITakeRules, RMUD.ILocaleDescriptionRules
 {
+    public RMUD.DescriptiveText LocaleDescription { get; set; }
+
     public kuz_shelf()
     {
-        Short = "a dusty shelf full of books";
+        Short = "dusty shelf full of books";
         Long = "There are so many books, and they all look so interesting and inviting. You could just go right ahead and take one.";
+        LocaleDescription = "A massive book shelf looms in the center of the room.";
         Nouns.Add("BOOK", "BOOKS", "SHELF", "DUSTY");
     }
 
@@ -29,15 +32,17 @@ public class kuz_shelf : RMUD.Thing, RMUD.ITakeRules
         RMUD.Mud.SendEventMessage(Actor, RMUD.EventMessageScope.Single, "You take a book.\r\n");
 	    RMUD.Mud.SendEventMessage(Actor, RMUD.EventMessageScope.External, Actor.Short + " takes a book.\r\n");
 
+        //Tell the take command not to emit messages or move this object to the player's inventory.
         return RMUD.RuleHandlerFollowUp.Stop;
     }
+
 }
 
 public class kuz_book : RMUD.Thing
 {
     public kuz_book()
     {
-        Short = "a generated book";
+        Short = "generated book";
         Nouns.Add("BOOK");
     }
 }

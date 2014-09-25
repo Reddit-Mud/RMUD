@@ -34,17 +34,32 @@ namespace RMUD.Commands
 
                 var visibleThings = new List<Thing>(location.Contents.Where(t => !Object.ReferenceEquals(t, Actor)));
 
-				//Display objects in room
-				if (visibleThings.Count > 0)
-					builder.Append("Also here: " + String.Join(", ", visibleThings.Select(t => t.Indefinite)));
-				else
-					builder.Append("There is nothing here.");
-				builder.Append("\r\n");
+                for (int i = 0; i < visibleThings.Count;)
+                {
+                    var localeDescribable = visibleThings[i] as ILocaleDescriptionRules;
+                    if (localeDescribable != null)
+                    {
+                        visibleThings.RemoveAt(i);
+                        builder.Append(localeDescribable.LocaleDescription.Expand(Actor, localeDescribable as MudObject));
+                        builder.Append("\r\n");
+                    }
+                    else
+                    {
+                        ++i;
+                    }
+                }
+
+                //Display objects in room
+                if (visibleThings.Count > 0)
+                {
+                    builder.Append("Also here: " + String.Join(", ", visibleThings.Select(t => t.Indefinite)));
+                    builder.Append("\r\n");
+                }
 
 				//Display exits from room
-				if (location.Links.Count > 0)
-				{
-					builder.Append("Obvious exits:\r\n");
+                if (location.Links.Count > 0)
+                {
+                    builder.Append("Obvious exits:\r\n");
 
                     foreach (var link in location.Links)
                     {
@@ -67,8 +82,8 @@ namespace RMUD.Commands
                         builder.Append(".\r\n");
                     }
 
-					builder.AppendLine("\r\n");
-				}
+                    builder.AppendLine("\r\n");
+                }
 
 				Mud.SendEventMessage(Actor, EventMessageScope.Single, builder.ToString());
 			}
