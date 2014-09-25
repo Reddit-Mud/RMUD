@@ -41,26 +41,35 @@ namespace RMUD
                     var startTime = DateTime.Now;
                     var matches = Parser.ParseCommand(Command.Substring(7), Client.Player);
                     var endTime = DateTime.Now;
-                    Client.Send(String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.\r\n",
-                        matches.Command.Processor.GetType().Name,
-                        (endTime - startTime).TotalMilliseconds,
-                        matches.Matches.Count));
-                    foreach (var match in matches.Matches)
+
+                    if (matches == null)
                     {
-                        var builder = new StringBuilder();
-
-                        foreach (var arg in match.Arguments)
+                        Client.Send(String.Format("Matched nothing in {0:n0} milliseconds.\r\n",
+                            (endTime - startTime).TotalMilliseconds));
+                    }
+                    else
+                    {
+                        Client.Send(String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.\r\n",
+                            matches.Command.Processor.GetType().Name,
+                            (endTime - startTime).TotalMilliseconds,
+                            matches.Matches.Count));
+                        foreach (var match in matches.Matches)
                         {
-                            builder.Append("[");
-                            builder.Append(arg.Key);
-                            builder.Append(" : ");
-                            builder.Append(arg.Value.ToString());
-                            builder.Append("] ");
+                            var builder = new StringBuilder();
+
+                            foreach (var arg in match.Arguments)
+                            {
+                                builder.Append("[");
+                                builder.Append(arg.Key);
+                                builder.Append(" : ");
+                                builder.Append(arg.Value.ToString());
+                                builder.Append("] ");
+                            }
+
+                            builder.Append("\r\n");
+
+                            Client.Send(builder.ToString());
                         }
-
-                        builder.Append("\r\n");
-
-                        Client.Send(builder.ToString());
                     }
                 }
                 else
