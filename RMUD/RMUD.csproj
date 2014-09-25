@@ -47,6 +47,7 @@
     <Compile Include="Commands\Chat.cs" />
     <Compile Include="Commands\Kick.cs" />
     <Compile Include="Commands\Ban.cs" />
+    <Compile Include="Commands\Tell.cs" />
     <Compile Include="Commands\Who.cs" />
     <Compile Include="Commands\Reload.cs" />
     <Compile Include="Commands\LockUnlock.cs" />
