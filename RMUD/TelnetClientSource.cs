@@ -99,7 +99,11 @@ namespace RMUD
             var NewClient = new TelnetClient { Socket = ClientSocket };
             ClientSocket.BeginReceive(NewClient.Storage, 0, 1024, System.Net.Sockets.SocketFlags.Partial, OnData, NewClient);
             Console.WriteLine("New telnet client: " + ClientSocket.RemoteEndPoint.ToString());
-            Mud.ClientConnected(NewClient);
+            if (Mud.ClientConnected(NewClient) == Mud.ClientAcceptanceStatus.Rejected)
+            {
+                Console.WriteLine("Rejected client.");
+                ClientSocket.Close();
+            }
         }
 
         private static string ValidCharacters = "@=|^\\;?:#.,!\"'$*<>/()[]{}-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";

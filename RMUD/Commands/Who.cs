@@ -30,6 +30,9 @@ namespace RMUD.Commands
             foreach (var client in clients)
             {
                 builder.Append(client.Player.Short);
+                builder.Append(" [");
+                builder.Append(client.ConnectionDescription);
+                builder.Append("]");
                 if (client.Player.Location != null)
                 {
                     builder.Append(" -- ");

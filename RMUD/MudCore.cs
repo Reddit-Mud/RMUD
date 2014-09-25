@@ -61,7 +61,13 @@ namespace RMUD
 			DatabaseLock.ReleaseMutex();
 		}
 
-        public static void ClientConnected(Client client)
+        public enum ClientAcceptanceStatus
+        {
+            Accepted,
+            Rejected,
+        }
+
+        public static ClientAcceptanceStatus ClientConnected(Client client)
         {
             DatabaseLock.WaitOne();
             client.Player = new Actor();
@@ -74,6 +80,8 @@ namespace RMUD
 
             ConnectedClients.Add(client);
 			DatabaseLock.ReleaseMutex();
+
+            return ClientAcceptanceStatus.Accepted;
         }
 
         public static bool Start(String basePath)
