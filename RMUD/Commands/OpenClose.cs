@@ -12,7 +12,7 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("OPEN", false),
-					new ObjectMatcher("OBJECT", new InScopeObjectSource(),
+					new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                          (actor, openable) => {
                              if (openable is IOpenableRules && !(openable as IOpenableRules).Open)
                                  return 1;
@@ -25,7 +25,7 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("CLOSE", false),
-					new ObjectMatcher("OBJECT", new InScopeObjectSource(),
+					new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                         (actor, openable) =>
                         {
                             if (openable is IOpenableRules && (openable as IOpenableRules).Open)
