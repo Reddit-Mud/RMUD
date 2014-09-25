@@ -44,24 +44,28 @@ namespace RMUD.Commands
 				//Display exits from room
 				if (location.Links.Count > 0)
 				{
-					builder.Append("Obvious exits: ");
+					builder.Append("Obvious exits:\r\n");
 
-					for (int i = 0; i < location.Links.Count; ++i)
-					{
-						var l = location.Links[i];
+                    foreach (var link in location.Links)
+                    {
+                        builder.Append("  ");
+                        builder.Append(Mud.CapFirst(link.Direction.ToString()));
 
-						builder.Append(l.Direction.ToString().ToLower());
+                        if (link.Door != null && link.Door is Thing)
+                        {
+                            builder.Append(", through ");
+                            builder.Append((link.Door as Thing).Indefinite);
+                        }
 
-						if (l.Door != null && l.Door is Thing)
-						{
-							builder.Append(" [through ");
-							builder.Append((l.Door as Thing).Definite);
-							builder.Append("]");
-						}
+                        var destinationRoom = Mud.GetObject(link.Destination) as Room;
+                        if (destinationRoom != null)
+                        {
+                            builder.Append(", to ");
+                            builder.Append(destinationRoom.Short);
+                        }
 
-						if (i != location.Links.Count - 1)
-							builder.Append(", ");
-					}
+                        builder.Append(".\r\n");
+                    }
 
 					builder.AppendLine("\r\n");
 				}
