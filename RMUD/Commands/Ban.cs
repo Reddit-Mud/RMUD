@@ -1,0 +1,107 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace RMUD.Commands
+{
+	internal class Ban : CommandFactory
+	{
+		public override void Create(CommandParser Parser)
+		{
+			Parser.AddCommand(
+                new Sequence(
+                    new RankGate(500),
+			        new KeyWord("BANS", false)),
+				new ShowBansProcessor(),
+				"Display the ban list.");
+
+            Parser.AddCommand(
+                new Sequence(
+                    new RankGate(500),
+                    new KeyWord("BAN", false),
+                    new Optional(new SingleWord("GLOB")),
+                    new Optional(new Rest("REASON"))),
+                new BanProcessor(),
+                "Ban an ip address.");
+
+            Parser.AddCommand(
+                new Sequence(
+                    new RankGate(500),
+                    new KeyWord("UNBAN", false),
+                    new Optional(new SingleWord("GLOB"))),
+                new UnbanProcessor(),
+                "Remove a ban on an ip address.");
+		}
+	}
+
+	internal class ShowBansProcessor : ICommandProcessor
+	{
+		public void Perform(PossibleMatch Match, Actor Actor)
+		{
+            if (Actor.ConnectedClient == null) return;
+
+            var builder = new StringBuilder();
+            builder.Append("~~~ ALL SET BANS ~~~\r\n");
+
+            foreach (var proscription in Mud.ProscriptionList.Proscriptions)
+            {
+                builder.Append(proscription.Glob);
+                builder.Append(" : ");
+                builder.Append(proscription.Reason);
+                builder.Append("\r\n");
+            }
+            
+            builder.Append("\r\n");
+
+            Actor.ConnectedClient.Send(builder.ToString());
+		}
+	}
+
+    internal class BanProcessor : ICommandProcessor
+    {
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            if (!Match.Arguments.ContainsKey("GLOB"))
+            {
+                if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("You need to supply a wildcard mask for the ip address.\r\n");
+                return;
+            }
+
+            if (!Match.Arguments.ContainsKey("REASON"))
+            {
+                if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("You must state a reason for the ban.\r\n");
+                return;
+            }
+
+            var glob = Match.Arguments["GLOB"].ToString();
+            var reasonBuilder = new StringBuilder();
+            Mud.AssembleText(Match.Arguments["REASON"] as LinkedListNode<String>, reasonBuilder);
+            var reason = reasonBuilder.ToString();
+
+            Mud.ProscriptionList.Ban(glob, reason);
+
+            if (Actor.ConnectedClient != null)
+                Actor.ConnectedClient.Send("You banned " + glob + "\r\n");
+        }
+    }
+
+    internal class UnbanProcessor : ICommandProcessor
+    {
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            if (!Match.Arguments.ContainsKey("GLOB"))
+            {
+                if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("You need to supply the wildcard mask to unban.\r\n");
+                return;
+            }
+
+            var glob = Match.Arguments["GLOB"].ToString();
+            
+            Mud.ProscriptionList.RemoveBan(glob);
+
+            if (Actor.ConnectedClient != null)
+                Actor.ConnectedClient.Send("You unbanned " + glob + "\r\n");
+        }
+    }
+}

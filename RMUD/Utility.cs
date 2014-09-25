@@ -18,5 +18,16 @@ namespace RMUD
                 return str.ToUpper();
             return str;
         }
+
+        public static void AssembleText(LinkedListNode<String> Node, StringBuilder Builder)
+        {
+            for (; Node != null; Node = Node.Next)
+            {
+                Builder.Append(Node.Value);
+                Builder.Append(" ");
+            }
+
+            Builder.Remove(Builder.Length - 1, 1);
+        }
     }
 }

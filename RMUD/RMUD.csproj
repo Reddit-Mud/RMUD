@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="CommandLine.cs" />
+    <Compile Include="Commands\Ban.cs" />
     <Compile Include="Commands\Who.cs" />
     <Compile Include="Commands\Reload.cs" />
     <Compile Include="Commands\LockUnlock.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="Commands\Go.cs" />
     <Compile Include="Commands\Examine.cs" />
     <Compile Include="Commands\Look.cs" />
+    <Compile Include="Parser\Matchers\Optional.cs" />
+    <Compile Include="ProscriptionList.cs" />
     <Compile Include="RuleDecorators\ILocaleDescriptionRules.cs" />
     <Compile Include="Utility.cs" />
     <None Include="database\static\testing\library.cs">

@@ -46,21 +46,16 @@ namespace RMUD.Commands
 
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var speechBuilder = new StringBuilder();
+            var speechBuilder = new StringBuilder();
 
-			speechBuilder.Append(Actor.Short);
-			if (EmoteType == EmoteTypes.Speech)
-				speechBuilder.Append(": \"");
-			else
-				speechBuilder.Append(" ");
+            speechBuilder.Append(Actor.Short);
+            if (EmoteType == EmoteTypes.Speech)
+                speechBuilder.Append(": \"");
+            else
+                speechBuilder.Append(" ");
 
-			for (var node = Match.Arguments["SPEECH"] as LinkedListNode<String>; node != null; node = node.Next)
-			{
-				speechBuilder.Append(node.Value);
-				speechBuilder.Append(" ");
-			}
+            Mud.AssembleText(Match.Arguments["SPEECH"] as LinkedListNode<String>, speechBuilder);
 
-			speechBuilder.Remove(speechBuilder.Length - 1, 1);
 			if (EmoteType == EmoteTypes.Speech)
 				speechBuilder.Append("\"\r\n");
 			else
@@ -68,5 +63,7 @@ namespace RMUD.Commands
 
 			Mud.SendEventMessage(Actor, EventMessageScope.Local, speechBuilder.ToString());
 		}
+
+        
 	}
 }

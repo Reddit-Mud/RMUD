@@ -12,5 +12,7 @@ namespace RMUD
         public String NewPlayerStartRoom;
 
         public int AllowedCommandRate = 100; //How many milliseconds to allow between commands - default is to not limit very much.
+
+        public String ProscriptionList = "proscriptions.txt";
 	}
 }

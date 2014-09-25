@@ -30,6 +30,7 @@ namespace RMUD
 		internal static LoginCommandHandler LoginCommandHandler;
 
         internal static Settings SettingsObject;
+        internal static ProscriptionList ProscriptionList;
 
 		internal struct RawPendingMessage
 		{
@@ -92,6 +93,8 @@ namespace RMUD
 				var settings = GetObject("settings") as Settings;
 				if (settings == null) throw new InvalidProgramException("No settings object is defined in the database!");
                 SettingsObject = settings;
+
+                ProscriptionList = new ProscriptionList(settings.ProscriptionList);
 
 				ParserCommandHandler = new ParserCommandHandler();
 				LoginCommandHandler = new LoginCommandHandler();
