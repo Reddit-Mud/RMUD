@@ -111,6 +111,17 @@ namespace RMUD
 				CommandExecutionThread = new Thread(ProcessCommands);
                 CommandExecutionThread.Start();
 
+                var databaseObjectFiles = new List<String>();
+                EnumerateDatabase("", true, s => databaseObjectFiles.Add(s));
+
+                Console.WriteLine("Found {0} database objects to load.", databaseObjectFiles.Count);
+                var start = DateTime.Now;
+                foreach (var objectFile in databaseObjectFiles)
+                {
+                    GetObject(objectFile);
+                }
+                Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
+
                 Console.WriteLine("Engine ready with path " + basePath + ".");
             }
             catch (Exception e)

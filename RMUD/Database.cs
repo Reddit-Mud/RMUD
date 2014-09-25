@@ -15,11 +15,25 @@ namespace RMUD
 
         internal static void InitializeDatabase(String basePath)
         {
-            StaticPath = basePath + "static/";
+            StaticPath = basePath + "static\\";
         }
 		
+        internal static void EnumerateDatabase(String DirectoryPath, bool Recursive, Action<String> OnFile)
+        {
+            var path = StaticPath + DirectoryPath;
+            foreach (var file in System.IO.Directory.EnumerateFiles(path))
+                if (System.IO.Path.GetExtension(file) == ".cs") 
+                    OnFile(file.Substring(StaticPath.Length, file.Length - StaticPath.Length - 3));
+            if (Recursive)
+            {
+                foreach (var directory in System.IO.Directory.EnumerateDirectories(path))
+                    EnumerateDatabase(directory.Substring(StaticPath.Length), true, OnFile);
+            }
+        }
+
         public static MudObject GetObject(String Path, Action<String> ReportErrors = null)
         {
+            Path = Path.Replace('/', '\\');
             if (NamedObjects.ContainsKey(Path)) return NamedObjects[Path];
 			
 			var result = LoadObject(Path, ReportErrors);
@@ -33,6 +47,7 @@ namespace RMUD
 
 		public static MudObject GetOrCreateInstance(String Path, String InstanceName, Action<String> ReportErrors = null)
 		{
+            Path = Path.Replace('/', '\\');
 			var baseObject = GetObject(Path, ReportErrors);
 
 			//We can't make an instance of nothing; this means that the base object has an error of some kind.
@@ -62,6 +77,9 @@ namespace RMUD
 
 		public static Assembly CompileScript(String Path, Action<String> ReportErrors)
 		{
+            var start = DateTime.Now;
+            Path = Path.Replace('/', '\\');
+
 			if (!System.IO.File.Exists(Path))
 			{
                 LogError(String.Format("Could not find {0}", Path));
@@ -94,12 +112,14 @@ namespace RMUD
 				return null;
 			}
 
-            LogError(String.Format("Compiled {0}", Path));
+            LogError(String.Format("Compiled {0} in {1:0n} milliseconds.", Path, (DateTime.Now - start).TotalMilliseconds));
 			return compilationResults.CompiledAssembly;
 		}
 
         private static MudObject LoadObject(String Path, Action<String> ReportErrors)
         {
+            Path = Path.Replace('/', '\\');
+
             var staticObjectPath = StaticPath + Path + ".cs";
 			var assembly = CompileScript(staticObjectPath, ReportErrors);
 			if (assembly == null) return null;
@@ -120,6 +140,8 @@ namespace RMUD
 
 		internal static MudObject ReloadObject(String Path, Action<String> ReportErrors)
 		{
+            Path = Path.Replace('/', '\\');
+
 			if (NamedObjects.ContainsKey(Path))
 			{
 				var existing = NamedObjects[Path];
@@ -157,6 +179,8 @@ namespace RMUD
 
         internal static bool ResetObject(String Path, Action<String> ReportErrors)
         {
+            Path = Path.Replace('/', '\\');
+
             if (NamedObjects.ContainsKey(Path))
             {
                 var existing = NamedObjects[Path];
