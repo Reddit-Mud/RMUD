@@ -13,5 +13,6 @@ namespace RMUD
 
         public Actor Player;
 		public IClientCommandHandler CommandHandler;
+        public DateTime TimeOfLastCommand = DateTime.Now;
     }
 }

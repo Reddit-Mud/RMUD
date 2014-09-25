@@ -9,9 +9,16 @@ namespace RMUD
 {
     public static partial class Mud
     {
-        private static Mutex CommandLock = new Mutex();
-        private static LinkedList<Action> PendingActions = new LinkedList<Action>();
-        private static Thread ActionExecutionThread;
+        private class PendingCommand
+        {
+            internal Client Client;
+            internal String RawCommand;
+        }
+
+        private static Mutex PendingCommandLock = new Mutex();
+        private static LinkedList<PendingCommand> PendingCommands = new LinkedList<PendingCommand>();
+        private static Thread CommandExecutionThread;
+
         internal static List<Client> ConnectedClients = new List<Client>();
         internal static Mutex DatabaseLock = new Mutex();
 		private static bool ShuttingDown = false;
@@ -21,6 +28,8 @@ namespace RMUD
 		internal static ParserCommandHandler ParserCommandHandler;
 		public static CommandParser Parser { get { return ParserCommandHandler.Parser; } }
 		internal static LoginCommandHandler LoginCommandHandler;
+
+        internal static Settings SettingsObject;
 
 		internal struct RawPendingMessage
 		{
@@ -36,16 +45,11 @@ namespace RMUD
 
 		internal static List<RawPendingMessage> PendingMessages = new List<RawPendingMessage>();
 		
-        internal static void EnqueuAction(Action Action)
-        {
-            CommandLock.WaitOne();
-            PendingActions.AddLast(Action);
-            CommandLock.ReleaseMutex();
-        }
-
         internal static void EnqueuClientCommand(Client Client, String RawCommand)
         {
-			EnqueuAction(() => { Client.CommandHandler.HandleCommand(Client, RawCommand); });
+            PendingCommandLock.WaitOne();
+            PendingCommands.AddLast(new PendingCommand { Client = Client, RawCommand = RawCommand });
+            PendingCommandLock.ReleaseMutex();
         }
 
 		public static void ClientDisconnected(Client client)
@@ -53,13 +57,8 @@ namespace RMUD
 			DatabaseLock.WaitOne();
 			ConnectedClients.Remove(client);
 			if (client.Player != null) client.Player.ConnectedClient = null;
+            Thing.Move(client.Player, null);
 			DatabaseLock.ReleaseMutex();
-			EnqueuAction(() => {
-				if (client.Player != null)
-				{
-					Thing.Move(client.Player, null);
-				}			
-			});
 		}
 
         public static void ClientConnected(Client client)
@@ -84,12 +83,13 @@ namespace RMUD
 				InitializeDatabase(basePath);
 				var settings = GetObject("settings") as Settings;
 				if (settings == null) throw new InvalidProgramException("No settings object is defined in the database!");
+                SettingsObject = settings;
 
 				ParserCommandHandler = new ParserCommandHandler();
 				LoginCommandHandler = new LoginCommandHandler();
 				
-				ActionExecutionThread = new Thread(CommandProcessingThread);
-                ActionExecutionThread.Start();
+				CommandExecutionThread = new Thread(ProcessCommands);
+                CommandExecutionThread.Start();
 
                 Console.WriteLine("Engine ready with path " + basePath + ".");
             }
@@ -160,31 +160,47 @@ namespace RMUD
             DatabaseLock.ReleaseMutex();
         }
 
-        public static void CommandProcessingThread()
+        public static void ProcessCommands()
         {
             while (!ShuttingDown)
             {
                 System.Threading.Thread.Sleep(10);
 
-				while (PendingActions.Count > 0)
+				while (PendingCommands.Count > 0)
 				{
-					CommandLock.WaitOne();
-					var PendingCommand = PendingActions.First.Value;
-					PendingActions.RemoveFirst();
-					CommandLock.ReleaseMutex();
+                    PendingCommand PendingCommand = null;
 
-                    DatabaseLock.WaitOne();
+					PendingCommandLock.WaitOne();
                     try
                     {
-                        PendingCommand();
-                        SendPendingMessages();
+                        PendingCommand = PendingCommands.FirstOrDefault(pc => (DateTime.Now - pc.Client.TimeOfLastCommand).TotalMilliseconds > SettingsObject.AllowedCommandRate);
+                        if (PendingCommand != null)
+                            PendingCommands.Remove(PendingCommand);
                     }
                     catch (Exception e)
                     {
                         LogCriticalError(e);
-                        ClearPendingMessages();
+                        PendingCommand = null;
                     }
-                    DatabaseLock.ReleaseMutex();
+					PendingCommandLock.ReleaseMutex();
+
+                    if (PendingCommand != null)
+                    {
+                        DatabaseLock.WaitOne();
+                        try
+                        {
+                            PendingCommand.Client.TimeOfLastCommand = DateTime.Now;
+                            PendingCommand.Client.CommandHandler.HandleCommand(PendingCommand.Client, PendingCommand.RawCommand);
+                            SendPendingMessages();
+                        }
+                        catch (Exception e)
+                        {
+                            LogCriticalError(e);
+                            ClearPendingMessages();
+                        }
+
+                        DatabaseLock.ReleaseMutex();
+                    }
                 }
             }
         }
