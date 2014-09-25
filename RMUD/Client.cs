@@ -12,6 +12,7 @@ namespace RMUD
 		public virtual String ConnectionDescription { get { throw new NotImplementedException(); } }
         public virtual String IPString { get { throw new NotImplementedException(); } }
 
+        public bool IsLoggedOn { get { return Player != null; } }
         public Actor Player;
 		public IClientCommandHandler CommandHandler;
         public DateTime TimeOfLastCommand = DateTime.Now;

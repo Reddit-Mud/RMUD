@@ -72,7 +72,7 @@ namespace RMUD.Commands
 						if (value == null) data.Append("null");
 						else data.Append(value.ToString());
 					}
-					catch (Exception e)
+					catch (Exception)
 					{
 						data.Append("[Error retrieving value]");
 					}

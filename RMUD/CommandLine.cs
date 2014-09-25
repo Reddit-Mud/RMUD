@@ -41,7 +41,7 @@ namespace RMUD
 					{
 						Property.SetValue(CommandLineOptions, System.Convert.ChangeType(Arguments[i], Property.PropertyType), null);
 					}
-					catch (Exception e)
+					catch (Exception)
 					{
 						return Error.BadValue;
 					}

@@ -81,8 +81,6 @@ namespace RMUD
             }
 
             DatabaseLock.WaitOne();
-            client.Player = new Actor();
-            client.Player.ConnectedClient = client;
             client.CommandHandler = LoginCommandHandler;
 
 			var settings = GetObject("settings", s => client.Send(s + "\r\n")) as Settings;
@@ -135,6 +133,16 @@ namespace RMUD
 
 			switch (Scope)
 			{
+                case EventMessageScope.AllConnectedPlayers:
+                    {
+                        foreach (var client in ConnectedClients)
+                        {
+                            if (client.IsLoggedOn)
+                                PendingMessages.Add(new RawPendingMessage(client, Message));
+                        }
+                    }
+                    break;
+
 				//Send message only to the player
 				case EventMessageScope.Single:
 					{

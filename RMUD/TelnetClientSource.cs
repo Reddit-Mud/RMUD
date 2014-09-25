@@ -129,6 +129,8 @@ namespace RMUD
             var Client = _asyncResult.AsyncState as TelnetClient;
             System.Net.EndPoint remoteEndPoint = null;
 
+            if (Client.Socket == null) return;
+
             try
             {
                 remoteEndPoint = Client.Socket.RemoteEndPoint;
@@ -177,6 +179,7 @@ namespace RMUD
                 else
                     Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 				Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 if (!Client.WasRejected) Mud.ClientDisconnected(Client);
             }
         }

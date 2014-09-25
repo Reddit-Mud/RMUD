@@ -18,14 +18,18 @@ namespace RMUD
 				new Sequence(new KeyWord("LOGIN", false), new SingleWord("NAME")),
 				new CommandProcessorWrapper((m, a) =>
 				{
-					a.Short = m.Arguments["NAME"].ToString();
-					a.ConnectedClient.CommandHandler = Mud.ParserCommandHandler;
-					a.Rank = 500; //Everyone is a wizard! 
-					Thing.Move(a, 
+                    var client = m.Arguments["CLIENT"] as Client;
+                    client.Player = new Actor();
+					client.Player.Short = m.Arguments["NAME"].ToString();
+                    client.Player.Nouns.Add(client.Player.Short.ToUpper());
+                    client.Player.ConnectedClient = client;
+					client.CommandHandler = Mud.ParserCommandHandler;
+					client.Player.Rank = 500; //Everyone is a wizard! 
+					Thing.Move(client.Player,
                         Mud.GetObject(
                             (Mud.GetObject("settings") as Settings).NewPlayerStartRoom, 
-                            s => a.ConnectedClient.Send(s + "\r\n")));
-					Mud.EnqueuClientCommand(a.ConnectedClient, "look");
+                            s => client.Send(s + "\r\n")));
+					Mud.EnqueuClientCommand(client, "look");
 				}),
 				"Login to an existing account.");
 		}
@@ -34,11 +38,14 @@ namespace RMUD
 		{
             try
 			{
-				var matchedCommand = Parser.ParseCommand(Command, Client.Player);
-				if (matchedCommand != null)
-					matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], Client.Player);
-				else
-					Client.Send("I do not understand.");
+				var matchedCommand = Parser.ParseCommand(Command, null);
+                if (matchedCommand != null)
+                {
+                    matchedCommand.Matches[0].Arguments.Upsert("CLIENT", Client);
+                    matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], null);
+                }
+                else
+                    Client.Send("I do not understand.");
 			}
 			catch (Exception e)
 			{

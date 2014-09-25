@@ -22,7 +22,7 @@ namespace RMUD.Commands
 		{
             if (Actor.ConnectedClient == null) return;
 
-            var clients = Mud.ConnectedClients.Where(c => c.Player != null);
+            var clients = Mud.ConnectedClients.Where(c => c.IsLoggedOn);
 
             var builder = new StringBuilder();
             builder.Append("~~~ WHO IS ONLINE ~~~\r\n");
