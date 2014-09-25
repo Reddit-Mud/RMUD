@@ -8,7 +8,6 @@ namespace RMUD
 	public class Actor : Thing, ITakeRules, IContainer
 	{
 		public Client ConnectedClient;
-		public int Rank = 0;
 		public List<Thing> Inventory = new List<Thing>();
 
 		public override string Definite { get { return Short; } }

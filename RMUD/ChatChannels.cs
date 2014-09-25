@@ -9,10 +9,12 @@ namespace RMUD
     {
         public String Name;
         public List<Client> Subscribers = new List<Client>();
+        public Func<Client, bool> AccessFilter = null;
 
-        public ChatChannel(String Name)
+        public ChatChannel(String Name, Func<Client, bool> AccessFilter = null)
         {
             this.Name = Name;
+            this.AccessFilter = AccessFilter;
         }
     }
 

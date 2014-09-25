@@ -30,7 +30,7 @@ namespace RMUD.Commands
             foreach (var client in clients)
             {
                 builder.Append(String.Format("[{0}] {1} [{2}]",
-                    Mud.SettingsObject.GetNameForRank(client.Player.Rank),
+                    Mud.SettingsObject.GetNameForRank(client.Rank),
                     client.Player.Short,
                     client.ConnectionDescription));
 

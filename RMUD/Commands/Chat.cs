@@ -52,6 +52,12 @@ namespace RMUD.Commands
                     Actor.ConnectedClient.Send("I don't recognize that channel.\r\n");
             else
             {
+                if (channel.AccessFilter != null && !channel.AccessFilter(Actor.ConnectedClient))
+                {
+                    Actor.ConnectedClient.Send("You do not have access to that channel.\r\n");
+                    return;
+                }
+
                 if (!channel.Subscribers.Contains(Actor.ConnectedClient))
                     channel.Subscribers.Add(Actor.ConnectedClient);
                 Actor.ConnectedClient.Send("You are now subscribed to " + channel.Name + ".\r\n");
@@ -109,12 +115,18 @@ namespace RMUD.Commands
             {
                 if (!channel.Subscribers.Contains(Actor.ConnectedClient))
                 {
+                    if (channel.AccessFilter != null && !channel.AccessFilter(Actor.ConnectedClient))
+                    {
+                        Actor.ConnectedClient.Send("You do not have access to that channel.\r\n");
+                        return;
+                    }
+
                     channel.Subscribers.Add(Actor.ConnectedClient);
                     Actor.ConnectedClient.Send("You are now subscribed to " + channel.Name + ".\r\n");
                 }
 
                 var messageBuilder = new StringBuilder();
-                messageBuilder.Append(String.Format("[{0}] {1} \"", channel.Name, Actor.Short));
+                messageBuilder.Append(String.Format("[{0}] {1}: \"", channel.Name, Actor.Short));
                 Mud.AssembleText(Match.Arguments["TEXT"] as LinkedListNode<String>, messageBuilder);
                 messageBuilder.Append("\"\r\n");
 

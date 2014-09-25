@@ -24,7 +24,7 @@ namespace RMUD
                     client.Player.Nouns.Add(client.Player.Short.ToUpper());
                     client.Player.ConnectedClient = client;
 					client.CommandHandler = Mud.ParserCommandHandler;
-					client.Player.Rank = 500; //Everyone is a wizard! 
+					client.Rank = 500; //Everyone is a wizard! 
 					Thing.Move(client.Player,
                         Mud.GetObject(
                             (Mud.GetObject("settings") as Settings).NewPlayerStartRoom, 

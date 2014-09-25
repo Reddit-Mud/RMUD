@@ -30,7 +30,7 @@ namespace RMUD
             RankNames.Add(Int32.MinValue, "sentina");
 
             Mud.ChatChannels.Add(new ChatChannel("OOC"));
-            Mud.ChatChannels.Add(new ChatChannel("SENATE"));
+            Mud.ChatChannels.Add(new ChatChannel("SENATE", c => c.Rank >= 100));
             Mud.ChatChannels.Add(new ChatChannel("HELP"));
         }
 
