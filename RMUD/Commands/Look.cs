@@ -29,10 +29,11 @@ namespace RMUD.Commands
 			{
 				var builder = new StringBuilder();
 
+                builder.Append("\r\n");
 				builder.Append(location.Short);
 				builder.Append("\r\n");
 				builder.Append(location.Long.Expand(Actor, location));
-				builder.Append("\r\n");
+				builder.Append("\r\n\r\n");
 
                 var visibleThings = new List<Thing>(location.Contents.Where(t => !Object.ReferenceEquals(t, Actor)));
 
@@ -43,7 +44,7 @@ namespace RMUD.Commands
                     {
                         visibleThings.RemoveAt(i);
                         builder.Append(localeDescribable.LocaleDescription.Expand(Actor, localeDescribable as MudObject));
-                        builder.Append("\r\n");
+                        builder.Append("\r\n\r\n");
                     }
                     else
                     {
@@ -55,7 +56,7 @@ namespace RMUD.Commands
                 if (visibleThings.Count > 0)
                 {
                     builder.Append("Also here: " + String.Join(", ", visibleThings.Select(t => t.Indefinite)));
-                    builder.Append("\r\n");
+                    builder.Append("\r\n\r\n");
                 }
 
 				//Display exits from room
