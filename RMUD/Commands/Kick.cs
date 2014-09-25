@@ -16,6 +16,14 @@ namespace RMUD.Commands
                     new ObjectMatcher("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None)),
                 new KickProcessor(),
                 "Pow! Right in the kisser!");
+
+            Parser.AddCommand(
+                new Sequence(
+                    new RankGate(500),
+                    new KeyWord("KICK", false),
+                    new SingleWord("MASK")),
+                new MaskedKickProcessor(),
+                "FAAAAAALCON PUNCH!");
         }
     }
 
@@ -23,17 +31,32 @@ namespace RMUD.Commands
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
-            var player = Match.Arguments["PLAYER"] as Actor;
+            Kick(Match.Arguments["PLAYER"] as Actor, Actor);
+        }
 
-            if (player.ConnectedClient != null)
+        public static void Kick(Actor Player, Actor Actor)
+        {
+            if (Player.ConnectedClient != null)
             {
-                player.ConnectedClient.Send(Actor.Short + " has removed you from the server.\r\n");
-                player.ConnectedClient.Disconnect();
-                Mud.SendEventMessage(Actor, EventMessageScope.AllConnectedPlayers, Actor.Short + " has removed " + player.Short + " from the server.\r\n");
+                Player.ConnectedClient.Send(Actor.Short + " has removed you from the server.\r\n");
+                Player.ConnectedClient.Disconnect();
+                Mud.SendEventMessage(Actor, EventMessageScope.AllConnectedPlayers, Actor.Short + " has removed " + Player.Short + " from the server.\r\n");
             }
-            else if (Actor.ConnectedClient != null)
+        }
+    }
+
+    internal class MaskedKickProcessor : ICommandProcessor
+    {
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            var mask = Match.Arguments["MASK"].ToString();
+            var maskRegex = new System.Text.RegularExpressions.Regex(ProscriptionList.ConvertGlobToRegex(mask), System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            //Iterate over local copy because kicking modifies ConnectedClients.
+            foreach (var client in new List<Client>(Mud.ConnectedClients))
             {
-                Actor.ConnectedClient.Send(player.Short + " is not connected.. what? Please find a calculator and verify that 2 + 2 = 5, as expected.\r\n");
+                if (client.IsLoggedOn && maskRegex.Matches(client.IPString).Count > 0)
+                    KickProcessor.Kick(client.Player, Actor);
             }
         }
     }

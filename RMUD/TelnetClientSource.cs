@@ -70,9 +70,9 @@ namespace RMUD
 			{
 				Console.WriteLine("Telnet client left gracefully : " + Socket.RemoteEndPoint.ToString());
 				Socket.Close();
+                Socket = null;
+                if (!WasRejected) Mud.ClientDisconnected(this);
 			}
-			Socket = null;
-            if (!WasRejected) Mud.ClientDisconnected(this);
         }
     }
 
@@ -134,7 +134,15 @@ namespace RMUD
             try
             {
                 remoteEndPoint = Client.Socket.RemoteEndPoint;
+            }
+            catch (Exception) //Just shut this one up.
+            {
+                if (!Client.WasRejected) Mud.ClientDisconnected(Client);
+                return;
+            }
 
+            try
+            {
                 System.Net.Sockets.SocketError Error;
                 int DataSize = Client.Socket.EndReceive(_asyncResult, out Error);
 
