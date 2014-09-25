@@ -11,15 +11,16 @@ tbc
 ### Interested in Helping?
 Glad to hear! There is plenty to be done! 
 
-At this point in time, *RMUD* is still in a pre-alpha state. The engine that will power our game is not based off an existing codebase, instead being built from scratch in C#. We do not have a set road-map *yet*, but we have a couple issues opened here in the repo that discuss current tasks, especially world-building, in length.  Feel free to hop in any of the threads and offer ideas or help, and if you just want direction, there is a [TASK] currently open __[here](https://github.com/Trevoke/let-us-write-a-mud/issues/5)__ that we need to finish. If you are more interested in programming, feel free to fork the repo and start hacking away! More information on the code can be found __[here](https://github.com/Trevoke/let-us-write-a-mud/issues/2)__.
+At this point in time, *RMUD* is still in a pre-alpha state. The engine that will power our game is not based off an existing codebase, instead being built from scratch in C#. We do not have a set road-map *yet*, but plenty of issues are currently waiting to be tackled. Feel free to hop in any of the threads and offer ideas or help. If you are more interested in programming, feel free to fork the repo and start hacking away! More information on the code can be found __[here](https://github.com/Trevoke/let-us-write-a-mud/issues/2)__.
 
 Anything else, feel free to ask!
 
-A road-map and task-list will be up within the coming week.
+A road-map and task-list will be up within the coming weeks.
 
 
 ---
 
 ### Status
 As of September 2014, *RMUD* is currently in active development. 
-It is **not** in a playable state, and the server is **offline**.
+The game is **not** in a playable state, although the skeleton
+of the server can be tested at **luna.devrw.com:8669**.
