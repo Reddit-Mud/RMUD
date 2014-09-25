@@ -51,19 +51,9 @@ namespace RMUD.Commands
 				Thing.Move(Actor, destination);
 				Mud.EnqueuClientCommand(Actor.ConnectedClient, "look");
 
-				var arriveMessage = "";
-				if (direction.Value == Direction.DOWN)
-					arriveMessage = " arrives from above.\r\n";
-				else if (direction.Value == Direction.UP)
-					arriveMessage = " arrives from below.\r\n";
-				else if (direction.Value == Direction.IN)
-					arriveMessage = " arrives from outside.\r\n";
-				else if (direction.Value == Direction.OUT)
-					arriveMessage = " arrives from inside.\r\n";
-				else
-					arriveMessage = " arrives from the " + Link.Opposite(direction.Value).ToString().ToLower() + ".\r\n";
+                var arriveMessage = Link.FromMessage(Link.Opposite(direction.Value));
 
-				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + arriveMessage);
+				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " arrives " + arriveMessage + ".\r\n");
 			}
 		}
 	}

@@ -19,6 +19,10 @@ namespace RMUD
 		DOWN,
 		IN,
 		OUT,
+        PORT,
+        STARBOARD,
+        FORE,
+        AFT,
 	}
 
 	public class Link
@@ -40,7 +44,11 @@ namespace RMUD
             "UP", "U",
             "DOWN", "D" ,
 			"IN", "IN",		//'I' cannot be used as it is shorthand for the inventory command.
-			"OUT", "O"
+			"OUT", "O",
+            "PORT", "P",
+            "STARBOARD", "SB",
+            "FORE", "F",
+            "AFT", "A",
         };
 
 		public static bool IsCardinal(String _str)
@@ -74,9 +82,37 @@ namespace RMUD
 				case Direction.DOWN: return Direction.UP;
 				case Direction.IN: return Direction.OUT;
 				case Direction.OUT: return Direction.IN;
+                case Direction.PORT: return Direction.STARBOARD;
+                case Direction.STARBOARD: return Direction.PORT;
+                case Direction.FORE: return Direction.AFT;
+                case Direction.AFT: return Direction.FORE;
 				default: return Direction.NORTH;
 			}
 		}
+
+        public static String FromMessage(Direction Of)
+        {
+            switch (Of)
+            {
+                case Direction.NORTH: return "from the north";
+                case Direction.NORTHEAST: return "from the northeast";
+                case Direction.EAST: return "from the east";
+                case Direction.SOUTHEAST: return "from the southeast";
+                case Direction.SOUTH: return "from the south";
+                case Direction.SOUTHWEST: return "from the southwest";
+                case Direction.WEST: return "from the west";
+                case Direction.NORTHWEST: return "from the northwest";
+                case Direction.UP: return "from above";
+                case Direction.DOWN: return "from below";
+                case Direction.IN: return "from inside";
+                case Direction.OUT: return "from outside";
+                case Direction.PORT: return "from port";
+                case Direction.STARBOARD: return "from starboard";
+                case Direction.FORE: return "from foreward";
+                case Direction.AFT: return "from aftward";
+                default: return "";
+            }
+        }
 
 	}
 
