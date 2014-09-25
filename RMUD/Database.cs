@@ -69,7 +69,7 @@ namespace RMUD
 				return null;
 			}
 
-			var source = System.IO.File.ReadAllText(Path);
+			var source = "using RMUD;\r\n" + System.IO.File.ReadAllText(Path);
 
 			CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
 

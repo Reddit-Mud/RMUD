@@ -59,9 +59,9 @@
     <Compile Include="Commands\Look.cs" />
     <Compile Include="RuleDecorators\ILocaleDescriptionRules.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="database\static\testing\library.cs">
+    <None Include="database\static\testing\library.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <Compile Include="database\static\testing\disambig.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
