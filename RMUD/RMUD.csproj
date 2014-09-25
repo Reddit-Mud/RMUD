@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatChannels.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="CommandLine.cs" />
+    <Compile Include="Commands\Chat.cs" />
     <Compile Include="Commands\Kick.cs" />
     <Compile Include="Commands\Ban.cs" />
     <Compile Include="Commands\Who.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Commands\Look.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />
     <Compile Include="Parser\Matchers\Optional.cs" />
+    <Compile Include="Parser\Matchers\FirstOfMatcher.cs" />
     <Compile Include="ProscriptionList.cs" />
     <Compile Include="RuleDecorators\ILocaleDescriptionRules.cs" />
     <Compile Include="Utility.cs" />

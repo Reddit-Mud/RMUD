@@ -15,4 +15,10 @@ using System.Text;
 		{
 			List.AddRange(objects);
 		}
+
+        public static B ValueOrDefault<A,B>(this Dictionary<A, B> Dict, A Key)
+        {
+            if (Dict.ContainsKey(Key)) return Dict[Key];
+            else return default(B);
+        }
     }

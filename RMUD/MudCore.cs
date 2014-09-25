@@ -56,6 +56,7 @@ namespace RMUD
 		public static void ClientDisconnected(Client client)
 		{
 			DatabaseLock.WaitOne();
+            RemoveClientFromAllChannels(client);
 			ConnectedClients.Remove(client);
             if (client.Player != null)
             {

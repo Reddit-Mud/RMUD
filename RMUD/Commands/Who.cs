@@ -29,15 +29,17 @@ namespace RMUD.Commands
 
             foreach (var client in clients)
             {
-                builder.Append(client.Player.Short);
-                builder.Append(" [");
-                builder.Append(client.ConnectionDescription);
-                builder.Append("]");
+                builder.Append(String.Format("[{0}] {1} [{2}]",
+                    Mud.SettingsObject.GetNameForRank(client.Player.Rank),
+                    client.Player.Short,
+                    client.ConnectionDescription));
+
                 if (client.Player.Location != null)
                 {
                     builder.Append(" -- ");
                     builder.Append(client.Player.Location.Path);
                 }
+
                 builder.Append("\r\n");                
             }
 
