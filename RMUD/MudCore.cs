@@ -63,15 +63,15 @@ namespace RMUD
 
         public static void ClientConnected(Client client)
         {
-			client.Player = new Actor();
-			client.Player.ConnectedClient = client;
-			client.CommandHandler = LoginCommandHandler;
+            DatabaseLock.WaitOne();
+            client.Player = new Actor();
+            client.Player.ConnectedClient = client;
+            client.CommandHandler = LoginCommandHandler;
 
 			var settings = GetObject("settings", s => client.Send(s + "\r\n")) as Settings;
 			client.Send(settings.Banner);
 			client.Send(settings.MessageOfTheDay);
 
-			DatabaseLock.WaitOne();
             ConnectedClients.Add(client);
 			DatabaseLock.ReleaseMutex();
         }
