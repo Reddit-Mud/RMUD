@@ -122,7 +122,7 @@ namespace RMUD
             }
         }
 
-        private static string ValidCharacters = "@=|^\\;?:#.,!\"'$*<>/()[]{}-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
+        private static string ValidCharacters = "@=|^\\;?:#.,!\"'$*<>/()[]{}-+_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
 
         void OnData(IAsyncResult _asyncResult)
         {
