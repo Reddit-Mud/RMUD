@@ -18,7 +18,7 @@ namespace RMUD
 			public CommandLineOptions()
 			{
 				PORT = 8669;
-				DATABASEPATH = "database\\";
+				DATABASEPATH = "database/";
 			}
 		}
 
