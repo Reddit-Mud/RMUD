@@ -71,24 +71,35 @@ namespace RMUD
 
         #endregion
 
-        public virtual bool IsLighted()
+        public bool IsLit { get; private set; }
+
+        private void UpdateLighting()
         {
-            if (RoomType == RMUD.RoomType.Exterior) return true; //Query day/night system to see if there is light
+            IsLit = false;
 
-            bool foundLight = false;
-
-            Mud.EnumerateVisibleObjects(this, EnumerateVisibleObjectsSettings.Recurse, t =>
+            if (RoomType == RMUD.RoomType.Exterior)
             {
-                if (t is IEmitsLight)
-                    if ((t as IEmitsLight).EmitsLight)
-                    {
-                        foundLight = true;
-                        return EnumerateVisibleObjectsControl.Stop;
-                    }
-                return EnumerateVisibleObjectsControl.Continue;
-            });
+                IsLit = true;
+                //Query day/night system to see if there is light
+            }
+            else
+            {
+                Mud.EnumerateVisibleObjects(this, EnumerateVisibleObjectsSettings.Recurse, t =>
+                {
+                    if (t is IEmitsLight)
+                        if ((t as IEmitsLight).EmitsLight)
+                        {
+                            IsLit = true;
+                            return EnumerateVisibleObjectsControl.Stop;
+                        }
+                    return EnumerateVisibleObjectsControl.Continue;
+                });
+            }
+        }
 
-            return foundLight;
+        public override void HandleChanges()
+        {
+            UpdateLighting();
         }
     }
 }

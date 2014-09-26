@@ -21,5 +21,19 @@ namespace RMUD
 			this.Next = Next;
 			this.Arguments = new Dictionary<String, Object>(Arguments);
 		}
+
+        public PossibleMatch With(String ArgumentName, Object Value)
+        {
+            var r = new PossibleMatch(Arguments, Next);
+            r.Arguments.Upsert(ArgumentName, Value);
+            return r;
+        }
+
+        public PossibleMatch AdvanceWith(String ArgumentName, Object Value)
+        {
+            var r = new PossibleMatch(Arguments, Next.Next);
+            r.Arguments.Upsert(ArgumentName, Value);
+            return r;
+        }
     }
 }

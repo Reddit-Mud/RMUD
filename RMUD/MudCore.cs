@@ -45,12 +45,21 @@ namespace RMUD
 		}
 
 		internal static List<RawPendingMessage> PendingMessages = new List<RawPendingMessage>();
+
+        internal static List<MudObject> ChangedObjects = new List<MudObject>();
 		
         internal static void EnqueuClientCommand(Client Client, String RawCommand)
         {
             PendingCommandLock.WaitOne();
             PendingCommands.AddLast(new PendingCommand { Client = Client, RawCommand = RawCommand });
             PendingCommandLock.ReleaseMutex();
+        }
+
+        public static void MarkChangedObject(MudObject Object)
+        {
+            DatabaseLock.WaitOne();
+            if (!ChangedObjects.Contains(Object)) ChangedObjects.Add(Object);
+            DatabaseLock.ReleaseMutex();
         }
 
 		public static void ClientDisconnected(Client client)
@@ -178,6 +187,7 @@ namespace RMUD
                         {
                             PendingCommand.Client.TimeOfLastCommand = DateTime.Now;
                             PendingCommand.Client.CommandHandler.HandleCommand(PendingCommand.Client, PendingCommand.RawCommand);
+                            HandleChanges();
                             SendPendingMessages();
                         }
                         catch (Exception e)
@@ -212,6 +222,14 @@ namespace RMUD
             logfile.Close();
 
             Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}", DateTime.Now, ErrorString);
+        }
+
+        internal static void HandleChanges()
+        {
+            var startCount = ChangedObjects.Count;
+            for (int i = 0; i < startCount; ++i)
+                ChangedObjects[i].HandleChanges();
+            ChangedObjects.RemoveRange(0, startCount);
         }
 
         internal static void SendPendingMessages()
