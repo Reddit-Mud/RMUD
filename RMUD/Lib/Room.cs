@@ -5,10 +5,17 @@ using System.Text;
 
 namespace RMUD
 {
+    public enum RoomType
+    {
+        Exterior,
+        Interior
+    }
+
 	public class Room : MudObject, IContainer, IDescribed
 	{
 		public String Short;
 		public DescriptiveText Long { get; set; }
+        public RoomType RoomType = RoomType.Exterior;
 
 		public List<Thing> Contents = new List<Thing>();
 		public List<Link> Links = new List<Link>();
@@ -20,7 +27,9 @@ namespace RMUD
 			Links.Add(new Link { Direction = Direction, Destination = Destination, Door = Door });
 		}
 
-		public void AddScenery(String Description, params String[] Nouns)
+        #region Scenery 
+
+        public void AddScenery(String Description, params String[] Nouns)
 		{
 			var scenery = new Scenery();
 			scenery.Long = Description;
@@ -29,7 +38,16 @@ namespace RMUD
 			Scenery.Add(scenery);
 		}
 
-		public void Remove(Thing Thing)
+        public void AddScenery(Scenery Scenery)
+        {
+            this.Scenery.Add(Scenery);
+        }
+
+        #endregion
+
+        #region Implement IContainer
+
+        public void Remove(Thing Thing)
 		{
 			Contents.Remove(Thing);
 			Thing.Location = null;
@@ -49,6 +67,28 @@ namespace RMUD
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return (Contents as System.Collections.IEnumerable).GetEnumerator();
-		}
-	}
+        }
+
+        #endregion
+
+        public virtual bool IsLighted()
+        {
+            if (RoomType == RMUD.RoomType.Exterior) return true; //Query day/night system to see if there is light
+
+            bool foundLight = false;
+
+            Mud.EnumerateVisibleObjects(this, EnumerateVisibleObjectsSettings.Recurse, t =>
+            {
+                if (t is IEmitsLight)
+                    if ((t as IEmitsLight).EmitsLight)
+                    {
+                        foundLight = true;
+                        return EnumerateVisibleObjectsControl.Stop;
+                    }
+                return EnumerateVisibleObjectsControl.Continue;
+            });
+
+            return foundLight;
+        }
+    }
 }

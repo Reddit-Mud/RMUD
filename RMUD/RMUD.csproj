@@ -75,6 +75,8 @@
     <None Include="database\static\palantine\disambig_red_door.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="EnumerateVisibleObjects.cs" />
+    <Compile Include="RuleDecorators\IEmitsLight.cs" />
     <Compile Include="SendMessage.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />
     <Compile Include="Parser\Matchers\Optional.cs" />
