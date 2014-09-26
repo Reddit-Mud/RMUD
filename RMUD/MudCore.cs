@@ -135,6 +135,9 @@ namespace RMUD
                     {
                         GetObject(objectFile);
                     }
+
+                    HandleChanges();
+
                     Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
                 }
 

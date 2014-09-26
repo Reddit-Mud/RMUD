@@ -41,6 +41,7 @@ namespace RMUD
 			{
 				NamedObjects.Upsert(Path, result);
 				result.Initialize();
+                Mud.MarkChangedObject(result);
 			}
 			return result;
         }
@@ -150,6 +151,7 @@ namespace RMUD
 
 				NamedObjects.Upsert(Path, newObject);
 				newObject.Initialize();
+                Mud.MarkChangedObject(newObject);
 
 				//Preserve contents
 				if (existing is IContainer && newObject is IContainer)
@@ -188,6 +190,7 @@ namespace RMUD
                 var newObject = Activator.CreateInstance(existing.GetType()) as MudObject;
                 NamedObjects.Upsert(Path, newObject);
                 newObject.Initialize();
+                Mud.MarkChangedObject(newObject);
 
                 //Preserve the location of actors, and actors only.
                 if (existing is IContainer)
