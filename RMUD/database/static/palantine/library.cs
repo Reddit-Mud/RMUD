@@ -1,8 +1,4 @@
-﻿using RMUD;
-using System;
-using System.Collections.Generic;
-
-public class library : Room
+﻿public class library : Room
 {
 	public override void Initialize()
 	{

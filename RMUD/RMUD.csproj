@@ -63,21 +63,18 @@
     <Compile Include="Commands\Go.cs" />
     <Compile Include="Commands\Examine.cs" />
     <Compile Include="Commands\Look.cs" />
-    <None Include="database\static\palantine\library - Copy.cs">
+    <None Include="database\static\palantine\library_key.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="database\static\palantine\library_key.cs">
+    <None Include="database\static\palantine\disambig_key.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\disambig_key.cs">
+    </None>
+    <None Include="database\static\palantine\disambig_blue_door.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\disambig_blue_door.cs">
+    </None>
+    <None Include="database\static\palantine\disambig_red_door.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\disambig_red_door.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <Compile Include="SendMessage.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />
     <Compile Include="Parser\Matchers\Optional.cs" />
@@ -85,12 +82,12 @@
     <Compile Include="ProscriptionList.cs" />
     <Compile Include="RuleDecorators\ILocaleDescriptionRules.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="database\static\palantine\library.cs">
+    <None Include="database\static\palantine\library.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\disambig.cs">
+    </None>
+    <None Include="database\static\palantine\disambig.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <None Include="database\static\settings.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
