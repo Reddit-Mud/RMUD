@@ -63,6 +63,21 @@
     <Compile Include="Commands\Go.cs" />
     <Compile Include="Commands\Examine.cs" />
     <Compile Include="Commands\Look.cs" />
+    <None Include="database\static\palantine\library - Copy.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Compile Include="database\static\palantine\library_key.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\palantine\disambig_key.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\palantine\disambig_blue_door.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\palantine\disambig_red_door.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="SendMessage.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />
     <Compile Include="Parser\Matchers\Optional.cs" />
@@ -70,10 +85,10 @@
     <Compile Include="ProscriptionList.cs" />
     <Compile Include="RuleDecorators\ILocaleDescriptionRules.cs" />
     <Compile Include="Utility.cs" />
-    <None Include="database\static\testing\library.cs">
+    <Compile Include="database\static\palantine\library.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Compile Include="database\static\testing\disambig.cs">
+    </Compile>
+    <Compile Include="database\static\palantine\disambig.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <None Include="database\static\settings.cs">
