@@ -14,13 +14,15 @@ namespace RMUD.Commands
 					new Or(
 						new KeyWord("GET", false),
 						new KeyWord("TAKE", false)),
-					new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
-                        (actor, thing) => {
-                            if (actor.Contains(thing)) return -2;
-                            if (thing is ITakeRules && !(thing as ITakeRules).CanTake(actor))
-                                return -1;
-                            return 0;
-                        }, "SUBJECTSCORE")),
+                    new FirstOf(
+					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
+                            (actor, thing) => {
+                                if (actor.Contains(thing)) return -2;
+                                if (thing is ITakeRules && !(thing as ITakeRules).CanTake(actor))
+                                    return -1;
+                                return 0;
+                            }, "SUBJECTSCORE"),
+                        new Rest("GARBAGE"))),
                 new TakeProcessor(),
 				"Take something",
                 "SUBJECTSCORE");
@@ -31,23 +33,23 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["SUBJECT"] as Thing;
+			var target = Match.Arguments.ValueOrDefault("SUBJECT") as Thing;
             if (target == null)
             {
-                if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("Take what again?\r\n");
+                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "I don't see that here.\r\n");
             }
             else
             {
                 if (Actor.Contains(target))
                 {
-                    Actor.ConnectedClient.Send("You are already holding that.\r\n");
+                    Mud.SendMessage(Actor, "You are already holding that.\r\n");
                     return;
                 }
 
                 var takeRules = target as ITakeRules;
                 if (takeRules != null && !takeRules.CanTake(Actor))
                 {
-                    Actor.ConnectedClient.Send("You can't take that.\r\n");
+                    Mud.SendMessage(Actor, "You can't take that.\r\n");
                     return;
                 }
 
@@ -56,8 +58,8 @@ namespace RMUD.Commands
 
                 if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
                 {
-                    Mud.SendEventMessage(Actor, EventMessageScope.Single, "You take " + target.Indefinite + "\r\n");
-                    Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " takes " + target.Indefinite + "\r\n");
+                    Mud.SendMessage(Actor, MessageScope.Single, "You take " + target.Indefinite + "\r\n");
+                    Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " takes " + target.Indefinite + "\r\n");
                     Thing.Move(target, Actor);
                 }
             }

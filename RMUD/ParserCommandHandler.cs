@@ -44,12 +44,12 @@ namespace RMUD
 
                     if (matches == null)
                     {
-                        Client.Send(String.Format("Matched nothing in {0:n0} milliseconds.\r\n",
+                        Mud.SendMessage(Client, String.Format("Matched nothing in {0:n0} milliseconds.\r\n",
                             (endTime - startTime).TotalMilliseconds));
                     }
                     else
                     {
-                        Client.Send(String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.\r\n",
+                        Mud.SendMessage(Client, String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.\r\n",
                             matches.Command.Processor.GetType().Name,
                             (endTime - startTime).TotalMilliseconds,
                             matches.Matches.Count));
@@ -68,13 +68,13 @@ namespace RMUD
 
                             builder.Append("\r\n");
 
-                            Client.Send(builder.ToString());
+                            Mud.SendMessage(Client, builder.ToString());
                         }
                     }
                 }
                 else
                 {
-                    Client.Send("I don't recognize that debugging command.");
+                    Mud.SendMessage(Client, "I don't recognize that debugging command.");
                 }
 
                 #endregion
@@ -91,7 +91,7 @@ namespace RMUD
                     matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], Client.Player);
             }
             else
-                Client.Send("huh?\r\n");
+                Mud.SendMessage(Client, "huh?\r\n");
         }
     }
 }

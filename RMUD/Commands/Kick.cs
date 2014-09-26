@@ -38,9 +38,9 @@ namespace RMUD.Commands
         {
             if (Player.ConnectedClient != null)
             {
-                Player.ConnectedClient.Send(Actor.Short + " has removed you from the server.\r\n");
+                Mud.SendMessage(Player, Actor.Short + " has removed you from the server.\r\n");
                 Player.ConnectedClient.Disconnect();
-                Mud.SendEventMessage(Actor, EventMessageScope.AllConnectedPlayers, Actor.Short + " has removed " + Player.Short + " from the server.\r\n");
+                Mud.SendMessage(Actor, MessageScope.AllConnectedPlayers, Actor.Short + " has removed " + Player.Short + " from the server.\r\n");
             }
         }
     }

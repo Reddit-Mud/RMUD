@@ -27,7 +27,7 @@ namespace RMUD.Commands
 			var link = location.Links.FirstOrDefault(l => l.Direction == direction.Value);
 
 			if (link == null)
-				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You can't go that way.\r\n");
+				Mud.SendMessage(Actor, MessageScope.Single, "You can't go that way.\r\n");
 			else
 			{
 				if (link.Door != null)
@@ -35,17 +35,17 @@ namespace RMUD.Commands
 					var openable = link.Door as IOpenableRules;
 					if (openable != null && !openable.Open)
 					{
-						Mud.SendEventMessage(Actor, EventMessageScope.Single, "The door is closed.\r\n");
+						Mud.SendMessage(Actor, MessageScope.Single, "The door is closed.\r\n");
 						return;
 					}
 				}
 
-				Mud.SendEventMessage(Actor, EventMessageScope.Single, "You went " + direction.Value.ToString().ToLower() + ".\r\n");
-				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".\r\n");
+				Mud.SendMessage(Actor, MessageScope.Single, "You went " + direction.Value.ToString().ToLower() + ".\r\n");
+				Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".\r\n");
 				var destination = Mud.GetObject(link.Destination, s =>
 				{
 					if (Actor.ConnectedClient != null)
-						Actor.ConnectedClient.Send(s + "\r\n");
+						Mud.SendMessage(Actor, s + "\r\n");
 				}) as Room;
 				if (destination == null) throw new InvalidOperationException("[ERROR] Link does not lead to room.\r\n");
 				Thing.Move(Actor, destination);
@@ -53,7 +53,7 @@ namespace RMUD.Commands
 
                 var arriveMessage = Link.FromMessage(Link.Opposite(direction.Value));
 
-				Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " arrives " + arriveMessage + ".\r\n");
+				Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " arrives " + arriveMessage + ".\r\n");
 			}
 		}
 	}

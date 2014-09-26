@@ -54,7 +54,7 @@ namespace RMUD.Commands
             
             builder.Append("\r\n");
 
-            Actor.ConnectedClient.Send(builder.ToString());
+            Mud.SendMessage(Actor, builder.ToString());
 		}
 	}
 
@@ -64,13 +64,13 @@ namespace RMUD.Commands
         {
             if (!Match.Arguments.ContainsKey("GLOB"))
             {
-                if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("You need to supply a wildcard mask for the ip address.\r\n");
+                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "You need to supply a wildcard mask for the ip address.\r\n");
                 return;
             }
 
             if (!Match.Arguments.ContainsKey("REASON"))
             {
-                if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("You must state a reason for the ban.\r\n");
+                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "You must state a reason for the ban.\r\n");
                 return;
             }
 
@@ -82,7 +82,7 @@ namespace RMUD.Commands
             Mud.ProscriptionList.Ban(glob, reason);
 
             if (Actor.ConnectedClient != null)
-                Actor.ConnectedClient.Send("You banned " + glob + "\r\n");
+                Mud.SendMessage(Actor, "You banned " + glob + "\r\n");
         }
     }
 
@@ -92,7 +92,7 @@ namespace RMUD.Commands
         {
             if (!Match.Arguments.ContainsKey("GLOB"))
             {
-                if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("You need to supply the wildcard mask to unban.\r\n");
+                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "You need to supply the wildcard mask to unban.\r\n");
                 return;
             }
 
@@ -101,7 +101,7 @@ namespace RMUD.Commands
             Mud.ProscriptionList.RemoveBan(glob);
 
             if (Actor.ConnectedClient != null)
-                Actor.ConnectedClient.Send("You unbanned " + glob + "\r\n");
+                Mud.SendMessage(Actor, "You unbanned " + glob + "\r\n");
         }
     }
 }

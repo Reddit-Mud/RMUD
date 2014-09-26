@@ -49,18 +49,18 @@ namespace RMUD.Commands
 
             var channel = Match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
             if (channel == null)
-                    Actor.ConnectedClient.Send("I don't recognize that channel.\r\n");
+                    Mud.SendMessage(Actor, "I don't recognize that channel.\r\n");
             else
             {
                 if (channel.AccessFilter != null && !channel.AccessFilter(Actor.ConnectedClient))
                 {
-                    Actor.ConnectedClient.Send("You do not have access to that channel.\r\n");
+                    Mud.SendMessage(Actor, "You do not have access to that channel.\r\n");
                     return;
                 }
 
                 if (!channel.Subscribers.Contains(Actor.ConnectedClient))
                     channel.Subscribers.Add(Actor.ConnectedClient);
-                Actor.ConnectedClient.Send("You are now subscribed to " + channel.Name + ".\r\n");
+                Mud.SendMessage(Actor, "You are now subscribed to " + channel.Name + ".\r\n");
             }
 		}
 	}
@@ -73,11 +73,11 @@ namespace RMUD.Commands
 
             var channel = Match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
             if (channel == null)
-                Actor.ConnectedClient.Send("I don't recognize that channel.\r\n");
+                Mud.SendMessage(Actor, "I don't recognize that channel.\r\n");
             else
             {
                 channel.Subscribers.RemoveAll(c => Object.ReferenceEquals(c, Actor.ConnectedClient));
-                Actor.ConnectedClient.Send("You are now unsubscribed from " + channel.Name + ".\r\n");
+                Mud.SendMessage(Actor, "You are now unsubscribed from " + channel.Name + ".\r\n");
             }
         }
     }
@@ -98,7 +98,7 @@ namespace RMUD.Commands
             }
             builder.Append("\r\n");
 
-            Actor.ConnectedClient.Send(builder.ToString());
+            Mud.SendMessage(Actor, builder.ToString());
         }
     }
 
@@ -110,19 +110,19 @@ namespace RMUD.Commands
 
             var channel = Match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
             if (channel == null) //Shouldn't have gotten here is a channel name wasn't matched.
-                Actor.ConnectedClient.Send("I don't recognize that channel.\r\n");
+                Mud.SendMessage(Actor, "I don't recognize that channel.\r\n");
             else
             {
                 if (!channel.Subscribers.Contains(Actor.ConnectedClient))
                 {
                     if (channel.AccessFilter != null && !channel.AccessFilter(Actor.ConnectedClient))
                     {
-                        Actor.ConnectedClient.Send("You do not have access to that channel.\r\n");
+                        Mud.SendMessage(Actor, "You do not have access to that channel.\r\n");
                         return;
                     }
 
                     channel.Subscribers.Add(Actor.ConnectedClient);
-                    Actor.ConnectedClient.Send("You are now subscribed to " + channel.Name + ".\r\n");
+                    Mud.SendMessage(Actor, "You are now subscribed to " + channel.Name + ".\r\n");
                 }
 
                 var messageBuilder = new StringBuilder();

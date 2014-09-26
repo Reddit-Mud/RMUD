@@ -47,7 +47,7 @@ namespace RMUD.Commands
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null) 
-					Actor.ConnectedClient.Send("I don't think the concept of 'open' and 'closed' applies to that.\r\n");
+					Mud.SendMessage(Actor, "I don't think the concept of 'open' and 'closed' applies to that.\r\n");
 			}
 			else
 			{
@@ -55,14 +55,14 @@ namespace RMUD.Commands
 				{
 					if (thing != null)
 					{
-						Mud.SendEventMessage(Actor, EventMessageScope.Single, "You open " + thing.Definite + "\r\n");
-						Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " opens " + thing.Definite + "\r\n");
+						Mud.SendMessage(Actor, MessageScope.Single, "You open " + thing.Definite + "\r\n");
+						Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " opens " + thing.Definite + "\r\n");
 						target.HandleOpen(Actor);
 					}
 				}
 				else
 				{
-					Mud.SendEventMessage(Actor, EventMessageScope.Single, "You can't open that.\r\n");
+					Mud.SendMessage(Actor, MessageScope.Single, "You can't open that.\r\n");
 				}
 			}
 		}
@@ -77,7 +77,7 @@ namespace RMUD.Commands
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null)
-					Actor.ConnectedClient.Send("I don't think the concept of 'open' and 'closed' applies to that.\r\n");
+					Mud.SendMessage(Actor, "I don't think the concept of 'open' and 'closed' applies to that.\r\n");
 			}
 			else
 			{
@@ -85,14 +85,14 @@ namespace RMUD.Commands
 				{
 					if (thing != null)
 					{
-						Mud.SendEventMessage(Actor, EventMessageScope.Single, "You close " + thing.Definite + "\r\n");
-						Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " closes " + thing.Definite + "\r\n");
+						Mud.SendMessage(Actor, MessageScope.Single, "You close " + thing.Definite + "\r\n");
+						Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " closes " + thing.Definite + "\r\n");
 						target.HandleClose(Actor);
 					}
 				}
 				else
 				{
-					Mud.SendEventMessage(Actor, EventMessageScope.Single, "You can't close that.\r\n");
+					Mud.SendMessage(Actor, MessageScope.Single, "You can't close that.\r\n");
 				}
 			}
 		}

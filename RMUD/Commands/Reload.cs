@@ -35,15 +35,15 @@ namespace RMUD.Commands
 			var newObject = Mud.ReloadObject(target, s =>
 				{
 					if (Actor.ConnectedClient != null)
-						Actor.ConnectedClient.Send(s + "\r\n");
+						Mud.SendMessage(Actor, s + "\r\n");
 				});
 
 			if (Actor.ConnectedClient == null) return;
 
 			if (newObject == null)
-				Actor.ConnectedClient.Send("Failed to reload " + target + "\r\n");
+				Mud.SendMessage(Actor, "Failed to reload " + target + "\r\n");
 			else
-				Actor.ConnectedClient.Send("Reloaded " + target + "\r\n");				
+				Mud.SendMessage(Actor, "Reloaded " + target + "\r\n");				
 		}
 	}
 
@@ -55,15 +55,15 @@ namespace RMUD.Commands
             var succeeded = Mud.ResetObject(target, s =>
             {
                 if (Actor.ConnectedClient != null)
-                    Actor.ConnectedClient.Send(s + "\r\n");
+                    Mud.SendMessage(Actor, s + "\r\n");
             });
 
             if (Actor.ConnectedClient == null) return;
 
             if (!succeeded)
-                Actor.ConnectedClient.Send("Failed to reset " + target + "\r\n");
+                Mud.SendMessage(Actor, "Failed to reset " + target + "\r\n");
             else
-                Actor.ConnectedClient.Send("Reset " + target + "\r\n");
+                Mud.SendMessage(Actor, "Reset " + target + "\r\n");
         }
     }
 }

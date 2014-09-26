@@ -28,7 +28,7 @@ namespace RMUD.Commands
         {
             if (Object.ReferenceEquals(Actor, Match.Arguments["PLAYER"]))
             {
-                if (Actor.ConnectedClient != null) Actor.ConnectedClient.Send("Talking to yourself?\r\n");
+                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "Talking to yourself?\r\n");
                 return;
             }
 
@@ -41,9 +41,9 @@ namespace RMUD.Commands
 
             var player = Match.Arguments["PLAYER"] as Actor;
             if (player.ConnectedClient != null)
-                player.ConnectedClient.Send(String.Format(speechBuilder.ToString(), ""));
+                Mud.SendMessage(player, String.Format(speechBuilder.ToString(), ""));
             if (Actor.ConnectedClient != null)
-                Actor.ConnectedClient.Send(String.Format(speechBuilder.ToString(), " to " + player.Short));
+                Mud.SendMessage(Actor, String.Format(speechBuilder.ToString(), " to " + player.Short));
         }        
 	}
 }

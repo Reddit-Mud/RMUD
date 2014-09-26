@@ -72,23 +72,27 @@ namespace RMUD
             Rejected,
         }
 
-        public static ClientAcceptanceStatus ClientConnected(Client client)
+        public static ClientAcceptanceStatus ClientConnected(Client Client)
         {
-            var ban = ProscriptionList.IsBanned(client.IPString);
+            var ban = ProscriptionList.IsBanned(Client.IPString);
             if (ban.Banned)
             {
-                LogError("Rejected connection from " + client.IPString + ". Matched ban " + ban.SourceBan.Glob + " Reason: " + ban.SourceBan.Reason );
+                LogError("Rejected connection from " + Client.IPString + ". Matched ban " + ban.SourceBan.Glob + " Reason: " + ban.SourceBan.Reason );
                 return ClientAcceptanceStatus.Rejected;
             }
 
             DatabaseLock.WaitOne();
-            client.CommandHandler = LoginCommandHandler;
 
-			var settings = GetObject("settings", s => client.Send(s + "\r\n")) as Settings;
-			client.Send(settings.Banner);
-			client.Send(settings.MessageOfTheDay);
+            Client.CommandHandler = LoginCommandHandler;
 
-            ConnectedClients.Add(client);
+			var settings = GetObject("settings", s => Mud.SendMessage(Client, s + "\r\n")) as Settings;
+			Mud.SendMessage(Client, settings.Banner);
+			Mud.SendMessage(Client, settings.MessageOfTheDay);
+
+            ConnectedClients.Add(Client);
+
+            SendPendingMessages();
+
 			DatabaseLock.ReleaseMutex();
 
             return ClientAcceptanceStatus.Accepted;
@@ -111,16 +115,19 @@ namespace RMUD
 				CommandExecutionThread = new Thread(ProcessCommands);
                 CommandExecutionThread.Start();
 
-                var databaseObjectFiles = new List<String>();
-                EnumerateDatabase("", true, s => databaseObjectFiles.Add(s));
-
-                Console.WriteLine("Found {0} database objects to load.", databaseObjectFiles.Count);
-                var start = DateTime.Now;
-                foreach (var objectFile in databaseObjectFiles)
+                if (settings.UpfrontCompilation)
                 {
-                    GetObject(objectFile);
+                    var databaseObjectFiles = new List<String>();
+                    EnumerateDatabase("", true, s => databaseObjectFiles.Add(s));
+
+                    Console.WriteLine("Found {0} database objects to load.", databaseObjectFiles.Count);
+                    var start = DateTime.Now;
+                    foreach (var objectFile in databaseObjectFiles)
+                    {
+                        GetObject(objectFile);
+                    }
+                    Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
                 }
-                Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
 
                 Console.WriteLine("Engine ready with path " + basePath + ".");
             }
@@ -137,68 +144,6 @@ namespace RMUD
         public static void Shutdown()
         {
 			ShuttingDown = true;
-        }
-
-		public static void SendEventMessage(Actor Actor, EventMessageScope Scope, String Message)
-		{
-            DatabaseLock.WaitOne();
-
-			switch (Scope)
-			{
-                case EventMessageScope.AllConnectedPlayers:
-                    {
-                        foreach (var client in ConnectedClients)
-                        {
-                            if (client.IsLoggedOn)
-                                PendingMessages.Add(new RawPendingMessage(client, Message));
-                        }
-                    }
-                    break;
-
-				//Send message only to the player
-				case EventMessageScope.Single:
-					{
-						if (Actor == null) break;
-						if (Actor.ConnectedClient == null) break;
-						PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, Message));
-					}
-					break;
-
-				//Send message to everyone in the same location as the player
-				case EventMessageScope.Local:
-					{
-						if (Actor == null) break;
-						var location = Actor.Location as Room;
-						if (location == null) break;
-						foreach (var thing in location.Contents)
-						{
-							var other = thing as Actor;
-							if (other == null) continue;
-							if (other.ConnectedClient == null) continue;
-							PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Message));
-						}
-					}
-					break;
-
-				//Send message to everyone in the same location EXCEPT the player.
-				case EventMessageScope.External:
-					{
-						if (Actor == null) break;
-						var location = Actor.Location as Room;
-						if (location == null) break;
-						foreach (var thing in location.Contents)
-						{
-							var other = thing as Actor;
-							if (other == null) continue;
-							if (Object.ReferenceEquals(other, Actor)) continue;
-							if (other.ConnectedClient == null) continue;
-							PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Message));
-						}
-					}
-					break;
-			}
-
-            DatabaseLock.ReleaseMutex();
         }
 
         public static void ProcessCommands()
@@ -228,6 +173,7 @@ namespace RMUD
                     if (PendingCommand != null)
                     {
                         DatabaseLock.WaitOne();
+
                         try
                         {
                             PendingCommand.Client.TimeOfLastCommand = DateTime.Now;
@@ -270,8 +216,8 @@ namespace RMUD
 
         internal static void SendPendingMessages()
         {
-			foreach (var eventMessage in PendingMessages)
-				eventMessage.Destination.Send(eventMessage.Message);
+			foreach (var message in PendingMessages)
+				message.Destination.Send(message.Message);
             PendingMessages.Clear();
         }
 

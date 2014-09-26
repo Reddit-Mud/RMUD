@@ -42,9 +42,9 @@ namespace RMUD.Commands
 			if (Actor.ConnectedClient != null)
 			{
 				if (target == null)
-					Mud.SendEventMessage(Actor, EventMessageScope.Single, "That object is indescribeable.\r\n");
+					Mud.SendMessage(Actor, MessageScope.Single, "That object is indescribeable.\r\n");
 				else
-					Mud.SendEventMessage(Actor, EventMessageScope.Single, target.Long.Expand(Actor, target as MudObject) + "\r\n");
+					Mud.SendMessage(Actor, MessageScope.Single, target.Long.Expand(Actor, target as MudObject) + "\r\n");
 			}
 		}
 	}

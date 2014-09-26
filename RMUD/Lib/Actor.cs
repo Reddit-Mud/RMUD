@@ -13,7 +13,7 @@ namespace RMUD
 		public override string Definite { get { return Short; } }
 		public override string Indefinite { get { return Short; } }
 
-		bool ITakeRules.CanTake(Actor Actor)
+        bool ITakeRules.CanTake(Actor Actor)
 		{
 			return false;
 		}

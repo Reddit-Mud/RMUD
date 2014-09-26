@@ -45,7 +45,7 @@ namespace RMUD.Commands
 
             builder.Append("\r\n");
 
-            Actor.ConnectedClient.Send(builder.ToString());
+            Mud.SendMessage(Actor, builder.ToString());
 		}
 	}
 }

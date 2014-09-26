@@ -81,7 +81,7 @@ namespace RMUD.Commands
 				data.Append("\r\n");
 			}
 
-			Actor.ConnectedClient.Send(data.ToString());
+			Mud.SendMessage(Actor, data.ToString());
 		}
 	}
 }

@@ -58,20 +58,20 @@ namespace RMUD.Commands
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null) 
-					Actor.ConnectedClient.Send("I don't think the concept of 'locked' applies to that.\r\n");
+					Mud.SendMessage(Actor, "I don't think the concept of 'locked' applies to that.\r\n");
 				return;
 			}
 
 			if (!Object.ReferenceEquals(Actor, key.Location))
 			{
 				if (Actor.ConnectedClient != null)
-					Actor.ConnectedClient.Send("You'd have to be holding " + key.Definite + " for that to work.\r\n");
+					Mud.SendMessage(Actor, "You'd have to be holding " + key.Definite + " for that to work.\r\n");
 				return;
 			}
 
 			if (!target.Locked)
 			{
-				Mud.SendEventMessage(Actor, EventMessageScope.Single, "It's not locked.\r\n");
+				Mud.SendMessage(Actor, MessageScope.Single, "It's not locked.\r\n");
 				return;
 			}
 
@@ -80,14 +80,14 @@ namespace RMUD.Commands
 				var thing = target as Thing;
 				if (thing != null)
 				{
-					Mud.SendEventMessage(Actor, EventMessageScope.Single, "You unlock " + thing.Definite + ".\r\n");
-					Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " unlocks " + thing.Indefinite + " with " + key.Indefinite + ".\r\n");
+					Mud.SendMessage(Actor, MessageScope.Single, "You unlock " + thing.Definite + ".\r\n");
+					Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " unlocks " + thing.Indefinite + " with " + key.Indefinite + ".\r\n");
 				}
 				target.HandleUnlock(Actor, key);
 			}
 				else
 			{
-				Mud.SendEventMessage(Actor, EventMessageScope.Single, "It doesn't work.\r\n");
+				Mud.SendMessage(Actor, MessageScope.Single, "It doesn't work.\r\n");
 			}
 		}
 	}
@@ -102,20 +102,20 @@ namespace RMUD.Commands
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null)
-					Actor.ConnectedClient.Send("I don't think the concept of 'locked' applies to that.\r\n");
+					Mud.SendMessage(Actor, "I don't think the concept of 'locked' applies to that.\r\n");
 				return;
 			}
 
 			if (!Object.ReferenceEquals(Actor, key.Location))
 			{
 				if (Actor.ConnectedClient != null)
-					Actor.ConnectedClient.Send("You'd have to be holding " + key.Definite + " for that to work.\r\n");
+					Mud.SendMessage(Actor, "You'd have to be holding " + key.Definite + " for that to work.\r\n");
 				return;
 			}
 
 			if (target.Locked)
 			{
-				Mud.SendEventMessage(Actor, EventMessageScope.Single, "It's already locked.\r\n");
+				Mud.SendMessage(Actor, MessageScope.Single, "It's already locked.\r\n");
 				return;
 			}
 
@@ -124,14 +124,14 @@ namespace RMUD.Commands
 				var thing = target as Thing;
 				if (thing != null)
 				{
-					Mud.SendEventMessage(Actor, EventMessageScope.Single, "You lock " + thing.Definite + ".\r\n");
-					Mud.SendEventMessage(Actor, EventMessageScope.External, Actor.Short + " locks " + thing.Indefinite + " with " + key.Indefinite + ".\r\n");
+					Mud.SendMessage(Actor, MessageScope.Single, "You lock " + thing.Definite + ".\r\n");
+					Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " locks " + thing.Indefinite + " with " + key.Indefinite + ".\r\n");
 				}
 				target.HandleLock(Actor, key);
 			}
 			else
 			{
-				Mud.SendEventMessage(Actor, EventMessageScope.Single, "It doesn't work.\r\n");
+				Mud.SendMessage(Actor, MessageScope.Single, "It doesn't work.\r\n");
 			}
 		}
 	}

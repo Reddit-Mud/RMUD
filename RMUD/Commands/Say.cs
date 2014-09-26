@@ -61,7 +61,7 @@ namespace RMUD.Commands
 			else
 				speechBuilder.Append("\r\n");
 
-			Mud.SendEventMessage(Actor, EventMessageScope.Local, speechBuilder.ToString());
+			Mud.SendMessage(Actor, MessageScope.Local, speechBuilder.ToString());
 		}
 
         

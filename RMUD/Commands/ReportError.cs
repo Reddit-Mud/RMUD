@@ -17,7 +17,7 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			if (Actor.ConnectedClient != null)
-				Actor.ConnectedClient.Send(Message);
+				Mud.SendMessage(Actor, Message);
 		}
 	}
 }

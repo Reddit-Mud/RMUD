@@ -39,7 +39,7 @@ namespace RMUD.Commands
 				}
 			}
 
-			Mud.SendEventMessage(Actor, EventMessageScope.Single, builder.ToString());
+			Mud.SendMessage(Actor, MessageScope.Single, builder.ToString());
 		}
 	}
 }

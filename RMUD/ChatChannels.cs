@@ -32,7 +32,7 @@ namespace RMUD
             foreach (var client in Channel.Subscribers)
             {
                 if (client.IsLoggedOn)
-                    client.Send(Message);
+                    Mud.SendMessage(client, Message);
             }
         }
 

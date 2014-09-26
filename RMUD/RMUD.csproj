@@ -63,6 +63,7 @@
     <Compile Include="Commands\Go.cs" />
     <Compile Include="Commands\Examine.cs" />
     <Compile Include="Commands\Look.cs" />
+    <Compile Include="SendMessage.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />
     <Compile Include="Parser\Matchers\Optional.cs" />
     <Compile Include="Parser\Matchers\FirstOfMatcher.cs" />

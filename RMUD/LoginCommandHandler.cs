@@ -28,7 +28,7 @@ namespace RMUD
 					Thing.Move(client.Player,
                         Mud.GetObject(
                             (Mud.GetObject("settings") as Settings).NewPlayerStartRoom, 
-                            s => client.Send(s + "\r\n")));
+                            s => Mud.SendMessage(client, s + "\r\n")));
 					Mud.EnqueuClientCommand(client, "look");
 				}),
 				"Login to an existing account.");
@@ -45,12 +45,12 @@ namespace RMUD
                     matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], null);
                 }
                 else
-                    Client.Send("I do not understand.");
+                    Mud.SendMessage(Client, "I do not understand.");
 			}
 			catch (Exception e)
 			{
 				Mud.ClearPendingMessages();
-				Client.Send(e.Message);
+                Mud.SendMessage(Client, e.Message);
 			}
 		}
 	}

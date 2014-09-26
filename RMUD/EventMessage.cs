@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public enum EventMessageScope
+	public enum MessageScope
 	{
 		Single,
 		Local,
