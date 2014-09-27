@@ -48,6 +48,8 @@ namespace RMUD.Commands
 				Thing.Move(target, Actor.Location);
 
 				if (dropRules != null) dropRules.HandleDrop(Actor);
+
+                Mud.MarkChangedObject(target, EnumerateObjectsSettings.ShallowLocation);
 			}
 		}
 	}

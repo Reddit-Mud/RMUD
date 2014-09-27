@@ -84,15 +84,15 @@ namespace RMUD
             }
             else
             {
-                Mud.EnumerateVisibleObjects(this, EnumerateVisibleObjectsSettings.Recurse, t =>
+                Mud.EnumerateObjects(this, EnumerateObjectsSettings.SingleRecurse | EnumerateObjectsSettings.VisibleOnly, t =>
                 {
                     if (t is IEmitsLight)
                         if ((t as IEmitsLight).EmitsLight)
                         {
                             IsLit = true;
-                            return EnumerateVisibleObjectsControl.Stop;
+                            return EnumerateObjectsControl.Stop;
                         }
-                    return EnumerateVisibleObjectsControl.Continue;
+                    return EnumerateObjectsControl.Continue;
                 });
             }
         }

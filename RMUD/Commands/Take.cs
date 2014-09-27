@@ -62,6 +62,8 @@ namespace RMUD.Commands
                     Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " takes " + target.Indefinite + "\r\n");
                     Thing.Move(target, Actor);
                 }
+
+                Mud.MarkChangedObject(target, EnumerateObjectsSettings.ShallowLocation);
             }
 		}
 	}

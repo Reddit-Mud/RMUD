@@ -55,10 +55,14 @@ namespace RMUD
             PendingCommandLock.ReleaseMutex();
         }
 
-        public static void MarkChangedObject(MudObject Object)
+        public static void MarkChangedObject(MudObject Object, EnumerateObjectsSettings Settings)
         {
             DatabaseLock.WaitOne();
-            if (!ChangedObjects.Contains(Object)) ChangedObjects.Add(Object);
+            EnumerateObjects(Object, Settings, o =>
+                {
+                    if (!ChangedObjects.Contains(o)) ChangedObjects.Add(o);
+                    return EnumerateObjectsControl.Continue;
+                });
             DatabaseLock.ReleaseMutex();
         }
 

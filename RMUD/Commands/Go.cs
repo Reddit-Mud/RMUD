@@ -54,6 +54,9 @@ namespace RMUD.Commands
                 var arriveMessage = Link.FromMessage(Link.Opposite(direction.Value));
 
 				Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " arrives " + arriveMessage + ".\r\n");
+
+                Mud.MarkChangedObject(location, EnumerateObjectsSettings.Room);
+                Mud.MarkChangedObject(destination, EnumerateObjectsSettings.Room);
 			}
 		}
 	}

@@ -8,7 +8,7 @@
         AddScenery("Which do you mean?", "MIRROR", "MIRRORS");
 
         OpenLink(RMUD.Direction.WEST, "palantine\\library", RMUD.Mud.GetObject("palantine\\disambig_blue_door"));
-        OpenLink(RMUD.Direction.EAST, "palantine\\disambig", RMUD.Mud.GetObject("palantine\\disambig_red_door"));
+        OpenLink(RMUD.Direction.EAST, "palantine\\dark_room", RMUD.Mud.GetObject("palantine\\disambig_red_door"));
 
         RMUD.Thing.Move(RMUD.Mud.GetObject("palantine\\disambig_key") as RMUD.Thing, this);
         RMUD.Thing.Move(RMUD.Mud.GetObject("palantine\\library_key") as RMUD.Thing, this);

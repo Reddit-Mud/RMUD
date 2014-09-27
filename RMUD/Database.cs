@@ -41,7 +41,7 @@ namespace RMUD
 			{
 				NamedObjects.Upsert(Path, result);
 				result.Initialize();
-                Mud.MarkChangedObject(result);
+                Mud.MarkChangedObject(result, EnumerateObjectsSettings.Room);
 			}
 			return result;
         }
@@ -68,6 +68,7 @@ namespace RMUD
 				newMudObject.Instance = InstanceName;
 
 				newMudObject.Initialize();
+                Mud.MarkChangedObject(newMudObject, EnumerateObjectsSettings.Room);
 				return newMudObject;
 			}
 			else
@@ -151,7 +152,7 @@ namespace RMUD
 
 				NamedObjects.Upsert(Path, newObject);
 				newObject.Initialize();
-                Mud.MarkChangedObject(newObject);
+                Mud.MarkChangedObject(newObject, EnumerateObjectsSettings.Room);
 
 				//Preserve contents
 				if (existing is IContainer && newObject is IContainer)
@@ -190,7 +191,7 @@ namespace RMUD
                 var newObject = Activator.CreateInstance(existing.GetType()) as MudObject;
                 NamedObjects.Upsert(Path, newObject);
                 newObject.Initialize();
-                Mud.MarkChangedObject(newObject);
+                Mud.MarkChangedObject(newObject, EnumerateObjectsSettings.Room);
 
                 //Preserve the location of actors, and actors only.
                 if (existing is IContainer)
