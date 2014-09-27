@@ -2,8 +2,9 @@
 {
 	public override void Initialize()
 	{
-		Banner = "~~== REDDIT MUD ==~~\r\n";
-		MessageOfTheDay = "Prototype by Blecki\r\nFor now, just type 'login [name]'. You'll enter the world and be given wizard powers. Neat!\r\n";
-        NewPlayerStartRoom = "palantine/disambig";
+		Banner = "RMUD\r\n";
+		MessageOfTheDay = "Player accounts are not yet implemented. For now, just use 'login [name]'.\r\n";
+        	NewPlayerStartRoom = "tutorial/school/lobby";
+        	UpfrontCompiliation = "true";
 	}
 }
