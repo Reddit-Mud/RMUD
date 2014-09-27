@@ -84,7 +84,7 @@ namespace RMUD
             }
             else
             {
-                Mud.EnumerateObjects(this, EnumerateObjectsSettings.SingleRecurse | EnumerateObjectsSettings.VisibleOnly, t =>
+                Mud.EnumerateObjects(this, EnumerateObjectsDepth.Deep, t =>
                 {
                     if (t is IEmitsLight)
                         if ((t as IEmitsLight).EmitsLight)

@@ -11,48 +11,17 @@ namespace RMUD
         Continue
     }
 
-    [Flags]
-    public enum EnumerateObjectsSettings
+    public enum EnumerateObjectsDepth
     {
-        None = 0,
-        SingleRecurse = 1,
-        DeepRecurse = 2,
-        IncludeSelf = 4,
-        VisibleOnly = 8,
-        Peers = 16,
-        Location = 32,
-        OnlySelf = 64,
-
-        DeepLocation = DeepRecurse | Location | IncludeSelf,
-        ShallowLocation = SingleRecurse | Location | IncludeSelf,
-        Room = IncludeSelf | DeepRecurse,
+        None,
+        Shallow,
+        Deep
     }
 
     public static partial class Mud
     {
-        private static EnumerateObjectsControl __EnumerateObjects(MudObject Source, EnumerateObjectsSettings Settings, Func<MudObject, EnumerateObjectsControl> Callback)
+        public static EnumerateObjectsControl EnumerateObjects(MudObject Source, EnumerateObjectsDepth Depth, Func<MudObject, EnumerateObjectsControl> Callback)
         {
-            if ((Settings & EnumerateObjectsSettings.OnlySelf) == EnumerateObjectsSettings.OnlySelf)
-                return Callback(Source);
-
-            if ((Settings & EnumerateObjectsSettings.Location) == EnumerateObjectsSettings.Location)
-            {
-                if (Source is Thing && (Source as Thing).Location != null)
-                    return __EnumerateObjects((Source as Thing).Location, Settings ^ EnumerateObjectsSettings.Location, Callback);
-                return EnumerateObjectsControl.Continue;
-            }
-
-            if ((Settings & EnumerateObjectsSettings.Peers) == EnumerateObjectsSettings.Peers)
-            {
-                if (Source is Thing && (Source as Thing).Location != null)
-                    return __EnumerateObjects((Source as Thing).Location, Settings ^ EnumerateObjectsSettings.Peers, Callback);
-                return EnumerateObjectsControl.Continue;
-            }
-             
-            if ((Settings & EnumerateObjectsSettings.IncludeSelf) == EnumerateObjectsSettings.IncludeSelf)
-                    if (Callback(Source) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
-
-            
             var container = Source as IContainer;
             if (container == null) return EnumerateObjectsControl.Continue;
 
@@ -60,24 +29,19 @@ namespace RMUD
             {
                 if (Callback(thing) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
 
-                if ((Settings & EnumerateObjectsSettings.SingleRecurse) == EnumerateObjectsSettings.SingleRecurse && thing is IContainer)
+                if (Depth == EnumerateObjectsDepth.Deep)
                 {
-                    if (__EnumerateObjects(thing, Settings ^ EnumerateObjectsSettings.SingleRecurse, Callback) == EnumerateObjectsControl.Stop)
+                    if (EnumerateObjects(thing, EnumerateObjectsDepth.Deep, Callback) == EnumerateObjectsControl.Stop)
                         return EnumerateObjectsControl.Stop;
                 }
-                else if ((Settings & EnumerateObjectsSettings.DeepRecurse) == EnumerateObjectsSettings.DeepRecurse && thing is IContainer)
+                else if (Depth == EnumerateObjectsDepth.Shallow)
                 {
-                    if (__EnumerateObjects(thing, Settings, Callback) == EnumerateObjectsControl.Stop)
+                    if (EnumerateObjects(thing, EnumerateObjectsDepth.None, Callback) == EnumerateObjectsControl.Stop)
                         return EnumerateObjectsControl.Stop;
                 }
             }
 
             return EnumerateObjectsControl.Continue;
-        }
-
-        public static void EnumerateObjects(MudObject Source, EnumerateObjectsSettings Settings, Func<MudObject, EnumerateObjectsControl> Callback)
-        {
-            __EnumerateObjects(Source, Settings, Callback);
         }
     }
 
