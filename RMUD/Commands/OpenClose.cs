@@ -55,7 +55,8 @@ namespace RMUD.Commands
 			}
 			else
 			{
-				if (target.CanOpen(Actor))
+                var checkRule = target.CanOpen(Actor);
+				if (checkRule.Allowed)
 				{
 					if (thing != null)
 					{
@@ -66,7 +67,7 @@ namespace RMUD.Commands
 				}
 				else
 				{
-					Mud.SendMessage(Actor, MessageScope.Single, "You can't open that.\r\n");
+					Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
 				}
 			}
 		}
@@ -85,7 +86,8 @@ namespace RMUD.Commands
 			}
 			else
 			{
-				if (target.CanClose(Actor))
+                var checkRule = target.CanClose(Actor);
+				if (checkRule.Allowed)
 				{
 					if (thing != null)
 					{
@@ -96,7 +98,7 @@ namespace RMUD.Commands
 				}
 				else
 				{
-					Mud.SendMessage(Actor, MessageScope.Single, "You can't close that.\r\n");
+					Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
 				}
 			}
 		}

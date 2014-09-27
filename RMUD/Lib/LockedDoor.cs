@@ -20,15 +20,17 @@ namespace RMUD
 
 		public bool Open { get; set; }
 
-		bool IOpenableRules.CanOpen(Actor Actor)
+		CheckRule IOpenableRules.CanOpen(Actor Actor)
 		{
-			if (Locked) return false;
-			return !Open;
+            if (Locked) return CheckRule.Disallow("It seems to be locked.");
+            if (Open) return CheckRule.Disallow("It's already open.");
+            else return CheckRule.Allow();
 		}
 
-		bool IOpenableRules.CanClose(Actor Actor)
+		CheckRule IOpenableRules.CanClose(Actor Actor)
 		{
-			return Open;
+            if (!Open) return CheckRule.Disallow("It's already closed.");
+            else return CheckRule.Allow();
 		}
 
 		void IOpenableRules.HandleOpen(Actor Actor)

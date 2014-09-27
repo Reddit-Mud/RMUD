@@ -81,6 +81,7 @@
     <Compile Include="EnumerateObjects.cs" />
     <Compile Include="NounList.cs" />
     <Compile Include="Parser\Matchers\FailIfNoMatches.cs" />
+    <Compile Include="RuleDecorators\CheckRuleResponse.cs" />
     <Compile Include="RuleDecorators\IEmitsLight.cs" />
     <Compile Include="SendMessage.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />

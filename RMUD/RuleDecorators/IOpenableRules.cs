@@ -11,8 +11,8 @@ namespace RMUD
 	public interface IOpenableRules
 	{
 		bool Open { get; }
-		bool CanOpen(Actor Actor);
-		bool CanClose(Actor Actor);
+		CheckRule CanOpen(Actor Actor);
+		CheckRule CanClose(Actor Actor);
 		void HandleOpen(Actor Actor);
 		void HandleClose(Actor Actor);
 	}
