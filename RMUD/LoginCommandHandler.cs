@@ -25,6 +25,7 @@ namespace RMUD
                     client.Player.ConnectedClient = client;
 					client.CommandHandler = Mud.ParserCommandHandler;
 					client.Rank = 500; //Everyone is a wizard! 
+                    Mud.FindChatChannel("OOC").Subscribers.Add(client); //Everyone is on ooc!
 					Thing.Move(client.Player,
                         Mud.GetObject(
                             (Mud.GetObject("settings") as Settings).NewPlayerStartRoom, 

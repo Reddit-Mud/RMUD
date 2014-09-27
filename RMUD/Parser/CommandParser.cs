@@ -35,6 +35,11 @@ namespace RMUD
 			}
 		}
 
+        public class MatchAborted : Exception
+        {
+            public MatchAborted(String Message) : base(Message) { }
+        }
+
 		public class MatchContext
 		{
 			public Actor ExecutingActor;
@@ -72,8 +77,19 @@ namespace RMUD
 
 			foreach (var command in Commands)
 			{
+                IEnumerable<PossibleMatch> matches;
+
+                try
+                {
+                    matches = command.Matcher.Match(rootMatch, matchContext);
+                }
+                catch (MatchAborted ma)
+                {
+                    return new MatchedCommand(new CommandEntry { Processor = new Commands.ReportError(ma.Message) }, null);
+                }
+
                 //Only accept matches that consumed all of the input.
-                var matches = command.Matcher.Match(rootMatch, matchContext).Where(m => m.Next == null);
+                matches = matches.Where(m => m.Next == null);
 
                 //If we did, however, consume all of the input, we will assume this match is successful.
                 if (matches.Count() > 0)
