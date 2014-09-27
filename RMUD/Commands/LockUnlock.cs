@@ -79,8 +79,9 @@ namespace RMUD.Commands
 				return;
 			}
 
-			if (target.CanUnlock(Actor, key))
-			{
+            var checkRule = target.CanUnlock(Actor, key);
+            if (checkRule.Allowed)
+            {
 				var thing = target as Thing;
 				if (thing != null)
 				{
@@ -89,9 +90,9 @@ namespace RMUD.Commands
 				}
 				target.HandleUnlock(Actor, key);
 			}
-				else
+		    else
 			{
-				Mud.SendMessage(Actor, MessageScope.Single, "It doesn't work.\r\n");
+				Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
 			}
 		}
 	}
@@ -123,7 +124,8 @@ namespace RMUD.Commands
 				return;
 			}
 
-			if (target.CanLock(Actor, key))
+            var checkRule = target.CanLock(Actor, key);
+			if (checkRule.Allowed)
 			{
 				var thing = target as Thing;
 				if (thing != null)
@@ -135,7 +137,7 @@ namespace RMUD.Commands
 			}
 			else
 			{
-				Mud.SendMessage(Actor, MessageScope.Single, "It doesn't work.\r\n");
+				Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
 			}
 		}
 	}

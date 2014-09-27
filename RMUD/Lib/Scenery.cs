@@ -15,9 +15,9 @@ namespace RMUD
 			Nouns = new NounList();
 		}
 
-		bool ITakeRules.CanTake(Actor Actor)
+		CheckRule ITakeRules.CanTake(Actor Actor)
 		{
-			return false;
+			return CheckRule.Disallow("That's a terrible idea.");
 		}
 
         RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }

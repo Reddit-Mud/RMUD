@@ -45,9 +45,9 @@ namespace RMUD
 
 		#endregion
 
-		bool ITakeRules.CanTake(Actor Actor)
+		CheckRule ITakeRules.CanTake(Actor Actor)
 		{
-			return false;
+			return CheckRule.Disallow("Doors only make good doors if you leave them where they are at.");
 		}
 
         RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }

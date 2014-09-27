@@ -13,9 +13,9 @@ namespace RMUD
 		public override string Definite { get { return Short; } }
 		public override string Indefinite { get { return Short; } }
 
-        bool ITakeRules.CanTake(Actor Actor)
+        CheckRule ITakeRules.CanTake(Actor Actor)
 		{
-			return false;
+			return CheckRule.Disallow("You can't take people.");
 		}
 
         RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }

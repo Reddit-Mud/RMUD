@@ -18,7 +18,7 @@ namespace RMUD.Commands
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
                             (actor, thing) => {
                                 if (actor.Contains(thing)) return -2;
-                                if (thing is ITakeRules && !(thing as ITakeRules).CanTake(actor))
+                                if (thing is ITakeRules && !(thing as ITakeRules).CanTake(actor).Allowed)
                                     return -1;
                                 return 0;
                             }, "SUBJECTSCORE"),
@@ -42,10 +42,14 @@ namespace RMUD.Commands
             }
 
             var takeRules = target as ITakeRules;
-            if (takeRules != null && !takeRules.CanTake(Actor))
+            if (takeRules != null)
             {
-                Mud.SendMessage(Actor, "You can't take that.\r\n");
-                return;
+                var checkRule = takeRules.CanTake(Actor);
+                if (!checkRule.Allowed)
+                {
+                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
+                    return;
+                }
             }
 
             var handleRuleFollowUp = RuleHandlerFollowUp.Continue;

@@ -11,8 +11,8 @@ namespace RMUD
 	public interface ILockableRules
 	{
 		bool Locked { get; }
-		bool CanLock(Actor Actor, Thing Key);
-		bool CanUnlock(Actor Actor, Thing Key);
+		CheckRule CanLock(Actor Actor, Thing Key);
+		CheckRule CanUnlock(Actor Actor, Thing Key);
 		void HandleLock(Actor Actor, Thing Key);
 		void HandleUnlock(Actor Actor, Thing Key);
 	}

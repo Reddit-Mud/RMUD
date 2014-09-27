@@ -13,7 +13,7 @@ namespace RMUD
 
 	public interface ITakeRules
 	{
-		bool CanTake(Actor Actor);
+		CheckRule CanTake(Actor Actor);
 		RuleHandlerFollowUp HandleTake(Actor Actor);
 	}
 }

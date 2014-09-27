@@ -21,9 +21,9 @@ public class kuz_shelf : Thing, ITakeRules, ILocaleDescriptionRules
         Nouns.Add("BOOK", "BOOKS", "SHELF", "DUSTY");
     }
 
-    bool ITakeRules.CanTake(Actor Actor)
+    CheckRule ITakeRules.CanTake(Actor Actor)
     {
-        return true;
+        return CheckRule.Allow();
     }
 
     RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor)

@@ -50,9 +50,9 @@ namespace RMUD
 
 		#endregion
 
-		bool ITakeRules.CanTake(Actor Actor)
+		CheckRule ITakeRules.CanTake(Actor Actor)
 		{
-			return false;
+			return CheckRule.Disallow("That's not going to work.");
 		}
 
         RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
@@ -61,18 +61,24 @@ namespace RMUD
 
 		public bool Locked { get; set; }
 
-		bool ILockableRules.CanLock(Actor Actor, Thing Key)
+		CheckRule ILockableRules.CanLock(Actor Actor, Thing Key)
 		{
-			if (Open) return false;
-			if (Locked) return false;
-            return IsMatchingKey(Key);
+			if (Open) return CheckRule.Disallow("You'll have to close it first.");
+            if (Locked) return CheckRule.Disallow("It's already locked.");
+            if (IsMatchingKey(Key))
+                return CheckRule.Allow();
+            else
+                return CheckRule.Disallow("That is not the right key.");
 		}
 
-		bool ILockableRules.CanUnlock(Actor Actor, Thing Key)
+		CheckRule ILockableRules.CanUnlock(Actor Actor, Thing Key)
 		{
-			if (Open) return false;
-			if (!Locked) return false;
-            return IsMatchingKey(Key);
+            if (Open) return CheckRule.Disallow("It's already open.");
+            if (!Locked) return CheckRule.Disallow("It's not locked.");
+            if (IsMatchingKey(Key))
+                return CheckRule.Allow();
+            else
+                return CheckRule.Disallow("That is not the right key.");
 		}
 
 		void ILockableRules.HandleLock(Actor Actor, Thing Key)
