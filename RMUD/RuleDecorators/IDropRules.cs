@@ -7,7 +7,7 @@ namespace RMUD
 {
 	public interface IDropRules
 	{
-		bool CanDrop(Actor Actor);
+		CheckRule CanDrop(Actor Actor);
 		void HandleDrop(Actor Actor);
 	}
 }

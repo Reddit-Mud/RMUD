@@ -39,11 +39,15 @@ namespace RMUD.Commands
 				}
 
 				var dropRules = target as IDropRules;
-				if (dropRules != null && !dropRules.CanDrop(Actor))
-				{
-					Mud.SendMessage(Actor, "You can't drop that.\r\n");
-					return;
-				}
+                if (dropRules != null)
+                {
+                    var checkRule = dropRules.CanDrop(Actor);
+                    if (!checkRule.Allowed)
+                    {
+                        Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
+                        return;
+                    }
+                }
 
 				Mud.SendMessage(Actor, MessageScope.Single, "You drop " + target.Indefinite + "\r\n");
 				Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " drops " + target.Indefinite + "\r\n");
