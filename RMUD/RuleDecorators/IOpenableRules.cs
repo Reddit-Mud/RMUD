@@ -13,7 +13,7 @@ namespace RMUD
 		bool Open { get; }
 		CheckRule CanOpen(Actor Actor);
 		CheckRule CanClose(Actor Actor);
-		void HandleOpen(Actor Actor);
-		void HandleClose(Actor Actor);
+		RuleHandlerFollowUp HandleOpen(Actor Actor);
+		RuleHandlerFollowUp HandleClose(Actor Actor);
 	}
 }

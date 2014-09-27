@@ -58,12 +58,14 @@ namespace RMUD.Commands
                 var checkRule = target.CanOpen(Actor);
 				if (checkRule.Allowed)
 				{
-					if (thing != null)
-					{
-						Mud.SendMessage(Actor, MessageScope.Single, "You open " + thing.Definite + "\r\n");
-						Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " opens " + thing.Definite + "\r\n");
-						target.HandleOpen(Actor);
-					}
+                    if (target.HandleOpen(Actor) == RuleHandlerFollowUp.Continue)
+                    {
+                        if (thing != null)
+                        {
+                            Mud.SendMessage(Actor, MessageScope.Single, "You open " + thing.Definite + "\r\n");
+                            Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " opens " + thing.Definite + "\r\n");
+                        }
+                    }
 				}
 				else
 				{
@@ -89,12 +91,14 @@ namespace RMUD.Commands
                 var checkRule = target.CanClose(Actor);
 				if (checkRule.Allowed)
 				{
-					if (thing != null)
-					{
-						Mud.SendMessage(Actor, MessageScope.Single, "You close " + thing.Definite + "\r\n");
-						Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " closes " + thing.Definite + "\r\n");
-						target.HandleClose(Actor);
-					}
+                    if (target.HandleClose(Actor) == RuleHandlerFollowUp.Continue)
+                    {
+                        if (thing != null)
+                        {
+                            Mud.SendMessage(Actor, MessageScope.Single, "You close " + thing.Definite + "\r\n");
+                            Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " closes " + thing.Definite + "\r\n");
+                        }
+                    }
 				}
 				else
 				{

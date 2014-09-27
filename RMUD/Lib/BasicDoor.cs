@@ -29,18 +29,20 @@ namespace RMUD
             else return CheckRule.Disallow("It's already closed.");
 		}
 
-		void IOpenableRules.HandleOpen(Actor Actor)
+		RuleHandlerFollowUp IOpenableRules.HandleOpen(Actor Actor)
 		{
 			Open = true;
             Nouns.RemoveAll(n => n == "CLOSED");
             Nouns.Add("OPEN");
+            return RuleHandlerFollowUp.Continue;
 		}
 
-		void IOpenableRules.HandleClose(Actor Actor)
+		RuleHandlerFollowUp IOpenableRules.HandleClose(Actor Actor)
 		{
 			Open = false;
             Nouns.RemoveAll(n => n == "OPEN");
             Nouns.Add("CLOSED");
+            return RuleHandlerFollowUp.Continue;
 		}
 
 		#endregion
