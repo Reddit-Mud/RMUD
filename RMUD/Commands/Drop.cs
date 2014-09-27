@@ -12,7 +12,9 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("DROP", false),
-					new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld, "SUBJECTSCORE")),
+                    new FailIfNoMatches(
+					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld, "SUBJECTSCORE"),
+                        "I don't know what object you're talking about.\r\n")),
 				new DropProcessor(),
 				"Drop something",
                 "SUBJECTSCORE");

@@ -12,12 +12,14 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("OPEN", false),
-					new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
-                         (actor, openable) => {
-                             if (openable is IOpenableRules && !(openable as IOpenableRules).Open)
-                                 return 1;
-                            return -1;
-                        }, "SUBJECTSCORE")),
+                    new FailIfNoMatches(
+					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
+                             (actor, openable) => {
+                               if (openable is IOpenableRules && !(openable as IOpenableRules).Open)
+                                     return 1;
+                                return -1;
+                            }, "SUBJECTSCORE"),
+                        "I don't see that here.\r\n")),
 				new OpenProcessor(),
 				"Open something",
                 "SUBJECTSCORE");
@@ -25,13 +27,15 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new KeyWord("CLOSE", false),
-					new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
-                        (actor, openable) =>
-                        {
-                            if (openable is IOpenableRules && (openable as IOpenableRules).Open)
-                                return 1;
-                            return -1;
-                        }, "SUBJECTSCORE")),
+                    new FailIfNoMatches(
+		    			new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
+                            (actor, openable) =>
+                            {
+                                if (openable is IOpenableRules && (openable as IOpenableRules).Open)
+                                    return 1;
+                                return -1;
+                            }, "SUBJECTSCORE"),
+                        "I don't see that here.\r\n")),
 				new CloseProcessor(),
 				"Close something",
                 "SUBJECTSCORE");

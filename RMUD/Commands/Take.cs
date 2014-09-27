@@ -14,7 +14,7 @@ namespace RMUD.Commands
 					new Or(
 						new KeyWord("GET", false),
 						new KeyWord("TAKE", false)),
-                    new FirstOf(
+                    new FailIfNoMatches(
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
                             (actor, thing) => {
                                 if (actor.Contains(thing)) return -2;
@@ -22,7 +22,7 @@ namespace RMUD.Commands
                                     return -1;
                                 return 0;
                             }, "SUBJECTSCORE"),
-                        new Rest("GARBAGE"))),
+                        "I don't see that here.\r\n")),
                 new TakeProcessor(),
 				"Take something",
                 "SUBJECTSCORE");
@@ -31,40 +31,34 @@ namespace RMUD.Commands
 
 	internal class TakeProcessor : ICommandProcessor
 	{
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-			var target = Match.Arguments.ValueOrDefault("SUBJECT") as Thing;
-            if (target == null)
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            var target = Match.Arguments.ValueOrDefault("SUBJECT") as Thing;
+
+            if (Actor.Contains(target))
             {
-                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "I don't see that here.\r\n");
+                Mud.SendMessage(Actor, "You are already holding that.\r\n");
+                return;
             }
-            else
+
+            var takeRules = target as ITakeRules;
+            if (takeRules != null && !takeRules.CanTake(Actor))
             {
-                if (Actor.Contains(target))
-                {
-                    Mud.SendMessage(Actor, "You are already holding that.\r\n");
-                    return;
-                }
-
-                var takeRules = target as ITakeRules;
-                if (takeRules != null && !takeRules.CanTake(Actor))
-                {
-                    Mud.SendMessage(Actor, "You can't take that.\r\n");
-                    return;
-                }
-
-                var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
-                if (takeRules != null) handleRuleFollowUp = takeRules.HandleTake(Actor);
-
-                if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
-                {
-                    Mud.SendMessage(Actor, MessageScope.Single, "You take " + target.Indefinite + "\r\n");
-                    Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " takes " + target.Indefinite + "\r\n");
-                    Thing.Move(target, Actor);
-                }
-
-                Mud.MarkLocaleForUpdate(target);
+                Mud.SendMessage(Actor, "You can't take that.\r\n");
+                return;
             }
-		}
+
+            var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
+            if (takeRules != null) handleRuleFollowUp = takeRules.HandleTake(Actor);
+
+            if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
+            {
+                Mud.SendMessage(Actor, MessageScope.Single, "You take " + target.Indefinite + "\r\n");
+                Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " takes " + target.Indefinite + "\r\n");
+                Thing.Move(target, Actor);
+            }
+
+            Mud.MarkLocaleForUpdate(target);
+        }
 	}
 }

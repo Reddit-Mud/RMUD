@@ -7,30 +7,22 @@ namespace RMUD.Commands
 {
 	internal class Examine : CommandFactory
 	{
-		public override void Create(CommandParser Parser)
-		{
-			Parser.AddCommand(
-				new Sequence(
-					new Or(
-						new KeyWord("LOOK", false),
-						new KeyWord("EXAMINE", false),
-						new KeyWord("X", false)),
-					new KeyWord("AT", true),
-					new ObjectMatcher("OBJECT", new InScopeObjectSource())),
-				new ExamineProcessor(),
-				"Look closely at an object.");
+        public override void Create(CommandParser Parser)
+        {
+            Parser.AddCommand(
+                new Sequence(
+                    new Or(
+                        new KeyWord("LOOK", false),
+                        new KeyWord("EXAMINE", false),
+                        new KeyWord("X", false)),
+                    new KeyWord("AT", true),
+                    new FailIfNoMatches(
+                        new ObjectMatcher("OBJECT", new InScopeObjectSource()),
+                        "I don't see that here.\r\n")),
+                new ExamineProcessor(),
+                "Look closely at an object.");
 
-			Parser.AddCommand(
-				new Sequence(
-					new Or(
-						new KeyWord("LOOK", false),
-						new KeyWord("EXAMINE", false),
-						new KeyWord("X", false)),
-					new KeyWord("AT", true),
-					new Rest("ERROR"))
-				, new ReportError("I don't see that here.\r\n"),
-				"Error reporting command");
-		}
+        }
 	}
 
 	internal class ExamineProcessor : ICommandProcessor

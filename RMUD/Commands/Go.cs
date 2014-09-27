@@ -10,9 +10,13 @@ namespace RMUD.Commands
 		public override void Create(CommandParser Parser)
 		{
 			Parser.AddCommand(
-				new Sequence(
-					new KeyWord("GO", true),
-					new Cardinal("DIRECTION")),
+                new FirstOf(
+                    new Sequence(
+                        new KeyWord("GO", true),
+                        new FailIfNoMatches(
+                            new Cardinal("DIRECTION"),
+                            "What way was that?\r\n")),
+                    new Cardinal("DIRECTION")),
 				new GoProcessor(),
 				"Move between rooms.");
 		}

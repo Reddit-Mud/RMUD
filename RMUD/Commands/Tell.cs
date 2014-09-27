@@ -15,8 +15,12 @@ namespace RMUD.Commands
                         new KeyWord("TELL", false),
                         new KeyWord("WHISPER", false)),
                     new KeyWord("TO", true),
-                    new ObjectMatcher("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),
-                    new Rest("SPEECH")),
+                    new FailIfNoMatches(
+                        new ObjectMatcher("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),
+                        "Whom?\r\n"),
+                    new FailIfNoMatches(
+                        new Rest("SPEECH"),
+                        "And what would you like to tell then, hmm?\r\n")),
                 new TellProcessor(),
                 "Tell a player something privately.");
         }

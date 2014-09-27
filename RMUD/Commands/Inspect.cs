@@ -16,10 +16,12 @@ namespace RMUD.Commands
 						new KeyWord("INSPECT", false),
 						new KeyWord("INS", false),
 						new KeyWord("P", false)),
-					new Or(
-						new ObjectMatcher("OBJECT", new InScopeObjectSource()),
-						new KeyWord("HERE", false)))
-				, new InspectProcessor(),
+                    new FailIfNoMatches(
+					    new Or(
+						    new ObjectMatcher("OBJECT", new InScopeObjectSource()),
+						    new KeyWord("HERE", false)),
+                        "I don't see that here.\r\n")),
+				new InspectProcessor(),
 				"Inspect internal properties of an object.");
 		}
 	}

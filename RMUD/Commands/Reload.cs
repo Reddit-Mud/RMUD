@@ -13,16 +13,20 @@ namespace RMUD.Commands
 				new Sequence(
 					new RankGate(500),
 					new KeyWord("RELOAD", false),
-					new Path("TARGET"))
-				, new ReloadProcessor(),
+                    new FailIfNoMatches(
+					    new Path("TARGET"),
+                        "It helps if you give me a path.\r\n")),
+				new ReloadProcessor(),
 				"Reload an object from disc.");
 
             Parser.AddCommand(
                 new Sequence(
                     new RankGate(500),
                     new KeyWord("RESET", false),
-                    new Path("TARGET"))
-                , new ResetProcessor(),
+                    new FailIfNoMatches(
+                        new Path("TARGET"),
+                        "It helps if you give me a path.\r\n")),
+                new ResetProcessor(),
                 "Reset an object. It is not reloaded from disc.");
 		}
 	}

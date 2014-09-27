@@ -14,7 +14,9 @@ namespace RMUD.Commands
 					new Or(
 						new KeyWord("SAY", false),
 						new KeyWord("'", false)),
-					new Rest("SPEECH")),
+                    new FailIfNoMatches(
+					    new Rest("SPEECH"),
+                        "Say what?\r\n")),
 				new SayProcessor(SayProcessor.EmoteTypes.Speech),
 				"Say something.");
 
@@ -23,7 +25,9 @@ namespace RMUD.Commands
 					new Or(
 						new KeyWord("EMOTE", false),
 						new KeyWord("\"", false)),
-					new Rest("SPEECH")),
+                    new FailIfNoMatches(
+					    new Rest("SPEECH"),
+                        "You exist. Actually this is an error message, but that's what you just told me to say.\r\n")),
 				new SayProcessor(SayProcessor.EmoteTypes.Emote),
 				"Emote something.");
 		}

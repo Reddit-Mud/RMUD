@@ -13,10 +13,14 @@ namespace RMUD.Commands
 				new Sequence(
 					new RankGate(500),
 					new KeyWord("MOVE", false),
-					new ObjectMatcher("OBJECT", new InScopeObjectSource()),
+                    new FailIfNoMatches(
+					    new ObjectMatcher("OBJECT", new InScopeObjectSource()),
+                        "I don't see that here.\r\n"),
 					new KeyWord("TO", true),
-					new Path("DESTINATION"))
-				, new MoveProcessor(),
+                    new FailIfNoMatches(
+					    new Path("DESTINATION"),
+                        "You have to specify where to move it to.\r\n")),
+				new MoveProcessor(),
 				"Teleport an object to a new location. Bypasses take rules.");
 		}
 	}
