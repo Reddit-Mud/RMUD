@@ -12,10 +12,8 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 new Sequence(
                     new Or(
-                        new KeyWord("LOOK", false),
                         new KeyWord("EXAMINE", false),
                         new KeyWord("X", false)),
-                    new KeyWord("AT", true),
                     new FailIfNoMatches(
                         new ObjectMatcher("OBJECT", new InScopeObjectSource()),
                         "I don't see that here.\r\n")),

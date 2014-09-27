@@ -12,7 +12,7 @@ namespace RMUD.Commands
 			Parser.AddCommand(
                 new FirstOf(
                     new Sequence(
-                        new KeyWord("GO", true),
+                        new KeyWord("GO", false),
                         new FailIfNoMatches(
                             new Cardinal("DIRECTION"),
                             "What way was that?\r\n")),

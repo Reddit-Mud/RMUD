@@ -35,9 +35,9 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 new Sequence(
                     new ChatChannelNameMatcher("CHANNEL"),
-                    new FailIfNoMatches(
-                        new Rest("TEXT"),
-                        "You have to actually say something to use the chat channel.\r\n")),
+                    //new FailIfNoMatches(
+                        new Rest("TEXT")),
+                    //    "You have to actually say something to use the chat channel.\r\n")),
                 new ChatProcessor(),
                 "Chat on a channel.");
         }

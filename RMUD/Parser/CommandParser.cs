@@ -31,7 +31,10 @@ namespace RMUD
 			public MatchedCommand(CommandEntry Command, IEnumerable<PossibleMatch> Matches)
 			{
 				this.Command = Command;
-				this.Matches = new List<PossibleMatch>(Matches);
+                if (Matches != null)
+                    this.Matches = new List<PossibleMatch>(Matches);
+                else
+                    this.Matches = new List<PossibleMatch>();
 			}
 		}
 
@@ -85,7 +88,7 @@ namespace RMUD
                 }
                 catch (MatchAborted ma)
                 {
-                    return new MatchedCommand(new CommandEntry { Processor = new Commands.ReportError(ma.Message) }, null);
+                    return new MatchedCommand(new CommandEntry { Processor = new Commands.ReportError(ma.Message) }, new PossibleMatch[] { new PossibleMatch(new Dictionary<string,object>(), null) });
                 }
 
                 //Only accept matches that consumed all of the input.

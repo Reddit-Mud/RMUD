@@ -31,10 +31,8 @@ namespace RMUD.Commands
 
 			Parser.AddCommand(
 				new Sequence(
-					new Or(
-						new KeyWord("UNLOCK", false),
-						new KeyWord("OPEN", false)),
-                    new FailIfNoMatches(
+					new KeyWord("UNLOCK", false),
+				    new FailIfNoMatches(
                         new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                             (actor, matchable) =>
                             {
