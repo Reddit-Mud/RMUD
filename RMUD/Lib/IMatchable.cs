@@ -7,6 +7,6 @@ namespace RMUD
 {
 	public interface IMatchable
 	{
-		List<String> Nouns { get; set; }
+		NounList Nouns { get; set; }
 	}
 }

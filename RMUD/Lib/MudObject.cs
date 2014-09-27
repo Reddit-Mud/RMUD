@@ -25,7 +25,7 @@ namespace RMUD
 		}
 
 		public virtual void Initialize() { }
-        public virtual void HandleChanges() { }
+        public virtual void HandleMarkedUpdate() { }
 
 		public override string ToString()
 		{

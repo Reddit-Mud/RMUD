@@ -79,6 +79,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="EnumerateObjects.cs" />
+    <Compile Include="NounList.cs" />
     <Compile Include="RuleDecorators\IEmitsLight.cs" />
     <Compile Include="SendMessage.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />
@@ -90,9 +91,9 @@
     <None Include="database\static\palantine\library.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="database\static\palantine\disambig.cs">
+    <Compile Include="database\static\palantine\disambig.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Compile>
     <None Include="database\static\settings.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

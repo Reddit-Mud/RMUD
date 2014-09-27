@@ -97,7 +97,7 @@ namespace RMUD
             }
         }
 
-        public override void HandleChanges()
+        public override void HandleMarkedUpdate()
         {
             UpdateLighting();
         }

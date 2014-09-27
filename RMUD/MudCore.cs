@@ -46,7 +46,7 @@ namespace RMUD
 
 		internal static List<RawPendingMessage> PendingMessages = new List<RawPendingMessage>();
 
-        internal static List<MudObject> ChangedObjects = new List<MudObject>();
+        internal static List<MudObject> MarkedObjects = new List<MudObject>();
 		
         internal static void EnqueuClientCommand(Client Client, String RawCommand)
         {
@@ -55,14 +55,31 @@ namespace RMUD
             PendingCommandLock.ReleaseMutex();
         }
 
-        public static void MarkChangedObject(MudObject Object, EnumerateObjectsSettings Settings)
+        public static Room FindLocale(MudObject Of)
+        {
+            MudObject locale = Of;
+
+            while (true)
+            {
+                if (locale == null) return null;
+                else if (locale is Room)
+                    return locale as Room;
+                else if (locale is Thing)
+                {
+                    locale = (locale as Thing).Location;
+                    if (Object.ReferenceEquals(locale, Of)) throw new InvalidOperationException("Cycle found in database.");
+                }
+                else
+                    return null; 
+            }
+        }
+
+        public static void MarkLocaleForUpdate(MudObject Object)
         {
             DatabaseLock.WaitOne();
-            EnumerateObjects(Object, Settings, o =>
-                {
-                    if (!ChangedObjects.Contains(o)) ChangedObjects.Add(o);
-                    return EnumerateObjectsControl.Continue;
-                });
+            MudObject locale = FindLocale(Object);
+            if (locale != null && !MarkedObjects.Contains(locale))
+                MarkedObjects.Add(locale);
             DatabaseLock.ReleaseMutex();
         }
 
@@ -140,7 +157,7 @@ namespace RMUD
                         GetObject(objectFile);
                     }
 
-                    HandleChanges();
+                    UpdateMarkedObjects();
 
                     Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
                 }
@@ -194,7 +211,7 @@ namespace RMUD
                         {
                             PendingCommand.Client.TimeOfLastCommand = DateTime.Now;
                             PendingCommand.Client.CommandHandler.HandleCommand(PendingCommand.Client, PendingCommand.RawCommand);
-                            HandleChanges();
+                            UpdateMarkedObjects();
                             SendPendingMessages();
                         }
                         catch (Exception e)
@@ -231,12 +248,12 @@ namespace RMUD
             Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}", DateTime.Now, ErrorString);
         }
 
-        internal static void HandleChanges()
+        internal static void UpdateMarkedObjects()
         {
-            var startCount = ChangedObjects.Count;
+            var startCount = MarkedObjects.Count;
             for (int i = 0; i < startCount; ++i)
-                ChangedObjects[i].HandleChanges();
-            ChangedObjects.RemoveRange(0, startCount);
+                MarkedObjects[i].HandleMarkedUpdate();
+            MarkedObjects.RemoveRange(0, startCount);
         }
 
         internal static void SendPendingMessages()

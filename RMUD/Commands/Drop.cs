@@ -49,7 +49,7 @@ namespace RMUD.Commands
 
 				if (dropRules != null) dropRules.HandleDrop(Actor);
 
-                Mud.MarkChangedObject(target, EnumerateObjectsSettings.ShallowLocation);
+                Mud.MarkLocaleForUpdate(target);
 			}
 		}
 	}

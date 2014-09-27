@@ -55,8 +55,8 @@ namespace RMUD.Commands
 
 				Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " arrives " + arriveMessage + ".\r\n");
 
-                Mud.MarkChangedObject(location, EnumerateObjectsSettings.Room);
-                Mud.MarkChangedObject(destination, EnumerateObjectsSettings.Room);
+                Mud.MarkLocaleForUpdate(location);
+                Mud.MarkLocaleForUpdate(destination);
 			}
 		}
 	}

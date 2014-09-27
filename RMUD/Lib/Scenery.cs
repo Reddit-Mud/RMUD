@@ -7,12 +7,12 @@ namespace RMUD
 {
 	public class Scenery : MudObject, IDescribed, IMatchable, ITakeRules
 	{
-		public List<String> Nouns { get; set; }
+		public NounList Nouns { get; set; }
 		public DescriptiveText Long { get; set; }
 
 		public Scenery()
 		{
-			Nouns = new List<string>();
+			Nouns = new NounList();
 		}
 
 		bool ITakeRules.CanTake(Actor Actor)

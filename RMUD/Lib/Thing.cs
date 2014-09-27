@@ -12,16 +12,20 @@ namespace RMUD
         public String Article = "a";
 		public virtual String Indefinite { get { return Article + " " + Short; } }
 		public virtual String Definite { get { return "the " + Short; } }
-		public List<String> Nouns { get; set; }
+		public NounList Nouns { get; set; }
 		public MudObject Location;
 
 		public Thing()
 		{
-			Nouns = new List<string>();
+			Nouns = new NounList();
 		}
 
-		public static void Move(Thing Thing, MudObject Destination)
+		public static void Move(MudObject Object, MudObject Destination)
 		{
+            if (!(Object is Thing)) return; //Can't move it if it isn't a thing..
+
+            var Thing = Object as Thing;
+
 			if (Thing.Location != null)
 			{
 				var container = Thing.Location as IContainer;

@@ -63,7 +63,7 @@ namespace RMUD.Commands
                     Thing.Move(target, Actor);
                 }
 
-                Mud.MarkChangedObject(target, EnumerateObjectsSettings.ShallowLocation);
+                Mud.MarkLocaleForUpdate(target);
             }
 		}
 	}
