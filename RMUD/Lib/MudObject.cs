@@ -27,10 +27,11 @@ namespace RMUD
 		public virtual void Initialize() { }
         public virtual void HandleMarkedUpdate() { }
 
-		public override string ToString()
-		{
-            return this.GetType().Name + " -- " + Path;
-		}
+        public override string ToString()
+        {
+            if (String.IsNullOrEmpty(Path)) return this.GetType().Name;
+            else return Path;
+        }
 
 	}
 }

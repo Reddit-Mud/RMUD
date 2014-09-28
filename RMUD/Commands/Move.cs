@@ -30,10 +30,18 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["OBJECT"] as Thing;
-			var destination = Match.Arguments["DESTINATION"].ToString();
+            var destination = Match.Arguments["DESTINATION"].ToString();
 			var room = Mud.GetObject(destination);
-			if (room != null)
-				Thing.Move(target, room);
+            if (room != null)
+            {
+                Mud.MarkLocaleForUpdate(target);
+                Thing.Move(target, room);
+                Mud.MarkLocaleForUpdate(room);
+            }
+            else
+            {
+                Mud.SendMessage(Actor, "I couldn't find the destination for that move.\r\n");
+            }
 		}
 	}
 }

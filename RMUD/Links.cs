@@ -31,6 +31,11 @@ namespace RMUD
 		public String Destination;
 		public MudObject Door;
 
+        public override string ToString()
+        {
+            return Direction + " to " + Destination + (Door == null ? "" : (" through " + Door));
+        }
+
 		private static List<String> Names = new List<String>
         { 
             "NORTH", "N",

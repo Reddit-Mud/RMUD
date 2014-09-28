@@ -101,6 +101,8 @@ namespace RMUD.Commands
                             Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " closes " + thing.Definite + "\r\n");
                         }
                     }
+
+                    Mud.MarkLocaleForUpdate(target as MudObject);
 				}
 				else
 				{

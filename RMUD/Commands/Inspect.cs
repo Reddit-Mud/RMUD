@@ -12,11 +12,8 @@ namespace RMUD.Commands
 			Parser.AddCommand(
 				new Sequence(
 					new RankGate(500),
-					new Or(
-						new KeyWord("INSPECT", false),
-						new KeyWord("INS", false),
-						new KeyWord("P", false)),
-                    new FailIfNoMatches(
+					new KeyWord("INSPECT", false),
+					new FailIfNoMatches(
 					    new Or(
 						    new ObjectMatcher("OBJECT", new InScopeObjectSource()),
 						    new KeyWord("HERE", false)),
@@ -53,9 +50,7 @@ namespace RMUD.Commands
 				data.Append(" ");
 				data.Append(field.Name);
 				data.Append(" = ");
-				var value = field.GetValue(target);
-				if (value == null) data.Append("null");
-				else data.Append(value.ToString());
+                WriteValue(data, field.GetValue(target));
 				data.Append("\r\n");
 			}
 
@@ -70,9 +65,7 @@ namespace RMUD.Commands
 					data.Append(" = ");
 					try
 					{
-						var value = property.GetValue(target, null);
-						if (value == null) data.Append("null");
-						else data.Append(value.ToString());
+                        WriteValue(data, property.GetValue(target, null));
 					}
 					catch (Exception)
 					{
@@ -85,5 +78,32 @@ namespace RMUD.Commands
 
 			Mud.SendMessage(Actor, data.ToString());
 		}
+
+        private static void WriteValue(StringBuilder To, Object Value)
+        {
+            if (Value == null)
+                To.Append("NULL");
+            else if (Value is String)
+                To.Append("\"" + Value + "\"");
+            else if (Value is MudObject)
+                To.Append(Value.ToString());
+            else if (Value is System.Collections.IEnumerable)
+            {
+                To.Append("[ ");
+                int count = 0;
+                foreach (var subValue in (Value as System.Collections.IEnumerable))
+                {
+                    count += 1;
+                    WriteValue(To, subValue);
+                    To.Append(", ");
+                }
+
+                if (count > 0) To.Remove(To.Length - 2, 2);
+                To.Append(" ]");
+            }
+            else
+                To.Append(Value.ToString());
+
+        }
 	}
 }

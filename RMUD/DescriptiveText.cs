@@ -18,6 +18,12 @@ namespace RMUD
 		private readonly String RawText;
 		private readonly TextGenerationDelegate LambdaText;
 		private readonly DescriptiveTextType TextType;
+
+        public override string ToString()
+        {
+            if (TextType == DescriptiveTextType.TaggedText) return "\"" + RawText + "\"";
+            else return "Lambda Text";
+        }
 		
 		public DescriptiveText(String RawText)
 		{

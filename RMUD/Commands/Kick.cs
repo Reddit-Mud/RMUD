@@ -38,6 +38,8 @@ namespace RMUD.Commands
         {
             if (Player.ConnectedClient != null)
             {
+                Mud.MarkLocaleForUpdate(Player);
+
                 Mud.SendMessage(Player, Actor.Short + " has removed you from the server.\r\n");
                 Player.ConnectedClient.Disconnect();
                 Mud.SendMessage(Actor, MessageScope.AllConnectedPlayers, Actor.Short + " has removed " + Player.Short + " from the server.\r\n");
@@ -56,7 +58,10 @@ namespace RMUD.Commands
             foreach (var client in new List<Client>(Mud.ConnectedClients))
             {
                 if (client.IsLoggedOn && maskRegex.Matches(client.IPString).Count > 0)
+                {
+                    Mud.MarkLocaleForUpdate(client.Player);
                     KickProcessor.Kick(client.Player, Actor);
+                }
             }
         }
     }

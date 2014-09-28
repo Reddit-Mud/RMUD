@@ -75,6 +75,7 @@ namespace RMUD.Commands
             }
 
             var glob = Match.Arguments["GLOB"].ToString();
+
             var reasonBuilder = new StringBuilder();
             Mud.AssembleText(Match.Arguments["REASON"] as LinkedListNode<String>, reasonBuilder);
             var reason = reasonBuilder.ToString();
