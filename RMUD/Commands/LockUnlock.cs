@@ -18,16 +18,16 @@ namespace RMUD.Commands
                                 if (matchable is ILockableRules && !(matchable as ILockableRules).Locked)
                                     return 1;
                                 return -1;
-                            }, "SUBJECTSCORE"),
+                            }),
                         "I couldn't figure out what you're trying to lock.\r\n"),
 					new KeyWord("WITH", true),
                     new FailIfNoMatches(
-					    new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld, "OBJECTSCORE"),
+					    new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
                         "I couldn't figure out what you're trying to lock that with.\r\n")),
 				new LockProcessor(),
 				"Lock something with something",
-                "SUBJECTSCORE",
-                "OBJECTSCORE");
+                "SUBJECT-SCORE",
+                "OBJECT-SCORE");
 
 			Parser.AddCommand(
 				new Sequence(
@@ -39,16 +39,16 @@ namespace RMUD.Commands
                                 if (matchable is ILockableRules && (matchable as ILockableRules).Locked)
                                     return 1;
                                 return -1;
-                            }, "SUBJECTSCORE"),
+                            }),
                         "I couldn't figure out what you're trying to unlock.\r\n"),
                     new KeyWord("WITH", true),
                     new FailIfNoMatches(
-					    new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld, "OBJECTSCORE"),
+					    new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
                         "I couldn't figure out what you're trying to unlock that with.\r\n")),
 				new UnlockProcessor(),
 				"Unlock something with something",
-                "SUBJECTSCORE",
-                "OBJECTSCORE");
+                "SUBJECT-SCORE",
+                "OBJECT-SCORE");
 		}
 	}
 	

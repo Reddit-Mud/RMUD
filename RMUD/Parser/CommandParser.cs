@@ -47,22 +47,22 @@ namespace RMUD
 		{
 			public Actor ExecutingActor;
 
-			private List<IMatchable> CachedObjectsInScope = null;
-			public List<IMatchable> ObjectsInScope
+			private List<MatchableObject> CachedObjectsInScope = null;
+			public List<MatchableObject> ObjectsInScope
 			{
 				get
 				{
 					if (CachedObjectsInScope != null) return CachedObjectsInScope;
-					CachedObjectsInScope = new List<IMatchable>();
+					CachedObjectsInScope = new List<MatchableObject>();
 
-					CachedObjectsInScope.AddRange(ExecutingActor.Inventory);
+					CachedObjectsInScope.AddRange(ExecutingActor.Inventory.Select(t => new MatchableObject(t, "INVENTORY")));
 
 					var location = ExecutingActor.Location as Room;
 					if (location != null)
 					{
-						CachedObjectsInScope.AddRange(location.Contents);
-						CachedObjectsInScope.AddRange(location.Links.Where(l => (l.Door != null && l.Door is IMatchable)).Select(l => l.Door as IMatchable));
-						CachedObjectsInScope.AddRange(location.Scenery);
+						CachedObjectsInScope.AddRange(location.Contents.Select(t => new MatchableObject(t, "LOCATION")));
+						CachedObjectsInScope.AddRange(location.Links.Where(l => (l.Door != null && l.Door is IMatchable)).Select(l => new MatchableObject(l.Door as IMatchable, "LINK")));
+						CachedObjectsInScope.AddRange(location.Scenery.Select(s => new MatchableObject(s, "SCENERY")));
 					}
 						
 					return CachedObjectsInScope;

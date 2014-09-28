@@ -18,11 +18,11 @@ namespace RMUD.Commands
                                if (openable is IOpenableRules && !(openable as IOpenableRules).Open)
                                      return 1;
                                 return -1;
-                            }, "SUBJECTSCORE"),
+                            }),
                         "I don't see that here.\r\n")),
 				new OpenProcessor(),
 				"Open something",
-                "SUBJECTSCORE");
+                "SUBJECT-SCORE");
 
 			Parser.AddCommand(
 				new Sequence(
@@ -34,11 +34,11 @@ namespace RMUD.Commands
                                 if (openable is IOpenableRules && (openable as IOpenableRules).Open)
                                     return 1;
                                 return -1;
-                            }, "SUBJECTSCORE"),
+                            }),
                         "I don't see that here.\r\n")),
 				new CloseProcessor(),
 				"Close something",
-                "SUBJECTSCORE");
+                "SUBJECT-SCORE");
 		}
 	}
 	

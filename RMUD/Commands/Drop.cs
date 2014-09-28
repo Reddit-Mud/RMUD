@@ -13,11 +13,11 @@ namespace RMUD.Commands
 				new Sequence(
 					new KeyWord("DROP", false),
                     new FailIfNoMatches(
-					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld, "SUBJECTSCORE"),
+					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
                         "I don't know what object you're talking about.\r\n")),
 				new DropProcessor(),
 				"Drop something",
-                "SUBJECTSCORE");
+                "SUBJECT-SCORE");
 		}
 	}
 

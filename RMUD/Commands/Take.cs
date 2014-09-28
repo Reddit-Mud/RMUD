@@ -21,11 +21,11 @@ namespace RMUD.Commands
                                 if (thing is ITakeRules && !(thing as ITakeRules).CanTake(actor).Allowed)
                                     return -1;
                                 return 0;
-                            }, "SUBJECTSCORE"),
+                            }),
                         "I don't see that here.\r\n")),
                 new TakeProcessor(),
 				"Take something",
-                "SUBJECTSCORE");
+                "SUBJECT-SCORE");
 		}
 	}
 

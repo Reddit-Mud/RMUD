@@ -12,15 +12,26 @@ namespace RMUD
 		UnderstandMe = 1
 	}
 
+    public struct MatchableObject
+    {
+        public IMatchable Matchable;
+        public String Source;
+
+        public MatchableObject(IMatchable Matchable, String Source)
+        {
+            this.Matchable = Matchable;
+            this.Source = Source;
+        }
+    }
+
 	public interface IObjectSource
 	{
-		List<IMatchable> GetObjects(PossibleMatch State, CommandParser.MatchContext Context);
+		List<MatchableObject> GetObjects(PossibleMatch State, CommandParser.MatchContext Context);
 	}
 
     public class ObjectMatcher : ICommandTokenMatcher
     {
 		public String CaptureName;
-        public String ScoreName;
 
 		public ObjectMatcherSettings Settings;
 		public IObjectSource ObjectSource;
@@ -52,13 +63,11 @@ namespace RMUD
             String CaptureName,
             IObjectSource ObjectSource,
             Func<Actor, IMatchable, int> ScoreResults,
-            String ScoreName,
             ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
         {
             this.CaptureName = CaptureName;
             this.ObjectSource = ObjectSource;
             this.ScoreResults = ScoreResults;
-            this.ScoreName = ScoreName;
             this.Settings = Settings;
         }
 
@@ -75,15 +84,16 @@ namespace RMUD
 				{
 					var possibleMatch = new PossibleMatch(State.Arguments, State.Next.Next);
 					possibleMatch.Arguments.Upsert(CaptureName, Context.ExecutingActor);
+                    possibleMatch.Arguments.Upsert(CaptureName + "-SOURCE", "ME");
 					R.Add(possibleMatch);
 				}
 			}
 
-			foreach (var thing in ObjectSource.GetObjects(State, Context))
+			foreach (var matchableThing in ObjectSource.GetObjects(State, Context))
 			{
 				var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
 				bool matched = false;
-				while (possibleMatch.Next != null && thing.Nouns.Contains(possibleMatch.Next.Value.ToUpper()))
+				while (possibleMatch.Next != null && matchableThing.Matchable.Nouns.Contains(possibleMatch.Next.Value.ToUpper()))
 				{
 					matched = true;
 					possibleMatch.Next = possibleMatch.Next.Next;
@@ -91,17 +101,18 @@ namespace RMUD
 
 				if (matched)
 				{
-					possibleMatch.Arguments.Upsert(CaptureName, thing);
+					possibleMatch.Arguments.Upsert(CaptureName, matchableThing.Matchable);
+                    possibleMatch.Arguments.Upsert(CaptureName + "-SOURCE", matchableThing.Source);
 
 					if (useObjectScoring)
 					{
-						var score = ScoreResults(Context.ExecutingActor, thing);
-						possibleMatch.Arguments.Upsert(ScoreName, score);
+						var score = ScoreResults(Context.ExecutingActor, matchableThing.Matchable);
+						possibleMatch.Arguments.Upsert(CaptureName + "-SCORE", score);
 
 						var insertIndex = 0;
 						for (insertIndex = 0; insertIndex < R.Count; ++insertIndex)
 						{
-							if (score > (R[insertIndex].Arguments[ScoreName] as int?).Value) break;
+							if (score > (R[insertIndex].Arguments[CaptureName + "-SCORE"] as int?).Value) break;
 						}
 
 						R.Insert(insertIndex, possibleMatch);
