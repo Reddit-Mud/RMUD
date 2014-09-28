@@ -64,6 +64,22 @@ namespace RMUD.Commands
                         {
                             Mud.SendMessage(Actor, MessageScope.Single, "You open " + thing.Definite + "\r\n");
                             Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " opens " + thing.Definite + "\r\n");
+
+                            var source = Match.Arguments["SUBJECT-SOURCE"] as String;
+                            if (source == "LINK")
+                            {
+                                var location = Actor.Location as Room;
+                                var link = location.Links.FirstOrDefault(l => Object.ReferenceEquals(target, l.Door));
+                                if (link != null)
+                                {
+                                    var otherRoom = Mud.GetObject(link.Destination);
+                                    if (otherRoom != null)
+                                    {
+                                        Mud.SendMessage(otherRoom as Room, String.Format("{0} opens {1}.\r\n", Actor.Short, thing.Definite));
+                                        Mud.MarkLocaleForUpdate(otherRoom);
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -97,8 +113,24 @@ namespace RMUD.Commands
                     {
                         if (thing != null)
                         {
-                            Mud.SendMessage(Actor, MessageScope.Single, "You close " + thing.Definite + "\r\n");
-                            Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " closes " + thing.Definite + "\r\n");
+                            Mud.SendMessage(Actor, MessageScope.Single, "You close " + thing.Definite + ".\r\n");
+                            Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " closes " + thing.Definite + ".\r\n");
+
+                            var source = Match.Arguments["SUBJECT-SOURCE"] as String;
+                            if (source == "LINK")
+                            {
+                                var location = Actor.Location as Room;
+                                var link = location.Links.FirstOrDefault(l => Object.ReferenceEquals(target, l.Door));
+                                if (link != null)
+                                {
+                                    var otherRoom = Mud.GetObject(link.Destination);
+                                    if (otherRoom != null)
+                                    {
+                                        Mud.SendMessage(otherRoom as Room, String.Format("{0} closes {1}.\r\n", Actor.Short, thing.Definite));
+                                        Mud.MarkLocaleForUpdate(otherRoom);
+                                    }
+                                }
+                            }
                         }
                     }
 

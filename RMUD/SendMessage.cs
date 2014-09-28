@@ -17,6 +17,17 @@ namespace RMUD
             DatabaseLock.ReleaseMutex();
         }
 
+        public static void SendMessage(Room Room, String Message)
+        {
+            DatabaseLock.WaitOne();
+            foreach (var thing in Room)
+            {
+                if (thing is Actor && (thing as Actor).ConnectedClient != null)
+                    PendingMessages.Add(new RawPendingMessage((thing as Actor).ConnectedClient, Message));
+            }
+            DatabaseLock.ReleaseMutex();
+        }
+
         public static void SendMessage(Client Client, String Message)
         {
             DatabaseLock.WaitOne();
