@@ -82,18 +82,20 @@ namespace RMUD.Commands
             var checkRule = target.CanUnlock(Actor, key);
             if (checkRule.Allowed)
             {
-				var thing = target as Thing;
-				if (thing != null)
-				{
-					Mud.SendMessage(Actor, MessageScope.Single, "You unlock " + thing.Definite + ".\r\n");
-					Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " unlocks " + thing.Indefinite + " with " + key.Indefinite + ".\r\n");
-				}
-				target.HandleUnlock(Actor, key);
-			}
-		    else
-			{
-				Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
-			}
+                if (target.HandleUnlock(Actor, key) == RuleHandlerFollowUp.Continue)
+                {
+                    var thing = target as Thing;
+                    if (thing != null)
+                    {
+                        Mud.SendMessage(Actor, MessageScope.Single, "You unlock " + thing.Definite + ".\r\n");
+                        Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " unlocks " + thing.Indefinite + " with " + key.Indefinite + ".\r\n");
+                    }
+                }
+            }
+            else
+            {
+                Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
+            }
 		}
 	}
 
@@ -125,20 +127,22 @@ namespace RMUD.Commands
 			}
 
             var checkRule = target.CanLock(Actor, key);
-			if (checkRule.Allowed)
-			{
-				var thing = target as Thing;
-				if (thing != null)
-				{
-					Mud.SendMessage(Actor, MessageScope.Single, "You lock " + thing.Definite + ".\r\n");
-					Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " locks " + thing.Indefinite + " with " + key.Indefinite + ".\r\n");
-				}
-				target.HandleLock(Actor, key);
-			}
-			else
-			{
-				Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
-			}
+            if (checkRule.Allowed)
+            {
+                if (target.HandleLock(Actor, key) == RuleHandlerFollowUp.Continue)
+                {
+                    var thing = target as Thing;
+                    if (thing != null)
+                    {
+                        Mud.SendMessage(Actor, MessageScope.Single, "You lock " + thing.Definite + ".\r\n");
+                        Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " locks " + thing.Indefinite + " with " + key.Indefinite + ".\r\n");
+                    }
+                }
+            }
+            else
+            {
+                Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
+            }
 		}
 	}
 

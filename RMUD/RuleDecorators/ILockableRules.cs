@@ -13,7 +13,7 @@ namespace RMUD
 		bool Locked { get; }
 		CheckRule CanLock(Actor Actor, Thing Key);
 		CheckRule CanUnlock(Actor Actor, Thing Key);
-		void HandleLock(Actor Actor, Thing Key);
-		void HandleUnlock(Actor Actor, Thing Key);
+		RuleHandlerFollowUp HandleLock(Actor Actor, Thing Key);
+		RuleHandlerFollowUp HandleUnlock(Actor Actor, Thing Key);
 	}
 }

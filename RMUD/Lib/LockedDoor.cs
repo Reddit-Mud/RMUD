@@ -83,14 +83,16 @@ namespace RMUD
                 return CheckRule.Disallow("That is not the right key.");
 		}
 
-		void ILockableRules.HandleLock(Actor Actor, Thing Key)
+		RuleHandlerFollowUp ILockableRules.HandleLock(Actor Actor, Thing Key)
 		{
 			Locked = true;
+            return RuleHandlerFollowUp.Continue;
 		}
 
-		void ILockableRules.HandleUnlock(Actor Actor, Thing Key)
+		RuleHandlerFollowUp ILockableRules.HandleUnlock(Actor Actor, Thing Key)
 		{
 			Locked = false;
+            return RuleHandlerFollowUp.Continue;
 		}
 
 		#endregion

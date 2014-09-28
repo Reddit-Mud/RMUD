@@ -49,11 +49,15 @@ namespace RMUD.Commands
                     }
                 }
 
-				Mud.SendMessage(Actor, MessageScope.Single, "You drop " + target.Indefinite + "\r\n");
-				Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " drops " + target.Indefinite + "\r\n");
-				Thing.Move(target, Actor.Location);
+                var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
+                if (dropRules != null) handleRuleFollowUp = dropRules.HandleDrop(Actor);
 
-				if (dropRules != null) dropRules.HandleDrop(Actor);
+                if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
+                {
+                    Mud.SendMessage(Actor, MessageScope.Single, "You drop " + target.Indefinite + "\r\n");
+                    Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " drops " + target.Indefinite + "\r\n");
+                    Thing.Move(target, Actor.Location);
+                }
 
                 Mud.MarkLocaleForUpdate(target);
 			}

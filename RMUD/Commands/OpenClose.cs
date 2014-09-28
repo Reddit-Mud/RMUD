@@ -47,7 +47,6 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["SUBJECT"] as IOpenableRules;
-			var thing = target as Thing;
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null) 
@@ -60,12 +59,15 @@ namespace RMUD.Commands
 				{
                     if (target.HandleOpen(Actor) == RuleHandlerFollowUp.Continue)
                     {
+                        var thing = target as Thing;
                         if (thing != null)
                         {
                             Mud.SendMessage(Actor, MessageScope.Single, "You open " + thing.Definite + "\r\n");
                             Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " opens " + thing.Definite + "\r\n");
                         }
                     }
+
+                    Mud.MarkLocaleForUpdate(target as MudObject);
 				}
 				else
 				{
