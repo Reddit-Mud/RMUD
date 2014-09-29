@@ -25,23 +25,23 @@ namespace RMUD
             var container = Source as IContainer;
             if (container == null) return EnumerateObjectsControl.Continue;
 
-            foreach (var thing in container)
+            return container.EnumerateObjects(subObject =>
             {
-                if (Callback(thing) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+                if (Callback(subObject) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
 
                 if (Depth == EnumerateObjectsDepth.Deep)
                 {
-                    if (EnumerateObjects(thing, EnumerateObjectsDepth.Deep, Callback) == EnumerateObjectsControl.Stop)
+                    if (EnumerateObjects(subObject, EnumerateObjectsDepth.Deep, Callback) == EnumerateObjectsControl.Stop)
                         return EnumerateObjectsControl.Stop;
                 }
                 else if (Depth == EnumerateObjectsDepth.Shallow)
                 {
-                    if (EnumerateObjects(thing, EnumerateObjectsDepth.None, Callback) == EnumerateObjectsControl.Stop)
+                    if (EnumerateObjects(subObject, EnumerateObjectsDepth.None, Callback) == EnumerateObjectsControl.Stop)
                         return EnumerateObjectsControl.Stop;
                 }
-            }
 
-            return EnumerateObjectsControl.Continue;
+                return EnumerateObjectsControl.Continue;
+            });
         }
     }
 

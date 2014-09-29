@@ -22,27 +22,33 @@ namespace RMUD
 
 		#region IContainer
 
-		public void Remove(Thing Thing)
+		public void Remove(MudObject Thing)
 		{
-			Inventory.Remove(Thing);
-			Thing.Location = null;
+            if (!(Thing is Thing)) return;
+			Inventory.Remove(Thing as Thing);
+			(Thing as Thing).Location = null;
 		}
 
-		public void Add(Thing Thing)
+		public void Add(MudObject Thing)
 		{
-			Inventory.Add(Thing);
-			Thing.Location = this;
+            if (Thing is Thing)
+            {
+                Inventory.Add(Thing as Thing);
+                (Thing as Thing).Location = this;
+            }
 		}
 
-		IEnumerator<Thing> IEnumerable<Thing>.GetEnumerator()
-		{
-			return Inventory.GetEnumerator();
-		}
+        public EnumerateObjectsControl EnumerateObjects(Func<MudObject, EnumerateObjectsControl> Callback)
+        {
+            foreach (var thing in Inventory)
+                if (Callback(thing) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            return EnumerateObjectsControl.Continue;
+        }
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return (Inventory as System.Collections.IEnumerable).GetEnumerator();
-		}
+        public bool Contains(MudObject Object)
+        {
+            return Inventory.Contains(Object);
+        }
 
 		#endregion
 	}

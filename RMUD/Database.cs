@@ -157,11 +157,12 @@ namespace RMUD
 				//Preserve contents
 				if (existing is IContainer && newObject is IContainer)
 				{
-					foreach (var thing in (existing as IContainer))
-					{
-						(newObject as IContainer).Add(thing);
-						thing.Location = newObject;
-					}
+                    (existing as IContainer).EnumerateObjects(thing =>
+                        {
+                            (newObject as IContainer).Add(thing);
+                            if (thing is Thing) (thing as Thing).Location = newObject;
+                            return EnumerateObjectsControl.Continue;
+                        });
 				}
 
 				//Preserve location
@@ -196,15 +197,16 @@ namespace RMUD
                 //Preserve the location of actors, and actors only.
                 if (existing is IContainer)
                 {
-                    foreach (var thing in (existing as IContainer))
-                    {
-                        if (thing is Actor)
+                    (existing as IContainer).EnumerateObjects(thing =>
                         {
-                            //Can't use Thing.Move - it will change the list we are iterating.
-                            (newObject as IContainer).Add(thing);
-                            thing.Location = newObject;
-                        }
-                    }
+                            if (thing is Actor)
+                            {
+                                //Can't use Thing.Move - it will change the list we are iterating.
+                                (newObject as IContainer).Add(thing);
+                                (thing as Thing).Location = newObject;
+                            }
+                            return EnumerateObjectsControl.Continue;
+                        });
                 }
 
                 if (existing is Thing && (existing as Thing).Location != null)

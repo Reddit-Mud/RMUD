@@ -35,15 +35,15 @@ namespace RMUD
 
 		public ObjectMatcherSettings Settings;
 		public IObjectSource ObjectSource;
-		public Func<Actor, IMatchable, int> ScoreResults = null;
+		public Func<Actor, MudObject, int> ScoreResults = null;
 
-		public static int PreferNotHeld(Actor Actor, IMatchable Object)
+		public static int PreferNotHeld(Actor Actor, MudObject Object)
 		{
 			if (Actor.Contains(Object)) return -1;
 			return 0;
 		}
 
-		public static int PreferHeld(Actor Actor, IMatchable Object)
+		public static int PreferHeld(Actor Actor, MudObject Object)
 		{
 			if (Actor.Contains(Object)) return 1;
 			return 0;
@@ -62,7 +62,7 @@ namespace RMUD
         public ObjectMatcher(
             String CaptureName,
             IObjectSource ObjectSource,
-            Func<Actor, IMatchable, int> ScoreResults,
+            Func<Actor, MudObject, int> ScoreResults,
             ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
         {
             this.CaptureName = CaptureName;
@@ -106,7 +106,7 @@ namespace RMUD
 
 					if (useObjectScoring)
 					{
-						var score = ScoreResults(Context.ExecutingActor, matchableThing.Matchable);
+						var score = ScoreResults(Context.ExecutingActor, matchableThing.Matchable as MudObject);
 						possibleMatch.Arguments.Upsert(CaptureName + "-SCORE", score);
 
 						var insertIndex = 0;

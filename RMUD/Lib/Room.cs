@@ -47,26 +47,38 @@ namespace RMUD
 
         #region Implement IContainer
 
-        public void Remove(Thing Thing)
+        public void Remove(MudObject Thing)
 		{
-			Contents.Remove(Thing);
-			Thing.Location = null;
+            if (Thing is Thing)
+            {
+                Contents.Remove(Thing as Thing);
+                (Thing as Thing).Location = null;
+            }
 		}
 
-		public void Add(Thing Thing)
+		public void Add(MudObject Thing)
 		{
-			Contents.Add(Thing);
-			Thing.Location = this;
+            if (Thing is Thing)
+            {
+                Contents.Add(Thing as Thing);
+                (Thing as Thing).Location = this;
+            }
 		}
 
-		IEnumerator<Thing> IEnumerable<Thing>.GetEnumerator()
-		{
-			return Contents.GetEnumerator();
-		}
+        public EnumerateObjectsControl EnumerateObjects(Func<MudObject, EnumerateObjectsControl> Callback)
+        {
+            foreach (var mudObject in Contents)
+                if (Callback(mudObject) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            foreach (var scenery in Scenery)
+                if (Callback(scenery) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            foreach (var link in Links)
+                if (link.Door != null && Callback(link.Door) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            return EnumerateObjectsControl.Continue;
+        }
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return (Contents as System.Collections.IEnumerable).GetEnumerator();
+        public bool Contains(MudObject Object)
+        {
+            return Contents.Contains(Object);
         }
 
         #endregion

@@ -20,11 +20,12 @@ namespace RMUD
         public static void SendMessage(Room Room, String Message)
         {
             DatabaseLock.WaitOne();
-            foreach (var thing in Room)
+            Room.EnumerateObjects(thing =>
             {
                 if (thing is Actor && (thing as Actor).ConnectedClient != null)
                     PendingMessages.Add(new RawPendingMessage((thing as Actor).ConnectedClient, Message));
-            }
+                return EnumerateObjectsControl.Continue;
+            });
             DatabaseLock.ReleaseMutex();
         }
 
