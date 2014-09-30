@@ -80,6 +80,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="EnumerateObjects.cs" />
+    <Compile Include="Lib\GenericContainer.cs" />
     <Compile Include="NounList.cs" />
     <Compile Include="Parser\Matchers\FailIfNoMatches.cs" />
     <Compile Include="RuleDecorators\CheckRuleResponse.cs" />
