@@ -8,7 +8,7 @@ namespace RMUD
 	public class Actor : Thing, ITakeRules, IContainer
 	{
 		public Client ConnectedClient;
-		public List<Thing> Inventory = new List<Thing>();
+		public List<Thing> Held = new List<Thing>();
 
 		public override string Definite { get { return Short; } }
 		public override string Indefinite { get { return Short; } }
@@ -24,30 +24,48 @@ namespace RMUD
 
 		public void Remove(MudObject Thing)
 		{
-            if (!(Thing is Thing)) return;
-			Inventory.Remove(Thing as Thing);
-			(Thing as Thing).Location = null;
-		}
-
-		public void Add(MudObject Thing)
-		{
             if (Thing is Thing)
             {
-                Inventory.Add(Thing as Thing);
-                (Thing as Thing).Location = this;
+                
+                    if (Held.Remove(Thing as Thing))
+                        (Thing as Thing).Location = null;
+                
             }
 		}
 
-        public EnumerateObjectsControl EnumerateObjects(Func<MudObject, EnumerateObjectsControl> Callback)
+		public void Add(MudObject Thing, RelativeLocations Locations)
+		{
+            if (Thing is Thing)
+            {
+                if (Locations == RelativeLocations.Default || (Locations & RelativeLocations.Held) == RelativeLocations.Held)
+                {
+                    Held.Add(Thing as Thing);
+                    (Thing as Thing).Location = this;
+                }
+            }
+		}
+
+        public EnumerateObjectsControl EnumerateObjects(RelativeLocations Locations, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback)
         {
-            foreach (var thing in Inventory)
-                if (Callback(thing) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            if ((Locations & RelativeLocations.Held) == RelativeLocations.Held)
+                foreach (var thing in Held)
+                    if (Callback(thing, RelativeLocations.Held) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             return EnumerateObjectsControl.Continue;
         }
 
-        public bool Contains(MudObject Object)
+        public bool Contains(MudObject Object, RelativeLocations Locations)
         {
-            return Inventory.Contains(Object);
+            if ((Locations & RelativeLocations.Held) == RelativeLocations.Held)
+                return Held.Contains(Object);
+            return false;
+        }
+
+        public RelativeLocations LocationsSupported { get { return RelativeLocations.Held | RelativeLocations.Worn; } }
+
+        public RelativeLocations LocationOf(MudObject Object)
+        {
+            if (Held.Contains(Object)) return RelativeLocations.Held;
+            return RelativeLocations.None;
         }
 
 		#endregion

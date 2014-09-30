@@ -20,7 +20,7 @@ namespace RMUD
 			Nouns = new NounList();
 		}
 
-		public static void Move(MudObject Object, MudObject Destination)
+		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
 		{
             if (!(Object is Thing)) return; //Can't move it if it isn't a thing..
 
@@ -38,7 +38,7 @@ namespace RMUD
 			{
 				var destinationContainer = Destination as IContainer;
 				if (destinationContainer != null)
-					destinationContainer.Add(Thing);
+					destinationContainer.Add(Thing, Location);
 				Thing.Location = Destination;
 			}
 		}

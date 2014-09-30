@@ -5,11 +5,34 @@ using System.Text;
 
 namespace RMUD
 {
+    [Flags]
+    public enum RelativeLocations
+    {
+        None = 0,
+        Default = 0,
+
+        Contents = 1, //As of a room
+        Links = 2,
+        Scenery = 4,
+        
+        In = 8,
+        On = 16,
+        Under = 32,
+        Behind = 64,
+
+        Held = 128,
+        Worn = 256,
+
+        Everything = Contents | Links | Scenery | In | On | Under | Behind | Held | Worn,
+    }
+
 	public interface IContainer
 	{
 		void Remove(MudObject Object);
-		void Add(MudObject Object);
-        EnumerateObjectsControl EnumerateObjects(Func<MudObject, EnumerateObjectsControl> Callback);
-        bool Contains(MudObject Object);
+		void Add(MudObject Object, RelativeLocations Locations);
+        EnumerateObjectsControl EnumerateObjects(RelativeLocations Locations, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback);
+        bool Contains(MudObject Object, RelativeLocations Locations);
+        RelativeLocations LocationOf(MudObject Object);
+        RelativeLocations LocationsSupported { get; }
 	}
 }

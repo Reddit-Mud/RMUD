@@ -32,7 +32,7 @@ namespace RMUD.Commands
 			}
 			else
 			{
-				if (!Actor.Contains(target))
+				if (!Actor.Contains(target, RelativeLocations.Held))
 				{
 					Mud.SendMessage(Actor, "You aren't holding that.\r\n");
 					return;

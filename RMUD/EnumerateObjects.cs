@@ -25,7 +25,7 @@ namespace RMUD
             var container = Source as IContainer;
             if (container == null) return EnumerateObjectsControl.Continue;
 
-            return container.EnumerateObjects(subObject =>
+            return container.EnumerateObjects(RelativeLocations.Everything, (subObject, loc) =>
             {
                 if (Callback(subObject) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
 

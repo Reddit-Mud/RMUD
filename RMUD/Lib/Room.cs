@@ -51,34 +51,47 @@ namespace RMUD
 		{
             if (Thing is Thing)
             {
-                Contents.Remove(Thing as Thing);
-                (Thing as Thing).Location = null;
+                    if (Contents.Remove(Thing as Thing))
+                        (Thing as Thing).Location = null;
             }
 		}
 
-		public void Add(MudObject Thing)
+		public void Add(MudObject Thing, RelativeLocations Locations)
 		{
             if (Thing is Thing)
             {
-                Contents.Add(Thing as Thing);
-                (Thing as Thing).Location = this;
+                if (Locations == RelativeLocations.Default || (Locations & RelativeLocations.Contents) == RelativeLocations.Contents)
+                {
+                    Contents.Add(Thing as Thing);
+                    (Thing as Thing).Location = this;
+                }
             }
 		}
 
-        public EnumerateObjectsControl EnumerateObjects(Func<MudObject, EnumerateObjectsControl> Callback)
+        public EnumerateObjectsControl EnumerateObjects(RelativeLocations Locations, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback)
         {
             foreach (var mudObject in Contents)
-                if (Callback(mudObject) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+                if (Callback(mudObject, RelativeLocations.Contents) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             foreach (var scenery in Scenery)
-                if (Callback(scenery) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+                if (Callback(scenery, RelativeLocations.Scenery) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             foreach (var link in Links)
-                if (link.Door != null && Callback(link.Door) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+                if (link.Door != null && Callback(link.Door, RelativeLocations.Links) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             return EnumerateObjectsControl.Continue;
         }
 
-        public bool Contains(MudObject Object)
+        public bool Contains(MudObject Object, RelativeLocations Locations)
         {
-            return Contents.Contains(Object);
+            if ((Locations & RelativeLocations.Contents) == RelativeLocations.Contents)
+                return Contents.Contains(Object);
+            return false;
+        }
+
+        public RelativeLocations LocationsSupported { get { return RelativeLocations.Contents; } }
+
+        public RelativeLocations LocationOf(MudObject Object)
+        {
+            if (Contents.Contains(Object)) return RelativeLocations.Contents;
+            return RelativeLocations.None;
         }
 
         #endregion

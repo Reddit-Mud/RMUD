@@ -157,9 +157,9 @@ namespace RMUD
 				//Preserve contents
 				if (existing is IContainer && newObject is IContainer)
 				{
-                    (existing as IContainer).EnumerateObjects(thing =>
+                    (existing as IContainer).EnumerateObjects(RelativeLocations.Everything, (thing, loc) =>
                         {
-                            (newObject as IContainer).Add(thing);
+                            (newObject as IContainer).Add(thing, loc);
                             if (thing is Thing) (thing as Thing).Location = newObject;
                             return EnumerateObjectsControl.Continue;
                         });
@@ -170,8 +170,9 @@ namespace RMUD
 				{
 					if ((existing as Thing).Location != null)
 					{
-						Thing.Move(newObject as Thing, (existing as Thing).Location);
-						Thing.Move(existing as Thing, null);
+                        var loc = ((existing as Thing).Location as IContainer).LocationOf(existing);
+						Thing.Move(newObject as Thing, (existing as Thing).Location, loc);
+						Thing.Move(existing as Thing, null, RelativeLocations.None);
 					}
 				}
 
@@ -197,12 +198,12 @@ namespace RMUD
                 //Preserve the location of actors, and actors only.
                 if (existing is IContainer)
                 {
-                    (existing as IContainer).EnumerateObjects(thing =>
+                    (existing as IContainer).EnumerateObjects(RelativeLocations.Everything, (thing, loc) =>
                         {
                             if (thing is Actor)
                             {
                                 //Can't use Thing.Move - it will change the list we are iterating.
-                                (newObject as IContainer).Add(thing);
+                                (newObject as IContainer).Add(thing, loc);
                                 (thing as Thing).Location = newObject;
                             }
                             return EnumerateObjectsControl.Continue;
@@ -211,8 +212,9 @@ namespace RMUD
 
                 if (existing is Thing && (existing as Thing).Location != null)
                 {
-                    Thing.Move(newObject as Thing, (existing as Thing).Location);
-                    Thing.Move(existing as Thing, null);
+                    var loc = ((existing as Thing).Location as IContainer).LocationOf(existing);
+                    Thing.Move(newObject as Thing, (existing as Thing).Location, loc);
+                    Thing.Move(existing as Thing, null, RelativeLocations.None);
                 }
 
                 return true;

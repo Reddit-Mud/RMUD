@@ -17,7 +17,7 @@ namespace RMUD.Commands
                     new FailIfNoMatches(
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
                             (actor, thing) => {
-                                if (actor.Contains(thing)) return -2;
+                                if (actor.Contains(thing, RelativeLocations.Held)) return -2;
                                 if (thing is ITakeRules && !(thing as ITakeRules).CanTake(actor).Allowed)
                                     return -1;
                                 return 0;
@@ -35,7 +35,7 @@ namespace RMUD.Commands
         {
             var target = Match.Arguments.ValueOrDefault("SUBJECT") as Thing;
 
-            if (Actor.Contains(target))
+            if (Actor.Contains(target, RelativeLocations.Held))
             {
                 Mud.SendMessage(Actor, "You are already holding that.\r\n");
                 return;

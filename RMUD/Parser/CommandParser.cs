@@ -55,7 +55,7 @@ namespace RMUD
 					if (CachedObjectsInScope != null) return CachedObjectsInScope;
 					CachedObjectsInScope = new List<MatchableObject>();
 
-					CachedObjectsInScope.AddRange(ExecutingActor.Inventory.Select(t => new MatchableObject(t, "INVENTORY")));
+					CachedObjectsInScope.AddRange(ExecutingActor.Held.Select(t => new MatchableObject(t, "INVENTORY")));
 
 					var location = ExecutingActor.Location as Room;
 					if (location != null)

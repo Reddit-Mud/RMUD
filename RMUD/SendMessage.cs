@@ -20,7 +20,7 @@ namespace RMUD
         public static void SendMessage(Room Room, String Message)
         {
             DatabaseLock.WaitOne();
-            Room.EnumerateObjects(thing =>
+            Room.EnumerateObjects(RelativeLocations.Contents, (thing, loc) =>
             {
                 if (thing is Actor && (thing as Actor).ConnectedClient != null)
                     PendingMessages.Add(new RawPendingMessage((thing as Actor).ConnectedClient, Message));

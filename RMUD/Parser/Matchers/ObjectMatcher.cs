@@ -39,13 +39,13 @@ namespace RMUD
 
 		public static int PreferNotHeld(Actor Actor, MudObject Object)
 		{
-			if (Actor.Contains(Object)) return -1;
+			if (Actor.Contains(Object, RelativeLocations.Held)) return -1;
 			return 0;
 		}
 
 		public static int PreferHeld(Actor Actor, MudObject Object)
 		{
-			if (Actor.Contains(Object)) return 1;
+			if (Actor.Contains(Object, RelativeLocations.Held)) return 1;
 			return 0;
 		}
 
