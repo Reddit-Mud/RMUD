@@ -55,16 +55,17 @@ namespace RMUD
 					if (CachedObjectsInScope != null) return CachedObjectsInScope;
 					CachedObjectsInScope = new List<MatchableObject>();
 
-					CachedObjectsInScope.AddRange(ExecutingActor.Held.Select(t => new MatchableObject(t, "INVENTORY")));
-
 					var location = ExecutingActor.Location as Room;
 					if (location != null)
 					{
-						CachedObjectsInScope.AddRange(location.Contents.Select(t => new MatchableObject(t, "LOCATION")));
-						CachedObjectsInScope.AddRange(location.Links.Where(l => (l.Door != null && l.Door is IMatchable)).Select(l => new MatchableObject(l.Door as IMatchable, "LINK")));
-						CachedObjectsInScope.AddRange(location.Scenery.Select(s => new MatchableObject(s, "SCENERY")));
-					}
-						
+                        location.EnumerateObjects(RelativeLocations.Everything, (o, l) =>
+                            {
+                                if (o is IMatchable)
+                                    CachedObjectsInScope.Add(new MatchableObject(o as IMatchable, l));
+                                return EnumerateObjectsControl.Continue;
+                            });
+                    }
+	
 					return CachedObjectsInScope;
 				}
 			}

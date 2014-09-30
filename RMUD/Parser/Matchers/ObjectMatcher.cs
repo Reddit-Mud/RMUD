@@ -15,9 +15,9 @@ namespace RMUD
     public struct MatchableObject
     {
         public IMatchable Matchable;
-        public String Source;
+        public RelativeLocations Source;
 
-        public MatchableObject(IMatchable Matchable, String Source)
+        public MatchableObject(IMatchable Matchable, RelativeLocations Source)
         {
             this.Matchable = Matchable;
             this.Source = Source;

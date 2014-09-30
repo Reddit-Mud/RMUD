@@ -9,6 +9,7 @@ namespace RMUD
 	{
 		public Client ConnectedClient;
 		public List<Thing> Held = new List<Thing>();
+        public List<Thing> Worn = new List<Thing>();
 
 		public override string Definite { get { return Short; } }
 		public override string Indefinite { get { return Short; } }
@@ -22,16 +23,17 @@ namespace RMUD
 
 		#region IContainer
 
-		public void Remove(MudObject Thing)
-		{
+        public void Remove(MudObject Thing)
+        {
             if (Thing is Thing)
             {
-                
-                    if (Held.Remove(Thing as Thing))
-                        (Thing as Thing).Location = null;
-                
+
+                if (Held.Remove(Thing as Thing))
+                    (Thing as Thing).Location = null;
+                else if (Worn.Remove(Thing as Thing))
+                    (Thing as Thing).Location = null;
             }
-		}
+        }
 
 		public void Add(MudObject Thing, RelativeLocations Locations)
 		{
@@ -42,6 +44,11 @@ namespace RMUD
                     Held.Add(Thing as Thing);
                     (Thing as Thing).Location = this;
                 }
+                else if ((Locations & RelativeLocations.Worn) == RelativeLocations.Worn)
+                {
+                    Worn.Add(Thing as Thing);
+                    (Thing as Thing).Location = this;
+                }
             }
 		}
 
@@ -50,6 +57,9 @@ namespace RMUD
             if ((Locations & RelativeLocations.Held) == RelativeLocations.Held)
                 foreach (var thing in Held)
                     if (Callback(thing, RelativeLocations.Held) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            if ((Locations & RelativeLocations.Worn) == RelativeLocations.Worn)
+                foreach (var thing in Worn)
+                    if (Callback(thing, RelativeLocations.Worn) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             return EnumerateObjectsControl.Continue;
         }
 
@@ -57,6 +67,8 @@ namespace RMUD
         {
             if ((Locations & RelativeLocations.Held) == RelativeLocations.Held)
                 return Held.Contains(Object);
+            else if ((Locations & RelativeLocations.Worn) == RelativeLocations.Worn)
+                return Worn.Contains(Object);
             return false;
         }
 
@@ -65,6 +77,7 @@ namespace RMUD
         public RelativeLocations LocationOf(MudObject Object)
         {
             if (Held.Contains(Object)) return RelativeLocations.Held;
+            if (Worn.Contains(Object)) return RelativeLocations.Worn;
             return RelativeLocations.None;
         }
 

@@ -23,6 +23,8 @@ namespace RMUD
         Held = 128,
         Worn = 256,
 
+        ConnectedPlayers = 512,
+
         Everything = Contents | Links | Scenery | In | On | Under | Behind | Held | Worn,
     }
 

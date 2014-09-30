@@ -9,7 +9,7 @@ namespace RMUD
 	{
         public List<MatchableObject> GetObjects(PossibleMatch State, CommandParser.MatchContext Context)
         {
-            return new List<MatchableObject>(Mud.ConnectedClients.Where(c => c.IsLoggedOn).Select(c => new MatchableObject(c.Player, "PLAYERS")));
+            return new List<MatchableObject>(Mud.ConnectedClients.Where(c => c.IsLoggedOn).Select(c => new MatchableObject(c.Player, RelativeLocations.ConnectedPlayers)));
         }
 	}
 }

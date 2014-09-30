@@ -19,7 +19,7 @@ namespace RMUD
 
 		public List<Thing> Contents = new List<Thing>();
 		public List<Link> Links = new List<Link>();
-		public List<Scenery> Scenery = new List<Scenery>();
+		public List<MudObject> Scenery = new List<MudObject>();
 
 		public void OpenLink(Direction Direction, String Destination, MudObject Door = null)
 		{
@@ -47,35 +47,50 @@ namespace RMUD
 
         #region Implement IContainer
 
-        public void Remove(MudObject Thing)
-		{
-            if (Thing is Thing)
-            {
-                    if (Contents.Remove(Thing as Thing))
-                        (Thing as Thing).Location = null;
-            }
-		}
+        public void Remove(MudObject Object)
+        {
+            if (Object is Thing && Contents.Remove(Object as Thing))
+                (Object as Thing).Location = null;
+            else if (Scenery.Remove(Object)) { }
+            else if (Links.RemoveAll(l => System.Object.ReferenceEquals(Object, l.Door)) > 0) { }
+        }
 
-		public void Add(MudObject Thing, RelativeLocations Locations)
-		{
-            if (Thing is Thing)
+        public void Add(MudObject Thing, RelativeLocations Locations)
+        {
+            if (Locations == RelativeLocations.Default || (Locations & RelativeLocations.Contents) == RelativeLocations.Contents)
             {
-                if (Locations == RelativeLocations.Default || (Locations & RelativeLocations.Contents) == RelativeLocations.Contents)
+                if (Thing is Thing)
                 {
                     Contents.Add(Thing as Thing);
                     (Thing as Thing).Location = this;
                 }
             }
-		}
+            else if ((Locations & RelativeLocations.Scenery) == RelativeLocations.Scenery)
+            {
+                Scenery.Add(Thing);
+            }
+        }
 
         public EnumerateObjectsControl EnumerateObjects(RelativeLocations Locations, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback)
         {
-            foreach (var mudObject in Contents)
-                if (Callback(mudObject, RelativeLocations.Contents) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
-            foreach (var scenery in Scenery)
-                if (Callback(scenery, RelativeLocations.Scenery) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
-            foreach (var link in Links)
-                if (link.Door != null && Callback(link.Door, RelativeLocations.Links) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            if ((Locations & RelativeLocations.Contents) == RelativeLocations.Contents)
+            {
+                foreach (var mudObject in Contents)
+                    if (Callback(mudObject, RelativeLocations.Contents) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            }
+
+            if ((Locations & RelativeLocations.Contents) == RelativeLocations.Scenery)
+            {
+                foreach (var scenery in Scenery)
+                    if (Callback(scenery, RelativeLocations.Scenery) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            }
+
+            if ((Locations & RelativeLocations.Links) == RelativeLocations.Links)
+            {
+                foreach (var link in Links)
+                    if (link.Door != null && Callback(link.Door, RelativeLocations.Links) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+            }
+
             return EnumerateObjectsControl.Continue;
         }
 
@@ -83,14 +98,25 @@ namespace RMUD
         {
             if ((Locations & RelativeLocations.Contents) == RelativeLocations.Contents)
                 return Contents.Contains(Object);
+            else if ((Locations & RelativeLocations.Scenery) == RelativeLocations.Scenery)
+                return Scenery.Contains(Object);
+            else if ((Locations & RelativeLocations.Links) == RelativeLocations.Links)
+                return Links.Count(l => System.Object.ReferenceEquals(Object, l.Door)) > 0;
             return false;
         }
 
-        public RelativeLocations LocationsSupported { get { return RelativeLocations.Contents; } }
+        public RelativeLocations LocationsSupported
+        {
+            get
+            {
+                return RelativeLocations.Contents | RelativeLocations.Scenery | RelativeLocations.Links;
+            }
+        }
 
         public RelativeLocations LocationOf(MudObject Object)
         {
             if (Contents.Contains(Object)) return RelativeLocations.Contents;
+            if (Scenery.Contains(Object)) return RelativeLocations.Scenery;
             return RelativeLocations.None;
         }
 
