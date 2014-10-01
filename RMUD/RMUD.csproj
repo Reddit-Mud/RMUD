@@ -79,6 +79,9 @@
     <None Include="database\static\palantine\dark_room.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="database\static\palantine\antechamber.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="EnumerateObjects.cs" />
     <Compile Include="Lib\GenericContainer.cs" />
     <Compile Include="NounList.cs" />

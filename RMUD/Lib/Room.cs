@@ -79,7 +79,7 @@ namespace RMUD
                     if (Callback(mudObject, RelativeLocations.Contents) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             }
 
-            if ((Locations & RelativeLocations.Contents) == RelativeLocations.Scenery)
+            if ((Locations & RelativeLocations.Scenery) == RelativeLocations.Scenery)
             {
                 foreach (var scenery in Scenery)
                     if (Callback(scenery, RelativeLocations.Scenery) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;

@@ -20,6 +20,14 @@ namespace RMUD
 			Nouns = new NounList();
 		}
 
+        public Thing(String Short, String Long)
+        {
+            Nouns = new NounList();
+            this.Short = Short;
+            this.Long = Long;
+            Nouns.AddRange(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+        }
+
 		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
 		{
             if (!(Object is Thing)) return; //Can't move it if it isn't a thing..

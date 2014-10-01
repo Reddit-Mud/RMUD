@@ -9,10 +9,12 @@ namespace RMUD
 	{
         public Dictionary<RelativeLocations, List<MudObject>> Lists = new Dictionary<RelativeLocations, List<MudObject>>();
         public RelativeLocations Supported;
+        public RelativeLocations Default;
 
-        public GenericContainer(RelativeLocations Locations)
+        public GenericContainer(RelativeLocations Locations, RelativeLocations Default)
         {
             this.Supported = Locations;
+            this.Default = Default;
         }
 
 		#region IContainer
@@ -28,6 +30,8 @@ namespace RMUD
 
 		public void Add(MudObject Object, RelativeLocations Locations)
 		{
+            if (Locations == RelativeLocations.Default) Locations = Default;
+
             if ((Supported & Locations) == Locations)
             {
                 if (!Lists.ContainsKey(Locations)) Lists.Add(Locations, new List<MudObject>());
@@ -37,6 +41,8 @@ namespace RMUD
 
         public EnumerateObjectsControl EnumerateObjects(RelativeLocations Locations, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback)
         {
+            if (Locations == RelativeLocations.Default) Locations = Default;
+
             foreach (var list in Lists)
             {
                 if ((Locations & list.Key) == list.Key)
@@ -48,6 +54,8 @@ namespace RMUD
 
         public bool Contains(MudObject Object, RelativeLocations Locations)
         {
+            if (Locations == RelativeLocations.Default) Locations = Default;
+
             if (Lists.ContainsKey(Locations))
                 return Lists[Locations].Contains(Object);
             return false;

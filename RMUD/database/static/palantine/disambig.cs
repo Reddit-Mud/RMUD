@@ -9,6 +9,7 @@
 
         OpenLink(RMUD.Direction.WEST, "palantine\\library", RMUD.Mud.GetObject("palantine\\disambig_blue_door"));
         OpenLink(RMUD.Direction.EAST, "palantine\\dark_room", RMUD.Mud.GetObject("palantine\\disambig_red_door"));
+        OpenLink(RMUD.Direction.SOUTH, "palantine\\antechamber");
 
         RMUD.Thing.Move(RMUD.Mud.GetObject("palantine\\disambig_key"), this);
         RMUD.Thing.Move(RMUD.Mud.GetObject("palantine\\library_key"), this);
