@@ -36,7 +36,7 @@ namespace RMUD.Commands
 			{
 				if (link.Door != null)
 				{
-					var openable = link.Door as IOpenableRules;
+					var openable = link.Door as OpenableRules;
 					if (openable != null && !openable.Open)
 					{
 						Mud.SendMessage(Actor, MessageScope.Single, "The door is closed.\r\n");

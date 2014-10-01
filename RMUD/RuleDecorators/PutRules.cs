@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public interface IPutRules
+	public interface PutRules
 	{
 		CheckRule CanPut(Actor Actor, Thing What, RelativeLocations Location);
 		RuleHandlerFollowUp HandlePut(Actor Actor, Thing What, RelativeLocations Location);

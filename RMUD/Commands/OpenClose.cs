@@ -15,7 +15,7 @@ namespace RMUD.Commands
                     new FailIfNoMatches(
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                              (actor, openable) => {
-                               if (openable is IOpenableRules && !(openable as IOpenableRules).Open)
+                               if (openable is OpenableRules && !(openable as OpenableRules).Open)
                                      return 1;
                                 return -1;
                             }),
@@ -31,7 +31,7 @@ namespace RMUD.Commands
 		    			new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                             (actor, openable) =>
                             {
-                                if (openable is IOpenableRules && (openable as IOpenableRules).Open)
+                                if (openable is OpenableRules && (openable as OpenableRules).Open)
                                     return 1;
                                 return -1;
                             }),
@@ -46,7 +46,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["SUBJECT"] as IOpenableRules;
+			var target = Match.Arguments["SUBJECT"] as OpenableRules;
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null) 
@@ -97,7 +97,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["SUBJECT"] as IOpenableRules;
+			var target = Match.Arguments["SUBJECT"] as OpenableRules;
 			var thing = target as Thing;
 			if (target == null)
 			{

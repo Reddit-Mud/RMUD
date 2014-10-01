@@ -17,7 +17,7 @@
 	}
 }
 
-public class torch : RMUD.Thing, RMUD.IEmitsLight
+public class torch : RMUD.Thing, RMUD.EmitsLight
 {
     public torch()
     {
@@ -25,7 +25,7 @@ public class torch : RMUD.Thing, RMUD.IEmitsLight
         Nouns.Add("torch");
     }
 
-    bool RMUD.IEmitsLight.EmitsLight
+    bool RMUD.EmitsLight.EmitsLight
     {
         get { return true; }
     }

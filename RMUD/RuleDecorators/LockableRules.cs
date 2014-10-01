@@ -8,7 +8,7 @@ namespace RMUD
 	/// <summary>
 	/// Decorates an object that can be locked or unlocked, and interactive with the lock and unlock commands.
 	/// </summary>
-	public interface ILockableRules
+	public interface LockableRules
 	{
 		bool Locked { get; }
 		CheckRule CanLock(Actor Actor, Thing Key);

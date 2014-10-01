@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public interface IDropRules
+	public interface DropRules
 	{
 		CheckRule CanDrop(Actor Actor);
 		RuleHandlerFollowUp HandleDrop(Actor Actor);

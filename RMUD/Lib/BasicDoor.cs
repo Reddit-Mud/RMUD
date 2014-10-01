@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class BasicDoor : Thing, IOpenableRules, ITakeRules
+	public class BasicDoor : Thing, OpenableRules, TakeRules
 	{
 		public BasicDoor()
 		{
@@ -17,19 +17,19 @@ namespace RMUD
 
 		public bool Open { get; set; }
 
-		CheckRule IOpenableRules.CanOpen(Actor Actor)
+		CheckRule OpenableRules.CanOpen(Actor Actor)
 		{
             if (Open) return CheckRule.Disallow("It's already open.");
             else return CheckRule.Allow();
 		}
 
-		CheckRule IOpenableRules.CanClose(Actor Actor)
+		CheckRule OpenableRules.CanClose(Actor Actor)
 		{
             if (Open) return CheckRule.Allow();
             else return CheckRule.Disallow("It's already closed.");
 		}
 
-		RuleHandlerFollowUp IOpenableRules.HandleOpen(Actor Actor)
+		RuleHandlerFollowUp OpenableRules.HandleOpen(Actor Actor)
 		{
 			Open = true;
             Nouns.RemoveAll(n => n == "CLOSED");
@@ -37,7 +37,7 @@ namespace RMUD
             return RuleHandlerFollowUp.Continue;
 		}
 
-		RuleHandlerFollowUp IOpenableRules.HandleClose(Actor Actor)
+		RuleHandlerFollowUp OpenableRules.HandleClose(Actor Actor)
 		{
 			Open = false;
             Nouns.RemoveAll(n => n == "OPEN");
@@ -47,11 +47,11 @@ namespace RMUD
 
 		#endregion
 
-		CheckRule ITakeRules.CanTake(Actor Actor)
+		CheckRule TakeRules.CanTake(Actor Actor)
 		{
 			return CheckRule.Disallow("Doors only make good doors if you leave them where they are at.");
 		}
 
-        RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
+        RuleHandlerFollowUp TakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 	}
 }

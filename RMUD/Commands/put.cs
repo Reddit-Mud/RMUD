@@ -53,7 +53,7 @@ namespace RMUD.Commands
                 return;
             }
 
-            var dropRules = target as IDropRules;
+            var dropRules = target as DropRules;
             if (dropRules != null)
             {
                 var checkRule = dropRules.CanDrop(Actor);
@@ -64,7 +64,7 @@ namespace RMUD.Commands
                 }
             }
 
-            var putRules = container as IPutRules;
+            var putRules = container as PutRules;
             if (putRules != null)
             {
                 var checkRule = putRules.CanPut(Actor, target, relloc.Value);

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public interface IEmitsLight
+    public interface EmitsLight
 	{
         bool EmitsLight { get; }
 	}

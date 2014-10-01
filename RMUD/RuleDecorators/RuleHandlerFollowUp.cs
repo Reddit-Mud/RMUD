@@ -10,10 +10,4 @@ namespace RMUD
         Stop,
         Continue,
     }
-
-	public interface ITakeRules
-	{
-		CheckRule CanTake(Actor Actor);
-		RuleHandlerFollowUp HandleTake(Actor Actor);
-	}
 }

@@ -38,7 +38,7 @@ namespace RMUD.Commands
 					return;
 				}
 
-				var dropRules = target as IDropRules;
+				var dropRules = target as DropRules;
                 if (dropRules != null)
                 {
                     var checkRule = dropRules.CanDrop(Actor);

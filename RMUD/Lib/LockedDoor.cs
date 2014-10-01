@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class LockedDoor : Thing, IOpenableRules, ITakeRules, ILockableRules
+	public class LockedDoor : Thing, OpenableRules, TakeRules, LockableRules
 	{
         public Func<Thing, bool> IsMatchingKey;
 
@@ -20,20 +20,20 @@ namespace RMUD
 
 		public bool Open { get; set; }
 
-		CheckRule IOpenableRules.CanOpen(Actor Actor)
+		CheckRule OpenableRules.CanOpen(Actor Actor)
 		{
             if (Locked) return CheckRule.Disallow("It seems to be locked.");
             if (Open) return CheckRule.Disallow("It's already open.");
             else return CheckRule.Allow();
 		}
 
-		CheckRule IOpenableRules.CanClose(Actor Actor)
+		CheckRule OpenableRules.CanClose(Actor Actor)
 		{
             if (!Open) return CheckRule.Disallow("It's already closed.");
             else return CheckRule.Allow();
 		}
 
-		RuleHandlerFollowUp IOpenableRules.HandleOpen(Actor Actor)
+		RuleHandlerFollowUp OpenableRules.HandleOpen(Actor Actor)
 		{
 			Open = true;
             Nouns.RemoveAll(n => n == "CLOSED");
@@ -41,7 +41,7 @@ namespace RMUD
             return RuleHandlerFollowUp.Continue;
 		}
 
-		RuleHandlerFollowUp IOpenableRules.HandleClose(Actor Actor)
+		RuleHandlerFollowUp OpenableRules.HandleClose(Actor Actor)
 		{
 			Open = false;
 			Locked = false;
@@ -52,18 +52,18 @@ namespace RMUD
 
 		#endregion
 
-		CheckRule ITakeRules.CanTake(Actor Actor)
+		CheckRule TakeRules.CanTake(Actor Actor)
 		{
 			return CheckRule.Disallow("That's not going to work.");
 		}
 
-        RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
+        RuleHandlerFollowUp TakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 
 		#region ILockableRules
 
 		public bool Locked { get; set; }
 
-		CheckRule ILockableRules.CanLock(Actor Actor, Thing Key)
+		CheckRule LockableRules.CanLock(Actor Actor, Thing Key)
 		{
 			if (Open) return CheckRule.Disallow("You'll have to close it first.");
             if (Locked) return CheckRule.Disallow("It's already locked.");
@@ -73,7 +73,7 @@ namespace RMUD
                 return CheckRule.Disallow("That is not the right key.");
 		}
 
-		CheckRule ILockableRules.CanUnlock(Actor Actor, Thing Key)
+		CheckRule LockableRules.CanUnlock(Actor Actor, Thing Key)
 		{
             if (Open) return CheckRule.Disallow("It's already open.");
             if (!Locked) return CheckRule.Disallow("It's not locked.");
@@ -83,13 +83,13 @@ namespace RMUD
                 return CheckRule.Disallow("That is not the right key.");
 		}
 
-		RuleHandlerFollowUp ILockableRules.HandleLock(Actor Actor, Thing Key)
+		RuleHandlerFollowUp LockableRules.HandleLock(Actor Actor, Thing Key)
 		{
 			Locked = true;
             return RuleHandlerFollowUp.Continue;
 		}
 
-		RuleHandlerFollowUp ILockableRules.HandleUnlock(Actor Actor, Thing Key)
+		RuleHandlerFollowUp LockableRules.HandleUnlock(Actor Actor, Thing Key)
 		{
 			Locked = false;
             return RuleHandlerFollowUp.Continue;

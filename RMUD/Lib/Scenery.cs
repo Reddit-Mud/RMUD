@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Scenery : MudObject, IDescribed, IMatchable, ITakeRules
+	public class Scenery : MudObject, IDescribed, IMatchable, TakeRules
 	{
 		public NounList Nouns { get; set; }
 		public DescriptiveText Long { get; set; }
@@ -15,11 +15,11 @@ namespace RMUD
 			Nouns = new NounList();
 		}
 
-		CheckRule ITakeRules.CanTake(Actor Actor)
+		CheckRule TakeRules.CanTake(Actor Actor)
 		{
 			return CheckRule.Disallow("That's a terrible idea.");
 		}
 
-        RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
+        RuleHandlerFollowUp TakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 	}
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Actor : Thing, ITakeRules, IContainer
+	public class Actor : Thing, TakeRules, IContainer
 	{
 		public Client ConnectedClient;
 		public List<Thing> Held = new List<Thing>();
@@ -14,12 +14,12 @@ namespace RMUD
 		public override string Definite { get { return Short; } }
 		public override string Indefinite { get { return Short; } }
 
-        CheckRule ITakeRules.CanTake(Actor Actor)
+        CheckRule TakeRules.CanTake(Actor Actor)
 		{
 			return CheckRule.Disallow("You can't take people.");
 		}
 
-        RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
+        RuleHandlerFollowUp TakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 
 		#region IContainer
 

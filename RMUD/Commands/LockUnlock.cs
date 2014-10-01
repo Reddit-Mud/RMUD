@@ -15,7 +15,7 @@ namespace RMUD.Commands
                     new FailIfNoMatches(
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
                             (actor, matchable) => {
-                                if (matchable is ILockableRules && !(matchable as ILockableRules).Locked)
+                                if (matchable is LockableRules && !(matchable as LockableRules).Locked)
                                     return 1;
                                 return -1;
                             }),
@@ -36,7 +36,7 @@ namespace RMUD.Commands
                         new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                             (actor, matchable) =>
                             {
-                                if (matchable is ILockableRules && (matchable as ILockableRules).Locked)
+                                if (matchable is LockableRules && (matchable as LockableRules).Locked)
                                     return 1;
                                 return -1;
                             }),
@@ -56,7 +56,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["SUBJECT"] as ILockableRules;
+			var target = Match.Arguments["SUBJECT"] as LockableRules;
 			var key = Match.Arguments["OBJECT"] as Thing;
 			
 			if (target == null)
@@ -103,7 +103,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["SUBJECT"] as ILockableRules;
+			var target = Match.Arguments["SUBJECT"] as LockableRules;
 			var key = Match.Arguments["OBJECT"] as Thing;
 
 			if (target == null)

@@ -18,7 +18,8 @@ namespace RMUD.Commands
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
                             (actor, thing) => {
                                 if (actor.Contains(thing, RelativeLocations.Held)) return -2;
-                                if (thing is ITakeRules && !(thing as ITakeRules).CanTake(actor).Allowed)
+                                //Prefer things that can actually be taken
+                                if (thing is TakeRules && !(thing as TakeRules).CanTake(actor).Allowed)
                                     return -1;
                                 return 0;
                             }),
@@ -41,7 +42,7 @@ namespace RMUD.Commands
                 return;
             }
 
-            var takeRules = target as ITakeRules;
+            var takeRules = target as TakeRules;
             if (takeRules != null)
             {
                 var checkRule = takeRules.CanTake(Actor);

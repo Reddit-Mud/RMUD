@@ -19,7 +19,7 @@
 	}
 }
 
-public class Jupiter : RMUD.Scenery, RMUD.IEmitsLight
+public class Jupiter : RMUD.Scenery, RMUD.EmitsLight
 {
     public Jupiter()
     {
