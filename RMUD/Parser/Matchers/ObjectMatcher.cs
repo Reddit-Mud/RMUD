@@ -26,7 +26,7 @@ namespace RMUD
 
 	public interface IObjectSource
 	{
-		List<MatchableObject> GetObjects(PossibleMatch State, CommandParser.MatchContext Context);
+		List<MatchableObject> GetObjects(PossibleMatch State, MatchContext Context);
 	}
 
     public class ObjectMatcher : ICommandTokenMatcher
@@ -71,7 +71,7 @@ namespace RMUD
             this.Settings = Settings;
         }
 
-		public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
+		public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
 		{
             var useObjectScoring = ScoreResults != null;
 

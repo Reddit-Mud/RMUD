@@ -7,7 +7,7 @@ namespace RMUD
 {
     public interface ICommandTokenMatcher
     {
-        List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context);
+        List<PossibleMatch> Match(PossibleMatch State, MatchContext Context);
 		String Emit();
     }
 }

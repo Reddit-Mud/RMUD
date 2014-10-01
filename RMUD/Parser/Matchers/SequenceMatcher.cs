@@ -14,7 +14,7 @@ namespace RMUD
 			Matchers.AddRange(matchers);
 		}
 
-        public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
+        public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
         {
             var Matches = new List<PossibleMatch>();
             Matches.Add(State);

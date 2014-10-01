@@ -14,7 +14,7 @@ namespace RMUD
 			this.RequiredRank = RequiredRank;
 		}
 
-        public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
+        public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
         {
             var R = new List<PossibleMatch>();
             if (Context.ExecutingActor.ConnectedClient != null && Context.ExecutingActor.ConnectedClient.Rank >= RequiredRank)

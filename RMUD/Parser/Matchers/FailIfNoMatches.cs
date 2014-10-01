@@ -16,7 +16,7 @@ namespace RMUD
             this.Message = Message;
         }
 
-        public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
+        public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
         {
             var R = new List<PossibleMatch>();
             R.AddRange(Sub.Match(State, Context));

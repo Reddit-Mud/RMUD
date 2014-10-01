@@ -7,16 +7,16 @@ namespace RMUD
 {
     internal class FilterGate : ICommandTokenMatcher
     {
-        public Func<PossibleMatch, CommandParser.MatchContext, bool> Filter;
+        public Func<PossibleMatch, MatchContext, bool> Filter;
 		public String FilterHelpText;
 
-		internal FilterGate(Func<PossibleMatch, CommandParser.MatchContext, bool> Filter, String FilterHelpText)
+		internal FilterGate(Func<PossibleMatch, MatchContext, bool> Filter, String FilterHelpText)
 		{
 			this.Filter = Filter;
 			this.FilterHelpText = FilterHelpText;
 		}
 
-        public List<PossibleMatch> Match(PossibleMatch State, CommandParser.MatchContext Context)
+        public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
         {
             var R = new List<PossibleMatch>();
 			if (Filter(State, Context))
