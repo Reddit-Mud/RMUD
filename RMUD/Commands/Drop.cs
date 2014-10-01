@@ -23,44 +23,38 @@ namespace RMUD.Commands
 
 	internal class DropProcessor : ICommandProcessor
 	{
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-			var target = Match.Arguments["SUBJECT"] as Thing;
-			if (target == null)
-			{
-				if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "Drop what again?\r\n");
-			}
-			else
-			{
-				if (!Actor.Contains(target, RelativeLocations.Held))
-				{
-					Mud.SendMessage(Actor, "You aren't holding that.\r\n");
-					return;
-				}
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            var target = Match.Arguments["SUBJECT"] as Thing;
 
-				var dropRules = target as DropRules;
-                if (dropRules != null)
+            if (!Actor.Contains(target, RelativeLocations.Held))
+            {
+                Mud.SendMessage(Actor, "You aren't holding that.\r\n");
+                return;
+            }
+
+            var dropRules = target as DropRules;
+            if (dropRules != null)
+            {
+                var checkRule = dropRules.Check(Actor);
+                if (!checkRule.Allowed)
                 {
-                    var checkRule = dropRules.Check(Actor);
-                    if (!checkRule.Allowed)
-                    {
-                        Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
-                        return;
-                    }
+                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
+                    return;
                 }
+            }
 
-                var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
-                if (dropRules != null) handleRuleFollowUp = dropRules.Handle(Actor);
+            var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
+            if (dropRules != null) handleRuleFollowUp = dropRules.Handle(Actor);
 
-                if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
-                {
-                    Mud.SendMessage(Actor, MessageScope.Single, "You drop " + target.Indefinite + "\r\n");
-                    Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " drops " + target.Indefinite + "\r\n");
-                    Thing.Move(target, Actor.Location);
-                }
+            if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
+            {
+                Mud.SendMessage(Actor, MessageScope.Single, "You drop " + target.Indefinite + "\r\n");
+                Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " drops " + target.Indefinite + "\r\n");
+                Thing.Move(target, Actor.Location);
+            }
 
-                Mud.MarkLocaleForUpdate(target);
-			}
-		}
+            Mud.MarkLocaleForUpdate(target);
+        }
 	}
 }

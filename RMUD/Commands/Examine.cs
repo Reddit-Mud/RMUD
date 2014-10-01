@@ -27,10 +27,16 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-            var target = Match.Arguments["OBJECT"];
+            var target = Match.Arguments["OBJECT"] as MudObject;
 
 			if (Actor.ConnectedClient != null)
 			{
+                if (!Mud.IsVisibleTo(Actor, target))
+                {
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                    return;
+                }
+
                 var builder = new StringBuilder();
                 if (!(target is IDescribed))
                     builder.Append("That object is indescribeable.\r\n");
@@ -69,7 +75,7 @@ namespace RMUD.Commands
                     }
                 }
 
-                Mud.SendMessage(Actor, MessageScope.Single, builder.ToString());
+                Mud.SendMessage(Actor, builder.ToString());
 			}
 		}
 	}
