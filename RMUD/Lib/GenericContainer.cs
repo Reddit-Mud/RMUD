@@ -63,6 +63,8 @@ namespace RMUD
 
         public RelativeLocations LocationsSupported { get { return Supported; } }
 
+        public RelativeLocations DefaultLocation { get { return Default; } }
+
         public RelativeLocations LocationOf(MudObject Object)
         {
             foreach (var list in Lists)

@@ -9,7 +9,7 @@
 	}
 }
 
-public class kuz_shelf : Thing, ITakeRules, ILocaleDescriptionRules
+public class kuz_shelf : Thing, TakeRules, LocaleDescriptionRules
 {
     public DescriptiveText LocaleDescription { get; set; }
 
@@ -21,12 +21,12 @@ public class kuz_shelf : Thing, ITakeRules, ILocaleDescriptionRules
         Nouns.Add("BOOK", "BOOKS", "SHELF", "DUSTY");
     }
 
-    CheckRule ITakeRules.CanTake(Actor Actor)
+    CheckRule TakeRules.Check(Actor Actor)
     {
         return CheckRule.Allow();
     }
 
-    RuleHandlerFollowUp ITakeRules.HandleTake(Actor Actor)
+    RuleHandlerFollowUp TakeRules.Handle(Actor Actor)
     {
         var newBook = new kuz_book();
         Thing.Move(newBook, Actor);

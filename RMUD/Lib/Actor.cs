@@ -74,6 +74,8 @@ namespace RMUD
 
         public RelativeLocations LocationsSupported { get { return RelativeLocations.Held | RelativeLocations.Worn; } }
 
+        public RelativeLocations DefaultLocation { get { return RelativeLocations.Held; } }
+
         public RelativeLocations LocationOf(MudObject Object)
         {
             if (Held.Contains(Object)) return RelativeLocations.Held;

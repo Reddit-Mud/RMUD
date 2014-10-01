@@ -98,9 +98,10 @@
     <Compile Include="Parser\Matchers\Optional.cs" />
     <Compile Include="Parser\Matchers\FirstOfMatcher.cs" />
     <Compile Include="ProscriptionList.cs" />
-    <Compile Include="RuleDecorators\ILocaleDescriptionRules.cs" />
+    <Compile Include="RuleDecorators\LocaleDescriptionRules.cs" />
     <Compile Include="TelnetClient.cs" />
     <Compile Include="TelnetControlCodes.cs" />
+    <Compile Include="HasVisibleContents.cs" />
     <Compile Include="Utility.cs" />
     <None Include="database\static\palantine\library.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -114,6 +114,8 @@ namespace RMUD
             }
         }
 
+        public RelativeLocations DefaultLocation { get { return RelativeLocations.Contents; } }
+
         public RelativeLocations LocationOf(MudObject Object)
         {
             if (Contents.Contains(Object)) return RelativeLocations.Contents;

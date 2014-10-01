@@ -36,5 +36,6 @@ namespace RMUD
         bool Contains(MudObject Object, RelativeLocations Locations);
         RelativeLocations LocationOf(MudObject Object);
         RelativeLocations LocationsSupported { get; }
+        RelativeLocations DefaultLocation { get; }
 	}
 }

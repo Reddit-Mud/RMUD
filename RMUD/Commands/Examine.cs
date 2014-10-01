@@ -27,14 +27,49 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["OBJECT"] as IDescribed;
+            var target = Match.Arguments["OBJECT"];
 
 			if (Actor.ConnectedClient != null)
 			{
-				if (target == null)
-					Mud.SendMessage(Actor, MessageScope.Single, "That object is indescribeable.\r\n");
-				else
-					Mud.SendMessage(Actor, MessageScope.Single, target.Long.Expand(Actor, target as MudObject) + "\r\n");
+                var builder = new StringBuilder();
+                if (!(target is IDescribed))
+                    builder.Append("That object is indescribeable.\r\n");
+                else
+                    builder.Append((target as IDescribed).Long.Expand(Actor, target as MudObject) + "\r\n");
+
+                var openable = target as OpenableRules;
+                if (openable != null)
+                {
+                    if (openable.Open)
+                        builder.Append(Mud.CapFirst(String.Format("{0} is open.\r\n", (target as Thing).Definite)));
+                    else
+                        builder.Append(Mud.CapFirst(String.Format("{0} is closed.\r\n", (target as Thing).Definite)));
+                }
+
+                var container = target as IContainer;
+                if (container != null && ((container.LocationsSupported & RelativeLocations.On) == RelativeLocations.On))
+                {
+                    var contents = Mud.GetContents(container, RelativeLocations.On).Where(o => o is Thing);
+                    if (contents.Count() > 0)
+                    {
+                        builder.Append(String.Format("\r\nOn {0} is ", (target as Thing).Definite));
+                        builder.Append(String.Join(", ", contents.Select(o => (o as Thing).Indefinite)));
+                        builder.Append(".\r\n");
+                    }
+                }
+
+                if (Mud.HasVisibleContents(target as MudObject))
+                {
+                    var contents = Mud.GetContents(container, RelativeLocations.In).Where(o => o is Thing);
+                    if (contents.Count() > 0)
+                    {
+                        builder.Append(String.Format("\r\nIn {0} is ", (target as Thing).Definite));
+                        builder.Append(String.Join(", ", contents.Select(o => (o as Thing).Indefinite)));
+                        builder.Append(".\r\n");
+                    }
+                }
+
+                Mud.SendMessage(Actor, MessageScope.Single, builder.ToString());
 			}
 		}
 	}

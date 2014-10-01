@@ -15,7 +15,8 @@ namespace RMUD.Commands
                     new FailIfNoMatches(
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
                         "You don't seem to have that.\r\n"),
-                    new RelativeLocationMatcher("RELLOC"),
+                    new Optional(
+                        new RelativeLocationMatcher("RELLOC")),
                     new FailIfNoMatches(
                         new ObjectMatcher("OBJECT", new InScopeObjectSource(), (Actor, Object) =>
                             {
@@ -44,12 +45,19 @@ namespace RMUD.Commands
                 return;
             }
 
-            var relloc = Match.Arguments["RELLOC"] as RelativeLocations?;
-
             var container = Match.Arguments["OBJECT"] as IContainer;
-            if (container == null || ((container.LocationsSupported & relloc.Value) != relloc.Value))
+           
+            RelativeLocations relloc = RelativeLocations.In;
+            if (Match.Arguments.ContainsKey("RELLOC"))
+                relloc = (Match.Arguments["RELLOC"] as RelativeLocations?).Value;
+            else
             {
-                Mud.SendMessage(Actor, String.Format("You can't put things {0} that.\r\n", Mud.RelativeLocationName(relloc.Value)));
+                if (container != null) relloc = container.DefaultLocation;
+            }
+
+            if (container == null || ((container.LocationsSupported & relloc) != relloc))
+            {
+                Mud.SendMessage(Actor, String.Format("You can't put things {0} that.\r\n", Mud.RelativeLocationName(relloc)));
                 return;
             }
 
@@ -67,7 +75,7 @@ namespace RMUD.Commands
             var putRules = container as PutRules;
             if (putRules != null)
             {
-                var checkRule = putRules.Check(Actor, target, relloc.Value);
+                var checkRule = putRules.Check(Actor, target, relloc);
                 if (!checkRule.Allowed)
                 {
                     Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
@@ -76,13 +84,13 @@ namespace RMUD.Commands
             }
 
             var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
-            if (putRules != null) handleRuleFollowUp = putRules.Handle(Actor, target, relloc.Value);
+            if (putRules != null) handleRuleFollowUp = putRules.Handle(Actor, target, relloc);
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, MessageScope.Single, String.Format("You put {0} {1} {2}.\r\n", target.Definite, Mud.RelativeLocationName(relloc.Value), (container as Thing).Definite));
-                Mud.SendMessage(Actor, MessageScope.External, String.Format("{0} puts {1} {2} {3}.\r\n", Actor.Short, target.Indefinite, Mud.RelativeLocationName(relloc.Value), (container as Thing).Definite));
-                Thing.Move(target, container as MudObject, relloc.Value);
+                Mud.SendMessage(Actor, MessageScope.Single, String.Format("You put {0} {1} {2}.\r\n", target.Definite, Mud.RelativeLocationName(relloc), (container as Thing).Definite));
+                Mud.SendMessage(Actor, MessageScope.External, String.Format("{0} puts {1} {2} {3}.\r\n", Actor.Short, target.Indefinite, Mud.RelativeLocationName(relloc), (container as Thing).Definite));
+                Thing.Move(target, container as MudObject, relloc);
             }
 
             Mud.MarkLocaleForUpdate(target);
