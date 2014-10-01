@@ -17,5 +17,11 @@ namespace RMUD
             for (int i = 0; i < Nouns.Length; ++i)
                 base.Add(Nouns[i].ToUpper());
         }
+
+        new public void AddRange(IEnumerable<String> Range)
+        {
+            foreach (var str in Range)
+                Add(str);
+        }
     }
 }

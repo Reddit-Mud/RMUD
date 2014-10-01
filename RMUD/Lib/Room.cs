@@ -135,7 +135,7 @@ namespace RMUD
             }
             else
             {
-                Mud.EnumerateObjects(this, EnumerateObjectsDepth.Deep, t =>
+                Mud.EnumerateObjects(this, EnumerateObjectsDepth.Deep, (t,l) =>
                 {
                     if (t is IEmitsLight)
                         if ((t as IEmitsLight).EmitsLight)

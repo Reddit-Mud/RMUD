@@ -58,7 +58,36 @@ namespace RMUD.Commands
                     //Display objects in room
                     if (visibleThings.Count > 0)
                     {
-                        builder.Append("Also here: " + String.Join(", ", visibleThings.Select(t => t.Indefinite)));
+                        builder.Append("Also here: ");
+                        builder.Append(String.Join(", ", visibleThings.Select(visibleThing =>
+                        {
+                            var subBuilder = new StringBuilder();
+                            subBuilder.Append(visibleThing.Indefinite);
+
+                            var container = visibleThing as IContainer;
+                            if (container != null)
+                            {
+                                if ((container.LocationsSupported & RelativeLocations.On) == RelativeLocations.On)
+                                {
+                                    var subObjects = new List<Thing>();
+                                    container.EnumerateObjects(RelativeLocations.On, (o,l) => 
+                                    { 
+                                        if (o is Thing)
+                                            subObjects.Add(o as Thing); 
+                                        return EnumerateObjectsControl.Continue;
+                                    });
+                                    if (subObjects.Count > 0)
+                                    {
+                                        subBuilder.Append(" (on which is ");
+                                        subBuilder.Append(String.Join(", ", subObjects.Select(o => o.Indefinite)));
+                                        subBuilder.Append(")");
+                                    }
+                                }
+                            }
+
+                            return subBuilder.ToString();
+                        })));
+
                         builder.Append("\r\n\r\n");
                     }
 

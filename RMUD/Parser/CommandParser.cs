@@ -58,7 +58,7 @@ namespace RMUD
 					var location = ExecutingActor.Location as Room;
 					if (location != null)
 					{
-                        location.EnumerateObjects(RelativeLocations.Everything, (o, l) =>
+                        Mud.EnumerateObjects(location, EnumerateObjectsDepth.Shallow, (o, l) =>
                             {
                                 if (o is IMatchable)
                                     CachedObjectsInScope.Add(new MatchableObject(o as IMatchable, l));
@@ -69,6 +69,7 @@ namespace RMUD
 					return CachedObjectsInScope;
 				}
 			}
+
 		}
 
         internal MatchedCommand ParseCommand(String Command, Actor Actor)

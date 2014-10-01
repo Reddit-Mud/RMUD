@@ -20,14 +20,14 @@ namespace RMUD
 
     public static partial class Mud
     {
-        public static EnumerateObjectsControl EnumerateObjects(MudObject Source, EnumerateObjectsDepth Depth, Func<MudObject, EnumerateObjectsControl> Callback)
+        public static EnumerateObjectsControl EnumerateObjects(MudObject Source, EnumerateObjectsDepth Depth, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback)
         {
             var container = Source as IContainer;
             if (container == null) return EnumerateObjectsControl.Continue;
 
             return container.EnumerateObjects(RelativeLocations.Everything, (subObject, loc) =>
             {
-                if (Callback(subObject) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+                if (Callback(subObject, loc) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
 
                 if (Depth == EnumerateObjectsDepth.Deep)
                 {
