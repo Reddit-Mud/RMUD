@@ -59,6 +59,8 @@ namespace RMUD.Commands
 				{
                     if (target.HandleOpen(Actor) == RuleHandlerFollowUp.Continue)
                     {
+                        target.Open = true;
+
                         var thing = target as Thing;
                         if (thing != null)
                         {
@@ -111,6 +113,8 @@ namespace RMUD.Commands
 				{
                     if (target.HandleClose(Actor) == RuleHandlerFollowUp.Continue)
                     {
+                        target.Open = false;
+
                         if (thing != null)
                         {
                             Mud.SendMessage(Actor, MessageScope.Single, "You close " + thing.Definite + ".\r\n");

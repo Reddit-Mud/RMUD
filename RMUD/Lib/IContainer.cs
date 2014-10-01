@@ -25,6 +25,9 @@ namespace RMUD
 
         ConnectedPlayers = 512,
 
+        Room = Contents | Links | Scenery,
+        Player = Held | Worn,
+        Thing = In | On | Under | Behind,
         Everything = Contents | Links | Scenery | In | On | Under | Behind | Held | Worn,
     }
 

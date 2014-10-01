@@ -10,7 +10,7 @@ namespace RMUD
 	/// </summary>
 	public interface OpenableRules
 	{
-		bool Open { get; }
+        bool Open { get; set; }
 		CheckRule CheckOpen(Actor Actor);
 		CheckRule CheckClose(Actor Actor);
 		RuleHandlerFollowUp HandleOpen(Actor Actor);

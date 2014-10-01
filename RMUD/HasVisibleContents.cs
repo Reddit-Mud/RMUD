@@ -24,5 +24,12 @@ namespace RMUD
 
             return false;
         }
+
+        public static bool IsOpen(MudObject Object)
+        {
+            var openable = Object as OpenableRules;
+            if (openable != null) return openable.Open;
+            return true;
+        }
     }
 }
