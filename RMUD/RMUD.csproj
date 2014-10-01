@@ -41,10 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RelativeLocationNames.cs" />
     <Compile Include="ChatChannels.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="CommandLine.cs" />
     <Compile Include="Commands\Chat.cs" />
+    <Compile Include="Commands\Put.cs" />
     <Compile Include="Commands\Kick.cs" />
     <Compile Include="Commands\Ban.cs" />
     <Compile Include="Commands\Tell.cs" />
@@ -85,8 +87,10 @@
     <Compile Include="EnumerateObjects.cs" />
     <Compile Include="Lib\GenericContainer.cs" />
     <Compile Include="NounList.cs" />
+    <Compile Include="Parser\Matchers\RelativeLocationMatcher.cs" />
     <Compile Include="Parser\Matchers\FailIfNoMatches.cs" />
     <Compile Include="RuleDecorators\CheckRuleResponse.cs" />
+    <Compile Include="RuleDecorators\IPutRules.cs" />
     <Compile Include="RuleDecorators\IEmitsLight.cs" />
     <Compile Include="SendMessage.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />

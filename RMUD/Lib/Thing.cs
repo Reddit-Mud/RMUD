@@ -26,6 +26,10 @@ namespace RMUD
             this.Short = Short;
             this.Long = Long;
             Nouns.AddRange(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+
+            var firstChar = Short.ToLower()[0];
+            if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')
+                Article = "an";
         }
 
 		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
