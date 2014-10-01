@@ -7,7 +7,7 @@ namespace RMUD
 {
 	public interface DropRules
 	{
-		CheckRule CanDrop(Actor Actor);
-		RuleHandlerFollowUp HandleDrop(Actor Actor);
+		CheckRule Check(Actor Actor);
+		RuleHandlerFollowUp Handle(Actor Actor);
 	}
 }

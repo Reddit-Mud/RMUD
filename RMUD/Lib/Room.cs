@@ -29,13 +29,14 @@ namespace RMUD
 
         #region Scenery 
 
-        public void AddScenery(String Description, params String[] Nouns)
+        public Scenery AddScenery(String Description, params String[] Nouns)
 		{
 			var scenery = new Scenery();
 			scenery.Long = Description;
 			foreach (var noun in Nouns)
 				scenery.Nouns.Add(noun.ToUpper());
 			Scenery.Add(scenery);
+            return scenery;
 		}
 
         public void AddScenery(Scenery Scenery)

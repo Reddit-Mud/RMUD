@@ -15,11 +15,11 @@ namespace RMUD
 			Nouns = new NounList();
 		}
 
-		CheckRule TakeRules.CanTake(Actor Actor)
+		CheckRule TakeRules.Check(Actor Actor)
 		{
 			return CheckRule.Disallow("That's a terrible idea.");
 		}
 
-        RuleHandlerFollowUp TakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
+        RuleHandlerFollowUp TakeRules.Handle(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 	}
 }

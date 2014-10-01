@@ -14,12 +14,12 @@ namespace RMUD
 		public override string Definite { get { return Short; } }
 		public override string Indefinite { get { return Short; } }
 
-        CheckRule TakeRules.CanTake(Actor Actor)
+        CheckRule TakeRules.Check(Actor Actor)
 		{
 			return CheckRule.Disallow("You can't take people.");
 		}
 
-        RuleHandlerFollowUp TakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
+        RuleHandlerFollowUp TakeRules.Handle(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 
 		#region IContainer
 

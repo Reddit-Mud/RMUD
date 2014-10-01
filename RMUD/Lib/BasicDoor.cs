@@ -17,13 +17,13 @@ namespace RMUD
 
 		public bool Open { get; set; }
 
-		CheckRule OpenableRules.CanOpen(Actor Actor)
+		CheckRule OpenableRules.CheckOpen(Actor Actor)
 		{
             if (Open) return CheckRule.Disallow("It's already open.");
             else return CheckRule.Allow();
 		}
 
-		CheckRule OpenableRules.CanClose(Actor Actor)
+		CheckRule OpenableRules.CheckClose(Actor Actor)
 		{
             if (Open) return CheckRule.Allow();
             else return CheckRule.Disallow("It's already closed.");
@@ -47,11 +47,11 @@ namespace RMUD
 
 		#endregion
 
-		CheckRule TakeRules.CanTake(Actor Actor)
+		CheckRule TakeRules.Check(Actor Actor)
 		{
 			return CheckRule.Disallow("Doors only make good doors if you leave them where they are at.");
 		}
 
-        RuleHandlerFollowUp TakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
+        RuleHandlerFollowUp TakeRules.Handle(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 	}
 }

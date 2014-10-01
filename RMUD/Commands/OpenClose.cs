@@ -54,7 +54,7 @@ namespace RMUD.Commands
 			}
 			else
 			{
-                var checkRule = target.CanOpen(Actor);
+                var checkRule = target.CheckOpen(Actor);
 				if (checkRule.Allowed)
 				{
                     if (target.HandleOpen(Actor) == RuleHandlerFollowUp.Continue)
@@ -106,7 +106,7 @@ namespace RMUD.Commands
 			}
 			else
 			{
-                var checkRule = target.CanClose(Actor);
+                var checkRule = target.CheckClose(Actor);
 				if (checkRule.Allowed)
 				{
                     if (target.HandleClose(Actor) == RuleHandlerFollowUp.Continue)

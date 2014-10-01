@@ -42,7 +42,7 @@ namespace RMUD.Commands
 
                     for (int i = 0; i < visibleThings.Count; )
                     {
-                        var localeDescribable = visibleThings[i] as ILocaleDescriptionRules;
+                        var localeDescribable = visibleThings[i] as LocaleDescriptionRules;
                         if (localeDescribable != null)
                         {
                             visibleThings.RemoveAt(i);

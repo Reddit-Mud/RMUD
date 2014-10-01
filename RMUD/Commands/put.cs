@@ -56,7 +56,7 @@ namespace RMUD.Commands
             var dropRules = target as DropRules;
             if (dropRules != null)
             {
-                var checkRule = dropRules.CanDrop(Actor);
+                var checkRule = dropRules.Check(Actor);
                 if (!checkRule.Allowed)
                 {
                     Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
@@ -67,7 +67,7 @@ namespace RMUD.Commands
             var putRules = container as PutRules;
             if (putRules != null)
             {
-                var checkRule = putRules.CanPut(Actor, target, relloc.Value);
+                var checkRule = putRules.Check(Actor, target, relloc.Value);
                 if (!checkRule.Allowed)
                 {
                     Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
@@ -76,7 +76,7 @@ namespace RMUD.Commands
             }
 
             var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
-            if (putRules != null) handleRuleFollowUp = putRules.HandlePut(Actor, target, relloc.Value);
+            if (putRules != null) handleRuleFollowUp = putRules.Handle(Actor, target, relloc.Value);
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {

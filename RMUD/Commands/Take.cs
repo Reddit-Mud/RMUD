@@ -19,7 +19,7 @@ namespace RMUD.Commands
                             (actor, thing) => {
                                 if (actor.Contains(thing, RelativeLocations.Held)) return -2;
                                 //Prefer things that can actually be taken
-                                if (thing is TakeRules && !(thing as TakeRules).CanTake(actor).Allowed)
+                                if (thing is TakeRules && !(thing as TakeRules).Check(actor).Allowed)
                                     return -1;
                                 return 0;
                             }),
@@ -45,7 +45,7 @@ namespace RMUD.Commands
             var takeRules = target as TakeRules;
             if (takeRules != null)
             {
-                var checkRule = takeRules.CanTake(Actor);
+                var checkRule = takeRules.Check(Actor);
                 if (!checkRule.Allowed)
                 {
                     Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
@@ -54,7 +54,7 @@ namespace RMUD.Commands
             }
 
             var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
-            if (takeRules != null) handleRuleFollowUp = takeRules.HandleTake(Actor);
+            if (takeRules != null) handleRuleFollowUp = takeRules.Handle(Actor);
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {

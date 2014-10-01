@@ -11,8 +11,8 @@ namespace RMUD
 	public interface LockableRules
 	{
 		bool Locked { get; }
-		CheckRule CanLock(Actor Actor, Thing Key);
-		CheckRule CanUnlock(Actor Actor, Thing Key);
+		CheckRule CheckLock(Actor Actor, Thing Key);
+		CheckRule CheckUnlock(Actor Actor, Thing Key);
 		RuleHandlerFollowUp HandleLock(Actor Actor, Thing Key);
 		RuleHandlerFollowUp HandleUnlock(Actor Actor, Thing Key);
 	}

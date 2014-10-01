@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public interface ILocaleDescriptionRules
+	public interface LocaleDescriptionRules
 	{
 		DescriptiveText LocaleDescription { get; }
 	}

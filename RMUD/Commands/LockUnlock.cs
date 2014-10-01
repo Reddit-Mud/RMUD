@@ -79,7 +79,7 @@ namespace RMUD.Commands
 				return;
 			}
 
-            var checkRule = target.CanUnlock(Actor, key);
+            var checkRule = target.CheckUnlock(Actor, key);
             if (checkRule.Allowed)
             {
                 if (target.HandleUnlock(Actor, key) == RuleHandlerFollowUp.Continue)
@@ -126,7 +126,7 @@ namespace RMUD.Commands
 				return;
 			}
 
-            var checkRule = target.CanLock(Actor, key);
+            var checkRule = target.CheckLock(Actor, key);
             if (checkRule.Allowed)
             {
                 if (target.HandleLock(Actor, key) == RuleHandlerFollowUp.Continue)

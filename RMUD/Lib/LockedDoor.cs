@@ -20,14 +20,14 @@ namespace RMUD
 
 		public bool Open { get; set; }
 
-		CheckRule OpenableRules.CanOpen(Actor Actor)
+		CheckRule OpenableRules.CheckOpen(Actor Actor)
 		{
             if (Locked) return CheckRule.Disallow("It seems to be locked.");
             if (Open) return CheckRule.Disallow("It's already open.");
             else return CheckRule.Allow();
 		}
 
-		CheckRule OpenableRules.CanClose(Actor Actor)
+		CheckRule OpenableRules.CheckClose(Actor Actor)
 		{
             if (!Open) return CheckRule.Disallow("It's already closed.");
             else return CheckRule.Allow();
@@ -52,18 +52,18 @@ namespace RMUD
 
 		#endregion
 
-		CheckRule TakeRules.CanTake(Actor Actor)
+		CheckRule TakeRules.Check(Actor Actor)
 		{
 			return CheckRule.Disallow("That's not going to work.");
 		}
 
-        RuleHandlerFollowUp TakeRules.HandleTake(Actor Actor) { return RuleHandlerFollowUp.Continue; }
+        RuleHandlerFollowUp TakeRules.Handle(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 
 		#region ILockableRules
 
 		public bool Locked { get; set; }
 
-		CheckRule LockableRules.CanLock(Actor Actor, Thing Key)
+		CheckRule LockableRules.CheckLock(Actor Actor, Thing Key)
 		{
 			if (Open) return CheckRule.Disallow("You'll have to close it first.");
             if (Locked) return CheckRule.Disallow("It's already locked.");
@@ -73,7 +73,7 @@ namespace RMUD
                 return CheckRule.Disallow("That is not the right key.");
 		}
 
-		CheckRule LockableRules.CanUnlock(Actor Actor, Thing Key)
+		CheckRule LockableRules.CheckUnlock(Actor Actor, Thing Key)
 		{
             if (Open) return CheckRule.Disallow("It's already open.");
             if (!Locked) return CheckRule.Disallow("It's not locked.");
