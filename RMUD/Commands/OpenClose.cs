@@ -54,6 +54,13 @@ namespace RMUD.Commands
 			}
 			else
 			{
+                if (!Mud.IsVisibleTo(Actor, target as MudObject))
+            {
+                if (Actor.ConnectedClient != null)
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                return;
+            }
+
                 var checkRule = target.CheckOpen(Actor);
 				if (checkRule.Allowed)
 				{
@@ -108,6 +115,13 @@ namespace RMUD.Commands
 			}
 			else
 			{
+                if (!Mud.IsVisibleTo(Actor, target as MudObject))
+                {
+                    if (Actor.ConnectedClient != null)
+                        Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                    return;
+                }
+
                 var checkRule = target.CheckClose(Actor);
 				if (checkRule.Allowed)
 				{

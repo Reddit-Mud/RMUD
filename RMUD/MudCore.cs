@@ -95,6 +95,19 @@ namespace RMUD
                 return Of;
         }
 
+        public static bool ObjectContainsObject(MudObject Super, MudObject Sub)
+        {
+            if (Object.ReferenceEquals(Super, Sub)) return false; //Objects can't contain themselves...
+            if (Sub is Thing)
+            {
+                var location = (Sub as Thing).Location;
+                if (location == null) return false;
+                if (Object.ReferenceEquals(Super, location)) return true;
+                return ObjectContainsObject(Super, location);
+            }
+            return false;    
+        }
+
         public static void MarkLocaleForUpdate(MudObject Object)
         {
             DatabaseLock.WaitOne();

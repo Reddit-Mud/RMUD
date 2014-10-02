@@ -27,7 +27,7 @@ namespace RMUD.Commands
         {
             var target = Match.Arguments["SUBJECT"] as Thing;
 
-            if (!Actor.Contains(target, RelativeLocations.Held))
+            if (!Mud.ObjectContainsObject(Actor, target))
             {
                 Mud.SendMessage(Actor, "You aren't holding that.\r\n");
                 return;

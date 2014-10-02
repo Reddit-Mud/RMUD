@@ -66,7 +66,14 @@ namespace RMUD.Commands
 				return;
 			}
 
-			if (!Object.ReferenceEquals(Actor, key.Location))
+            if (!Mud.IsVisibleTo(Actor, target as MudObject))
+            {
+                if (Actor.ConnectedClient != null)
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                return;
+            }
+
+			if (!Mud.ObjectContainsObject(Actor, key))
 			{
 				if (Actor.ConnectedClient != null)
 					Mud.SendMessage(Actor, "You'd have to be holding " + key.Definite + " for that to work.\r\n");
@@ -113,7 +120,14 @@ namespace RMUD.Commands
 				return;
 			}
 
-			if (!Object.ReferenceEquals(Actor, key.Location))
+			if (!Mud.IsVisibleTo(Actor, target as MudObject))
+            {
+                if (Actor.ConnectedClient != null)
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                return;
+            }
+
+			if (!Mud.ObjectContainsObject(Actor, key))
 			{
 				if (Actor.ConnectedClient != null)
 					Mud.SendMessage(Actor, "You'd have to be holding " + key.Definite + " for that to work.\r\n");

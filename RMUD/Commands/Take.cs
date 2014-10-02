@@ -36,6 +36,13 @@ namespace RMUD.Commands
         {
             var target = Match.Arguments.ValueOrDefault("SUBJECT") as Thing;
 
+            if (!Mud.IsVisibleTo(Actor, target))
+            {
+                if (Actor.ConnectedClient != null)
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                return;
+            }
+
             if (Actor.Contains(target, RelativeLocations.Held))
             {
                 Mud.SendMessage(Actor, "You are already holding that.\r\n");

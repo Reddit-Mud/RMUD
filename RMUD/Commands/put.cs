@@ -38,15 +38,21 @@ namespace RMUD.Commands
         public void Perform(PossibleMatch Match, Actor Actor)
         {
             var target = Match.Arguments["SUBJECT"] as Thing;
+            var container = Match.Arguments["OBJECT"] as IContainer;
 
-            if (!Actor.Contains(target, RelativeLocations.Held))
+            if (!Mud.IsVisibleTo(Actor, container as MudObject))
+            {
+                if (Actor.ConnectedClient != null)
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                return;
+            }
+
+            if (!Mud.ObjectContainsObject(Actor, target as MudObject))
             {
                 Mud.SendMessage(Actor, "You aren't holding that.\r\n");
                 return;
             }
-
-            var container = Match.Arguments["OBJECT"] as IContainer;
-           
+            
             RelativeLocations relloc = RelativeLocations.In;
             if (Match.Arguments.ContainsKey("RELLOC"))
                 relloc = (Match.Arguments["RELLOC"] as RelativeLocations?).Value;
