@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Unlock.cs" />
     <Compile Include="Commands\LookUnderOrBehind.cs" />
+    <Compile Include="Commands\Close.cs" />
     <Compile Include="Parser\MatchContext.cs" />
+    <Compile Include="Parser\Matchers\ScoreGate.cs" />
     <Compile Include="RelativeLocationNames.cs" />
     <Compile Include="ChatChannels.cs" />
     <Compile Include="Client.cs" />
@@ -55,8 +58,8 @@
     <Compile Include="Commands\Version.cs" />
     <Compile Include="Commands\Who.cs" />
     <Compile Include="Commands\Reload.cs" />
-    <Compile Include="Commands\LockUnlock.cs" />
-    <Compile Include="Commands\OpenClose.cs" />
+    <Compile Include="Commands\Lock.cs" />
+    <Compile Include="Commands\Open.cs" />
     <Compile Include="Commands\Drop.cs" />
     <Compile Include="Commands\Inventory.cs" />
     <Compile Include="Commands\Help.cs" />

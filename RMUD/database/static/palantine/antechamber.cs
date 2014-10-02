@@ -35,7 +35,7 @@ public class Jupiter : RMUD.Scenery, RMUD.EmitsLight
 
 public class Table : RMUD.GenericContainer, RMUD.OpenableRules
 {
-    public Table() : base(RMUD.RelativeLocations.On | RMUD.RelativeLocations.In, RMUD.RelativeLocations.On)
+    public Table() : base(RMUD.RelativeLocations.On | RMUD.RelativeLocations.Under, RMUD.RelativeLocations.On)
     {
         Short = "ancient table";
         Long = "As the years have worn long the wood of this table has dried and shrunk, and split, and what was once a finely crafted table is now pitted and gouged. The top is still mostly smooth, from use but not from care.";
@@ -43,7 +43,7 @@ public class Table : RMUD.GenericContainer, RMUD.OpenableRules
 
         Open = false;
 
-        RMUD.Thing.Move(new RMUD.Thing("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.In);
+        RMUD.Thing.Move(new RMUD.Thing("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
     }
 
     public override string Indefinite
