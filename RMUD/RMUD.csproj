@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\LookUnderOrBehind.cs" />
     <Compile Include="Parser\MatchContext.cs" />
     <Compile Include="RelativeLocationNames.cs" />
     <Compile Include="ChatChannels.cs" />

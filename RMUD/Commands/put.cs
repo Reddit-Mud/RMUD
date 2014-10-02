@@ -67,6 +67,16 @@ namespace RMUD.Commands
                 return;
             }
 
+            if (relloc == RelativeLocations.In)
+            {
+                var openable = target as OpenableRules;
+                if (openable != null && !openable.Open)
+                {
+                    Mud.SendMessage(Actor, Mud.CapFirst(String.Format("{0} is closed.\r\n", target.Definite)));
+                    return;
+                }
+            }
+
             var dropRules = target as DropRules;
             if (dropRules != null)
             {
