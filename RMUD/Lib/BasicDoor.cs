@@ -5,7 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
-	public class BasicDoor : Thing, OpenableRules, TakeRules
+    public class Portal : Thing
+    {
+        //The defining characteristic of a door is actually that it's IN TWO ROOMS AT ONCE!
+        public MudObject FrontSide;
+        public MudObject BackSide;
+    }
+
+	public class BasicDoor : Portal, OpenableRules, TakeRules
 	{
 		public BasicDoor()
 		{

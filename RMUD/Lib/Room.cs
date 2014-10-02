@@ -35,13 +35,14 @@ namespace RMUD
 			scenery.Long = Description;
 			foreach (var noun in Nouns)
 				scenery.Nouns.Add(noun.ToUpper());
-			Scenery.Add(scenery);
+            AddScenery(scenery);
             return scenery;
 		}
 
         public void AddScenery(Scenery Scenery)
         {
             this.Scenery.Add(Scenery);
+            Scenery.Location = this;
         }
 
         #endregion

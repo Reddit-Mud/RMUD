@@ -17,8 +17,8 @@ namespace RMUD.Commands
                              (actor, openable) =>
                              {
                                  if (openable is OpenableRules && !(openable as OpenableRules).Open)
-                                     return 1;
-                                 return -1;
+                                     return MatchPreference.Likely;
+                                 return MatchPreference.Unlikely;
                              }),
                         "I don't see that here.\r\n")),
                 new OpenProcessor(),

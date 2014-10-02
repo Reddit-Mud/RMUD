@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class LockedDoor : Thing, OpenableRules, TakeRules, LockableRules
+	public class LockedDoor : Portal, OpenableRules, TakeRules, LockableRules
 	{
         public Func<Thing, bool> IsMatchingKey;
 

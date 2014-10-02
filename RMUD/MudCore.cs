@@ -76,23 +76,28 @@ namespace RMUD
 
         public static MudObject FindVisibilityCeiling(MudObject Of)
         {
+            if (Of is Room) return Of;
+
             if (Of is Thing)
             {
                 var location = (Of as Thing).Location;
+                if (location == null) return null;
+                
                 var container = location as IContainer;
-                if (container == null) return Of;
-
-                var relloc = container.LocationOf(Of);
-                if (relloc == RelativeLocations.In) //Consider the openable rules.
+                if (container != null)
                 {
-                    if (IsOpen(location)) return FindVisibilityCeiling(location);
-                    else return location;
+                    var relloc = container.LocationOf(Of);
+                    if (relloc == RelativeLocations.In) //Consider the openable rules.
+                    {
+                        if (IsOpen(location)) return FindVisibilityCeiling(location);
+                        else return location;
+                    }
                 }
-                else
-                    return FindVisibilityCeiling(location);
+                
+                return FindVisibilityCeiling(location);
             }
             else
-                return Of;
+                return null;
         }
 
         public static bool ObjectContainsObject(MudObject Super, MudObject Sub)

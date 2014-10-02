@@ -19,7 +19,7 @@ namespace RMUD
         public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
         {
             var r = Sub.Match(State, Context);
-            var highestScoreFound = Int32.MinValue;
+            var highestScoreFound = MatchPreference.VeryUnlikely;
             foreach (var match in r)
             {
                 var score = GetScore(match, ScoreArgument);
@@ -30,15 +30,15 @@ namespace RMUD
 
         public String Emit() { return "<BEST " + Sub.Emit() + ">"; }
 
-        private static int GetScore(PossibleMatch Match, String ScoreArgumentName)
+        private static MatchPreference GetScore(PossibleMatch Match, String ScoreArgumentName)
         {
             if (Match.Arguments.ContainsKey(ScoreArgumentName))
             {
-                var argScore = Match.Arguments[ScoreArgumentName] as int?;
+                var argScore = Match.Arguments[ScoreArgumentName] as MatchPreference?;
                 if (argScore.HasValue) return argScore.Value;
             }
 
-            return 0; //If there is no score, the match is neutral.
+            return MatchPreference.Plausible; //If there is no score, the match is neutral.
         }
     }
 }

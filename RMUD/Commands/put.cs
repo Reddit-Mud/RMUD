@@ -22,8 +22,8 @@ namespace RMUD.Commands
                             {
                                 //Prefer objects that are actually containers. No means curently to prefer
                                 //objects that actually support the relloc we matched previously.
-                                if (Object is IContainer) return 1;
-                                return 0;
+                                if (Object is IContainer) return MatchPreference.Likely;
+                                return MatchPreference.Plausible;
                             }),
                         "I can't see that here.")),
 				new PutProcessor(),

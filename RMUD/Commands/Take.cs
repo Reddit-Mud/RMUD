@@ -17,11 +17,11 @@ namespace RMUD.Commands
                     new FailIfNoMatches(
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
                             (actor, thing) => {
-                                if (actor.Contains(thing, RelativeLocations.Held)) return -2;
+                                if (actor.Contains(thing, RelativeLocations.Held)) return MatchPreference.VeryUnlikely;
                                 //Prefer things that can actually be taken
                                 if (thing is TakeRules && !(thing as TakeRules).Check(actor).Allowed)
-                                    return -1;
-                                return 0;
+                                    return MatchPreference.Unlikely;
+                                return MatchPreference.Plausible;
                             }),
                         "I don't see that here.\r\n")),
                 new TakeProcessor(),

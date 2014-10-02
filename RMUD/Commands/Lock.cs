@@ -17,8 +17,8 @@ namespace RMUD.Commands
                             (actor, matchable) =>
                             {
                                 if (matchable is LockableRules && !(matchable as LockableRules).Locked)
-                                    return 1;
-                                return -1;
+                                    return MatchPreference.Likely;
+                                return MatchPreference.Unlikely;
                             }),
                         "I couldn't figure out what you're trying to lock.\r\n"),
                     new KeyWord("WITH", true),

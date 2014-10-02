@@ -29,24 +29,33 @@ namespace RMUD
 		List<MatchableObject> GetObjects(PossibleMatch State, MatchContext Context);
 	}
 
+    public enum MatchPreference
+    {
+        VeryUnlikely = -2,
+        Unlikely = -1,
+        Plausible = 0,
+        Likely = 1,
+        VeryLikely = 2
+    }
+
     public class ObjectMatcher : ICommandTokenMatcher
     {
 		public String CaptureName;
 
 		public ObjectMatcherSettings Settings;
 		public IObjectSource ObjectSource;
-		public Func<Actor, MudObject, int> ScoreResults = null;
+		public Func<Actor, MudObject, MatchPreference> ScoreResults = null;
 
-		public static int PreferNotHeld(Actor Actor, MudObject Object)
+		public static MatchPreference PreferNotHeld(Actor Actor, MudObject Object)
 		{
-			if (Actor.Contains(Object, RelativeLocations.Held)) return -1;
-			return 0;
+			if (Actor.Contains(Object, RelativeLocations.Held)) return MatchPreference.Unlikely;
+			return MatchPreference.Plausible;
 		}
 
-		public static int PreferHeld(Actor Actor, MudObject Object)
+		public static MatchPreference PreferHeld(Actor Actor, MudObject Object)
 		{
-			if (Actor.Contains(Object, RelativeLocations.Held)) return 1;
-			return 0;
+			if (Actor.Contains(Object, RelativeLocations.Held)) return MatchPreference.Likely;
+			return MatchPreference.Plausible;
 		}
 
 		public ObjectMatcher(
@@ -62,7 +71,7 @@ namespace RMUD
         public ObjectMatcher(
             String CaptureName,
             IObjectSource ObjectSource,
-            Func<Actor, MudObject, int> ScoreResults,
+            Func<Actor, MudObject, MatchPreference> ScoreResults,
             ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
         {
             this.CaptureName = CaptureName;
@@ -112,7 +121,7 @@ namespace RMUD
 						var insertIndex = 0;
 						for (insertIndex = 0; insertIndex < R.Count; ++insertIndex)
 						{
-							if (score > (R[insertIndex].Arguments[CaptureName + "-SCORE"] as int?).Value) break;
+							if (score > (R[insertIndex].Arguments[CaptureName + "-SCORE"] as MatchPreference?).Value) break;
 						}
 
 						R.Insert(insertIndex, possibleMatch);

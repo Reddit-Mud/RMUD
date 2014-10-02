@@ -32,15 +32,19 @@ namespace RMUD
             return true;
         }
 
-        public static bool IsVisibleTo(MudObject A, MudObject B)
+        public static bool IsVisibleTo(MudObject Actor, MudObject Object)
         {
-            var ceilingA = Mud.FindVisibilityCeiling(A);
-            if (ceilingA == null) return false;
+            var ceilingActor = Mud.FindVisibilityCeiling(Actor);
+            if (ceilingActor == null) return false;
 
-            var ceilingB = Mud.FindVisibilityCeiling(B);
-            if (ceilingB == null) return false;
-
-            return System.Object.ReferenceEquals(ceilingA, ceilingB);
+            var ceilingObject = Mud.FindVisibilityCeiling(Object);
+            
+            if (ceilingObject != null) 
+                return System.Object.ReferenceEquals(ceilingActor, ceilingObject);
+            else if (ceilingActor is Room)
+                    return (ceilingActor as Room).Links.Count(l => System.Object.ReferenceEquals(l.Door, Object)) > 0;
+            
+            return false;
         }
     }
 }

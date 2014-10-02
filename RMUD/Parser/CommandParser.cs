@@ -74,7 +74,7 @@ namespace RMUD
                     {
                         foreach (var scoreArgumentName in command.ScoreArguments)
                         {
-                            var highestScoreFound = Int32.MinValue;
+                            var highestScoreFound = MatchPreference.VeryUnlikely;
                             foreach (var match in matches)
                             {
                                 var score = GetScore(match, scoreArgumentName);
@@ -91,15 +91,15 @@ namespace RMUD
             return null;
         }
 
-        private static int GetScore(PossibleMatch Match, String ScoreArgumentName)
+        private static MatchPreference GetScore(PossibleMatch Match, String ScoreArgumentName)
         {
             if (Match.Arguments.ContainsKey(ScoreArgumentName))
             {
-                var argScore = Match.Arguments[ScoreArgumentName] as int?;
+                var argScore = Match.Arguments[ScoreArgumentName] as MatchPreference?;
                 if (argScore.HasValue) return argScore.Value;
             }
 
-            return 0; //If there is no score, the match is neutral.
+            return MatchPreference.Plausible; //If there is no score, the match is neutral.
         }
     }
 }
