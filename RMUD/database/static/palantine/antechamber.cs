@@ -10,9 +10,9 @@
         AddScenery("Minerva is turned to regard her father Jupiter, and poses with one hand on her hips and the other on the shaft of a massive hammer.", "minerva");
 
         var table = new Table();
-        RMUD.Thing.Move(table, this);
+        RMUD.MudObject.Move(table, this);
 
-        RMUD.Thing.Move(new RMUD.Thing("old vase", "An old, cracked vase."), table);
+        RMUD.MudObject.Move(new RMUD.MudObject("old vase", "An old, cracked vase."), table);
 
 
         OpenLink(RMUD.Direction.NORTH, "palantine\\disambig");
@@ -33,7 +33,7 @@ public class Jupiter : RMUD.Scenery, RMUD.EmitsLight
     }
 }
 
-public class Table : RMUD.GenericContainer, RMUD.OpenableRules
+public class Table : RMUD.GenericContainer, RMUD.OpenableRules, RMUD.TakeRules
 {
     public Table() : base(RMUD.RelativeLocations.On | RMUD.RelativeLocations.Under, RMUD.RelativeLocations.On)
     {
@@ -43,7 +43,7 @@ public class Table : RMUD.GenericContainer, RMUD.OpenableRules
 
         Open = false;
 
-        RMUD.Thing.Move(new RMUD.Thing("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
+        RMUD.MudObject.Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
     }
 
     public override string Indefinite
@@ -79,4 +79,14 @@ public class Table : RMUD.GenericContainer, RMUD.OpenableRules
     }
 
     #endregion
+
+    RMUD.CheckRule RMUD.TakeRules.Check(RMUD.Actor Actor)
+    {
+        return RMUD.CheckRule.Disallow("It's far too heavy.");
+    }
+
+    RMUD.RuleHandlerFollowUp RMUD.TakeRules.Handle(RMUD.Actor Actor)
+    {
+        throw new System.NotImplementedException();
+    }
 }

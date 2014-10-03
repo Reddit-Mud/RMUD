@@ -3,13 +3,13 @@
 	public override void Initialize()
 	{
 		Short = "Palantine Villa - The Ancient Library of Kuz";
-        Thing.Move(new kuz_shelf(), this);
+        MudObject.Move(new kuz_shelf(), this);
 
         OpenLink(RMUD.Direction.EAST, "palantine/disambig", RMUD.Mud.GetObject("palantine/disambig_blue_door"));
 	}
 }
 
-public class kuz_shelf : Thing, TakeRules, LocaleDescriptionRules
+public class kuz_shelf : MudObject, TakeRules, LocaleDescriptionRules
 {
     public DescriptiveText LocaleDescription { get; set; }
 
@@ -29,7 +29,7 @@ public class kuz_shelf : Thing, TakeRules, LocaleDescriptionRules
     RuleHandlerFollowUp TakeRules.Handle(Actor Actor)
     {
         var newBook = new kuz_book();
-        Thing.Move(newBook, Actor);
+        MudObject.Move(newBook, Actor);
 
         Mud.SendMessage(Actor, MessageScope.Single, String.Format("You take {0}.\r\n", newBook.Indefinite));
 	    Mud.SendMessage(Actor, MessageScope.External, String.Format("{0} takes {1}.\r\n", Actor.Short, newBook.Indefinite));
@@ -40,7 +40,7 @@ public class kuz_shelf : Thing, TakeRules, LocaleDescriptionRules
 
 }
 
-public class kuz_book : Thing
+public class kuz_book : MudObject
 {
     public static List<String> TitlesA = new List<String>(new String[]{
         "Chronicles of",

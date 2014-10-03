@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Scenery : Thing, TakeRules
+	public class Scenery : MudObject, TakeRules
 	{
 		CheckRule TakeRules.Check(Actor Actor)
 		{

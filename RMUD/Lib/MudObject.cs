@@ -33,5 +33,54 @@ namespace RMUD
             else return Path;
         }
 
+        public String Short;
+		public DescriptiveText Long { get; set; }
+        public String Article = "a";
+		public virtual String Indefinite { get { return Article + " " + Short; } }
+		public virtual String Definite { get { return "the " + Short; } }
+		public NounList Nouns { get; set; }
+		public MudObject Location;
+
+		public MudObject()
+		{
+			Nouns = new NounList();
+		}
+
+        public MudObject(String Short, String Long)
+        {
+            Nouns = new NounList();
+            this.Short = Short;
+            this.Long = Long;
+            Nouns.AddRange(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+
+            var firstChar = Short.ToLower()[0];
+            if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')
+                Article = "an";
+        }
+
+		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
+		{
+            if (!(Object is MudObject)) return; //Can't move it if it isn't a MudObject..
+
+            var MudObject = Object as MudObject;
+
+			if (MudObject.Location != null)
+			{
+				var container = MudObject.Location as Container;
+				if (container != null)
+					container.Remove(MudObject);
+				MudObject.Location = null;
+			}
+
+			if (Destination != null)
+			{
+				var destinationContainer = Destination as Container;
+				if (destinationContainer != null)
+					destinationContainer.Add(MudObject, Location);
+				MudObject.Location = Destination;
+			}
+		}
+
+
 	}
 }

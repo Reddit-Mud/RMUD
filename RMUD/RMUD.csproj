@@ -126,13 +126,11 @@
     <Compile Include="RuleDecorators\LockableRules.cs" />
     <Compile Include="RuleDecorators\DropRules.cs" />
     <Compile Include="RuleDecorators\OpenableRules.cs" />
-    <Compile Include="Lib\IMatchable.cs" />
-    <Compile Include="Lib\IDescribed.cs" />
     <Compile Include="Lib\Scenery.cs" />
     <Compile Include="Lib\Settings.cs" />
-    <Compile Include="Lib\IContainer.cs" />
+    <Compile Include="Lib\Container.cs" />
     <Compile Include="LoginCommandHandler.cs" />
-    <Compile Include="IClientCommandHandler.cs" />
+    <Compile Include="ClientCommandHandler.cs" />
     <Compile Include="Lib\Actor.cs" />
     <Compile Include="Links.cs" />
     <Compile Include="ParserCommandHandler.cs" />
@@ -152,7 +150,6 @@
     <Compile Include="Parser\Matchers\SequenceMatcher.cs" />
     <Compile Include="Parser\PossibleMatch.cs" />
     <Compile Include="Lib\Room.cs" />
-    <Compile Include="Lib\Thing.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="MudCore.cs" />
     <Compile Include="Lib\MudObject.cs" />

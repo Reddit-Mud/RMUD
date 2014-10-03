@@ -5,9 +5,9 @@ using System.Text;
 
 namespace RMUD
 {
-	public class LockedDoor : Portal, OpenableRules, TakeRules, LockableRules
+	public class LockedDoor : MudObject, OpenableRules, TakeRules, LockableRules
 	{
-        public Func<Thing, bool> IsMatchingKey;
+        public Func<MudObject, bool> IsMatchingKey;
 
 		public LockedDoor()
 		{
@@ -63,7 +63,7 @@ namespace RMUD
 
 		public bool Locked { get; set; }
 
-		CheckRule LockableRules.CheckLock(Actor Actor, Thing Key)
+		CheckRule LockableRules.CheckLock(Actor Actor, MudObject Key)
 		{
 			if (Open) return CheckRule.Disallow("You'll have to close it first.");
             if (Locked) return CheckRule.Disallow("It's already locked.");
@@ -73,7 +73,7 @@ namespace RMUD
                 return CheckRule.Disallow("That is not the right key.");
 		}
 
-		CheckRule LockableRules.CheckUnlock(Actor Actor, Thing Key)
+		CheckRule LockableRules.CheckUnlock(Actor Actor, MudObject Key)
 		{
             if (Open) return CheckRule.Disallow("It's already open.");
             if (!Locked) return CheckRule.Disallow("It's not locked.");
@@ -83,13 +83,13 @@ namespace RMUD
                 return CheckRule.Disallow("That is not the right key.");
 		}
 
-		RuleHandlerFollowUp LockableRules.HandleLock(Actor Actor, Thing Key)
+		RuleHandlerFollowUp LockableRules.HandleLock(Actor Actor, MudObject Key)
 		{
 			Locked = true;
             return RuleHandlerFollowUp.Continue;
 		}
 
-		RuleHandlerFollowUp LockableRules.HandleUnlock(Actor Actor, Thing Key)
+		RuleHandlerFollowUp LockableRules.HandleUnlock(Actor Actor, MudObject Key)
 		{
 			Locked = false;
             return RuleHandlerFollowUp.Continue;

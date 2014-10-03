@@ -11,20 +11,20 @@ namespace RMUD
         Interior
     }
 
-	public class Room : MudObject, IContainer, IDescribed
+	public class Room : MudObject, Container
 	{
-		public String Short;
-		public DescriptiveText Long { get; set; }
         public RoomType RoomType = RoomType.Exterior;
 
-		public List<Thing> Contents = new List<Thing>();
+		public List<MudObject> Contents = new List<MudObject>();
 		public List<Link> Links = new List<Link>();
 		public List<MudObject> Scenery = new List<MudObject>();
 
 		public void OpenLink(Direction Direction, String Destination, MudObject Door = null)
 		{
 			Links.RemoveAll((l) => l.Direction == Direction);
-			Links.Add(new Link { Direction = Direction, Destination = Destination, Door = Door });
+            var link = new Link { Direction = Direction, Destination = Destination, Door = Door };
+            link.Location = this;
+            Links.Add(link);
 		}
 
         #region Scenery 
@@ -51,25 +51,24 @@ namespace RMUD
 
         public void Remove(MudObject Object)
         {
-            if (Object is Thing && Contents.Remove(Object as Thing))
-                (Object as Thing).Location = null;
-            else if (Scenery.Remove(Object)) { }
+            if (Contents.Remove(Object))
+                Object.Location = null;
+            else if (Scenery.Remove(Object))
+                Object.Location = null;
             else if (Links.RemoveAll(l => System.Object.ReferenceEquals(Object, l.Door)) > 0) { }
         }
 
-        public void Add(MudObject Thing, RelativeLocations Locations)
+        public void Add(MudObject MudObject, RelativeLocations Locations)
         {
             if (Locations == RelativeLocations.Default || (Locations & RelativeLocations.Contents) == RelativeLocations.Contents)
             {
-                if (Thing is Thing)
-                {
-                    Contents.Add(Thing as Thing);
-                    (Thing as Thing).Location = this;
-                }
+                Contents.Add(MudObject);
+                MudObject.Location = this;
             }
             else if ((Locations & RelativeLocations.Scenery) == RelativeLocations.Scenery)
             {
-                Scenery.Add(Thing);
+                Scenery.Add(MudObject);
+                MudObject.Location = this;
             }
         }
 

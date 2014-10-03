@@ -11,13 +11,13 @@
         OpenLink(RMUD.Direction.EAST, "palantine\\dark_room", RMUD.Mud.GetObject("palantine\\disambig_red_door"));
         OpenLink(RMUD.Direction.SOUTH, "palantine\\antechamber");
 
-        RMUD.Thing.Move(RMUD.Mud.GetObject("palantine\\disambig_key"), this);
-        RMUD.Thing.Move(RMUD.Mud.GetObject("palantine\\library_key"), this);
-        RMUD.Thing.Move(new torch(), this);
+        RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine\\disambig_key"), this);
+        RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine\\library_key"), this);
+        RMUD.MudObject.Move(new torch(), this);
 	}
 }
 
-public class torch : RMUD.Thing, RMUD.EmitsLight
+public class torch : RMUD.MudObject, RMUD.EmitsLight
 {
     public torch()
     {

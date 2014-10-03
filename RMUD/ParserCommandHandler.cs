@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-	public class ParserCommandHandler : IClientCommandHandler
+	public class ParserCommandHandler : ClientCommandHandler
 	{
 		internal CommandParser Parser;
 
@@ -61,7 +61,7 @@ namespace RMUD
 
                 if (matchedCommand == null)
                 {
-                    Mud.SendMessage(Client, String.Format("Matched nothing in {0:n0} milliseconds.\r\n",
+                    Mud.SendMessage(Client, String.Format("Matched noMudObject in {0:n0} milliseconds.\r\n",
                         (matchEndTime - startTime).TotalMilliseconds));
                 }
                 else

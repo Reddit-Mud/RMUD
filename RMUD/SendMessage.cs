@@ -20,10 +20,10 @@ namespace RMUD
         public static void SendMessage(Room Room, String Message)
         {
             DatabaseLock.WaitOne();
-            Room.EnumerateObjects(RelativeLocations.Contents, (thing, loc) =>
+            Room.EnumerateObjects(RelativeLocations.Contents, (MudObject, loc) =>
             {
-                if (thing is Actor && (thing as Actor).ConnectedClient != null)
-                    PendingMessages.Add(new RawPendingMessage((thing as Actor).ConnectedClient, Message));
+                if (MudObject is Actor && (MudObject as Actor).ConnectedClient != null)
+                    PendingMessages.Add(new RawPendingMessage((MudObject as Actor).ConnectedClient, Message));
                 return EnumerateObjectsControl.Continue;
             });
             DatabaseLock.ReleaseMutex();
@@ -67,9 +67,9 @@ namespace RMUD
 						if (Actor == null) break;
 						var location = Actor.Location as Room;
 						if (location == null) break;
-						foreach (var thing in location.Contents)
+						foreach (var MudObject in location.Contents)
 						{
-							var other = thing as Actor;
+							var other = MudObject as Actor;
 							if (other == null) continue;
 							if (other.ConnectedClient == null) continue;
 							PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Message));
@@ -83,9 +83,9 @@ namespace RMUD
 						if (Actor == null) break;
 						var location = Actor.Location as Room;
 						if (location == null) break;
-						foreach (var thing in location.Contents)
+						foreach (var MudObject in location.Contents)
 						{
-							var other = thing as Actor;
+							var other = MudObject as Actor;
 							if (other == null) continue;
 							if (Object.ReferenceEquals(other, Actor)) continue;
 							if (other.ConnectedClient == null) continue;

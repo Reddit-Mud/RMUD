@@ -22,7 +22,7 @@ namespace RMUD.Commands
                             }),
                         "I don't see that here.\r\n")),
 				new CloseProcessor(),
-				"Close something",
+				"Close someMudObject",
                 "SUBJECT-SCORE");
 		}
 	}
@@ -32,7 +32,7 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["SUBJECT"] as OpenableRules;
-			var thing = target as Thing;
+			var MudObject = target as MudObject;
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null)
@@ -54,10 +54,10 @@ namespace RMUD.Commands
                     {
                         target.Open = false;
 
-                        if (thing != null)
+                        if (MudObject != null)
                         {
-                            Mud.SendMessage(Actor, MessageScope.Single, "You close " + thing.Definite + ".\r\n");
-                            Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " closes " + thing.Definite + ".\r\n");
+                            Mud.SendMessage(Actor, MessageScope.Single, "You close " + MudObject.Definite + ".\r\n");
+                            Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " closes " + MudObject.Definite + ".\r\n");
 
                             var source = Match.Arguments["SUBJECT-SOURCE"] as String;
                             if (source == "LINK")
@@ -69,7 +69,7 @@ namespace RMUD.Commands
                                     var otherRoom = Mud.GetObject(link.Destination);
                                     if (otherRoom != null)
                                     {
-                                        Mud.SendMessage(otherRoom as Room, String.Format("{0} closes {1}.\r\n", Actor.Short, thing.Definite));
+                                        Mud.SendMessage(otherRoom as Room, String.Format("{0} closes {1}.\r\n", Actor.Short, MudObject.Definite));
                                         Mud.MarkLocaleForUpdate(otherRoom);
                                     }
                                 }

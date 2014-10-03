@@ -7,7 +7,7 @@ namespace RMUD
 {
 	public interface PutRules
 	{
-		CheckRule Check(Actor Actor, Thing What, RelativeLocations Location);
-		RuleHandlerFollowUp Handle(Actor Actor, Thing What, RelativeLocations Location);
+		CheckRule Check(Actor Actor, MudObject What, RelativeLocations Location);
+		RuleHandlerFollowUp Handle(Actor Actor, MudObject What, RelativeLocations Location);
 	}
 }

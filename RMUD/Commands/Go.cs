@@ -52,7 +52,7 @@ namespace RMUD.Commands
 						Mud.SendMessage(Actor, s + "\r\n");
 				}) as Room;
 				if (destination == null) throw new InvalidOperationException("[ERROR] Link does not lead to room.\r\n");
-				Thing.Move(Actor, destination);
+				MudObject.Move(Actor, destination);
 				Mud.EnqueuClientCommand(Actor.ConnectedClient, "look");
 
                 var arriveMessage = Link.FromMessage(Link.Opposite(direction.Value));

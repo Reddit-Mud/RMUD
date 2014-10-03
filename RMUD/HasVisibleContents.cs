@@ -12,7 +12,7 @@ namespace RMUD
     {
         public static bool HasVisibleContents(MudObject Object)
         {
-            var container = Object as IContainer;
+            var container = Object as Container;
             if (container == null) return false;
 
             if ((container.LocationsSupported & RelativeLocations.In) == RelativeLocations.In)

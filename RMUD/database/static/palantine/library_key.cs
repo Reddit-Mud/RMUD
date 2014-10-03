@@ -1,4 +1,4 @@
-﻿public class library_key : RMUD.Thing
+﻿public class library_key : RMUD.MudObject
 {
     public override void Initialize()
     {

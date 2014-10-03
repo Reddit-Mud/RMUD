@@ -5,11 +5,11 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Actor : Thing, TakeRules, IContainer
+	public class Actor : MudObject, TakeRules, Container
 	{
 		public Client ConnectedClient;
-		public List<Thing> Held = new List<Thing>();
-        public List<Thing> Worn = new List<Thing>();
+		public List<MudObject> Held = new List<MudObject>();
+        public List<MudObject> Worn = new List<MudObject>();
 
 		public override string Definite { get { return Short; } }
 		public override string Indefinite { get { return Short; } }
@@ -23,43 +23,36 @@ namespace RMUD
 
 		#region IContainer
 
-        public void Remove(MudObject Thing)
+        public void Remove(MudObject MudObject)
         {
-            if (Thing is Thing)
-            {
-
-                if (Held.Remove(Thing as Thing))
-                    (Thing as Thing).Location = null;
-                else if (Worn.Remove(Thing as Thing))
-                    (Thing as Thing).Location = null;
-            }
+            if (Held.Remove(MudObject))
+                MudObject.Location = null;
+            else if (Worn.Remove(MudObject))
+                MudObject.Location = null;
         }
 
-		public void Add(MudObject Thing, RelativeLocations Locations)
-		{
-            if (Thing is Thing)
+        public void Add(MudObject MudObject, RelativeLocations Locations)
+        {
+            if (Locations == RelativeLocations.Default || (Locations & RelativeLocations.Held) == RelativeLocations.Held)
             {
-                if (Locations == RelativeLocations.Default || (Locations & RelativeLocations.Held) == RelativeLocations.Held)
-                {
-                    Held.Add(Thing as Thing);
-                    (Thing as Thing).Location = this;
-                }
-                else if ((Locations & RelativeLocations.Worn) == RelativeLocations.Worn)
-                {
-                    Worn.Add(Thing as Thing);
-                    (Thing as Thing).Location = this;
-                }
+                Held.Add(MudObject);
+                MudObject.Location = this;
             }
-		}
+            else if ((Locations & RelativeLocations.Worn) == RelativeLocations.Worn)
+            {
+                Worn.Add(MudObject);
+                MudObject.Location = this;
+            }
+        }
 
         public EnumerateObjectsControl EnumerateObjects(RelativeLocations Locations, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback)
         {
             if ((Locations & RelativeLocations.Held) == RelativeLocations.Held)
-                foreach (var thing in Held)
-                    if (Callback(thing, RelativeLocations.Held) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+                foreach (var MudObject in Held)
+                    if (Callback(MudObject, RelativeLocations.Held) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             if ((Locations & RelativeLocations.Worn) == RelativeLocations.Worn)
-                foreach (var thing in Worn)
-                    if (Callback(thing, RelativeLocations.Worn) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+                foreach (var MudObject in Worn)
+                    if (Callback(MudObject, RelativeLocations.Worn) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             return EnumerateObjectsControl.Continue;
         }
 

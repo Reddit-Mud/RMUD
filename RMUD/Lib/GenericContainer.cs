@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public class GenericContainer : Thing, IContainer
+	public class GenericContainer : MudObject, Container
 	{
         public Dictionary<RelativeLocations, List<MudObject>> Lists = new Dictionary<RelativeLocations, List<MudObject>>();
         public RelativeLocations Supported;
@@ -23,8 +23,8 @@ namespace RMUD
         {
             foreach (var list in Lists)
             {
-                if (list.Value.Remove(Object) && Object is Thing)
-                    (Object as Thing).Location = null;
+                if (list.Value.Remove(Object))
+                    Object.Location = null;
             }
         }
 
@@ -46,8 +46,8 @@ namespace RMUD
             foreach (var list in Lists)
             {
                 if ((Locations & list.Key) == list.Key)
-                    foreach (var thing in list.Value)
-                        if (Callback(thing, list.Key) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+                    foreach (var MudObject in list.Value)
+                        if (Callback(MudObject, list.Key) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             }
             return EnumerateObjectsControl.Continue;
         }

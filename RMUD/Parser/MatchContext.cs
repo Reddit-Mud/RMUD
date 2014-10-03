@@ -29,10 +29,9 @@ namespace RMUD
         {
             return (o, l) =>
                 {
-                    if (o is IMatchable)
-                        Into.Add(new MatchableObject(o as IMatchable, l));
+                        Into.Add(new MatchableObject(o, l));
 
-                    var container = o as IContainer;
+                    var container = o as Container;
 
                     if (container != null)
                     {
@@ -50,12 +49,11 @@ namespace RMUD
                 };
         }
 
-        private static void EnumerateContainer(IContainer Container, RelativeLocations Location, List<MatchableObject> Into)
+        private static void EnumerateContainer(Container Container, RelativeLocations Location, List<MatchableObject> Into)
         {
             Container.EnumerateObjects(Location, (o, l) =>
                 {
-                    if (o is IMatchable)
-                        Into.Add(new MatchableObject(o as IMatchable, l));
+                        Into.Add(new MatchableObject(o, l));
                     return EnumerateObjectsControl.Continue;
                 });
         }

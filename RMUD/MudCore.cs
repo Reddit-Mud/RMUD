@@ -64,9 +64,9 @@ namespace RMUD
                 if (locale == null) return null;
                 else if (locale is Room)
                     return locale as Room;
-                else if (locale is Thing)
+                else if (locale is MudObject)
                 {
-                    locale = (locale as Thing).Location;
+                    locale = (locale as MudObject).Location;
                     if (Object.ReferenceEquals(locale, Of)) throw new InvalidOperationException("Cycle found in database.");
                 }
                 else
@@ -76,36 +76,31 @@ namespace RMUD
 
         public static MudObject FindVisibilityCeiling(MudObject Of)
         {
-            if (Of is Room) return Of;
+            //if (Of is Room) return Of;
 
-            if (Of is Thing)
+            if (Of.Location == null) return Of;
+
+            var container = Of.Location as Container;
+            if (container != null)
             {
-                var location = (Of as Thing).Location;
-                if (location == null) return null;
-                
-                var container = location as IContainer;
-                if (container != null)
+                var relloc = container.LocationOf(Of);
+                if (relloc == RelativeLocations.In) //Consider the openable rules.
                 {
-                    var relloc = container.LocationOf(Of);
-                    if (relloc == RelativeLocations.In) //Consider the openable rules.
-                    {
-                        if (IsOpen(location)) return FindVisibilityCeiling(location);
-                        else return location;
-                    }
+                    if (IsOpen(Of.Location)) return FindVisibilityCeiling(Of.Location);
+                    else return Of.Location;
                 }
-                
-                return FindVisibilityCeiling(location);
             }
-            else
-                return null;
+
+            return FindVisibilityCeiling(Of.Location);
+
         }
 
         public static bool ObjectContainsObject(MudObject Super, MudObject Sub)
         {
             if (Object.ReferenceEquals(Super, Sub)) return false; //Objects can't contain themselves...
-            if (Sub is Thing)
+            if (Sub is MudObject)
             {
-                var location = (Sub as Thing).Location;
+                var location = (Sub as MudObject).Location;
                 if (location == null) return false;
                 if (Object.ReferenceEquals(Super, location)) return true;
                 return ObjectContainsObject(Super, location);
@@ -130,7 +125,7 @@ namespace RMUD
             if (client.Player != null)
             {
                 client.Player.ConnectedClient = null;
-                Thing.Move(client.Player, null);
+                MudObject.Move(client.Player, null);
             }
 			DatabaseLock.ReleaseMutex();
 		}

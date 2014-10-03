@@ -5,8 +5,8 @@ using System.Text;
 
 namespace RMUD
 {
-	public interface IMatchable
+	public interface ClientCommandHandler
 	{
-		NounList Nouns { get; set; }
+		void HandleCommand(Client Client, String Command);
 	}
 }

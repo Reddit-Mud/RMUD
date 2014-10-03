@@ -25,7 +25,7 @@ namespace RMUD
         AFT,
 	}
 
-	public class Link
+	public class Link: MudObject
 	{
 		public Direction Direction;
 		public String Destination;

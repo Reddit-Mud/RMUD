@@ -16,16 +16,16 @@ namespace RMUD.Commands
 						new KeyWord("TAKE", false)),
                     new FailIfNoMatches(
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
-                            (actor, thing) => {
-                                if (actor.Contains(thing, RelativeLocations.Held)) return MatchPreference.VeryUnlikely;
-                                //Prefer things that can actually be taken
-                                if (thing is TakeRules && !(thing as TakeRules).Check(actor).Allowed)
+                            (actor, MudObject) => {
+                                if (actor.Contains(MudObject, RelativeLocations.Held)) return MatchPreference.VeryUnlikely;
+                                //Prefer MudObjects that can actually be taken
+                                if (MudObject is TakeRules && !(MudObject as TakeRules).Check(actor).Allowed)
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             }),
                         "I don't see that here.\r\n")),
                 new TakeProcessor(),
-				"Take something",
+				"Take someMudObject",
                 "SUBJECT-SCORE");
 		}
 	}
@@ -34,7 +34,7 @@ namespace RMUD.Commands
 	{
         public void Perform(PossibleMatch Match, Actor Actor)
         {
-            var target = Match.Arguments.ValueOrDefault("SUBJECT") as Thing;
+            var target = Match.Arguments.ValueOrDefault("SUBJECT") as MudObject;
 
             if (!Mud.IsVisibleTo(Actor, target))
             {
@@ -67,7 +67,7 @@ namespace RMUD.Commands
             {
                 Mud.SendMessage(Actor, MessageScope.Single, "You take " + target.Indefinite + "\r\n");
                 Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " takes " + target.Indefinite + "\r\n");
-                Thing.Move(target, Actor);
+                MudObject.Move(target, Actor);
             }
 
             Mud.MarkLocaleForUpdate(target);

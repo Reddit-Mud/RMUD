@@ -6,12 +6,12 @@ using System.Reflection;
 
 namespace RMUD
 {
-	public class DisambigCommandHandler : IClientCommandHandler
+	public class DisambigCommandHandler : ClientCommandHandler
 	{
 		public ParserCommandHandler ParentHandler;
         public CommandParser.MatchedCommand MatchedCommand;
         public String DisambigArgument = null;
-        public List<Thing> DisambigObjects = null;
+        public List<MudObject> DisambigObjects = null;
 
 		public DisambigCommandHandler(
             Client Client, 
@@ -29,17 +29,17 @@ namespace RMUD
 
             foreach (var argument in MatchedCommand.Matches[0].Arguments)
             {
-                if (argument.Value is Thing)
+                if (argument.Value is MudObject)
                 {
-                    var uniqueMatchables = new List<Thing>();
+                    var uniqueMatchables = new List<MudObject>();
                     var rejected = false;
 
                     foreach (var match in MatchedCommand.Matches)
                     {
                         if (match.Arguments.ContainsKey(argument.Key) &&
-                            match.Arguments[argument.Key] is Thing)
+                            match.Arguments[argument.Key] is MudObject)
                         {
-                            var matchableObject = match.Arguments[argument.Key] as Thing;
+                            var matchableObject = match.Arguments[argument.Key] as MudObject;
                             if (!uniqueMatchables.Contains(matchableObject))
                                 uniqueMatchables.Add(matchableObject);
                         }

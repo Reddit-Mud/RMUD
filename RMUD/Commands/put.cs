@@ -22,12 +22,12 @@ namespace RMUD.Commands
                             {
                                 //Prefer objects that are actually containers. No means curently to prefer
                                 //objects that actually support the relloc we matched previously.
-                                if (Object is IContainer) return MatchPreference.Likely;
+                                if (Object is Container) return MatchPreference.Likely;
                                 return MatchPreference.Plausible;
                             }),
                         "I can't see that here.")),
 				new PutProcessor(),
-				"Put something on, in, under or behind something",
+				"Put someMudObject on, in, under or behind someMudObject",
                 "SUBJECT-SCORE",
                 "OBJECT-SCORE");
 		}
@@ -37,8 +37,8 @@ namespace RMUD.Commands
 	{
         public void Perform(PossibleMatch Match, Actor Actor)
         {
-            var target = Match.Arguments["SUBJECT"] as Thing;
-            var container = Match.Arguments["OBJECT"] as IContainer;
+            var target = Match.Arguments["SUBJECT"] as MudObject;
+            var container = Match.Arguments["OBJECT"] as Container;
 
             if (!Mud.IsVisibleTo(Actor, container as MudObject))
             {
@@ -63,7 +63,7 @@ namespace RMUD.Commands
 
             if (container == null || ((container.LocationsSupported & relloc) != relloc))
             {
-                Mud.SendMessage(Actor, String.Format("You can't put things {0} that.\r\n", Mud.RelativeLocationName(relloc)));
+                Mud.SendMessage(Actor, String.Format("You can't put MudObjects {0} that.\r\n", Mud.RelativeLocationName(relloc)));
                 return;
             }
 
@@ -104,9 +104,9 @@ namespace RMUD.Commands
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, MessageScope.Single, String.Format("You put {0} {1} {2}.\r\n", target.Definite, Mud.RelativeLocationName(relloc), (container as Thing).Definite));
-                Mud.SendMessage(Actor, MessageScope.External, String.Format("{0} puts {1} {2} {3}.\r\n", Actor.Short, target.Indefinite, Mud.RelativeLocationName(relloc), (container as Thing).Definite));
-                Thing.Move(target, container as MudObject, relloc);
+                Mud.SendMessage(Actor, MessageScope.Single, String.Format("You put {0} {1} {2}.\r\n", target.Definite, Mud.RelativeLocationName(relloc), (container as MudObject).Definite));
+                Mud.SendMessage(Actor, MessageScope.External, String.Format("{0} puts {1} {2} {3}.\r\n", Actor.Short, target.Indefinite, Mud.RelativeLocationName(relloc), (container as MudObject).Definite));
+                MudObject.Move(target, container as MudObject, relloc);
             }
 
             Mud.MarkLocaleForUpdate(target);

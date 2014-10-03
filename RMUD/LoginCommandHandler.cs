@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-	public class LoginCommandHandler : IClientCommandHandler
+	public class LoginCommandHandler : ClientCommandHandler
 	{
 		internal CommandParser Parser;
 
@@ -26,7 +26,7 @@ namespace RMUD
 					client.CommandHandler = Mud.ParserCommandHandler;
 					client.Rank = 500; //Everyone is a wizard! 
                     Mud.FindChatChannel("OOC").Subscribers.Add(client); //Everyone is on ooc!
-					Thing.Move(client.Player,
+					MudObject.Move(client.Player,
                         Mud.GetObject(
                             (Mud.GetObject("settings") as Settings).NewPlayerStartRoom, 
                             s => Mud.SendMessage(client, s + "\r\n")));

@@ -18,7 +18,7 @@ namespace RMUD.Commands
 					    new Rest("SPEECH"),
                         "Say what?\r\n")),
 				new SayProcessor(SayProcessor.EmoteTypes.Speech),
-				"Say something.");
+				"Say someMudObject.");
 
 			Parser.AddCommand(
 				new Sequence(
@@ -29,7 +29,7 @@ namespace RMUD.Commands
 					    new Rest("SPEECH"),
                         "You exist. Actually this is an error message, but that's what you just told me to say.\r\n")),
 				new SayProcessor(SayProcessor.EmoteTypes.Emote),
-				"Emote something.");
+				"Emote someMudObject.");
 		}
 	}
 

@@ -27,11 +27,11 @@ namespace RMUD
 
         Room = Contents | Links | Scenery,
         Player = Held | Worn,
-        Thing = In | On | Under | Behind,
-        Everything = Contents | Links | Scenery | In | On | Under | Behind | Held | Worn,
+        MudObject = In | On | Under | Behind,
+        EveryMudObject = Contents | Links | Scenery | In | On | Under | Behind | Held | Worn,
     }
 
-	public interface IContainer
+	public interface Container
 	{
 		void Remove(MudObject Object);
 		void Add(MudObject Object, RelativeLocations Locations);

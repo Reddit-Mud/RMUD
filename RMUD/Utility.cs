@@ -30,7 +30,7 @@ namespace RMUD
             Builder.Remove(Builder.Length - 1, 1);
         }
 
-        public static List<MudObject> GetContents(IContainer Container, RelativeLocations Locations)
+        public static List<MudObject> GetContents(Container Container, RelativeLocations Locations)
         {
             var r = new List<MudObject>();
             Container.EnumerateObjects(Locations, (o, l) => { r.Add(o); return EnumerateObjectsControl.Continue; });

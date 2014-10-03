@@ -28,8 +28,8 @@ namespace RMUD.Commands
         {
             if (Actor.ConnectedClient == null) return;
 
-            var target = Match.Arguments["OBJECT"] as Thing;
-            var container = target as IContainer;
+            var target = Match.Arguments["OBJECT"] as MudObject;
+            var container = target as Container;
 
             if (!Mud.IsVisibleTo(Actor, target))
             {
@@ -55,20 +55,20 @@ namespace RMUD.Commands
                 }
             }
 
-            var contents = Mud.GetContents(container, relloc).Where(o => o is Thing);
+            var contents = Mud.GetContents(container, relloc).Where(o => o is MudObject);
             if (contents.Count() > 0)
             {
                 var builder = new StringBuilder();
 
-                builder.Append(Mud.CapFirst(String.Format("{0} {1} is ", Mud.RelativeLocationName(relloc), (target as Thing).Definite)));
-                builder.Append(String.Join(", ", contents.Select(o => (o as Thing).Indefinite)));
+                builder.Append(Mud.CapFirst(String.Format("{0} {1} is ", Mud.RelativeLocationName(relloc), (target as MudObject).Definite)));
+                builder.Append(String.Join(", ", contents.Select(o => (o as MudObject).Indefinite)));
                 builder.Append(".\r\n");
 
                 Mud.SendMessage(Actor, builder.ToString());
             }
             else
             {
-                Mud.SendMessage(Actor, String.Format("There is nothing {0} {1}.\r\n", Mud.RelativeLocationName(relloc), target.Definite));
+                Mud.SendMessage(Actor, String.Format("There is noMudObject {0} {1}.\r\n", Mud.RelativeLocationName(relloc), target.Definite));
             }
         }
 	}

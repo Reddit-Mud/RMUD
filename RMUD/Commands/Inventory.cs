@@ -27,7 +27,7 @@ namespace RMUD.Commands
 
 			var builder = new StringBuilder();
 
-			if (Actor.Held.Count == 0) builder.Append("You have nothing.\r\n");
+			if (Actor.Held.Count == 0) builder.Append("You have noMudObject.\r\n");
 			else
 			{
 				builder.Append("You are carrying..\r\n");

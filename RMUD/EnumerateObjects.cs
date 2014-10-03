@@ -22,10 +22,10 @@ namespace RMUD
     {
         public static EnumerateObjectsControl EnumerateObjects(MudObject Source, EnumerateObjectsDepth Depth, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback)
         {
-            var container = Source as IContainer;
+            var container = Source as Container;
             if (container == null) return EnumerateObjectsControl.Continue;
 
-            return container.EnumerateObjects(RelativeLocations.Everything, (subObject, loc) =>
+            return container.EnumerateObjects(RelativeLocations.EveryMudObject, (subObject, loc) =>
             {
                 if (Callback(subObject, loc) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
 

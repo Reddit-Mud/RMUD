@@ -51,7 +51,7 @@ namespace RMUD
             Path = Path.Replace('\\', '/');
 			var baseObject = GetObject(Path, ReportErrors);
 
-			//We can't make an instance of nothing; this means that the base object has an error of some kind.
+			//We can't make an instance of noMudObject; this means that the base object has an error of some kind.
 			if (baseObject == null) return null;
 
 			//Create the new instance of the same class as the base type.
@@ -155,24 +155,24 @@ namespace RMUD
                 newObject.HandleMarkedUpdate();
 
 				//Preserve contents
-				if (existing is IContainer && newObject is IContainer)
+				if (existing is Container && newObject is Container)
 				{
-                    (existing as IContainer).EnumerateObjects(RelativeLocations.Everything, (thing, loc) =>
+                    (existing as Container).EnumerateObjects(RelativeLocations.EveryMudObject, (MudObject, loc) =>
                         {
-                            (newObject as IContainer).Add(thing, loc);
-                            if (thing is Thing) (thing as Thing).Location = newObject;
+                            (newObject as Container).Add(MudObject, loc);
+                            if (MudObject is MudObject) (MudObject as MudObject).Location = newObject;
                             return EnumerateObjectsControl.Continue;
                         });
 				}
 
 				//Preserve location
-				if (existing is Thing && newObject is Thing)
+				if (existing is MudObject && newObject is MudObject)
 				{
-					if ((existing as Thing).Location != null)
+					if ((existing as MudObject).Location != null)
 					{
-                        var loc = ((existing as Thing).Location as IContainer).LocationOf(existing);
-						Thing.Move(newObject as Thing, (existing as Thing).Location, loc);
-						Thing.Move(existing as Thing, null, RelativeLocations.None);
+                        var loc = ((existing as MudObject).Location as Container).LocationOf(existing);
+						MudObject.Move(newObject as MudObject, (existing as MudObject).Location, loc);
+						MudObject.Move(existing as MudObject, null, RelativeLocations.None);
 					}
 				}
 
@@ -196,25 +196,25 @@ namespace RMUD
                 newObject.HandleMarkedUpdate();
 
                 //Preserve the location of actors, and actors only.
-                if (existing is IContainer)
+                if (existing is Container)
                 {
-                    (existing as IContainer).EnumerateObjects(RelativeLocations.Everything, (thing, loc) =>
+                    (existing as Container).EnumerateObjects(RelativeLocations.EveryMudObject, (MudObject, loc) =>
                         {
-                            if (thing is Actor)
+                            if (MudObject is Actor)
                             {
-                                //Can't use Thing.Move - it will change the list we are iterating.
-                                (newObject as IContainer).Add(thing, loc);
-                                (thing as Thing).Location = newObject;
+                                //Can't use MudObject.Move - it will change the list we are iterating.
+                                (newObject as Container).Add(MudObject, loc);
+                                (MudObject as MudObject).Location = newObject;
                             }
                             return EnumerateObjectsControl.Continue;
                         });
                 }
 
-                if (existing is Thing && (existing as Thing).Location != null)
+                if (existing is MudObject && (existing as MudObject).Location != null)
                 {
-                    var loc = ((existing as Thing).Location as IContainer).LocationOf(existing);
-                    Thing.Move(newObject as Thing, (existing as Thing).Location, loc);
-                    Thing.Move(existing as Thing, null, RelativeLocations.None);
+                    var loc = ((existing as MudObject).Location as Container).LocationOf(existing);
+                    MudObject.Move(newObject as MudObject, (existing as MudObject).Location, loc);
+                    MudObject.Move(existing as MudObject, null, RelativeLocations.None);
                 }
 
                 return true;

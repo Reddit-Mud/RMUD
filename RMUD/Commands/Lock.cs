@@ -26,7 +26,7 @@ namespace RMUD.Commands
                         new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
                         "I couldn't figure out what you're trying to lock that with.\r\n")),
                 new LockProcessor(),
-                "Lock something with something",
+                "Lock someMudObject with someMudObject",
                 "SUBJECT-SCORE",
                 "OBJECT-SCORE");
         }
@@ -37,7 +37,7 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["SUBJECT"] as LockableRules;
-			var key = Match.Arguments["OBJECT"] as Thing;
+			var key = Match.Arguments["OBJECT"] as MudObject;
 
 			if (target == null)
 			{
@@ -71,11 +71,11 @@ namespace RMUD.Commands
             {
                 if (target.HandleLock(Actor, key) == RuleHandlerFollowUp.Continue)
                 {
-                    var thing = target as Thing;
-                    if (thing != null)
+                    var MudObject = target as MudObject;
+                    if (MudObject != null)
                     {
-                        Mud.SendMessage(Actor, MessageScope.Single, "You lock " + thing.Definite + ".\r\n");
-                        Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " locks " + thing.Indefinite + " with " + key.Indefinite + ".\r\n");
+                        Mud.SendMessage(Actor, MessageScope.Single, "You lock " + MudObject.Definite + ".\r\n");
+                        Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " locks " + MudObject.Indefinite + " with " + key.Indefinite + ".\r\n");
                     }
                 }
             }

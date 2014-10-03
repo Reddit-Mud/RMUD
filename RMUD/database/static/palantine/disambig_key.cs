@@ -1,4 +1,4 @@
-﻿public class disambig_key : RMUD.Thing
+﻿public class disambig_key : RMUD.MudObject
 {
     public override void Initialize()
     {

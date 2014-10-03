@@ -38,14 +38,14 @@ namespace RMUD.Commands
                     builder.Append(location.Long.Expand(Actor, location));
                     builder.Append("\r\n\r\n");
 
-                    var visibleThings = new List<Thing>(location.Contents.Where(t => !Object.ReferenceEquals(t, Actor)));
+                    var visibleMudObjects = new List<MudObject>(location.Contents.Where(t => !Object.ReferenceEquals(t, Actor)));
 
-                    for (int i = 0; i < visibleThings.Count; )
+                    for (int i = 0; i < visibleMudObjects.Count; )
                     {
-                        var localeDescribable = visibleThings[i] as LocaleDescriptionRules;
+                        var localeDescribable = visibleMudObjects[i] as LocaleDescriptionRules;
                         if (localeDescribable != null)
                         {
-                            visibleThings.RemoveAt(i);
+                            visibleMudObjects.RemoveAt(i);
                             builder.Append(localeDescribable.LocaleDescription.Expand(Actor, localeDescribable as MudObject));
                             builder.Append("\r\n\r\n");
                         }
@@ -56,24 +56,24 @@ namespace RMUD.Commands
                     }
 
                     //Display objects in room
-                    if (visibleThings.Count > 0)
+                    if (visibleMudObjects.Count > 0)
                     {
                         builder.Append("Also here: ");
-                        builder.Append(String.Join(", ", visibleThings.Select(visibleThing =>
+                        builder.Append(String.Join(", ", visibleMudObjects.Select(visibleMudObject =>
                         {
                             var subBuilder = new StringBuilder();
-                            subBuilder.Append(visibleThing.Indefinite);
+                            subBuilder.Append(visibleMudObject.Indefinite);
 
-                            var container = visibleThing as IContainer;
+                            var container = visibleMudObject as Container;
                             if (container != null)
                             {
                                 if ((container.LocationsSupported & RelativeLocations.On) == RelativeLocations.On)
                                 {
-                                    var subObjects = new List<Thing>();
+                                    var subObjects = new List<MudObject>();
                                     container.EnumerateObjects(RelativeLocations.On, (o,l) => 
                                     { 
-                                        if (o is Thing)
-                                            subObjects.Add(o as Thing); 
+                                        if (o is MudObject)
+                                            subObjects.Add(o as MudObject); 
                                         return EnumerateObjectsControl.Continue;
                                     });
                                     if (subObjects.Count > 0)
@@ -101,10 +101,10 @@ namespace RMUD.Commands
                             builder.Append("  ");
                             builder.Append(Mud.CapFirst(link.Direction.ToString()));
 
-                            if (link.Door != null && link.Door is Thing)
+                            if (link.Door != null && link.Door is MudObject)
                             {
                                 builder.Append(", through ");
-                                builder.Append((link.Door as Thing).Indefinite);
+                                builder.Append((link.Door as MudObject).Indefinite);
                             }
 
                             var destinationRoom = Mud.GetObject(link.Destination) as Room;

@@ -14,10 +14,10 @@ namespace RMUD
 
     public struct MatchableObject
     {
-        public IMatchable Matchable;
+        public MudObject Matchable;
         public RelativeLocations Source;
 
-        public MatchableObject(IMatchable Matchable, RelativeLocations Source)
+        public MatchableObject(MudObject Matchable, RelativeLocations Source)
         {
             this.Matchable = Matchable;
             this.Source = Source;
@@ -98,11 +98,11 @@ namespace RMUD
 				}
 			}
 
-			foreach (var matchableThing in ObjectSource.GetObjects(State, Context))
+			foreach (var matchableMudObject in ObjectSource.GetObjects(State, Context))
 			{
 				var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
 				bool matched = false;
-				while (possibleMatch.Next != null && matchableThing.Matchable.Nouns.Contains(possibleMatch.Next.Value.ToUpper()))
+				while (possibleMatch.Next != null && matchableMudObject.Matchable.Nouns.Contains(possibleMatch.Next.Value.ToUpper()))
 				{
 					matched = true;
 					possibleMatch.Next = possibleMatch.Next.Next;
@@ -110,12 +110,12 @@ namespace RMUD
 
 				if (matched)
 				{
-					possibleMatch.Arguments.Upsert(CaptureName, matchableThing.Matchable);
-                    possibleMatch.Arguments.Upsert(CaptureName + "-SOURCE", matchableThing.Source);
+					possibleMatch.Arguments.Upsert(CaptureName, matchableMudObject.Matchable);
+                    possibleMatch.Arguments.Upsert(CaptureName + "-SOURCE", matchableMudObject.Source);
 
 					if (useObjectScoring)
 					{
-						var score = ScoreResults(Context.ExecutingActor, matchableThing.Matchable as MudObject);
+						var score = ScoreResults(Context.ExecutingActor, matchableMudObject.Matchable as MudObject);
 						possibleMatch.Arguments.Upsert(CaptureName + "-SCORE", score);
 
 						var insertIndex = 0;

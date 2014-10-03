@@ -16,7 +16,7 @@ namespace RMUD.Commands
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
                         "I don't know what object you're talking about.\r\n")),
 				new DropProcessor(),
-				"Drop something",
+				"Drop someMudObject",
                 "SUBJECT-SCORE");
 		}
 	}
@@ -25,7 +25,7 @@ namespace RMUD.Commands
 	{
         public void Perform(PossibleMatch Match, Actor Actor)
         {
-            var target = Match.Arguments["SUBJECT"] as Thing;
+            var target = Match.Arguments["SUBJECT"] as MudObject;
 
             if (!Mud.ObjectContainsObject(Actor, target))
             {
@@ -51,7 +51,7 @@ namespace RMUD.Commands
             {
                 Mud.SendMessage(Actor, MessageScope.Single, "You drop " + target.Indefinite + "\r\n");
                 Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " drops " + target.Indefinite + "\r\n");
-                Thing.Move(target, Actor.Location);
+                MudObject.Move(target, Actor.Location);
             }
 
             Mud.MarkLocaleForUpdate(target);

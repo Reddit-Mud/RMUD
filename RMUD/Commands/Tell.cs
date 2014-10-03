@@ -22,7 +22,7 @@ namespace RMUD.Commands
                         new Rest("SPEECH"),
                         "And what would you like to tell then, hmm?\r\n")),
                 new TellProcessor(),
-                "Tell a player something privately.");
+                "Tell a player someMudObject privately.");
         }
 	}
 
