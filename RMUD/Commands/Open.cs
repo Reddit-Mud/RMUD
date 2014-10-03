@@ -58,22 +58,6 @@ namespace RMUD.Commands
                         {
                             Mud.SendMessage(Actor, MessageScope.Single, "You open " + MudObject.Definite + "\r\n");
                             Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " opens " + MudObject.Definite + "\r\n");
-
-                            var source = Match.Arguments["SUBJECT-SOURCE"] as String;
-                            if (source == "LINK")
-                            {
-                                var location = Actor.Location as Room;
-                                var link = location.Links.FirstOrDefault(l => Object.ReferenceEquals(target, l.Portal));
-                                if (link != null)
-                                {
-                                    var otherRoom = Mud.GetObject(link.Destination);
-                                    if (otherRoom != null)
-                                    {
-                                        Mud.SendMessage(otherRoom as Room, String.Format("{0} opens {1}.\r\n", Actor.Short, MudObject.Definite));
-                                        Mud.MarkLocaleForUpdate(otherRoom);
-                                    }
-                                }
-                            }
                         }
                     }
 

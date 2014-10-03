@@ -7,9 +7,9 @@ namespace RMUD
 {	
 	public class ConnectedPlayersObjectSource : IObjectSource
 	{
-        public List<MatchableObject> GetObjects(PossibleMatch State, MatchContext Context)
+        public List<MudObject> GetObjects(PossibleMatch State, MatchContext Context)
         {
-            return new List<MatchableObject>(Mud.ConnectedClients.Where(c => c.IsLoggedOn).Select(c => new MatchableObject(c.Player, RelativeLocations.ConnectedPlayers)));
+            return new List<MudObject>(Mud.ConnectedClients.Where(c => c.IsLoggedOn).Select(c => c.Player));
         }
 	}
 }

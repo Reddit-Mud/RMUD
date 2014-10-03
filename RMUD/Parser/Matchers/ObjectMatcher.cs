@@ -12,21 +12,9 @@ namespace RMUD
 		UnderstandMe = 1
 	}
 
-    public struct MatchableObject
-    {
-        public MudObject Matchable;
-        public RelativeLocations Source;
-
-        public MatchableObject(MudObject Matchable, RelativeLocations Source)
-        {
-            this.Matchable = Matchable;
-            this.Source = Source;
-        }
-    }
-
 	public interface IObjectSource
 	{
-		List<MatchableObject> GetObjects(PossibleMatch State, MatchContext Context);
+		List<MudObject> GetObjects(PossibleMatch State, MatchContext Context);
 	}
 
     public enum MatchPreference
@@ -102,7 +90,7 @@ namespace RMUD
 			{
 				var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
 				bool matched = false;
-				while (possibleMatch.Next != null && matchableMudObject.Matchable.Nouns.Contains(possibleMatch.Next.Value.ToUpper()))
+				while (possibleMatch.Next != null && matchableMudObject.Nouns.Contains(possibleMatch.Next.Value.ToUpper()))
 				{
 					matched = true;
 					possibleMatch.Next = possibleMatch.Next.Next;
@@ -110,12 +98,11 @@ namespace RMUD
 
 				if (matched)
 				{
-					possibleMatch.Arguments.Upsert(CaptureName, matchableMudObject.Matchable);
-                    possibleMatch.Arguments.Upsert(CaptureName + "-SOURCE", matchableMudObject.Source);
+					possibleMatch.Arguments.Upsert(CaptureName, matchableMudObject);
 
 					if (useObjectScoring)
 					{
-						var score = ScoreResults(Context.ExecutingActor, matchableMudObject.Matchable as MudObject);
+						var score = ScoreResults(Context.ExecutingActor, matchableMudObject);
 						possibleMatch.Arguments.Upsert(CaptureName + "-SCORE", score);
 
 						var insertIndex = 0;

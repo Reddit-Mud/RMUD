@@ -7,9 +7,9 @@ namespace RMUD
 {	
 	public class InScopeObjectSource : IObjectSource
 	{
-		public List<MatchableObject> GetObjects(PossibleMatch State, MatchContext Context)
+		public List<MudObject> GetObjects(PossibleMatch State, MatchContext Context)
 		{
-			return new List<MatchableObject>(Context.ObjectsInScope);
+			return new List<MudObject>(Context.ObjectsInScope);
 		}
 	}
 }
