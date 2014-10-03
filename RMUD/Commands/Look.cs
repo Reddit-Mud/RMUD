@@ -101,10 +101,10 @@ namespace RMUD.Commands
                             builder.Append("  ");
                             builder.Append(Mud.CapFirst(link.Direction.ToString()));
 
-                            if (link.Door != null && link.Door is MudObject)
+                            if (link.Portal != null)
                             {
                                 builder.Append(", through ");
-                                builder.Append((link.Door as MudObject).Indefinite);
+                                builder.Append(link.Portal.Indefinite);
                             }
 
                             var destinationRoom = Mud.GetObject(link.Destination) as Room;

@@ -19,10 +19,11 @@ namespace RMUD
 		public List<Link> Links = new List<Link>();
 		public List<MudObject> Scenery = new List<MudObject>();
 
-		public void OpenLink(Direction Direction, String Destination, MudObject Door = null)
+		public void OpenLink(Direction Direction, String Destination, MudObject Portal = null)
 		{
 			Links.RemoveAll((l) => l.Direction == Direction);
-            var link = new Link { Direction = Direction, Destination = Destination, Door = Door };
+            var link = new Link { Direction = Direction, Destination = Destination, Portal = Portal as Portal };
+            if (Portal is Portal) (Portal as Portal).AddSide(this);
             link.Location = this;
             Links.Add(link);
 		}
@@ -55,7 +56,7 @@ namespace RMUD
                 Object.Location = null;
             else if (Scenery.Remove(Object))
                 Object.Location = null;
-            else if (Links.RemoveAll(l => System.Object.ReferenceEquals(Object, l.Door)) > 0) { }
+            else if (Links.RemoveAll(l => System.Object.ReferenceEquals(Object, l.Portal)) > 0) { }
         }
 
         public void Add(MudObject MudObject, RelativeLocations Locations)
@@ -89,7 +90,7 @@ namespace RMUD
             if ((Locations & RelativeLocations.Links) == RelativeLocations.Links)
             {
                 foreach (var link in Links)
-                    if (link.Door != null && Callback(link.Door, RelativeLocations.Links) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
+                    if (link.Portal != null && Callback(link.Portal, RelativeLocations.Links) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             }
 
             return EnumerateObjectsControl.Continue;
@@ -102,7 +103,7 @@ namespace RMUD
             else if ((Locations & RelativeLocations.Scenery) == RelativeLocations.Scenery)
                 return Scenery.Contains(Object);
             else if ((Locations & RelativeLocations.Links) == RelativeLocations.Links)
-                return Links.Count(l => System.Object.ReferenceEquals(Object, l.Door)) > 0;
+                return Links.Count(l => System.Object.ReferenceEquals(Object, l.Portal)) > 0;
             return false;
         }
 
@@ -120,6 +121,7 @@ namespace RMUD
         {
             if (Contents.Contains(Object)) return RelativeLocations.Contents;
             if (Scenery.Contains(Object)) return RelativeLocations.Scenery;
+            if (Links.Count(l => System.Object.ReferenceEquals(Object, l.Portal)) > 0) return RelativeLocations.Links;
             return RelativeLocations.None;
         }
 

@@ -63,7 +63,7 @@ namespace RMUD.Commands
                             if (source == "LINK")
                             {
                                 var location = Actor.Location as Room;
-                                var link = location.Links.FirstOrDefault(l => Object.ReferenceEquals(target, l.Door));
+                                var link = location.Links.FirstOrDefault(l => Object.ReferenceEquals(target, l.Portal));
                                 if (link != null)
                                 {
                                     var otherRoom = Mud.GetObject(link.Destination);

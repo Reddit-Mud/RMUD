@@ -23,8 +23,6 @@ namespace RMUD
         internal static Mutex DatabaseLock = new Mutex();
 		private static bool ShuttingDown = false;
 
-        private static String CriticalLog = "errors.log";
-
 		internal static ParserCommandHandler ParserCommandHandler;
 		public static CommandParser Parser { get { return ParserCommandHandler.Parser; } }
 		internal static LoginCommandHandler LoginCommandHandler;
@@ -258,28 +256,6 @@ namespace RMUD
                     }
                 }
             }
-        }
-
-        public static void LogCriticalError(Exception e)
-        {
-            var logfile = new System.IO.StreamWriter(CriticalLog, true);
-            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- Error while handling client command.", DateTime.Now);
-            logfile.WriteLine(e.Message);
-            logfile.WriteLine(e.StackTrace);
-            logfile.Close();
-
-            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- Error while handling client command.", DateTime.Now);
-            Console.WriteLine(e.Message);
-            Console.WriteLine(e.StackTrace);
-        }
-
-        public static void LogError(String ErrorString)
-        {
-            var logfile = new System.IO.StreamWriter(CriticalLog, true);
-            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}", DateTime.Now, ErrorString);
-            logfile.Close();
-
-            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}", DateTime.Now, ErrorString);
         }
 
         internal static void UpdateMarkedObjects()

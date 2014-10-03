@@ -5,20 +5,16 @@ using System.Text;
 
 namespace RMUD
 {
-	public class LockedDoor : MudObject, OpenableRules, TakeRules, LockableRules
+	public class LockedDoor : BasicDoor, OpenableRules, LockableRules
 	{
         public Func<MudObject, bool> IsMatchingKey;
 
 		public LockedDoor()
 		{
-			this.Nouns.Add("DOOR", "CLOSED");
-			Open = false;
 			Locked = true;
 		}
 
 		#region IOpenable
-
-		public bool Open { get; set; }
 
 		CheckRule OpenableRules.CheckOpen(Actor Actor)
 		{
@@ -35,30 +31,17 @@ namespace RMUD
 
 		RuleHandlerFollowUp OpenableRules.HandleOpen(Actor Actor)
 		{
-			Open = true;
-            Nouns.RemoveAll(n => n == "CLOSED");
-            Nouns.Add("OPEN");
-            return RuleHandlerFollowUp.Continue;
+            return ImplementHandleOpen(Actor);
 		}
 
-		RuleHandlerFollowUp OpenableRules.HandleClose(Actor Actor)
-		{
-			Open = false;
-			Locked = false;
-            Nouns.RemoveAll(n => n == "OPEN");
-            Nouns.Add("CLOSED");
-            return RuleHandlerFollowUp.Continue;
-		}
+        RuleHandlerFollowUp OpenableRules.HandleClose(Actor Actor)
+        {
+            Locked = false;
+            return ImplementHandleClose(Actor);
+        }
 
 		#endregion
-
-		CheckRule TakeRules.Check(Actor Actor)
-		{
-			return CheckRule.Disallow("That's not going to work.");
-		}
-
-        RuleHandlerFollowUp TakeRules.Handle(Actor Actor) { return RuleHandlerFollowUp.Continue; }
-
+        
 		#region ILockableRules
 
 		public bool Locked { get; set; }

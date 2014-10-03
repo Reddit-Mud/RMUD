@@ -39,10 +39,10 @@ namespace RMUD
 
             var ceilingObject = Mud.FindVisibilityCeiling(Object);
             
-            if (ceilingObject != null) 
+            if (!System.Object.ReferenceEquals(ceilingObject, Object)) 
                 return System.Object.ReferenceEquals(ceilingActor, ceilingObject);
             else if (ceilingActor is Room)
-                    return (ceilingActor as Room).Links.Count(l => System.Object.ReferenceEquals(l.Door, Object)) > 0;
+                    return (ceilingActor as Room).Links.Count(l => System.Object.ReferenceEquals(l.Portal, Object)) > 0;
             
             return false;
         }

@@ -29,11 +29,11 @@ namespace RMUD
 	{
 		public Direction Direction;
 		public String Destination;
-		public MudObject Door;
+		public Portal Portal;
 
         public override string ToString()
         {
-            return Direction + " to " + Destination + (Door == null ? "" : (" through " + Door));
+            return Direction + " to " + Destination + (Portal == null ? "" : (" through " + Portal));
         }
 
 		private static List<String> Names = new List<String>
