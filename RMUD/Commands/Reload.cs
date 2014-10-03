@@ -31,7 +31,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class ReloadProcessor : ICommandProcessor
+	internal class ReloadProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
@@ -51,7 +51,7 @@ namespace RMUD.Commands
 		}
 	}
 
-    internal class ResetProcessor : ICommandProcessor
+    internal class ResetProcessor : CommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {

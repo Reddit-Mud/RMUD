@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    internal class RankGate : ICommandTokenMatcher
+    internal class RankGate : CommandTokenMatcher
     {
         public int RequiredRank;
 

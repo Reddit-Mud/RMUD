@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    internal class FilterGate : ICommandTokenMatcher
+    internal class FilterGate : CommandTokenMatcher
     {
         public Func<PossibleMatch, MatchContext, bool> Filter;
 		public String FilterHelpText;

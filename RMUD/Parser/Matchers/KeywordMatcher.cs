@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    internal class KeyWord : ICommandTokenMatcher
+    internal class KeyWord : CommandTokenMatcher
     {
         public String Word;
         public bool Optional = false;

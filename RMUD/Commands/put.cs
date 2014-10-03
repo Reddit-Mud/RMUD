@@ -33,7 +33,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class PutProcessor : ICommandProcessor
+	internal class PutProcessor : CommandProcessor
 	{
         public void Perform(PossibleMatch Match, Actor Actor)
         {

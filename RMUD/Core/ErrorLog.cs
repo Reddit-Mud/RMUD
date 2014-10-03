@@ -32,5 +32,14 @@ namespace RMUD
 
             Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}", DateTime.Now, ErrorString);
         }
+
+        public static void LogWarning(String Warning)
+        {
+            var logfile = new System.IO.StreamWriter(CriticalLog, true);
+            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- WARNING: {1}", DateTime.Now, Warning);
+            logfile.Close();
+
+            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- WARNING: {1}", DateTime.Now, Warning);
+        }
     }
 }

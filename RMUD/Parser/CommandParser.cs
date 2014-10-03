@@ -9,15 +9,15 @@ namespace RMUD
     {
 		public class CommandEntry
 		{
-			internal ICommandTokenMatcher Matcher;
+			internal CommandTokenMatcher Matcher;
             internal List<String> ScoreArguments;
-			internal ICommandProcessor Processor;
+			internal CommandProcessor Processor;
 			internal String HelpText;
 		}
 
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
 
-        public void AddCommand(ICommandTokenMatcher Matcher, ICommandProcessor Processor, String HelpText, params String[] ScoreArguments)
+        public void AddCommand(CommandTokenMatcher Matcher, CommandProcessor Processor, String HelpText, params String[] ScoreArguments)
         {
             var Entry = new CommandEntry { Matcher = Matcher, Processor = Processor, HelpText = HelpText, ScoreArguments = new List<string>(ScoreArguments) };
 			Commands.Add(Entry);

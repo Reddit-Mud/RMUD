@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public interface ICommandTokenMatcher
+    public interface CommandTokenMatcher
     {
         List<PossibleMatch> Match(PossibleMatch State, MatchContext Context);
 		String Emit();

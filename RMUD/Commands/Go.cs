@@ -22,7 +22,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class GoProcessor : ICommandProcessor
+	internal class GoProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{

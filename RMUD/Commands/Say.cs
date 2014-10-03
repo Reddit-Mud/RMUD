@@ -33,7 +33,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class SayProcessor : ICommandProcessor
+	internal class SayProcessor : CommandProcessor
 	{
 		public enum EmoteTypes
 		{

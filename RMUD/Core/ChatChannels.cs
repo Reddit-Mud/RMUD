@@ -43,7 +43,7 @@ namespace RMUD
         }
     }
 
-    public class ChatChannelNameMatcher : ICommandTokenMatcher
+    public class ChatChannelNameMatcher : CommandTokenMatcher
     {
         public String ArgumentName;
 

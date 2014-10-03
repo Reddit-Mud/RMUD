@@ -35,7 +35,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class ShowBansProcessor : ICommandProcessor
+	internal class ShowBansProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
@@ -58,7 +58,7 @@ namespace RMUD.Commands
 		}
 	}
 
-    internal class BanProcessor : ICommandProcessor
+    internal class BanProcessor : CommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
@@ -87,7 +87,7 @@ namespace RMUD.Commands
         }
     }
 
-    internal class UnbanProcessor : ICommandProcessor
+    internal class UnbanProcessor : CommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {

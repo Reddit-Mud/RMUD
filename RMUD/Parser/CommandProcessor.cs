@@ -5,12 +5,12 @@ using System.Text;
 
 namespace RMUD
 {
-    public interface ICommandProcessor
+    public interface CommandProcessor
     {
 		void Perform(PossibleMatch Match, Actor Actor);
     }
 
-	public class CommandProcessorWrapper : ICommandProcessor
+	public class CommandProcessorWrapper : CommandProcessor
 	{
 		private Action<PossibleMatch, Actor> Processor;
 

@@ -38,7 +38,7 @@ namespace RMUD
         VeryLikely = 2
     }
 
-    public class ObjectMatcher : ICommandTokenMatcher
+    public class ObjectMatcher : CommandTokenMatcher
     {
 		public String CaptureName;
 

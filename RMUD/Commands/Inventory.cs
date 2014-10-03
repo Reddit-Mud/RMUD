@@ -19,7 +19,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class InventoryProcessor : ICommandProcessor
+	internal class InventoryProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
@@ -27,11 +27,12 @@ namespace RMUD.Commands
 
 			var builder = new StringBuilder();
 
-			if (Actor.Held.Count == 0) builder.Append("You have noMudObject.\r\n");
+            var heldObjects = Mud.GetContents(Actor as Container, RelativeLocations.Held);
+			if (heldObjects.Count == 0) builder.Append("You have nothing.\r\n");
 			else
 			{
 				builder.Append("You are carrying..\r\n");
-				foreach (var item in Actor.Held)
+				foreach (var item in heldObjects)
 				{
 					builder.Append("  ");
 					builder.Append(item.Indefinite);

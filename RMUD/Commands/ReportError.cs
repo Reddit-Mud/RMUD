@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class ReportError : ICommandProcessor
+	internal class ReportError : CommandProcessor
 	{
 		public String Message;
 

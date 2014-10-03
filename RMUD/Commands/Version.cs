@@ -18,7 +18,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class VersionProcessor : ICommandProcessor
+	internal class VersionProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{

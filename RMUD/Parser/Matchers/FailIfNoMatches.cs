@@ -5,12 +5,12 @@ using System.Text;
 
 namespace RMUD
 {
-    internal class FailIfNoMatches : ICommandTokenMatcher
+    internal class FailIfNoMatches : CommandTokenMatcher
     {
-        public ICommandTokenMatcher Sub;
+        public CommandTokenMatcher Sub;
         public String Message;
 
-        public FailIfNoMatches(ICommandTokenMatcher Sub, String Message)
+        public FailIfNoMatches(CommandTokenMatcher Sub, String Message)
         {
             this.Sub = Sub;
             this.Message = Message;

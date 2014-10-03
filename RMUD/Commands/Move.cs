@@ -25,7 +25,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class MoveProcessor : ICommandProcessor
+	internal class MoveProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{

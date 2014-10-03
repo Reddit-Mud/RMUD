@@ -43,7 +43,7 @@ namespace RMUD.Commands
         }
 	}
 
-	internal class SubscribeProcessor : ICommandProcessor
+	internal class SubscribeProcessor : CommandProcessor
 	{
         public void Perform(PossibleMatch Match, Actor Actor)
         {
@@ -62,7 +62,7 @@ namespace RMUD.Commands
         }
     }
 
-    internal class UnsubscribeProcessor : ICommandProcessor
+    internal class UnsubscribeProcessor : CommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
@@ -74,7 +74,7 @@ namespace RMUD.Commands
         }
     }
 
-    internal class ListChannelsProcessor : ICommandProcessor
+    internal class ListChannelsProcessor : CommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
@@ -94,7 +94,7 @@ namespace RMUD.Commands
         }
     }
 
-    internal class ChatProcessor : ICommandProcessor
+    internal class ChatProcessor : CommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {

@@ -5,11 +5,11 @@ using System.Text;
 
 namespace RMUD
 {
-    public class Or : ICommandTokenMatcher
+    public class Or : CommandTokenMatcher
     {
-        internal List<ICommandTokenMatcher> Matchers = new List<ICommandTokenMatcher>();
+        internal List<CommandTokenMatcher> Matchers = new List<CommandTokenMatcher>();
 
-		public Or(params ICommandTokenMatcher[] matchers)
+		public Or(params CommandTokenMatcher[] matchers)
 		{
 			Matchers.AddRange(matchers);
 		}

@@ -32,7 +32,7 @@ namespace RMUD.Commands
 		}
 	}
 	
-	internal class UnlockProcessor : ICommandProcessor
+	internal class UnlockProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{

@@ -23,7 +23,7 @@ namespace RMUD.Commands
         }
 	}
 
-	internal class ExamineProcessor : ICommandProcessor
+	internal class ExamineProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{

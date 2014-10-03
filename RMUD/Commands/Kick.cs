@@ -27,7 +27,7 @@ namespace RMUD.Commands
         }
     }
 
-    internal class KickProcessor : ICommandProcessor
+    internal class KickProcessor : CommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
@@ -47,7 +47,7 @@ namespace RMUD.Commands
         }
     }
 
-    internal class MaskedKickProcessor : ICommandProcessor
+    internal class MaskedKickProcessor : CommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {

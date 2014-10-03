@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    internal class Path : ICommandTokenMatcher
+    internal class Path : CommandTokenMatcher
     {
         public String ArgumentName;
 

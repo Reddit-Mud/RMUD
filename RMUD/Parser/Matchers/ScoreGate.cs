@@ -5,12 +5,12 @@ using System.Text;
 
 namespace RMUD
 {
-    internal class ScoreGate : ICommandTokenMatcher
+    internal class ScoreGate : CommandTokenMatcher
     {
         public String ScoreArgument;
-        public ICommandTokenMatcher Sub;
+        public CommandTokenMatcher Sub;
 
-        internal ScoreGate(ICommandTokenMatcher Sub, String ScoreArgument)
+        internal ScoreGate(CommandTokenMatcher Sub, String ScoreArgument)
         {
             this.ScoreArgument = ScoreArgument;
             this.Sub = Sub;

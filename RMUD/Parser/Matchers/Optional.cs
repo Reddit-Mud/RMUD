@@ -5,11 +5,11 @@ using System.Text;
 
 namespace RMUD
 {
-    internal class Optional : ICommandTokenMatcher
+    internal class Optional : CommandTokenMatcher
     {
-        public ICommandTokenMatcher Sub;
+        public CommandTokenMatcher Sub;
 
-        public Optional(ICommandTokenMatcher Sub)
+        public Optional(CommandTokenMatcher Sub)
         {
             this.Sub = Sub;
         }

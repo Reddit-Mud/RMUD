@@ -16,7 +16,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class WhoProcessor : ICommandProcessor
+	internal class WhoProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{

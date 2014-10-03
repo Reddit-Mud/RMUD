@@ -21,7 +21,7 @@ namespace RMUD.Commands
 		}
 	}
 
-	internal class DropProcessor : ICommandProcessor
+	internal class DropProcessor : CommandProcessor
 	{
         public void Perform(PossibleMatch Match, Actor Actor)
         {
