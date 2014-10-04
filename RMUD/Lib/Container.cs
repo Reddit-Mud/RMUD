@@ -27,7 +27,7 @@ namespace RMUD
 
         Room = Contents | Links | Scenery,
         Player = Held | Worn,
-        MudObject = In | On | Under | Behind,
+        Supporter = In | On | Under | Behind,
         EveryMudObject = Contents | Links | Scenery | In | On | Under | Behind | Held | Worn,
     }
 

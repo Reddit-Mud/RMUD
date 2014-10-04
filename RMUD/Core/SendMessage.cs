@@ -20,10 +20,10 @@ namespace RMUD
         public static void SendLocaleMessage(MudObject Object, String Message)
         {
             DatabaseLock.WaitOne();
-            var room = Mud.FindLocale(Object) as Room;
-            if (room != null)
+            var container = Mud.FindLocale(Object) as Container;
+            if (container != null)
             {
-                room.EnumerateObjects(RelativeLocations.Contents, (MudObject, loc) =>
+                container.EnumerateObjects(RelativeLocations.EveryMudObject, (MudObject, loc) =>
                 {
                     if (MudObject is Actor && (MudObject as Actor).ConnectedClient != null)
                         PendingMessages.Add(new RawPendingMessage((MudObject as Actor).ConnectedClient, Message));
