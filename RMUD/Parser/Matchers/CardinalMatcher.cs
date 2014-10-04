@@ -19,12 +19,9 @@ namespace RMUD
             var r = new List<PossibleMatch>();
 			if (State.Next == null) return r;
 
-			if (Link.IsCardinal(State.Next.Value.ToUpper()))
-			{
-				var match = new PossibleMatch(State.Arguments, State.Next.Next);
-				match.Arguments.Upsert(ArgumentName, Link.ToCardinal(State.Next.Value.ToUpper()));
-				r.Add(match);
-			}
+            if (Link.IsCardinal(State.Next.Value.ToUpper()))
+                r.Add(State.AdvanceWith(ArgumentName, Link.ToCardinal(State.Next.Value.ToUpper())));
+
 			return r;
         }
 

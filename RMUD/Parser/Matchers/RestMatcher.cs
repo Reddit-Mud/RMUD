@@ -16,14 +16,10 @@ namespace RMUD
 
         public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
         {
-            var R = new List<PossibleMatch>();
-			if (State.Next != null)
-			{
-				var possibleMatch = new PossibleMatch(State.Arguments, null);
-				possibleMatch.Arguments.Upsert(ArgumentName, State.Next);
-				R.Add(possibleMatch);
-			}
-			return R;
+            var r = new List<PossibleMatch>();
+            if (State.Next != null)
+                r.Add(State.AdvanceWith(ArgumentName, State.Next));
+			return r;
         }
 
 		public String Emit() { return "[TEXT]"; }

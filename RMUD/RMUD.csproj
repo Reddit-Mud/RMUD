@@ -108,7 +108,7 @@
     <Compile Include="RuleDecorators\RuleHandlerFollowUp.cs" />
     <Compile Include="Core\SendMessage.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />
-    <Compile Include="Parser\Matchers\Optional.cs" />
+    <Compile Include="Parser\Matchers\OptionalMatcher.cs" />
     <Compile Include="Parser\Matchers\FirstOfMatcher.cs" />
     <Compile Include="Core\ProscriptionList.cs" />
     <Compile Include="RuleDecorators\LocaleDescriptionRules.cs" />
@@ -146,7 +146,6 @@
     <Compile Include="Parser\CommandProcessor.cs" />
     <Compile Include="Parser\CommandTokenMatcher.cs" />
     <Compile Include="Parser\Matchers\CardinalMatcher.cs" />
-    <Compile Include="Parser\Matchers\FilterGate.cs" />
     <Compile Include="Parser\Matchers\RestMatcher.cs" />
     <Compile Include="Parser\Matchers\PathMatcher.cs" />
     <Compile Include="Parser\Matchers\RankGate.cs" />
