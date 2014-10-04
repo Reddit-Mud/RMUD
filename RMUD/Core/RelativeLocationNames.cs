@@ -7,7 +7,7 @@ namespace RMUD
 {
     public static partial class Mud
     {
-        public static String RelativeLocationName(RelativeLocations Location)
+        public static String GetRelativeLocationName(RelativeLocations Location)
         {
             if ((Location & RelativeLocations.On) == RelativeLocations.On)
                 return "on";

@@ -44,6 +44,11 @@
     <Compile Include="Commands\Unlock.cs" />
     <Compile Include="Commands\LookUnderOrBehind.cs" />
     <Compile Include="Commands\Close.cs" />
+    <Compile Include="Core\FindLocale.cs" />
+    <Compile Include="Core\MarkForUpdate.cs" />
+    <Compile Include="Core\CommandQueue.cs" />
+    <Compile Include="Core\ObjectContainsObject.cs" />
+    <Compile Include="Core\PendingMessages.cs" />
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Parser\MatchContext.cs" />
@@ -121,7 +126,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="Lib\DescriptiveText.cs" />
-    <Compile Include="Core\MessageScope.cs" />
     <Compile Include="Lib\BasicDoor.cs" />
     <Compile Include="Lib\LockedDoor.cs" />
     <Compile Include="Clients\DisambigCommandHandler.cs" />

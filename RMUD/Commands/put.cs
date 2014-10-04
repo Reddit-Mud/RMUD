@@ -63,7 +63,7 @@ namespace RMUD.Commands
 
             if (container == null || ((container.LocationsSupported & relloc) != relloc))
             {
-                Mud.SendMessage(Actor, String.Format("You can't put MudObjects {0} that.\r\n", Mud.RelativeLocationName(relloc)));
+                Mud.SendMessage(Actor, String.Format("You can't put MudObjects {0} that.\r\n", Mud.GetRelativeLocationName(relloc)));
                 return;
             }
 
@@ -104,8 +104,8 @@ namespace RMUD.Commands
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, String.Format("You put {0} {1} {2}.\r\n", target.Definite, Mud.RelativeLocationName(relloc), (container as MudObject).Definite));
-                Mud.SendExternalMessage(Actor, String.Format("{0} puts {1} {2} {3}.\r\n", Actor.Short, target.Indefinite, Mud.RelativeLocationName(relloc), (container as MudObject).Definite));
+                Mud.SendMessage(Actor, String.Format("You put {0} {1} {2}.\r\n", target.Definite, Mud.GetRelativeLocationName(relloc), (container as MudObject).Definite));
+                Mud.SendExternalMessage(Actor, String.Format("{0} puts {1} {2} {3}.\r\n", Actor.Short, target.Indefinite, Mud.GetRelativeLocationName(relloc), (container as MudObject).Definite));
                 MudObject.Move(target, container as MudObject, relloc);
             }
 
