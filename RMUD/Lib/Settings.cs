@@ -15,6 +15,7 @@ namespace RMUD
         public int AllowedCommandRate = 100; //How many milliseconds to allow between commands - default is to not limit very much.
 
         public String ProscriptionList = "proscriptions.txt";
+        public int MaximumChatChannelLogSize = 1000;
 
         public Dictionary<int, String> RankNames;
 

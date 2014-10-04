@@ -40,6 +40,17 @@ namespace RMUD.Commands
                     //    "You have to actually say someMudObject to use the chat channel.\r\n")),
                 new ChatProcessor(),
                 "Chat on a channel.");
+
+            Parser.AddCommand(
+               new Sequence(
+                   new KeyWord("RECALL", false),
+                   new FailIfNoMatches(
+                       new ChatChannelNameMatcher("CHANNEL"),
+                       "I don't recognize that channel.\r\n"),
+                   new Optional(
+                       new Number("COUNT"))),
+                new RecallProcessor(),
+                "Recall past conversation on a channel.");
         }
 	}
 
@@ -120,6 +131,31 @@ namespace RMUD.Commands
             messageBuilder.Append("\"\r\n");
 
             Mud.SendChatMessage(channel, messageBuilder.ToString());
+        }
+    }
+
+    internal class RecallProcessor : CommandProcessor
+    {
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            if (Actor.ConnectedClient == null) return;
+
+            var channel = Match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+            if (channel.AccessFilter != null && !channel.AccessFilter(Actor.ConnectedClient))
+            {
+                Mud.SendMessage(Actor, "You do not have access to that channel.\r\n");
+                return;
+            }
+
+            int count = 20;
+            if (Match.Arguments.ContainsKey("COUNT")) count = (Match.Arguments["COUNT"] as int?).Value;
+
+            var start = channel.ChatHistory.Count - count;
+            if (start < 0) start = 0;
+
+            for (int i = start; i < channel.ChatHistory.Count; ++i)
+                Mud.SendMessage(Actor, String.Format("{0} : {1}", channel.ChatHistory[i].Time, channel.ChatHistory[i].Message));
+
         }
     }
 }

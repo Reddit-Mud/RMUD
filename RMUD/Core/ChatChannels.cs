@@ -5,11 +5,18 @@ using System.Text;
 
 namespace RMUD
 {
+    public class ChatMessage
+    {
+        public DateTime Time;
+        public String Message;
+    }
+
     public class ChatChannel
     {
         public String Name;
         public List<Client> Subscribers = new List<Client>();
         public Func<Client, bool> AccessFilter = null;
+        public List<ChatMessage> ChatHistory = new List<ChatMessage>();
 
         public ChatChannel(String Name, Func<Client, bool> AccessFilter = null)
         {
@@ -29,6 +36,10 @@ namespace RMUD
 
         public static void SendChatMessage(ChatChannel Channel, String Message)
         {
+            Channel.ChatHistory.Add(new ChatMessage { Time = DateTime.Now, Message = Message });
+            if (Channel.ChatHistory.Count > Mud.SettingsObject.MaximumChatChannelLogSize)
+                Channel.ChatHistory.RemoveAt(0);
+
             foreach (var client in Channel.Subscribers)
             {
                 if (client.IsLoggedOn)

@@ -31,27 +31,25 @@ namespace RMUD
                 {
                     Into.Add(o);
 
-                    var container = o as Container;
-
-                    if (container != null)
+                    if (o is Container)
                     {
-                        EnumerateContainer(container, RelativeLocations.On, Into);
-                        if (Mud.IsOpen(container as MudObject))
-                            EnumerateContainer(container, RelativeLocations.In, Into);
-                        EnumerateContainer(container, RelativeLocations.Behind, Into);
-                        EnumerateContainer(container, RelativeLocations.Under, Into);
+                        EnumerateContainer(o, RelativeLocations.On, Into);
+                        if (Mud.IsOpen(o))
+                            EnumerateContainer(o, RelativeLocations.In, Into);
+                        EnumerateContainer(o, RelativeLocations.Behind, Into);
+                        EnumerateContainer(o, RelativeLocations.Under, Into);
 
-                        if (container is Actor) 
-                            EnumerateContainer(container, RelativeLocations.Player, Into);
+                        if (o is Actor) 
+                            EnumerateContainer(o, RelativeLocations.Player, Into);
                     }
 
                     return EnumerateObjectsControl.Continue;
                 };
         }
 
-        private static void EnumerateContainer(Container Container, RelativeLocations Location, List<MudObject> Into)
+        private static void EnumerateContainer(MudObject Container, RelativeLocations Location, List<MudObject> Into)
         {
-            Container.EnumerateObjects(Location, (o, l) =>
+            (Container as Container).EnumerateObjects(Location, (o, l) =>
                 {
                         Into.Add(o);
                     return EnumerateObjectsControl.Continue;

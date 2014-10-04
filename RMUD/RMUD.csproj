@@ -47,6 +47,7 @@
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Parser\MatchContext.cs" />
+    <Compile Include="Parser\Matchers\NumberMatcher.cs" />
     <Compile Include="Parser\Matchers\ScoreGate.cs" />
     <Compile Include="Core\RelativeLocationNames.cs" />
     <Compile Include="Core\ChatChannels.cs" />
