@@ -11,7 +11,7 @@ namespace RMUD
     {
         private static String CriticalLog = "errors.log";
 
-        public static void LogCriticalError(Exception e)
+        public static void LogCommandError(Exception e)
         {
             var logfile = new System.IO.StreamWriter(CriticalLog, true);
             logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- Error while handling client command.", DateTime.Now);
@@ -20,6 +20,19 @@ namespace RMUD
             logfile.Close();
 
             Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- Error while handling client command.", DateTime.Now);
+            Console.WriteLine(e.Message);
+            Console.WriteLine(e.StackTrace);
+        }
+
+        public static void LogCriticalError(Exception e)
+        {
+            var logfile = new System.IO.StreamWriter(CriticalLog, true);
+            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- Critical error.", DateTime.Now);
+            logfile.WriteLine(e.Message);
+            logfile.WriteLine(e.StackTrace);
+            logfile.Close();
+
+            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- Critical error.", DateTime.Now);
             Console.WriteLine(e.Message);
             Console.WriteLine(e.StackTrace);
         }

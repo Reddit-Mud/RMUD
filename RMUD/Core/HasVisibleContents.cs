@@ -34,10 +34,10 @@ namespace RMUD
 
         public static bool IsVisibleTo(MudObject Actor, MudObject Object)
         {
-            var ceilingActor = Mud.FindVisibilityCeiling(Actor);
+            var ceilingActor = Mud.FindLocale(Actor);
             if (ceilingActor == null) return false;
 
-            var ceilingObject = Mud.FindVisibilityCeiling(Object);
+            var ceilingObject = Mud.FindLocale(Object);
             
             if (!System.Object.ReferenceEquals(ceilingObject, Object)) 
                 return System.Object.ReferenceEquals(ceilingActor, ceilingObject);

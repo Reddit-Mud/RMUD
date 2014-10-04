@@ -65,8 +65,8 @@ namespace RMUD.Commands
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, MessageScope.Single, "You take " + target.Indefinite + "\r\n");
-                Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " takes " + target.Indefinite + "\r\n");
+                Mud.SendMessage(Actor, "You take " + target.Indefinite + "\r\n");
+                Mud.SendExternalMessage(Actor, Actor.Short + " takes " + target.Indefinite + "\r\n");
                 MudObject.Move(target, Actor);
             }
 

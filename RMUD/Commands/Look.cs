@@ -125,7 +125,7 @@ namespace RMUD.Commands
                     builder.Append("It is too dark to see.\r\n\r\n");
                 }
 
-				Mud.SendMessage(Actor, MessageScope.Single, builder.ToString());
+				Mud.SendMessage(Actor, builder.ToString());
 			}
 		}
 	}

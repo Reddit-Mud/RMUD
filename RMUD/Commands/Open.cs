@@ -56,8 +56,8 @@ namespace RMUD.Commands
                         var MudObject = target as MudObject;
                         if (MudObject != null)
                         {
-                            Mud.SendMessage(Actor, MessageScope.Single, "You open " + MudObject.Definite + "\r\n");
-                            Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " opens " + MudObject.Definite + "\r\n");
+                            Mud.SendMessage(Actor, "You open " + MudObject.Definite + "\r\n");
+                            Mud.SendExternalMessage(Actor, Actor.Short + " opens " + MudObject.Definite + "\r\n");
                         }
                     }
 
@@ -65,7 +65,7 @@ namespace RMUD.Commands
 				}
 				else
 				{
-					Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
+					Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
 				}
 			}
 		}

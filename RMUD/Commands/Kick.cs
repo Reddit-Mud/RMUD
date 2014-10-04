@@ -42,7 +42,7 @@ namespace RMUD.Commands
 
                 Mud.SendMessage(Player, Actor.Short + " has removed you from the server.\r\n");
                 Player.ConnectedClient.Disconnect();
-                Mud.SendMessage(Actor, MessageScope.AllConnectedPlayers, Actor.Short + " has removed " + Player.Short + " from the server.\r\n");
+                Mud.SendGlobalMessage(Actor.Short + " has removed " + Player.Short + " from the server.\r\n");
             }
         }
     }

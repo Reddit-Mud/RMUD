@@ -31,7 +31,7 @@ namespace RMUD.Commands
 			var link = location.Links.FirstOrDefault(l => l.Direction == direction.Value);
 
 			if (link == null)
-				Mud.SendMessage(Actor, MessageScope.Single, "You can't go that way.\r\n");
+				Mud.SendMessage(Actor, "You can't go that way.\r\n");
 			else
 			{
 				if (link.Portal != null)
@@ -39,13 +39,13 @@ namespace RMUD.Commands
 					var openable = link.Portal as OpenableRules;
 					if (openable != null && !openable.Open)
 					{
-						Mud.SendMessage(Actor, MessageScope.Single, "The door is closed.\r\n");
+						Mud.SendMessage(Actor, "The door is closed.\r\n");
 						return;
 					}
 				}
 
-				Mud.SendMessage(Actor, MessageScope.Single, "You went " + direction.Value.ToString().ToLower() + ".\r\n");
-				Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".\r\n");
+				Mud.SendMessage(Actor, "You went " + direction.Value.ToString().ToLower() + ".\r\n");
+				Mud.SendExternalMessage(Actor, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".\r\n");
 				var destination = Mud.GetObject(link.Destination, s =>
 				{
 					if (Actor.ConnectedClient != null)
@@ -57,7 +57,7 @@ namespace RMUD.Commands
 
                 var arriveMessage = Link.FromMessage(Link.Opposite(direction.Value));
 
-				Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " arrives " + arriveMessage + ".\r\n");
+				Mud.SendExternalMessage(Actor, Actor.Short + " arrives " + arriveMessage + ".\r\n");
 
                 Mud.MarkLocaleForUpdate(location);
                 Mud.MarkLocaleForUpdate(destination);

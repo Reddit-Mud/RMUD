@@ -104,8 +104,8 @@ namespace RMUD.Commands
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, MessageScope.Single, String.Format("You put {0} {1} {2}.\r\n", target.Definite, Mud.RelativeLocationName(relloc), (container as MudObject).Definite));
-                Mud.SendMessage(Actor, MessageScope.External, String.Format("{0} puts {1} {2} {3}.\r\n", Actor.Short, target.Indefinite, Mud.RelativeLocationName(relloc), (container as MudObject).Definite));
+                Mud.SendMessage(Actor, String.Format("You put {0} {1} {2}.\r\n", target.Definite, Mud.RelativeLocationName(relloc), (container as MudObject).Definite));
+                Mud.SendExternalMessage(Actor, String.Format("{0} puts {1} {2} {3}.\r\n", Actor.Short, target.Indefinite, Mud.RelativeLocationName(relloc), (container as MudObject).Definite));
                 MudObject.Move(target, container as MudObject, relloc);
             }
 

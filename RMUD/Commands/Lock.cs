@@ -62,7 +62,7 @@ namespace RMUD.Commands
 
 			if (target.Locked)
 			{
-				Mud.SendMessage(Actor, MessageScope.Single, "It's already locked.\r\n");
+				Mud.SendMessage(Actor, "It's already locked.\r\n");
 				return;
 			}
 
@@ -74,14 +74,14 @@ namespace RMUD.Commands
                     var MudObject = target as MudObject;
                     if (MudObject != null)
                     {
-                        Mud.SendMessage(Actor, MessageScope.Single, "You lock " + MudObject.Definite + ".\r\n");
-                        Mud.SendMessage(Actor, MessageScope.External, Actor.Short + " locks " + MudObject.Indefinite + " with " + key.Indefinite + ".\r\n");
+                        Mud.SendMessage(Actor, "You lock " + MudObject.Definite + ".\r\n");
+                        Mud.SendExternalMessage(Actor, Actor.Short + " locks " + MudObject.Indefinite + " with " + key.Indefinite + ".\r\n");
                     }
                 }
             }
             else
             {
-                Mud.SendMessage(Actor, MessageScope.Single, checkRule.ReasonDisallowed + "\r\n");
+                Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
             }
 		}
 	}

@@ -17,15 +17,38 @@ namespace RMUD
             DatabaseLock.ReleaseMutex();
         }
 
-        public static void SendMessage(Room Room, String Message)
+        public static void SendLocaleMessage(MudObject Object, String Message)
         {
             DatabaseLock.WaitOne();
-            Room.EnumerateObjects(RelativeLocations.Contents, (MudObject, loc) =>
+            var room = Mud.FindLocale(Object) as Room;
+            if (room != null)
             {
-                if (MudObject is Actor && (MudObject as Actor).ConnectedClient != null)
-                    PendingMessages.Add(new RawPendingMessage((MudObject as Actor).ConnectedClient, Message));
-                return EnumerateObjectsControl.Continue;
-            });
+                room.EnumerateObjects(RelativeLocations.Contents, (MudObject, loc) =>
+                {
+                    if (MudObject is Actor && (MudObject as Actor).ConnectedClient != null)
+                        PendingMessages.Add(new RawPendingMessage((MudObject as Actor).ConnectedClient, Message));
+                    return EnumerateObjectsControl.Continue;
+                });
+            }
+            DatabaseLock.ReleaseMutex();
+        }
+
+        public static void SendExternalMessage(Actor Actor, String Message)
+        {
+            if (Actor == null) return;
+            var location = Actor.Location as Room;
+            if (location == null) return;
+
+            DatabaseLock.WaitOne();
+            location.EnumerateObjects(RelativeLocations.Contents, (o, l) =>
+                {
+                    var other = o as Actor;
+                    if (other == null) return EnumerateObjectsControl.Continue;
+                    if (Object.ReferenceEquals(other, Actor)) return EnumerateObjectsControl.Continue;
+                    if (other.ConnectedClient == null) return EnumerateObjectsControl.Continue;
+                    PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Message));
+                    return EnumerateObjectsControl.Continue;
+                });
             DatabaseLock.ReleaseMutex();
         }
 
@@ -36,65 +59,14 @@ namespace RMUD
             DatabaseLock.ReleaseMutex();
         }
 
-		public static void SendMessage(Actor Actor, MessageScope Scope, String Message)
-		{
+        public static void SendGlobalMessage(String Message)
+        {
             DatabaseLock.WaitOne();
-
-			switch (Scope)
-			{
-                case MessageScope.AllConnectedPlayers:
-                    {
-                        foreach (var client in ConnectedClients)
-                        {
-                            if (client.IsLoggedOn)
-                                PendingMessages.Add(new RawPendingMessage(client, Message));
-                        }
-                    }
-                    break;
-
-				//Send message only to the player
-				case MessageScope.Single:
-					{
-						if (Actor == null) break;
-						if (Actor.ConnectedClient == null) break;
-						PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, Message));
-					}
-					break;
-
-				//Send message to everyone in the same location as the player
-				case MessageScope.Local:
-					{
-						if (Actor == null) break;
-						var location = Actor.Location as Room;
-						if (location == null) break;
-						foreach (var MudObject in location.Contents)
-						{
-							var other = MudObject as Actor;
-							if (other == null) continue;
-							if (other.ConnectedClient == null) continue;
-							PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Message));
-						}
-					}
-					break;
-
-				//Send message to everyone in the same location EXCEPT the player.
-				case MessageScope.External:
-					{
-						if (Actor == null) break;
-						var location = Actor.Location as Room;
-						if (location == null) break;
-						foreach (var MudObject in location.Contents)
-						{
-							var other = MudObject as Actor;
-							if (other == null) continue;
-							if (Object.ReferenceEquals(other, Actor)) continue;
-							if (other.ConnectedClient == null) continue;
-							PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Message));
-						}
-					}
-					break;
-			}
-
+            foreach (var client in ConnectedClients)
+            {
+                if (client.IsLoggedOn)
+                    PendingMessages.Add(new RawPendingMessage(client, Message));
+            }
             DatabaseLock.ReleaseMutex();
         }
     }

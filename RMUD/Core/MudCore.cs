@@ -53,26 +53,7 @@ namespace RMUD
             PendingCommandLock.ReleaseMutex();
         }
 
-        public static Room FindLocale(MudObject Of)
-        {
-            MudObject locale = Of;
-
-            while (true)
-            {
-                if (locale == null) return null;
-                else if (locale is Room)
-                    return locale as Room;
-                else if (locale is MudObject)
-                {
-                    locale = (locale as MudObject).Location;
-                    if (Object.ReferenceEquals(locale, Of)) throw new InvalidOperationException("Cycle found in database.");
-                }
-                else
-                    return null; 
-            }
-        }
-
-        public static MudObject FindVisibilityCeiling(MudObject Of)
+        public static MudObject FindLocale(MudObject Of)
         {
             //if (Of is Room) return Of;
 
@@ -84,12 +65,12 @@ namespace RMUD
                 var relloc = container.LocationOf(Of);
                 if (relloc == RelativeLocations.In) //Consider the openable rules.
                 {
-                    if (IsOpen(Of.Location)) return FindVisibilityCeiling(Of.Location);
+                    if (IsOpen(Of.Location)) return FindLocale(Of.Location);
                     else return Of.Location;
                 }
             }
 
-            return FindVisibilityCeiling(Of.Location);
+            return FindLocale(Of.Location);
 
         }
 
@@ -230,7 +211,7 @@ namespace RMUD
                     }
                     catch (Exception e)
                     {
-                        LogCriticalError(e);
+                        LogCommandError(e);
                         PendingCommand = null;
                     }
 					PendingCommandLock.ReleaseMutex();
@@ -248,7 +229,7 @@ namespace RMUD
                         }
                         catch (Exception e)
                         {
-                            LogCriticalError(e);
+                            LogCommandError(e);
                             ClearPendingMessages();
                         }
 
