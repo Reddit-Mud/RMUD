@@ -21,7 +21,7 @@ namespace RMUD
 
 		public void OpenLink(Direction Direction, String Destination, MudObject Portal = null)
 		{
-            if (!(Portal is Portal)) Mud.LogWarning("Object passed to OpenLink in " + Path + " is not a portal.");
+            if (Portal != null && !(Portal is Portal)) Mud.LogWarning("Object passed to OpenLink in " + Path + " is not a portal.");
             if (Links.RemoveAll((l) => l.Direction == Direction) > 0) Mud.LogWarning("Opened duplicate link in " + Path);
 
             var link = new Link { Direction = Direction, Destination = Destination, Portal = Portal as Portal };
