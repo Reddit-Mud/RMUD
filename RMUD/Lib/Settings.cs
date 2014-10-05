@@ -16,6 +16,7 @@ namespace RMUD
 
         public String ProscriptionList = "proscriptions.txt";
         public int MaximumChatChannelLogSize = 1000;
+        public int HeartbeatInterval = 1000 * 10; //Heart beat every tend seconds.
 
         public Dictionary<int, String> RankNames;
 

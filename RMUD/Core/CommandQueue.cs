@@ -44,6 +44,7 @@ namespace RMUD
             while (!ShuttingDown)
             {
                 System.Threading.Thread.Sleep(10);
+                Heartbeat();
 
                 while (PendingCommands.Count > 0)
                 {

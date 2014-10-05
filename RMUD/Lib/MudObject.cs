@@ -5,8 +5,16 @@ using System.Text;
 
 namespace RMUD
 {
+    public enum ObjectState
+    {
+        Unitialized,
+        Alive,
+        Destroyed
+    }
+
 	public class MudObject
-	{
+    {
+        public ObjectState State = ObjectState.Unitialized; 
 		public String Path { get; internal set; }
 		public String Instance { get; internal set; }
 
@@ -26,6 +34,7 @@ namespace RMUD
 
 		public virtual void Initialize() { }
         public virtual void HandleMarkedUpdate() { }
+        public virtual void Heartbeat(UInt64 HeartbeatID) { }
 
         public override string ToString()
         {
@@ -44,6 +53,7 @@ namespace RMUD
 		public MudObject()
 		{
 			Nouns = new NounList();
+            State = ObjectState.Alive;
 		}
 
         public MudObject(String Short, String Long)
@@ -56,6 +66,21 @@ namespace RMUD
             var firstChar = Short.ToLower()[0];
             if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')
                 Article = "an";
+
+            State = ObjectState.Alive;
+        }
+
+        public void Destroy(bool DestroyChildren)
+        {
+            State = ObjectState.Destroyed;
+
+            if (DestroyChildren && this is Container)
+                (this as Container).EnumerateObjects(RelativeLocations.EveryMudObject, (child, loc) =>
+                    {
+                        if (child.State != ObjectState.Destroyed)
+                            child.Destroy(true);
+                        return EnumerateObjectsControl.Continue;
+                    });
         }
 
 		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
@@ -81,6 +106,5 @@ namespace RMUD
 			}
 		}
 
-
-	}
+    }
 }

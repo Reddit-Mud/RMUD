@@ -40,7 +40,8 @@ namespace RMUD
 			if (result != null)
 			{
 				NamedObjects.Upsert(Path, result);
-				result.Initialize();
+                result.Initialize();
+                result.State = ObjectState.Alive;
                 result.HandleMarkedUpdate();
 			}
 			return result;
@@ -68,6 +69,7 @@ namespace RMUD
 				newMudObject.Instance = InstanceName;
 
 				newMudObject.Initialize();
+                newMudObject.State = ObjectState.Alive;
                 newMudObject.HandleMarkedUpdate();
 				return newMudObject;
 			}
@@ -131,6 +133,7 @@ namespace RMUD
 			if (newMudObject != null)
 			{
 				newMudObject.Path = Path;
+                newMudObject.State = ObjectState.Unitialized;
 				return newMudObject;
 			}
 			else
@@ -151,8 +154,9 @@ namespace RMUD
 				if (newObject == null) return null;
 
 				NamedObjects.Upsert(Path, newObject);
-				newObject.Initialize();
-                newObject.HandleMarkedUpdate();
+                newObject.Initialize(); 
+                newObject.State = ObjectState.Alive;
+				newObject.HandleMarkedUpdate();
 
 				//Preserve contents
 				if (existing is Container && newObject is Container)
@@ -176,6 +180,8 @@ namespace RMUD
 					}
 				}
 
+                existing.Destroy(false);
+
 				return newObject;
 			}
 			else
@@ -193,6 +199,7 @@ namespace RMUD
                 var newObject = Activator.CreateInstance(existing.GetType()) as MudObject;
                 NamedObjects.Upsert(Path, newObject);
                 newObject.Initialize();
+                newObject.State = ObjectState.Alive;
                 newObject.HandleMarkedUpdate();
 
                 //Preserve the location of actors, and actors only.
@@ -206,6 +213,10 @@ namespace RMUD
                                 (newObject as Container).Add(MudObject, loc);
                                 (MudObject as MudObject).Location = newObject;
                             }
+                            else
+                            {
+                                MudObject.Destroy(true);
+                            }
                             return EnumerateObjectsControl.Continue;
                         });
                 }
@@ -216,6 +227,8 @@ namespace RMUD
                     MudObject.Move(newObject as MudObject, (existing as MudObject).Location, loc);
                     MudObject.Move(existing as MudObject, null, RelativeLocations.None);
                 }
+
+                existing.Destroy(false);
 
                 return true;
             }

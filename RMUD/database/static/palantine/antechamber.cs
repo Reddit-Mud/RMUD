@@ -25,11 +25,17 @@ public class Jupiter : RMUD.Scenery, RMUD.EmitsLight
     {
         Nouns.Add("jupiter");
         Long = "Jupiter holds in his left hand a gleaming thunderbolt. It glows bright enough to light the entire chamber. In his right, he holds a chisel.";
+        RMUD.Mud.RegisterForHeartbeat(this);
     }
 
     public bool EmitsLight
     {
         get { return true; }
+    }
+
+    public override void Heartbeat(ulong HeartbeatID)
+    {
+        RMUD.Mud.SendLocaleMessage(this, string.Format("Jupiter's thunderbolt sparkles for the {0}th time.\r\n", HeartbeatID));
     }
 }
 
