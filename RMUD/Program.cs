@@ -75,9 +75,20 @@ namespace RMUD
                 else if (command.ToUpper() == "HEARTBEAT")
                 {
                     Mud.DatabaseLock.WaitOne();
-                    Console.WriteLine("HEARTBEAT INTERVAL: {0} OBJECTS: {1} HID: {2}", Mud.SettingsObject.HeartbeatInterval, Mud.ObjectsRegisteredForHeartbeat.Count, Mud.HeartbeatID);
+                    Console.WriteLine("Heartbeat interval: {0} Objects: {1} HID: {2}",
+                        Mud.SettingsObject.HeartbeatInterval, 
+                        Mud.ObjectsRegisteredForHeartbeat.Count, 
+                        Mud.HeartbeatID);
                     foreach (var Object in Mud.ObjectsRegisteredForHeartbeat)
                         Console.WriteLine(Object.ToString());
+                    Mud.DatabaseLock.ReleaseMutex();
+                }
+                else if (command.ToUpper() == "TIME")
+                {
+                    Mud.DatabaseLock.WaitOne();
+                    Console.WriteLine("Current time in game: {0}", Mud.TimeOfDay);
+                    Console.WriteLine("Advance rate: {0} per heartbeat",
+                        Mud.SettingsObject.ClockAdvanceRate);
                     Mud.DatabaseLock.ReleaseMutex();
                 }
 			}

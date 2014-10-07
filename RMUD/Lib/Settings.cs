@@ -16,7 +16,8 @@ namespace RMUD
 
         public String ProscriptionList = "proscriptions.txt";
         public int MaximumChatChannelLogSize = 1000;
-        public int HeartbeatInterval = 1000 * 10; //Heart beat every tend seconds.
+        public int HeartbeatInterval = 1000 * 10; //Heart beat every ten seconds.
+        public TimeSpan ClockAdvanceRate = TimeSpan.FromMinutes(1);
 
         public Dictionary<int, String> RankNames;
 

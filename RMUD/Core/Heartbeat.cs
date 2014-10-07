@@ -12,6 +12,7 @@ namespace RMUD
         internal static List<MudObject> ObjectsRegisteredForHeartbeat = new List<MudObject>();
         internal static UInt64 HeartbeatID = 0;
         internal static DateTime TimeOfLastHeartbeat = DateTime.Now;
+        internal static DateTime TimeOfDay = DateTime.Parse("03/15/2015 11:15:00 -5:00");
 		
         public static void RegisterForHeartbeat(MudObject Object)
         {
@@ -34,6 +35,8 @@ namespace RMUD
             var timeSinceLastBeat = now - TimeOfLastHeartbeat;
             if (timeSinceLastBeat.TotalMilliseconds >= Mud.SettingsObject.HeartbeatInterval)
             {
+                TimeOfDay += Mud.SettingsObject.ClockAdvanceRate;
+
                 TimeOfLastHeartbeat = now;
                 HeartbeatID += 1;
 
