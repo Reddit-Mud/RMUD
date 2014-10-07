@@ -41,9 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clients\Account.cs" />
     <Compile Include="Commands\Unlock.cs" />
     <Compile Include="Commands\LookUnderOrBehind.cs" />
     <Compile Include="Commands\Close.cs" />
+    <Compile Include="Core\Accounts.cs" />
     <Compile Include="Core\FindLocale.cs" />
     <Compile Include="Core\Heartbeat.cs" />
     <Compile Include="Core\MarkForUpdate.cs" />
@@ -95,9 +97,9 @@
     <None Include="database\static\palantine\dark_room.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="database\static\palantine\antechamber.cs">
+    <None Include="database\static\palantine\antechamber.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <Compile Include="Core\EnumerateObjects.cs" />
     <Compile Include="Lib\GenericContainer.cs" />
     <Compile Include="Lib\NounList.cs" />
@@ -120,9 +122,9 @@
     <None Include="database\static\palantine\library.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="database\static\palantine\disambig.cs">
+    <None Include="database\static\palantine\disambig.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <None Include="database\static\settings.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

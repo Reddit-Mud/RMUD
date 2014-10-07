@@ -16,8 +16,20 @@ namespace RMUD.Commands
 
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			if (Actor.ConnectedClient != null)
-				Mud.SendMessage(Actor, Message);
+            if (Actor == null)
+            {
+                if (Match.Arguments.ContainsKey("CLIENT"))
+                {
+                    var client = Match.Arguments["CLIENT"] as Client;
+                    if (client != null)
+                        Mud.SendMessage(client, Message);
+                }
+            }
+            else
+            {
+                if (Actor.ConnectedClient != null)
+                    Mud.SendMessage(Actor, Message);
+            }
 		}
 	}
 }

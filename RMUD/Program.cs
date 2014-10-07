@@ -80,7 +80,6 @@ namespace RMUD
                         Console.WriteLine(Object.ToString());
                     Mud.DatabaseLock.ReleaseMutex();
                 }
-
 			}
 
 			telnetListener.Shutdown();

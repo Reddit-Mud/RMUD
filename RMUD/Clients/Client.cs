@@ -13,6 +13,7 @@ namespace RMUD
         public virtual String IPString { get { throw new NotImplementedException(); } }
 
         public bool IsLoggedOn { get { return Player != null; } }
+        public Account Account;
         public Actor Player;
         public int Rank = 0;
 		public ClientCommandHandler CommandHandler;

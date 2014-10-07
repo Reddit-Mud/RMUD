@@ -3,7 +3,7 @@
 	public override void Initialize()
 	{
 		Banner = "~~== REDDIT MUD ==~~\r\n";
-		MessageOfTheDay = "Prototype by Blecki\r\nFor now, just type 'login [name]'. You'll enter the world and be given wizard powers. Neat!\r\n";
+		MessageOfTheDay = "register username password - Create a new account.\r\nlogin username password - Log into an existing account.";
         NewPlayerStartRoom = "palantine/antechamber";
 	}
 }
