@@ -28,9 +28,9 @@ public class Jupiter : RMUD.Scenery, RMUD.EmitsLight
         RMUD.Mud.RegisterForHeartbeat(this);
     }
 
-    public bool EmitsLight
+    public RMUD.LightingLevel EmitsLight
     {
-        get { return true; }
+        get { return RMUD.LightingLevel.Bright; }
     }
 
     public override void Heartbeat(ulong HeartbeatID)

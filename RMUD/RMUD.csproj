@@ -52,6 +52,7 @@
     <Compile Include="Core\CommandQueue.cs" />
     <Compile Include="Core\ObjectContainsObject.cs" />
     <Compile Include="Core\PendingMessages.cs" />
+    <Compile Include="Core\Time.cs" />
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Parser\MatchContext.cs" />

@@ -129,27 +129,25 @@ namespace RMUD
 
         #endregion
 
-        public bool IsLit { get; private set; }
+        public LightingLevel AmbientLighting { get; private set; }
 
         private void UpdateLighting()
         {
-            IsLit = false;
+            AmbientLighting = LightingLevel.Dark;
 
             if (RoomType == RMUD.RoomType.Exterior)
             {
-                IsLit = true;
-                //Query day/night system to see if there is light
+                AmbientLighting = Mud.AmbientExteriorLightingLevel;
             }
             else
             {
                 Mud.EnumerateObjects(this, (t,l) =>
                 {
                     if (t is EmitsLight)
-                        if ((t as EmitsLight).EmitsLight)
-                        {
-                            IsLit = true;
-                            return EnumerateObjectsControl.Stop;
-                        }
+                    {
+                        var lightingLevel = (t as EmitsLight).EmitsLight;
+                        if (lightingLevel > AmbientLighting) AmbientLighting = lightingLevel;
+                    }
                     return EnumerateObjectsControl.Continue;
                 });
             }

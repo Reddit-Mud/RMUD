@@ -7,6 +7,6 @@ namespace RMUD
 {
     public interface EmitsLight
 	{
-        bool EmitsLight { get; }
+        LightingLevel EmitsLight { get; }
 	}
 }

@@ -42,7 +42,7 @@ namespace RMUD.Commands
             builder.Append(location.Short);
             builder.Append("\r\n");
 
-            if (!location.IsLit)
+            if (location.AmbientLighting <= LightingLevel.Dark)
             {
                 builder.Append("It is too dark to see.\r\n\r\n");
                 return builder.ToString();

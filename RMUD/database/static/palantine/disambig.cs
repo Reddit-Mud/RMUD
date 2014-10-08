@@ -25,8 +25,8 @@ public class torch : RMUD.MudObject, RMUD.EmitsLight
         Nouns.Add("torch");
     }
 
-    bool RMUD.EmitsLight.EmitsLight
+    RMUD.LightingLevel RMUD.EmitsLight.EmitsLight
     {
-        get { return true; }
+        get { return RMUD.LightingLevel.Bright; }
     }
 }
