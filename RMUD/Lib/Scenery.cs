@@ -7,6 +7,10 @@ namespace RMUD
 {
 	public class Scenery : MudObject, TakeRules
 	{
+        public Scenery() { }
+
+        public Scenery(String Short, String Long) : base(Short, Long) { }
+
 		CheckRule TakeRules.Check(Actor Actor)
 		{
 			return CheckRule.Disallow("That's a terrible idea.");

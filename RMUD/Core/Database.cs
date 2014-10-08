@@ -17,6 +17,11 @@ namespace RMUD
         {
             StaticPath = basePath + "static/";
         }
+
+        internal static String GetObjectRealPath(String Path)
+        {
+            return StaticPath + Path + ".cs";
+        }
 		
         internal static void EnumerateDatabase(String DirectoryPath, bool Recursive, Action<String> OnFile)
         {
@@ -79,6 +84,50 @@ namespace RMUD
 			}
 		}
 
+        public static String LoadSourceFile(String Path, Action<String> ReportErrors, List<String> FilesLoaded)
+        {
+            Path = Path.Replace('\\', '/');
+
+            if (!System.IO.File.Exists(Path))
+            {
+                LogError(String.Format("Could not find {0}", Path));
+                if (ReportErrors != null) ReportErrors("Could not find " + Path);
+                return "";
+            }
+
+            if (FilesLoaded.Contains(Path))
+            {
+                LogError(String.Format("Circular reference detected in {0}", Path));
+                if (ReportErrors != null) ReportErrors(String.Format("Circular reference detected in {0}", Path));
+                return "";
+            }
+
+            FilesLoaded.Add(Path);
+
+            var rawSource = new StringBuilder();
+
+            var file = System.IO.File.OpenText(Path);
+            while (!file.EndOfStream)
+            {
+                var line = file.ReadLine();
+                if (line.StartsWith("//import"))
+                {
+                    var splitAt = line.IndexOf(' ');
+                    if (splitAt < 0) continue;
+                    var importedFilename = line.Substring(splitAt + 1);
+                    rawSource.Append(LoadSourceFile(GetObjectRealPath(importedFilename), ReportErrors, FilesLoaded));
+                    rawSource.AppendLine();
+                }
+                else
+                {
+                    rawSource.Append(line);
+                    rawSource.AppendLine();
+                }
+            }
+
+            return rawSource.ToString();
+        }
+
 		public static Assembly CompileScript(String Path, Action<String> ReportErrors)
 		{
             var start = DateTime.Now;
@@ -91,15 +140,15 @@ namespace RMUD
 				return null;
 			}
 
-			var source = "using System;\r\nusing System.Collections.Generic;\r\nusing RMUD;\r\n" + System.IO.File.ReadAllText(Path);
+            CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
 
-			CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
+            var parameters = new CompilerParameters();
+            parameters.GenerateInMemory = true;
+            parameters.GenerateExecutable = false;
+            parameters.ReferencedAssemblies.Add("RMUD.exe");
 
-			var parameters = new CompilerParameters();
-			parameters.GenerateInMemory = true;
-			parameters.GenerateExecutable = false;
-			//parameters.OutputAssembly = Guid.NewGuid().ToString();
-			parameters.ReferencedAssemblies.Add("RMUD.exe");
+            var source = "using System;\r\nusing System.Collections.Generic;\r\nusing RMUD;\r\n" + LoadSourceFile(Path, ReportErrors, new List<string>());
+            			
 			CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, source);
 			if (compilationResults.Errors.Count > 0)
 			{
