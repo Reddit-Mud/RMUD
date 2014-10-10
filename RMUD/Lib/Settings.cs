@@ -14,6 +14,12 @@ namespace RMUD
 
         public int AllowedCommandRate = 100; //How many milliseconds to allow between commands - default is to not limit very much.
 
+        //How many milliseconds should a command be allowed to run before it is aborted?
+        //Aborting a player's command is always reported as a critical error, however this
+        //  helps guard against infinite loops in the database source that could lock up
+        //  the server.
+        public int CommandTimeOut = 10000; 
+
         public String ProscriptionList = "proscriptions.txt";
         public int MaximumChatChannelLogSize = 1000;
         public int HeartbeatInterval = 1000 * 10; //Heart beat every ten seconds.

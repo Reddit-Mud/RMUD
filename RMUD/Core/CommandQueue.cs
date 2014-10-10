@@ -18,6 +18,10 @@ namespace RMUD
         private static Mutex PendingCommandLock = new Mutex();
         private static LinkedList<PendingCommand> PendingCommands = new LinkedList<PendingCommand>();
         private static Thread CommandExecutionThread;
+        private static Thread IndividualCommandThread;
+        private static AutoResetEvent CommandReadyHandle = new AutoResetEvent(false);
+        private static AutoResetEvent CommandFinishedHandle = new AutoResetEvent(false);
+        private static PendingCommand NextCommand;
 
         internal static ParserCommandHandler ParserCommandHandler;
         public static CommandParser Parser { get { return ParserCommandHandler.Parser; } }
@@ -38,19 +42,53 @@ namespace RMUD
             CommandExecutionThread = new Thread(ProcessCommands);
             CommandExecutionThread.Start();
         }
-                
-        private static void ProcessCommands()
+
+        private static void ProcessIndividualCommand()
         {
             while (!ShuttingDown)
             {
+                CommandReadyHandle.WaitOne();
+
+                try
+                {
+                    NextCommand.Client.TimeOfLastCommand = DateTime.Now;
+                    NextCommand.Client.CommandHandler.HandleCommand(NextCommand.Client, NextCommand.RawCommand);
+                }
+                catch (System.Threading.ThreadAbortException e)
+                {
+                    LogError("Command worker thread was aborted. Timeout hit?");
+                    ClearPendingMessages();
+                }
+                catch (Exception e)
+                {
+                    LogCommandError(e);
+                    ClearPendingMessages();
+                }
+
+                NextCommand = null;
+
+                CommandFinishedHandle.Set();
+            }
+        }
+                
+        private static void ProcessCommands()
+        {
+            IndividualCommandThread = new Thread(ProcessIndividualCommand);
+            IndividualCommandThread.Start();
+
+            while (!ShuttingDown)
+            {
                 System.Threading.Thread.Sleep(10);
+                DatabaseLock.WaitOne();
                 Heartbeat();
+                DatabaseLock.ReleaseMutex();
 
                 while (PendingCommands.Count > 0)
                 {
                     PendingCommand PendingCommand = null;
 
                     PendingCommandLock.WaitOne();
+
                     try
                     {
                         PendingCommand = PendingCommands.FirstOrDefault(pc => (DateTime.Now - pc.Client.TimeOfLastCommand).TotalMilliseconds > SettingsObject.AllowedCommandRate);
@@ -62,25 +100,29 @@ namespace RMUD
                         LogCommandError(e);
                         PendingCommand = null;
                     }
+
                     PendingCommandLock.ReleaseMutex();
 
                     if (PendingCommand != null)
                     {
                         DatabaseLock.WaitOne();
 
-                        try
+                        NextCommand = PendingCommand;
+                        CommandReadyHandle.Set(); //Signal worker thread to proceed.
+                        if (CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
                         {
-                            PendingCommand.Client.TimeOfLastCommand = DateTime.Now;
-                            PendingCommand.Client.CommandHandler.HandleCommand(PendingCommand.Client, PendingCommand.RawCommand);
                             UpdateMarkedObjects();
                             SendPendingMessages();
                         }
-                        catch (Exception e)
+                        else
                         {
-                            LogCommandError(e);
-                            ClearPendingMessages();
+                            IndividualCommandThread.Abort();
+                            PendingCommand.Client.Send("Command timeout.\r\n");
+                            Mud.LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
+                            IndividualCommandThread = new Thread(ProcessIndividualCommand);
+                            IndividualCommandThread.Start();
                         }
-
+                                                
                         DatabaseLock.ReleaseMutex();
                     }
                 }

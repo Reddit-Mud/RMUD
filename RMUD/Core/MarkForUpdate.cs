@@ -13,11 +13,9 @@ namespace RMUD
 		
         public static void MarkLocaleForUpdate(MudObject Object)
         {
-            DatabaseLock.WaitOne();
             MudObject locale = FindLocale(Object);
             if (locale != null && !MarkedObjects.Contains(locale))
                 MarkedObjects.Add(locale);
-            DatabaseLock.ReleaseMutex();
         }
 
         internal static void UpdateMarkedObjects()

@@ -132,7 +132,7 @@ namespace RMUD
         public LightingLevel AmbientLighting { get; private set; }
 
         private void UpdateLighting()
-        {
+        {           
             AmbientLighting = LightingLevel.Dark;
 
             if (RoomType == RMUD.RoomType.Exterior)

@@ -11,15 +11,12 @@ namespace RMUD
     {
         public static void SendMessage(Actor Actor, String Message)
         {
-            DatabaseLock.WaitOne();
             if (Actor != null && Actor.ConnectedClient != null)
                 PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, Message));
-            DatabaseLock.ReleaseMutex();
         }
 
         public static void SendLocaleMessage(MudObject Object, String Message)
         {
-            DatabaseLock.WaitOne();
             var container = Mud.FindLocale(Object) as Container;
             if (container != null)
             {
@@ -30,7 +27,6 @@ namespace RMUD
                     return EnumerateObjectsControl.Continue;
                 });
             }
-            DatabaseLock.ReleaseMutex();
         }
 
         public static void SendExternalMessage(Actor Actor, String Message)
@@ -39,7 +35,6 @@ namespace RMUD
             var location = Actor.Location as Room;
             if (location == null) return;
 
-            DatabaseLock.WaitOne();
             location.EnumerateObjects(RelativeLocations.Contents, (o, l) =>
                 {
                     var other = o as Actor;
@@ -49,25 +44,20 @@ namespace RMUD
                     PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Message));
                     return EnumerateObjectsControl.Continue;
                 });
-            DatabaseLock.ReleaseMutex();
         }
 
         public static void SendMessage(Client Client, String Message)
         {
-            DatabaseLock.WaitOne();
             PendingMessages.Add(new RawPendingMessage(Client, Message));
-            DatabaseLock.ReleaseMutex();
         }
 
         public static void SendGlobalMessage(String Message)
         {
-            DatabaseLock.WaitOne();
             foreach (var client in ConnectedClients)
             {
                 if (client.IsLoggedOn)
                     PendingMessages.Add(new RawPendingMessage(client, Message));
             }
-            DatabaseLock.ReleaseMutex();
         }
     }
 }

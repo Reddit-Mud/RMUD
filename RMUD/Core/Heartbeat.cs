@@ -16,17 +16,13 @@ namespace RMUD
 		
         public static void RegisterForHeartbeat(MudObject Object)
         {
-            DatabaseLock.WaitOne();
             if (!ObjectsRegisteredForHeartbeat.Contains(Object))
                 ObjectsRegisteredForHeartbeat.Add(Object);
-            DatabaseLock.ReleaseMutex();
         }
 
         public static void UnregisterForHeartbeat(MudObject Object)
         {
-            DatabaseLock.WaitOne();
             ObjectsRegisteredForHeartbeat.Remove(Object);
-            DatabaseLock.ReleaseMutex();
         }
 
         internal static void Heartbeat()
@@ -40,7 +36,6 @@ namespace RMUD
                 TimeOfLastHeartbeat = now;
                 HeartbeatID += 1;
 
-                DatabaseLock.WaitOne();
                 for (int i = 0; i < ObjectsRegisteredForHeartbeat.Count; )
                 {
                     var Object = ObjectsRegisteredForHeartbeat[i];
@@ -55,7 +50,6 @@ namespace RMUD
                 }
 
                 Mud.SendPendingMessages();
-                DatabaseLock.ReleaseMutex();
             }
         }
     }
