@@ -18,5 +18,13 @@ namespace RMUD
         public int Rank = 0;
 		public ClientCommandHandler CommandHandler;
         public DateTime TimeOfLastCommand = DateTime.Now;
+
+        public bool IsAfk
+        {
+            get
+            {
+                return (DateTime.Now - TimeOfLastCommand) > TimeSpan.FromMilliseconds(Mud.SettingsObject.AFKTime);
+            }
+        }
     }
 }

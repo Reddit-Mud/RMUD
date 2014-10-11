@@ -34,6 +34,12 @@ namespace RMUD.Commands
                     client.Player.Short,
                     client.ConnectionDescription));
 
+                if (client.IsAfk)
+                {
+                    builder.Append(" afk: ");
+                    builder.Append(client.Account.AFKMessage);
+                }
+
                 if (client.Player.Location != null)
                 {
                     builder.Append(" -- ");

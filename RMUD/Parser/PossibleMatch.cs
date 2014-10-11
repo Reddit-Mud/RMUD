@@ -35,5 +35,12 @@ namespace RMUD
             r.Arguments.Upsert(ArgumentName, Value);
             return r;
         }
+
+        public PossibleMatch EndWith(String ArgumentName, Object Value)
+        {
+            var r = new PossibleMatch(Arguments, null);
+            r.Arguments.Upsert(ArgumentName, Value);
+            return r;
+        }
     }
 }

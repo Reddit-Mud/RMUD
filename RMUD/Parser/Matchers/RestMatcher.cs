@@ -18,7 +18,7 @@ namespace RMUD
         {
             var r = new List<PossibleMatch>();
             if (State.Next != null)
-                r.Add(State.AdvanceWith(ArgumentName, State.Next));
+                r.Add(State.EndWith(ArgumentName, State.Next));
 			return r;
         }
 

@@ -47,7 +47,11 @@ namespace RMUD.Commands
             if (player.ConnectedClient != null)
                 Mud.SendMessage(player, String.Format(speechBuilder.ToString(), ""));
             if (Actor.ConnectedClient != null)
+            {
                 Mud.SendMessage(Actor, String.Format(speechBuilder.ToString(), " to " + player.Short));
+                if (player.ConnectedClient != null && player.ConnectedClient.IsAfk)
+                    Mud.SendMessage(Actor, String.Format("[{0} is AFK: {1}]", player.Short, player.ConnectedClient.Account.AFKMessage));
+            }
         }        
 	}
 }
