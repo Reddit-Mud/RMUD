@@ -36,14 +36,15 @@ namespace RMUD
 
         public static void SendChatMessage(ChatChannel Channel, String Message)
         {
-            Channel.ChatHistory.Add(new ChatMessage { Time = DateTime.Now, Message = Message });
+            var messageTime = DateTime.Now;
+            Channel.ChatHistory.Add(new ChatMessage { Time = messageTime, Message = Message });
             if (Channel.ChatHistory.Count > Mud.SettingsObject.MaximumChatChannelLogSize)
                 Channel.ChatHistory.RemoveAt(0);
 
             foreach (var client in Channel.Subscribers)
             {
                 if (client.IsLoggedOn)
-                    Mud.SendMessage(client, Message);
+                    Mud.SendMessage(client, String.Format("{0} {1}", messageTime, Message));
             }
         }
 

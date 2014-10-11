@@ -45,7 +45,12 @@ namespace RMUD.Commands
 
             var player = Match.Arguments["PLAYER"] as Actor;
             if (player.ConnectedClient != null)
-                Mud.SendMessage(player, String.Format(speechBuilder.ToString(), ""));
+            {
+                if (player.ConnectedClient.IsAfk)
+                    Mud.SendMessage(player, String.Format("{1} " + speechBuilder.ToString(), "", DateTime.Now));
+                else
+                    Mud.SendMessage(player, String.Format(speechBuilder.ToString(), ""));
+            }
             if (Actor.ConnectedClient != null)
             {
                 Mud.SendMessage(Actor, String.Format(speechBuilder.ToString(), " to " + player.Short));
