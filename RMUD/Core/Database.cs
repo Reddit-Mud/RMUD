@@ -28,7 +28,7 @@ namespace RMUD
             var path = StaticPath + DirectoryPath;
             foreach (var file in System.IO.Directory.EnumerateFiles(path))
                 if (System.IO.Path.GetExtension(file) == ".cs") 
-                    OnFile(file.Substring(StaticPath.Length, file.Length - StaticPath.Length - 3));
+                    OnFile(file.Substring(StaticPath.Length, file.Length - StaticPath.Length - 3).Replace("\\", "/"));
             if (Recursive)
             {
                 foreach (var directory in System.IO.Directory.EnumerateDirectories(path))
@@ -36,23 +36,74 @@ namespace RMUD
             }
         }
 
+        internal static void BulkCompile(String DirectoryPath, bool Recursive, Action<String> ReportErrors)
+        {
+            if (NamedObjects.Count != 1) //That is, if anything besides Settings has been loaded...
+                throw new InvalidOperationException("Bulk compilation must happen before any other objects are loaded or bad things happen.");
+
+            var source = new StringBuilder();
+            source.Append("using System;\nusing System.Collections.Generic;\nusing RMUD;\nnamespace database {\n");
+            int namespaceCount = 0;
+            EnumerateDatabase(DirectoryPath, Recursive, (s) =>
+            {
+                source.AppendFormat("namespace __{0} {{\n", namespaceCount);
+                namespaceCount += 1;
+                source.Append(LoadSourceFile(StaticPath + s + ".cs", ReportErrors, null));
+                source.Append("\n}\n\n");
+            });
+            source.Append("}\n");
+
+            //System.IO.File.WriteAllText("dump.txt", source.ToString());
+
+            var combinedAssembly = CompileCode(source.ToString(), DirectoryPath + "/*", ReportErrors);
+
+            if (combinedAssembly != null)
+            {
+                namespaceCount = 0;
+                EnumerateDatabase(DirectoryPath, Recursive, (s) =>
+                    {
+                        var qualifiedName = String.Format("database.__{0}.{1}", namespaceCount, System.IO.Path.GetFileNameWithoutExtension(s));
+                        namespaceCount += 1;
+                        var newObject = combinedAssembly.CreateInstance(qualifiedName) as MudObject;
+                        if (newObject == null)
+                        {
+                            ReportErrors(String.Format("Type {0} not found in combined assembly.", qualifiedName));
+                            return;
+                        }
+
+                        newObject.Path = s;
+                        newObject.State = ObjectState.Unitialized;
+
+                        NamedObjects.Upsert(s, newObject);
+                    });
+            }
+        }
+
         public static MudObject GetObject(String Path, Action<String> ReportErrors = null)
         {
             Path = Path.Replace('\\', '/');
-            if (NamedObjects.ContainsKey(Path)) return NamedObjects[Path];
-			
-			var result = LoadObject(Path, ReportErrors);
-			if (result != null)
-			{
-				NamedObjects.Upsert(Path, result);
-                result.Initialize();
-                result.State = ObjectState.Alive;
-                result.HandleMarkedUpdate();
+
+            MudObject r = null;
+            
+            if (NamedObjects.ContainsKey(Path)) 
+                r = NamedObjects[Path];
+            else 
+            {
+                r = LoadObject(Path, ReportErrors);
+                if (r != null) NamedObjects.Upsert(Path, r);
+            }
+
+            if (r != null && r.State == ObjectState.Unitialized)
+            {
+                r.Initialize();
+                r.State = ObjectState.Alive;
+                r.HandleMarkedUpdate();
 			}
-			return result;
+
+			return r;
         }
 
-		public static MudObject GetOrCreateInstance(String Path, String InstanceName, Action<String> ReportErrors = null)
+        public static MudObject GetOrCreateInstance(String Path, String InstanceName, Action<String> ReportErrors = null)
 		{
             Path = Path.Replace('\\', '/');
 			var baseObject = GetObject(Path, ReportErrors);
@@ -95,10 +146,11 @@ namespace RMUD
                 return "";
             }
 
-            if (FilesLoaded.Contains(Path))
+            if (FilesLoaded == null) FilesLoaded = new List<string>();
+            else if (FilesLoaded.Contains(Path))
             {
-                LogError(String.Format("Circular reference detected in {0}", Path));
-                if (ReportErrors != null) ReportErrors(String.Format("Circular reference detected in {0}", Path));
+                //LogError(String.Format("Circular reference detected in {0}", Path));
+                //if (ReportErrors != null) ReportErrors(String.Format("Circular reference detected in {0}", Path));
                 return "";
             }
 
@@ -128,6 +180,34 @@ namespace RMUD
             return rawSource.ToString();
         }
 
+        public static Assembly CompileCode(String Source, String ErrorPath, Action<String> ReportErrors)
+        {
+            CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
+
+            var parameters = new CompilerParameters();
+            parameters.GenerateInMemory = true;
+            parameters.GenerateExecutable = false;
+            parameters.ReferencedAssemblies.Add("RMUD.exe");
+
+            CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, Source);
+            if (compilationResults.Errors.Count > 0)
+            {
+                var errorString = new StringBuilder();
+                errorString.AppendLine(String.Format("{0} errors in {1}", compilationResults.Errors.Count, ErrorPath));
+
+                foreach (var error in compilationResults.Errors)
+                {
+                    if (ReportErrors != null) ReportErrors(error.ToString());
+                    errorString.Append(error.ToString());
+                    errorString.AppendLine();
+                }
+                LogError(errorString.ToString());
+                return null;
+            }
+
+            return compilationResults.CompiledAssembly;
+        }
+
 		public static Assembly CompileScript(String Path, Action<String> ReportErrors)
 		{
             var start = DateTime.Now;
@@ -140,33 +220,13 @@ namespace RMUD
 				return null;
 			}
 
-            CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
-
-            var parameters = new CompilerParameters();
-            parameters.GenerateInMemory = true;
-            parameters.GenerateExecutable = false;
-            parameters.ReferencedAssemblies.Add("RMUD.exe");
-
             var source = "using System;\r\nusing System.Collections.Generic;\r\nusing RMUD;\r\n" + LoadSourceFile(Path, ReportErrors, new List<string>());
-            			
-			CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, source);
-			if (compilationResults.Errors.Count > 0)
-			{
-                var errorString = new StringBuilder();
-                errorString.AppendLine(String.Format("{0} errors in {1}", compilationResults.Errors.Count, Path));
 
-				foreach (var error in compilationResults.Errors)
-				{
-					if (ReportErrors != null) ReportErrors(error.ToString());
-                    errorString.Append(error.ToString());
-                    errorString.AppendLine();
-				}
-		        LogError(errorString.ToString());
-				return null;
-			}
+            var assembly = CompileCode(source, Path, ReportErrors);
 
             LogError(String.Format("Compiled {0} in {1} milliseconds.", Path, (DateTime.Now - start).TotalMilliseconds));
-			return compilationResults.CompiledAssembly;
+
+			return assembly;
 		}
 
         private static MudObject LoadObject(String Path, Action<String> ReportErrors)

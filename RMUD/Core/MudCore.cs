@@ -76,19 +76,18 @@ namespace RMUD
 
                 if (settings.UpfrontCompilation)
                 {
-                    var databaseObjectFiles = new List<String>();
-                    EnumerateDatabase("", true, s => databaseObjectFiles.Add(s));
+                    Console.WriteLine("Bulk compilation enabled.");
 
-                    Console.WriteLine("Found {0} database objects to load.", databaseObjectFiles.Count);
                     var start = DateTime.Now;
-                    foreach (var objectFile in databaseObjectFiles)
-                    {
-                        GetObject(objectFile);
-                    }
+                    var errorReported = false;
+                    BulkCompile("", true, (s) => {
+                        LogError(s);
+                        errorReported = true;
+                    });
 
-                    UpdateMarkedObjects();
-
-                    Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
+                    if (errorReported) Console.WriteLine("Bulk compilation failed. Using ad-hoc compilation as fallback.");
+                    else 
+                        Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
                 }
 
                 Console.WriteLine("Engine ready with path " + basePath + ".");
