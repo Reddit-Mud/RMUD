@@ -1,0 +1,80 @@
+﻿public class sonar : RMUD.MudObject
+{
+    private static int MapWidth = 25;
+    private static int MapHeight = 25;
+    
+    public override void Initialize()
+    {
+        Short = "devine sonar device";
+        Nouns.Add("devine", "sonar", "device", "map");
+
+        Long = new RMUD.DescriptiveText((actor, owner) =>
+        {
+            var builder = new System.Text.StringBuilder();
+            builder.Append("As you gaze into the depths of the devine sonar device, a map forms in your mind...\r\n\r\n");
+
+            var mapGrid = new int[MapWidth, MapHeight];
+            for (int y = 0; y < MapHeight; ++y)
+                for (int x = 0; x < MapWidth; ++x)
+                    mapGrid[x,y] = ' ';
+
+            if (actor.Location is RMUD.Room) MapLocation(mapGrid, (MapWidth / 2), (MapHeight / 2), actor.Location as RMUD.Room, '@');
+
+            for (int y = 0; y < MapHeight; ++y)
+            {
+                for (int x = 0; x < MapWidth; ++x)
+                    builder.Append((char)mapGrid[x, y]);
+                builder.Append("\r\n");
+            }
+
+            return builder.ToString();
+        });
+    }
+
+    private static void MapLocation(int[,] MapGrid, int X, int Y, RMUD.Room Location, int Symbol)
+    {
+        if (X < 1 || X >= MapWidth - 1 || Y < 1 || Y >= MapHeight - 1) return;
+
+        if (MapGrid[X, Y] != ' ') return;
+        if (Symbol == ' ') Symbol = Location.Short.ToUpper()[0];
+        MapGrid[X, Y] = Symbol;
+
+        foreach (var link in Location.Links)
+        {
+            var destination = RMUD.Mud.GetObject(link.Destination) as RMUD.Room;
+            var directionVector = RMUD.Link.GetAsVector(link.Direction);
+            PlaceEdge(MapGrid, X + directionVector.X, Y + directionVector.Y, link.Direction);
+
+            if (destination.RoomType == Location.RoomType)
+                MapLocation(MapGrid, X + (directionVector.X * 3), Y + (directionVector.Y * 3), destination, ' ');
+        }
+    }
+
+    private static void PlaceEdge(int[,] MapGrid, int X, int Y, RMUD.Direction Direction)
+    {
+        if (X < 1 || X >= MapWidth - 1 || Y < 1 || Y >= MapHeight - 1) return;
+
+        switch (Direction)
+        {
+            case RMUD.Direction.NORTH:
+            case RMUD.Direction.SOUTH:
+                MapGrid[X, Y] = '|';
+                break;
+            case RMUD.Direction.EAST:
+            case RMUD.Direction.WEST:
+                MapGrid[X, Y] = '-';
+                break;
+            case RMUD.Direction.NORTHEAST:
+            case RMUD.Direction.SOUTHWEST:
+                MapGrid[X, Y] = '/';
+                break;
+            case RMUD.Direction.NORTHWEST:
+            case RMUD.Direction.SOUTHEAST:
+                MapGrid[X, Y] = '\\';
+                break;
+            default:
+                MapGrid[X, Y] = '*';
+                break;
+        }
+    }
+}

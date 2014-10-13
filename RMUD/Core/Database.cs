@@ -180,6 +180,16 @@ namespace RMUD
             return rawSource.ToString();
         }
 
+        public static String LoadRawSourceFile(String Path)
+        {
+            Path = Path.Replace('\\', '/');
+            if (Path.Contains("..")) return "Backtrack path entries are not permitted.";
+            var realPath = StaticPath + Path + ".cs";
+
+            if (!System.IO.File.Exists(realPath)) return "File not found.";
+            return System.IO.File.ReadAllText(realPath);
+        }
+
         public static Assembly CompileCode(String Source, String ErrorPath, Action<String> ReportErrors)
         {
             CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");

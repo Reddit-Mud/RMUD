@@ -31,6 +31,14 @@ namespace RMUD
 		public String Destination;
 		public Portal Portal;
 
+        public struct DirectionVector
+        {
+            public int X;
+            public int Y;
+
+            public DirectionVector(int X, int Y) { this.X = X; this.Y = Y; }
+        }
+
         public override string ToString()
         {
             return Direction + " to " + Destination + (Portal == null ? "" : (" through " + Portal));
@@ -70,6 +78,30 @@ namespace RMUD
 		{
 			return Cardinal.ToString().ToLower();
 		}
+
+        public static DirectionVector GetAsVector(Direction D)
+        {
+            switch (D)
+            {
+                case Direction.NORTH: return new DirectionVector(0, -1);
+                case Direction.NORTHEAST: return new DirectionVector(1, -1);
+                case Direction.EAST: return new DirectionVector(1,0);
+                case Direction.SOUTHEAST: return new DirectionVector(1,1);
+                case Direction.SOUTH: return new DirectionVector(0, 1);
+                case Direction.SOUTHWEST: return new DirectionVector(-1,1);
+                case Direction.WEST: return new DirectionVector(-1,0);
+                case Direction.NORTHWEST: return new DirectionVector(-1, -1);
+                case Direction.UP:
+                case Direction.DOWN:
+                case Direction.IN:
+                case Direction.OUT:
+                case Direction.PORT:
+                case Direction.STARBOARD:
+                case Direction.FORE:
+                case Direction.AFT:
+                default: return new DirectionVector(0, 0);
+            }
+        }
 
 		public static Direction Opposite(Direction Of)
 		{

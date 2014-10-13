@@ -13,10 +13,8 @@ namespace RMUD
 
 	public struct DescriptiveText
 	{
-		public delegate String TextGenerationDelegate(Actor Viewer, MudObject Owner);
-
 		private readonly String RawText;
-		private readonly TextGenerationDelegate LambdaText;
+		private readonly Func<Actor,MudObject, String> LambdaText;
 		private readonly DescriptiveTextType TextType;
 
         public override string ToString()
@@ -32,7 +30,7 @@ namespace RMUD
 			this.TextType = DescriptiveTextType.TaggedText;
 		}
 
-		public DescriptiveText(TextGenerationDelegate LambdaText)
+		public DescriptiveText(Func<Actor, MudObject, String> LambdaText)
 		{
 			this.RawText = null;
 			this.LambdaText = LambdaText;
@@ -44,7 +42,7 @@ namespace RMUD
 			return new DescriptiveText(RawText);
 		}
 
-		public static implicit operator DescriptiveText(TextGenerationDelegate LambdaText)
+		public static implicit operator DescriptiveText(Func<Actor, MudObject, String> LambdaText)
 		{
 			return new DescriptiveText(LambdaText);
 		}
