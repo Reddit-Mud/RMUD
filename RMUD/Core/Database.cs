@@ -57,7 +57,7 @@ namespace RMUD
             Path = Path.Replace('\\', '/');
 			var baseObject = GetObject(Path, ReportErrors);
 
-			//We can't make an instance of noMudObject; this means that the base object has an error of some kind.
+			//We can't make an instance of nothing; this means that the base object has an error of some kind.
 			if (baseObject == null) return null;
 
 			//Create the new instance of the same class as the base type.

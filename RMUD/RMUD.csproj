@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Commands\Afk.cs" />
+    <Compile Include="Commands\Instance.cs" />
     <Compile Include="Commands\Sleep.cs" />
     <Compile Include="Commands\Unlock.cs" />
     <Compile Include="Commands\LookUnderOrBehind.cs" />
