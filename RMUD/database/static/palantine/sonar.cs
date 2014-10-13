@@ -1,6 +1,6 @@
 ﻿public class sonar : RMUD.MudObject
 {
-    private static int MapWidth = 25;
+    private static int MapWidth = 50;
     private static int MapHeight = 25;
     
     public override void Initialize()
@@ -17,6 +17,23 @@
             for (int y = 0; y < MapHeight; ++y)
                 for (int x = 0; x < MapWidth; ++x)
                     mapGrid[x,y] = ' ';
+
+            for (int y = 1; y < MapHeight - 1; ++y)
+            {
+                mapGrid[0, y] = '|';
+                mapGrid[MapWidth - 1, y] = '|';
+            }
+
+            for (int x = 1; x < MapWidth - 1; ++x)
+            {
+                mapGrid[x, 0] = '-';
+                mapGrid[x, MapHeight - 1] = '-';
+            }
+
+            mapGrid[0, 0] = '+';
+            mapGrid[0, MapHeight - 1] = '+';
+            mapGrid[MapWidth - 1, 0] = '+';
+            mapGrid[MapWidth - 1, MapHeight - 1] = '+';
 
             if (actor.Location is RMUD.Room) MapLocation(mapGrid, (MapWidth / 2), (MapHeight / 2), actor.Location as RMUD.Room, '@');
 
@@ -36,7 +53,14 @@
         if (X < 1 || X >= MapWidth - 1 || Y < 1 || Y >= MapHeight - 1) return;
 
         if (MapGrid[X, Y] != ' ') return;
-        if (Symbol == ' ') Symbol = Location.Short.ToUpper()[0];
+        if (Symbol == ' ')
+        {
+            var spacer = Location.Short.LastIndexOf('-');
+            if (spacer > 0 && spacer < Location.Short.Length - 2)
+                Symbol = Location.Short.ToUpper()[spacer + 2];
+            else
+                Symbol = Location.Short.ToUpper()[0];
+        }
         MapGrid[X, Y] = Symbol;
 
         foreach (var link in Location.Links)
