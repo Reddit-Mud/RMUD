@@ -18,5 +18,8 @@ namespace RMUD
         /// This should factor in the time of day, and the phase of the moon if at night, to determine if there is adequate lighting for exterior rooms to be visible.
         /// </summary>
         public static LightingLevel AmbientExteriorLightingLevel { get { return LightingLevel.Bright; } }
+
+        public static bool IsDay { get { return true; } }
+        public static bool IsNight { get { return false; } }
     }
 }
