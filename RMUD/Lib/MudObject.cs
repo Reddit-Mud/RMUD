@@ -9,7 +9,7 @@ namespace RMUD
     {
         Unitialized,
         Alive,
-        Destroyed
+        Destroyed,
     }
 
 	public class MudObject

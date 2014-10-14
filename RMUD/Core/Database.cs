@@ -270,8 +270,9 @@ namespace RMUD
 			{
 				var existing = NamedObjects[Path];
 				var newObject = LoadObject(Path, ReportErrors);
-				if (newObject == null) return null;
+				if (newObject == null)  return null;
 
+                existing.State = ObjectState.Destroyed;
 				NamedObjects.Upsert(Path, newObject);
                 newObject.Initialize(); 
                 newObject.State = ObjectState.Alive;
@@ -314,7 +315,8 @@ namespace RMUD
             if (NamedObjects.ContainsKey(Path))
             {
                 var existing = NamedObjects[Path];
-
+                existing.State = ObjectState.Destroyed;
+                
                 var newObject = Activator.CreateInstance(existing.GetType()) as MudObject;
                 NamedObjects.Upsert(Path, newObject);
                 newObject.Initialize();
