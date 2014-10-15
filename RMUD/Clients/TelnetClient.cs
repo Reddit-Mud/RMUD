@@ -71,7 +71,7 @@ namespace RMUD
 				Console.WriteLine("Telnet client left gracefully : " + Socket.RemoteEndPoint.ToString());
 				Socket.Close();
                 Socket = null;
-                if (!WasRejected) Mud.ClientDisconnected(this);
+                //if (!WasRejected) Mud.ClientDisconnected(this);
 			}
         }
     }

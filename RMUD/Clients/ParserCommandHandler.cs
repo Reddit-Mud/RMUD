@@ -44,6 +44,17 @@ namespace RMUD
                     Command = Command.Substring("@TIME ".Length);
                     displayTime = true;
                 }
+                else if (Command.ToUpper().StartsWith("@DEBUG "))
+                {
+                    Command = Command.Substring("@DEBUG ".Length);
+                    if (Client.Rank < 500)
+                    {
+                        Mud.SendMessage(Client, "You do not have sufficient rank to use the debug command.\r\n");
+                        return;
+                    }
+
+                    Mud.CommandTimeoutEnabled = false;
+                }
                 else
                 {
                     Mud.SendMessage(Client, "I don't recognize that debugging command.");
@@ -61,7 +72,7 @@ namespace RMUD
 
                 if (matchedCommand == null)
                 {
-                    Mud.SendMessage(Client, String.Format("Matched noMudObject in {0:n0} milliseconds.\r\n",
+                    Mud.SendMessage(Client, String.Format("Matched nothing in {0:n0} milliseconds.\r\n",
                         (matchEndTime - startTime).TotalMilliseconds));
                 }
                 else

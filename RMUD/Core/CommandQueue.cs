@@ -23,6 +23,10 @@ namespace RMUD
         private static AutoResetEvent CommandFinishedHandle = new AutoResetEvent(false);
         private static PendingCommand NextCommand;
 
+        //The client command handler can set this flag when it wants the command timeout to be ignored.
+        public static bool CommandTimeoutEnabled = true;
+
+
         internal static ParserCommandHandler ParserCommandHandler;
         public static CommandParser Parser { get { return ParserCommandHandler.Parser; } }
         internal static LoginCommandHandler LoginCommandHandler;
@@ -108,6 +112,7 @@ namespace RMUD
                         DatabaseLock.WaitOne();
 
                         NextCommand = PendingCommand;
+                        CommandTimeoutEnabled = true;
                         CommandReadyHandle.Set(); //Signal worker thread to proceed.
                         if (CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
                         {
@@ -116,11 +121,22 @@ namespace RMUD
                         }
                         else
                         {
-                            IndividualCommandThread.Abort();
-                            PendingCommand.Client.Send("Command timeout.\r\n");
-                            Mud.LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
-                            IndividualCommandThread = new Thread(ProcessIndividualCommand);
-                            IndividualCommandThread.Start();
+                            if (!CommandTimeoutEnabled)
+                            {
+                                //Timeout is disabled, go ahead and wait for infinity.
+                                CommandFinishedHandle.WaitOne();
+                                UpdateMarkedObjects();
+                                SendPendingMessages();
+                            }
+                            else
+                            {
+                                //Kill the command processor thread.
+                                IndividualCommandThread.Abort();
+                                PendingCommand.Client.Send("Command timeout.\r\n");
+                                Mud.LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
+                                IndividualCommandThread = new Thread(ProcessIndividualCommand);
+                                IndividualCommandThread.Start();
+                            }
                         }
                                                 
                         DatabaseLock.ReleaseMutex();
