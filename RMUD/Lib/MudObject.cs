@@ -23,13 +23,13 @@ namespace RMUD
 			return Path == other;
 		}
 
-		public DTO GetDTO()
+		public Object GetDTO()
 		{
 			//Use the name 'Path@Instance' to fetch data from the dynamic database.
 			// If Instance is null or empty, the resulting name is 'Path@'. This is the
 			// name non-instanced objects can use to store data in the dynamic
 			// database.
-            return Mud.LoadDTO(Path + "@" + Instance);
+			return null;
 		}
 
 		public virtual void Initialize() { }

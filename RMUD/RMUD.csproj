@@ -52,7 +52,6 @@
     <Compile Include="Commands\Unlock.cs" />
     <Compile Include="Commands\LookUnderOrBehind.cs" />
     <Compile Include="Commands\Close.cs" />
-    <Compile Include="Core\Persistence.cs" />
     <Compile Include="Core\Accounts.cs" />
     <Compile Include="Core\FindLocale.cs" />
     <Compile Include="Core\Heartbeat.cs" />
