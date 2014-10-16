@@ -93,15 +93,35 @@ namespace RMUD
                             Mud.SettingsObject.ClockAdvanceRate);
                         Mud.DatabaseLock.ReleaseMutex();
                     }
+                    else if (command.ToUpper() == "SAVE")
+                    {
+                        Mud.DatabaseLock.WaitOne();
+                        Console.WriteLine("Saving named objects to file...");
+                        foreach(var data in Mud.NamedObjects){
+                            Console.WriteLine(data.Key);
+                            var dto = new DTO();
+                            var properties = (from x in data.Value.GetType().GetProperties() select x);
+                            dto.Data = properties.ToDictionary
+                            (
+                                x => x.Name, 
+                                x => (x.GetGetMethod().Invoke(data.Value, null) ?? "").ToString()
+                            );
+                            Mud.SaveDTO(data.Key, dto);
+                        }
+                        Console.WriteLine("Saved all named objects.");
+                    }
                 }
             }
             catch (Exception e) //Who knows what Mono might throw?
             {
-                while (true) { } //We still don't want to exit.
+                Console.WriteLine("ERROR:", e.Message, e.Source, e.StackTrace, e.Data);
+                //Infinite loop??? while (true) { } //We still don't want to exit.
             }
-
-            telnetListener.Shutdown();
-            Mud.Shutdown();
+            finally
+            {
+                telnetListener.Shutdown();
+                Mud.Shutdown();
+            }
         }
     }
 }
