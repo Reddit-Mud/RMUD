@@ -37,10 +37,10 @@ namespace RMUD
                     new KeyWord("REGISTER", false),
                     new FailIfNoMatches(
                         new SingleWord("USERNAME"),
-                        "You must supply a username."),
+                        "You must supply a username.\r\n"),
                     new FailIfNoMatches(
                         new SingleWord("PASSWORD"),
-                        "You must supply a password.")),
+                        "You must supply a password.\r\n")),
                 new CommandProcessorWrapper((Match, Actor) =>
                     {
                         var client = Match.Arguments["CLIENT"] as Client;
@@ -59,17 +59,17 @@ namespace RMUD
                         newAccount.LoggedInCharacter = newCharacter; //Hackity hack.
                         LoginCommandHandler.LogPlayerIn(client, newAccount);
                     }),
-                    "Create a new account.");
+                    "Create a new account.\r\n");
 
             Parser.AddCommand(
                 new Sequence(
                     new KeyWord("LOGIN", false),
                     new FailIfNoMatches(
                         new SingleWord("USERNAME"),
-                        "You must supply a username."),
+                        "You must supply a username.\r\n"),
                     new FailIfNoMatches(
                         new SingleWord("PASSWORD"),
-                        "You must supply a password.")),
+                        "You must supply a password.\r\n")),
                 new CommandProcessorWrapper((Match, Actor) =>
                 {
                     var client = Match.Arguments["CLIENT"] as Client;
@@ -85,7 +85,7 @@ namespace RMUD
 
                     LoginCommandHandler.LogPlayerIn(client, existingAccount);
                 }),
-				"Login to an existing account.");
+                "Login to an existing account.\r\n");
 		}
 
 		public void HandleCommand(Client Client, String Command)
@@ -99,7 +99,7 @@ namespace RMUD
                     matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], null);
                 }
                 else
-                    Mud.SendMessage(Client, "I do not understand.");
+                    Mud.SendMessage(Client, "I do not understand.\r\n");
 			}
 			catch (Exception e)
 			{

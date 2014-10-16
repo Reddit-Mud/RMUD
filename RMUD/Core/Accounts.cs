@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Security.Cryptography;
 
 namespace RMUD
 {
@@ -14,27 +15,42 @@ namespace RMUD
             return Accounts.FirstOrDefault(a => a.UserName == UserName);
         }
 
-        private static String HashPassword(String Password)
+        private static String HashPassword(String Password, String Salt)
         {
             var sha = System.Security.Cryptography.SHA512.Create();
-            var bytes = System.Text.Encoding.ASCII.GetBytes(Password);
+            var bytes = System.Text.Encoding.ASCII.GetBytes(Salt + Password);
             var hash = sha.ComputeHash(bytes);
             return System.Convert.ToBase64String(hash);
         }
 
+        public static string GenerateRandomSalt()
+        {
+            var bytes = new Byte[64];
+            var rng = new RNGCryptoServiceProvider();
+            rng.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
+        }
+
         public static bool VerifyAccount(Account Account, String Password)
         {
-            var saltedPassword = Password + Account.UserName + "SECURITAS";
-            var hashedPassword = HashPassword(saltedPassword);
+            var test = HashPassword(Password, Account.Salt);
 
-            return Account.HashedPassword == hashedPassword;
+            return Account.HashedPassword == test;
         }
 
         public static Account CreateAccount(String UserName, String Password)
         {
-            if (FindAccount(UserName) != null) throw new InvalidOperationException();
-            var hashedPassword = HashPassword(Password + UserName + "SECURITAS");
-            var newAccount = new Account { UserName = UserName, HashedPassword = hashedPassword };
+            if (FindAccount(UserName) != null)
+            {
+                throw new InvalidOperationException("Account already exists");
+            }
+            if (String.IsNullOrWhiteSpace(Password))
+            {
+                throw new InvalidOperationException("A password must be specified when creating an account");
+            }
+            var salt = GenerateRandomSalt();
+            var hash = HashPassword(Password, salt);
+            var newAccount = new Account { UserName = UserName, HashedPassword = hash, Salt = salt };
             Accounts.Add(newAccount);
             return newAccount;
         }
