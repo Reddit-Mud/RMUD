@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RMUD
 {
@@ -9,6 +6,8 @@ namespace RMUD
     {
         public String UserName;
         public String HashedPassword;
+        public String Salt;
+        public String Character;
         public String AFKMessage = "AFK";
 
         public Actor LoggedInCharacter;
