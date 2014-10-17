@@ -5,6 +5,13 @@ using System.Text;
 
 namespace RMUD
 {
+    public enum Echo
+    {
+        None,   // No echo at all
+        All,    // All user input will be echoed back
+        Mask,   // A mask character will be echoed back
+    }
+
     public class Client
     {
         public virtual void Send(String message) { }
@@ -26,5 +33,9 @@ namespace RMUD
                 return (DateTime.Now - TimeOfLastCommand) > TimeSpan.FromMilliseconds(Mud.SettingsObject.AFKTime);
             }
         }
+
+        protected Echo _myEcho = Echo.Mask;
+        public virtual Echo Echo { get { return _myEcho; } set { _myEcho = value; } }
+
     }
 }
