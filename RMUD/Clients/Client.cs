@@ -34,7 +34,7 @@ namespace RMUD
             }
         }
 
-        protected Echo _myEcho = Echo.Mask;
+        protected Echo _myEcho = Echo.All;
         public virtual Echo Echo { get { return _myEcho; } set { _myEcho = value; } }
 
     }

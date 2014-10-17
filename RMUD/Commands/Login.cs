@@ -14,16 +14,13 @@ namespace RMUD.Commands
                     new KeyWord("LOGIN", false),
                     new FailIfNoMatches(
                         new SingleWord("USERNAME"),
-                        "You must supply a username.\r\n"),
-                    new FailIfNoMatches(
-                        new SingleWord("PASSWORD"),
-                        "You must supply a password.\r\n")),
+                        "You must supply a username.\r\n")),
                 new LoginProcessor(),
                 "Login to an existing account.\r\n");
         }
 	}
 
-	internal class LoginProcessor : CommandProcessor
+	internal class LoginProcessor : AuthenticationCommandProcessor
 	{
         public void Perform(PossibleMatch Match, Actor Actor)
         {
@@ -37,16 +34,20 @@ namespace RMUD.Commands
 
             var client = Match.Arguments["CLIENT"] as Client;
             var userName = Match.Arguments["USERNAME"].ToString();
-            var password = Match.Arguments["PASSWORD"].ToString();
 
-            var existingAccount = Mud.FindAccount(userName);
-            if (existingAccount == null || Mud.VerifyAccount(existingAccount, password) == false)
+            client.CommandHandler = new PasswordCommandHandler(client, this, userName);
+        }
+
+        public void Authenticate(Client Client, String UserName, String Password)
+        {
+            var existingAccount = Mud.FindAccount(UserName);
+            if (existingAccount == null || Mud.VerifyAccount(existingAccount, Password) == false)
             {
-                Mud.SendMessage(client, "Could not verify account.\r\n");
+                Mud.SendMessage(Client, "Could not verify account.\r\n");
                 return;
             }
 
-            LoginCommandHandler.LogPlayerIn(client, existingAccount);
-        }        
+            LoginCommandHandler.LogPlayerIn(Client, existingAccount);
+        }
 	}
 }

@@ -14,32 +14,47 @@ namespace RMUD.Commands
                     new KeyWord("REGISTER", false),
                     new FailIfNoMatches(
                         new SingleWord("USERNAME"),
-                        "You must supply a username.\r\n"),
-                    new FailIfNoMatches(
-                        new SingleWord("PASSWORD"),
-                        "You must supply a password.\r\n")),
+                        "You must supply a username.\r\n")),
                     new RegistrationProcessor(),
                     "Create a new account.\r\n");
         }
 	}
 
-	internal class RegistrationProcessor : CommandProcessor
+    internal class RegistrationProcessor : AuthenticationCommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
-            var client = Match.Arguments["CLIENT"] as Client;
-            var userName = Match.Arguments["USERNAME"].ToString();
-            var password = Match.Arguments["PASSWORD"].ToString();
-
-            var existingAccount = Mud.FindAccount(userName);
-            if (existingAccount != null)
+            if (Actor != null)
             {
-                Mud.SendMessage(client, "That account already exists.\r\n");
+                Mud.SendMessage(Actor.ConnectedClient, "You are already logged in.\r\n");
                 return;
             }
 
-            var newAccount = Mud.CreateAccount(userName, password);
-            LoginCommandHandler.LogPlayerIn(client, newAccount);
+            Mud.CommandTimeoutEnabled = false;
+
+            var client = Match.Arguments["CLIENT"] as Client;
+            var userName = Match.Arguments["USERNAME"].ToString();
+
+            client.CommandHandler = new PasswordCommandHandler(client, this, userName);
+        }
+
+        public void Authenticate(Client Client, String UserName, String Password)
+        {
+            var existingAccount = Mud.FindAccount(UserName);
+            if (existingAccount != null)
+            {
+                Mud.SendMessage(Client, "Account already exists.\r\n");
+                return;
+            }
+
+            var newAccount = Mud.CreateAccount(UserName, Password);
+            if (newAccount == null)
+            {
+                Mud.SendMessage(Client, "Could not create account.\r\n");
+                return;
+            }
+
+            LoginCommandHandler.LogPlayerIn(Client, newAccount);
         }
     }
 }

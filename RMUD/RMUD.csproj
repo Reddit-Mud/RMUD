@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\Account.cs" />
+    <Compile Include="Clients\PasswordCommandHandler.cs" />
     <Compile Include="Commands\Register.cs" />
     <Compile Include="Commands\Login.cs" />
     <Compile Include="Commands\Quit.cs" />
@@ -67,6 +68,7 @@
     </Compile>
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
+    <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
     <Compile Include="Parser\MatchContext.cs" />
     <Compile Include="Parser\Matchers\NumberMatcher.cs" />
     <Compile Include="Parser\Matchers\ScoreGate.cs" />
