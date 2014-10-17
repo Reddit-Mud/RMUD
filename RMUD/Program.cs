@@ -98,28 +98,8 @@ namespace RMUD
                         else if (command.ToUpper() == "SAVE")
                         {
                             Mud.DatabaseLock.WaitOne();
-                            Console.WriteLine("Saving named objects to file...");
-                            foreach (var data in Mud.NamedObjects)
-                            {
-                                Console.WriteLine(data.Key);
-
-                                try
-                                {
-                                    var dto = new DTO();
-                                    var properties = (from x in data.Value.GetType().GetProperties() select x);
-                                    dto.Data = properties.ToDictionary
-                                    (
-                                        x => x.Name,
-                                        x => (x.GetGetMethod().Invoke(data.Value, null) ?? "").ToString()
-                                    );
-                                    Mud.SaveDTO(data.Key, dto);
-                                }
-                                catch (Exception e)
-                                {
-                                    Console.WriteLine(e.Message);
-                                }
-                            }
-                            Console.WriteLine("Saved all named objects.");
+                            Console.WriteLine("Saving persistent instances to file...");
+                            Mud.SaveActiveInstances();
                         }
                     }
                 }

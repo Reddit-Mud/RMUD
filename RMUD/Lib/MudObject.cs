@@ -17,21 +17,15 @@ namespace RMUD
         public ObjectState State = ObjectState.Unitialized; 
 		public String Path { get; internal set; }
 		public String Instance { get; internal set; }
-
+       
+        public DTO PersistenceObject { get; internal set; }
+        public bool IsPersistent { get { return PersistenceObject != null; } }
+        
 		public bool Is(String other) 
 		{
 			return Path == other;
 		}
-
-		public DTO GetDTO()
-		{
-			//Use the name 'Path@Instance' to fetch data from the dynamic database.
-			// If Instance is null or empty, the resulting name is 'Path@'. This is the
-			// name non-instanced objects can use to store data in the dynamic
-			// database.
-            return Mud.LoadDTO(Path + "@" + Instance);
-		}
-
+        
 		public virtual void Initialize() { }
         public virtual void HandleMarkedUpdate() { }
         public virtual void Heartbeat(UInt64 HeartbeatID) { }

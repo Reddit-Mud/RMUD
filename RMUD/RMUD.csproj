@@ -61,6 +61,9 @@
     <Compile Include="Core\ObjectContainsObject.cs" />
     <Compile Include="Core\PendingMessages.cs" />
     <Compile Include="Core\Time.cs" />
+    <Compile Include="database\static\palantine\skull.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

@@ -8,12 +8,73 @@ namespace RMUD
 {
     public class DTO
     {
+        public MudObject Owner;
         public Dictionary<String, String> Data = new Dictionary<String, String>();
     }
 
     public static partial class Mud
     {
-        public static DTO LoadDTO(String Path)
+        private static Dictionary<String, DTO> ActiveInstances = new Dictionary<string, DTO>();
+        
+        public static void PersistInstance(MudObject Object)
+        {
+            if (Object.PersistenceObject != null) return; //The object is already persistent.
+
+            var instanceName = Object.Path + "@" + Object.Instance;
+
+            var dto = LoadDTO(instanceName);
+            if (dto == null) dto = new DTO();
+            dto.Owner = Object;
+            Object.PersistenceObject = dto;
+
+            ActiveInstances.Upsert(instanceName, dto);           
+        }
+
+        public static MudObject GetOrCreateInstance(String Path, String InstanceName, Action<String> ReportErrors = null)
+        {
+            if (String.IsNullOrEmpty(InstanceName)) 
+                throw new InvalidOperationException("Instance name can't be empty.");
+            
+            Path = Path.Replace('\\', '/');
+            
+            var instanceName = Path + "@" + InstanceName;
+            if (ActiveInstances.ContainsKey(instanceName)) return ActiveInstances[instanceName].Owner;
+            
+            var baseObject = GetObject(Path, ReportErrors);
+
+            //We can't make an instance of nothing; this means that the base object has an error of some kind.
+            if (baseObject == null) return null;
+
+            //Create the new instance of the same class as the base type.
+            var assembly = baseObject.GetType().Assembly;
+            var newMudObject = Activator.CreateInstance(baseObject.GetType()) as MudObject;
+
+            //It should not be possible for newMudObject to be null.
+            if (newMudObject != null)
+            {
+                newMudObject.Path = Path;
+                newMudObject.Instance = InstanceName;
+
+                newMudObject.Initialize(); //Initialize must call 'PersistInstance' to setup persistence.
+                newMudObject.State = ObjectState.Alive;
+                newMudObject.HandleMarkedUpdate();
+                return newMudObject;
+            }
+            else
+            {
+                throw new InvalidProgramException();
+            }
+        }
+
+        public static void SaveActiveInstances()
+        {
+            foreach (var instance in ActiveInstances)
+            {
+                SaveDTO(instance.Key, instance.Value);
+            }
+        }
+
+        private static DTO LoadDTO(String Path)
         {
             var filename = DynamicPath + Path + ".txt";
             if (!File.Exists(filename)) return null;
@@ -34,7 +95,7 @@ namespace RMUD
             return dto;
         }
 
-        public static void SaveDTO(String Path, DTO Dto)
+        private static void SaveDTO(String Path, DTO Dto)
         {
             var filename = DynamicPath + Path + ".txt";
             try
@@ -53,7 +114,7 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR:", e.Message, e.Source, e.StackTrace, e.Data);
+                Mud.LogCriticalError(e);
             }
         }
     }
