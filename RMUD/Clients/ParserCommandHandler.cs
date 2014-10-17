@@ -14,15 +14,8 @@ namespace RMUD
 		{
 			Parser = new CommandParser();
 
-			//Iterate over all types, find ICommandFactories, Create commands
-			foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-			{
-				if (type.IsSubclassOf(typeof(CommandFactory)))
-				{
-					var instance = Activator.CreateInstance(type) as CommandFactory;
-					instance.Create(Parser);
-				}
-			}
+			foreach (var cmd in CommandFactory.AllCommands)
+			    CommandFactory.GetCommand(cmd.Key).Create(Parser);
 		}
 
         public void HandleCommand(Client Client, String Command)

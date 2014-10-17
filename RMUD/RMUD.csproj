@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\Account.cs" />
+    <Compile Include="Commands\Register.cs" />
+    <Compile Include="Commands\Login.cs" />
     <Compile Include="Commands\Quit.cs" />
     <Compile Include="Commands\Afk.cs" />
     <Compile Include="Commands\Shutdown.cs" />
