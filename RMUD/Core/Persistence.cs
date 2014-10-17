@@ -30,6 +30,14 @@ namespace RMUD
             ActiveInstances.Upsert(instanceName, dto);           
         }
 
+        public static void ForgetInstance(MudObject Object)
+        {
+            var instanceName = Object.Path + "@" + Object.Instance;
+            if (ActiveInstances.ContainsKey(instanceName))
+                ActiveInstances.Remove(instanceName);
+            Object.PersistenceObject = null;
+        }
+
         public static MudObject GetOrCreateInstance(String Path, String InstanceName, Action<String> ReportErrors = null)
         {
             if (String.IsNullOrEmpty(InstanceName)) 

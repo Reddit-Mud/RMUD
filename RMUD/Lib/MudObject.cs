@@ -67,6 +67,7 @@ namespace RMUD
         public void Destroy(bool DestroyChildren)
         {
             State = ObjectState.Destroyed;
+            Mud.ForgetInstance(this);
 
             if (DestroyChildren && this is Container)
                 (this as Container).EnumerateObjects(RelativeLocations.EveryMudObject, (child, loc) =>
