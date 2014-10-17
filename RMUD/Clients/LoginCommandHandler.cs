@@ -13,19 +13,30 @@ namespace RMUD
         private static void LogPlayerIn(Client Client, Account Account)
         {
             Client.Account = Account;
-            Client.Player = Mud.GetAccountCharacter(Account);
-            Client.Player.ConnectedClient = Client;
             Client.CommandHandler = Mud.ParserCommandHandler;
             Client.Rank = 500;
 
+            if (Account.LoggedInCharacter != null)
+            {
+                //Connect to the existing session
+                if (Account.LoggedInCharacter.ConnectedClient != null)
+                    Account.LoggedInCharacter.ConnectedClient.Disconnect();
+                Client.Player = Account.LoggedInCharacter;
+            }
+            else
+            {
+                //Start a new session
+                Client.Player = Mud.GetAccountCharacter(Account);
+                Mud.FindChatChannel("OOC").Subscribers.Add(Client); //Everyone is on ooc!
+                MudObject.Move(Client.Player,
+                    Mud.GetObject(
+                        (Mud.GetObject("settings") as Settings).NewPlayerStartRoom,
+                        s => Mud.SendMessage(Client, s + "\r\n")));
+                Mud.EnqueuClientCommand(Client, "look");
+            }
+
+            Client.Player.ConnectedClient = Client;
             Account.LoggedInCharacter = Client.Player;
- 
-            Mud.FindChatChannel("OOC").Subscribers.Add(Client); //Everyone is on ooc!
-            MudObject.Move(Client.Player,
-                Mud.GetObject(
-                    (Mud.GetObject("settings") as Settings).NewPlayerStartRoom,
-                    s => Mud.SendMessage(Client, s + "\r\n")));
-            Mud.EnqueuClientCommand(Client, "look");
         }
 
 		public LoginCommandHandler()
@@ -56,7 +67,6 @@ namespace RMUD
 
                         var newAccount = Mud.CreateAccount(userName, password);
                         var newCharacter = Mud.CreateCharacter(newAccount, userName);
-                        newAccount.LoggedInCharacter = newCharacter; //Hackity hack.
                         LoginCommandHandler.LogPlayerIn(client, newAccount);
                     }),
                     "Create a new account.");

@@ -45,16 +45,13 @@ namespace RMUD
             newCharacter.Short = CharacterName;
             newCharacter.Nouns.Add(CharacterName.ToUpper());
             newCharacter.Path = "account/" + Account.UserName;
-            newCharacter.Instance = Guid.NewGuid().ToString();
-            Account.Character = newCharacter.Instance;
+            newCharacter.Instance = "main";
             return newCharacter;
         }
 
         public static Actor GetAccountCharacter(Account Account)
         {
-            return Account.LoggedInCharacter;
-
-            //This should actually create a new actor and load it's data from the database.
+            return Mud.GetOrCreateInstance("account/" + Account.UserName, "main") as Actor;
         }
     }
 }
