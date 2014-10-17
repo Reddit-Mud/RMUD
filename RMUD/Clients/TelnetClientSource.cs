@@ -109,7 +109,11 @@ namespace RMUD
             var Client = _asyncResult.AsyncState as TelnetClient;
             System.Net.EndPoint remoteEndPoint = null;
 
-            if (Client.Socket == null) return;
+            if (Client.Socket == null)
+            {
+                if (!Client.WasRejected) Mud.ClientDisconnected(Client);
+                return;
+            }
 
             try
             {

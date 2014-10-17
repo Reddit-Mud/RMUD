@@ -20,14 +20,16 @@ namespace RMUD
             {
                 //Connect to the existing session
                 if (Account.LoggedInCharacter.ConnectedClient != null)
+                {
+                    Account.LoggedInCharacter.ConnectedClient.Player = null;
                     Account.LoggedInCharacter.ConnectedClient.Disconnect();
+                }
                 Client.Player = Account.LoggedInCharacter;
             }
             else
             {
                 //Start a new session
                 Client.Player = Mud.GetAccountCharacter(Account);
-                Mud.FindChatChannel("OOC").Subscribers.Add(Client); //Everyone is on ooc!
                 MudObject.Move(Client.Player,
                     Mud.GetObject(
                         (Mud.GetObject("settings") as Settings).NewPlayerStartRoom,
@@ -35,6 +37,7 @@ namespace RMUD
                 Mud.EnqueuClientCommand(Client, "look");
             }
 
+            Mud.FindChatChannel("OOC").Subscribers.Add(Client); //Everyone is on ooc!
             Client.Player.ConnectedClient = Client;
             Account.LoggedInCharacter = Client.Player;
         }
@@ -66,7 +69,6 @@ namespace RMUD
                         }
 
                         var newAccount = Mud.CreateAccount(userName, password);
-                        var newCharacter = Mud.CreateCharacter(newAccount, userName);
                         LoginCommandHandler.LogPlayerIn(client, newAccount);
                     }),
                     "Create a new account.\r\n");
@@ -82,6 +84,8 @@ namespace RMUD
                         "You must supply a password.\r\n")),
                 new CommandProcessorWrapper((Match, Actor) =>
                 {
+                    Mud.CommandTimeoutEnabled = false;
+
                     var client = Match.Arguments["CLIENT"] as Client;
                     var userName = Match.Arguments["USERNAME"].ToString();
                     var password = Match.Arguments["PASSWORD"].ToString();

@@ -44,10 +44,12 @@ namespace RMUD
             {
                 throw new InvalidOperationException("Account already exists");
             }
+
             if (String.IsNullOrWhiteSpace(Password))
             {
                 throw new InvalidOperationException("A password must be specified when creating an account");
             }
+
             var salt = GenerateRandomSalt();
             var hash = HashPassword(Password, salt);
             var newAccount = new Account { UserName = UserName, HashedPassword = hash, Salt = salt };
@@ -55,19 +57,15 @@ namespace RMUD
             return newAccount;
         }
 
-        public static Actor CreateCharacter(Account Account, String CharacterName)
-        {
-            var newCharacter = new Actor();
-            newCharacter.Short = CharacterName;
-            newCharacter.Nouns.Add(CharacterName.ToUpper());
-            newCharacter.Path = "account/" + Account.UserName;
-            newCharacter.Instance = "main";
-            return newCharacter;
-        }
-
         public static Actor GetAccountCharacter(Account Account)
         {
-            return Mud.GetOrCreateInstance("account/" + Account.UserName, "main") as Actor;
+            var character = new Actor();
+            character.Path = "account/" + Account.UserName;
+            character.Instance = "main";
+
+            character.Short = Account.UserName;
+            character.Nouns.Add(Account.UserName.ToUpper());
+            return character;
         }
     }
 }
