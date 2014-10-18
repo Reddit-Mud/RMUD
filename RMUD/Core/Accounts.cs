@@ -73,8 +73,10 @@ namespace RMUD
         {
             try
             {
-                var filename = Mud.AccountsPath + account.UserName + "/account.txt";
+                var directory = Mud.AccountsPath + account.UserName;
+                var filename = directory + "/account.txt";
                 var json = JsonConvert.SerializeObject(account, Formatting.Indented);
+                System.IO.Directory.CreateDirectory(directory);
                 File.WriteAllText(filename, json);
             }
             catch (Exception e)
