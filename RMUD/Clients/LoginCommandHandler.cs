@@ -10,7 +10,7 @@ namespace RMUD
 	{
 		internal CommandParser Parser;
 
-        private static void LogPlayerIn(Client Client, Account Account)
+        public static void LogPlayerIn(Client Client, Account Account)
         {
             Client.Account = Account;
             Client.CommandHandler = Mud.ParserCommandHandler;
@@ -48,58 +48,10 @@ namespace RMUD
 		{
 			Parser = new CommandParser();
 
-            Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("REGISTER", false),
-                    new FailIfNoMatches(
-                        new SingleWord("USERNAME"),
-                        "You must supply a username.\r\n"),
-                    new FailIfNoMatches(
-                        new SingleWord("PASSWORD"),
-                        "You must supply a password.\r\n")),
-                new CommandProcessorWrapper((Match, Actor) =>
-                    {
-                        var client = Match.Arguments["CLIENT"] as Client;
-                        var userName = Match.Arguments["USERNAME"].ToString();
-                        var password = Match.Arguments["PASSWORD"].ToString();
+            CommandFactory.GetCommand("Login").Create(Parser);
+            CommandFactory.GetCommand("Register").Create(Parser);
+            CommandFactory.GetCommand("Quit").Create(Parser);
 
-                        var existingAccount = Mud.FindAccount(userName);
-                        if (existingAccount != null)
-                        {
-                            Mud.SendMessage(client, "That account already exists.\r\n");
-                            return;
-                        }
-
-                        var newAccount = Mud.CreateAccount(userName, password);
-                        LoginCommandHandler.LogPlayerIn(client, newAccount);
-                    }),
-                    "Create a new account.\r\n");
-
-            Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("LOGIN", false),
-                    new FailIfNoMatches(
-                        new SingleWord("USERNAME"),
-                        "You must supply a username.\r\n"),
-                    new FailIfNoMatches(
-                        new SingleWord("PASSWORD"),
-                        "You must supply a password.\r\n")),
-                new CommandProcessorWrapper((Match, Actor) =>
-                {
-                    var client = Match.Arguments["CLIENT"] as Client;
-                    var userName = Match.Arguments["USERNAME"].ToString();
-                    var password = Match.Arguments["PASSWORD"].ToString();
-
-                    var existingAccount = Mud.FindAccount(userName);
-                    if (existingAccount == null || Mud.VerifyAccount(existingAccount, password) == false)
-                    {
-                        Mud.SendMessage(client, "Could not verify account.\r\n");
-                        return;
-                    }
-
-                    LoginCommandHandler.LogPlayerIn(client, existingAccount);
-                }),
-                "Login to an existing account.\r\n");
 		}
 
 		public void HandleCommand(Client Client, String Command)

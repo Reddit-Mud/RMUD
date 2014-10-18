@@ -72,7 +72,7 @@ namespace RMUD
             }
             else
             {
-                Mud.SendMessage(Client, "That command is too ambiguous for me to help you with.");
+                Mud.SendMessage(Client, "That command is too ambiguous for me to help you with.\r\n");
             }
 		}
 

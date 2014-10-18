@@ -20,8 +20,20 @@ namespace RMUD.Commands
 	{
         public void Perform(PossibleMatch Match, Actor Actor)
         {
-            if (Actor.ConnectedClient != null)
-                Actor.ConnectedClient.Disconnect();
-        }        
+            Client client = null;
+            if (Actor != null && Actor.ConnectedClient != null)
+            {
+                client = Actor.ConnectedClient;
+            }
+            else
+            {
+                client = Match.Arguments["CLIENT"] as Client;
+            }
+
+            if (client != null)
+            {
+                client.Disconnect();
+            }
+        }
 	}
 }

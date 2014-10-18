@@ -7,7 +7,25 @@ namespace RMUD
 {
     public class TelnetClient : Client
     {
-        public System.Net.Sockets.Socket Socket = null;
+        protected System.Net.Sockets.Socket _mySocket = null;
+        public System.Net.Sockets.Socket Socket { 
+            get { return _mySocket; } 
+            set
+            { 
+                _mySocket = value; 
+                // We will handle all the echoing echoing echoing
+                var echoCommand = new byte[]
+                { 
+                    (byte)TelnetControlCodes.IAC, 
+                    (byte)TelnetControlCodes.Will, // TODO: Handle client response denying this request
+                    (byte)TelnetControlCodes.Echo,
+                    (byte)TelnetControlCodes.IAC,
+                    (byte)TelnetControlCodes.Dont,
+                    (byte)TelnetControlCodes.Echo,
+                };
+                Send(echoCommand);
+            }
+        }
         public String CommandQueue = "";
         public byte[] Storage = new byte[1024];
         internal bool WasRejected = false;
@@ -35,7 +53,14 @@ namespace RMUD
 
         private static byte[] SendBuffer = new byte[1024];
 
-        override public void Send(String message)
+        public override void Send(String message)
+        {
+            byte[] msg = new byte[message.Length * sizeof(char)];
+            System.Buffer.BlockCopy(message.ToCharArray(), 0, msg, 0, msg.Length);
+            Send(msg);
+        }
+
+        public virtual void Send(byte[] message)
         {
 			if (Socket == null) return;
 
@@ -43,13 +68,11 @@ namespace RMUD
 			{
 				int bytesSent = 0;
 
-				if (!String.IsNullOrEmpty(CommandQueue)) message = "\r" + message + CommandQueue;
-
 				while (bytesSent < message.Length)
 				{
 					int thisChunk = 0;
 					for (int i = bytesSent; i < message.Length && thisChunk < 1024; ++i, ++thisChunk)
-						SendBuffer[thisChunk] = (byte)message[i];
+						SendBuffer[thisChunk] = message[i];
 					if (Socket != null && Socket.Connected) Socket.Send(SendBuffer, thisChunk, System.Net.Sockets.SocketFlags.None);
 					bytesSent += thisChunk;
 				}
@@ -74,5 +97,6 @@ namespace RMUD
                 //if (!WasRejected) Mud.ClientDisconnected(this);
 			}
         }
+
     }
 }
