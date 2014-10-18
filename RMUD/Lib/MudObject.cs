@@ -43,6 +43,17 @@ namespace RMUD
 		public virtual String Definite { get { return "the " + Short; } }
 		public NounList Nouns { get; set; }
 		public MudObject Location;
+        public String LocationString
+        {
+            get
+            {
+                if (Location != null)
+                {
+                    return Location.Path + (Location.Instance != null ? "@" + Location.Instance : "");
+                }
+                return null;
+            }
+        }
 
 		public MudObject()
 		{
@@ -80,25 +91,26 @@ namespace RMUD
 
 		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
 		{
-            if (!(Object is MudObject)) return; //Can't move it if it isn't a MudObject..
-
-            var MudObject = Object as MudObject;
-
-			if (MudObject.Location != null)
+            if (Object.Location != null)
 			{
-				var container = MudObject.Location as Container;
+                var container = Object.Location as Container;
 				if (container != null)
-					container.Remove(MudObject);
-				MudObject.Location = null;
+                    container.Remove(Object);
+                Object.Location = null;
 			}
 
 			if (Destination != null)
 			{
 				var destinationContainer = Destination as Container;
 				if (destinationContainer != null)
-					destinationContainer.Add(MudObject, Location);
-				MudObject.Location = Destination;
+                    destinationContainer.Add(Object, Location);
+                Object.Location = Destination;
 			}
+
+            if (Object.IsPersistent)
+            {
+                Object.PersistenceObject.Data["L"] = Object.LocationString;
+            }
 		}
 
     }

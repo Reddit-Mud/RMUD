@@ -102,6 +102,16 @@ namespace RMUD
                             var totalInstances = Mud.SaveActiveInstances();
                             Console.WriteLine(totalInstances + " instances saved");
                         }
+                        else if (command.ToUpper() == "DEBUGON")
+                        {
+                            Mud.CommandTimeoutEnabled = false;
+                            Console.WriteLine("Debugging mode enabled");
+                        }
+                        else if (command.ToUpper() == "DEBUGOFF")
+                        {
+                            Mud.CommandTimeoutEnabled = true;
+                            Console.WriteLine("Debugging mode disabled");
+                        }
                     }
                 }
                 catch (Exception e)

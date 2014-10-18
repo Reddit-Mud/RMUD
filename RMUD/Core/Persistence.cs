@@ -8,8 +8,18 @@ namespace RMUD
 {
     public class DTO
     {
+        public DTO() { }
+        
+        public DTO(String Location)
+        {
+            Data["L"] = Location;
+        }
+
         public MudObject Owner;
-        public Dictionary<String, String> Data = new Dictionary<String, String>();
+        public Dictionary<String, String> Data = new Dictionary<String, String>
+        {
+            {"L", ""} // Location
+        };
     }
 
     public static partial class Mud
@@ -23,10 +33,9 @@ namespace RMUD
             var instanceName = Object.Path + "@" + Object.Instance;
 
             var dto = LoadDTO(instanceName);
-            if (dto == null) dto = new DTO();
+            if (dto == null) dto = new DTO(Object.LocationString);
             dto.Owner = Object;
             Object.PersistenceObject = dto;
-
             ActiveInstances.Upsert(instanceName, dto);           
         }
 

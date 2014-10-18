@@ -12,6 +12,7 @@ namespace RMUD
     {
         public static String StaticPath { get; private set; }
         public static String DynamicPath { get; private set; }
+        public static String AccountsPath { get; private set; }
 
         internal static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
 
@@ -19,6 +20,7 @@ namespace RMUD
         {
             StaticPath = basePath + "static/";
             DynamicPath = basePath + "dynamic/";
+            AccountsPath = basePath + "accounts/";
         }
 
         internal static String GetObjectRealPath(String Path)

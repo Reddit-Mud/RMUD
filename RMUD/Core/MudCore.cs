@@ -70,7 +70,7 @@ namespace RMUD
                 if (settings == null) throw new InvalidProgramException("No settings object is defined in the database!");
                 SettingsObject = settings;
 
-                ProscriptionList = new ProscriptionList(settings.ProscriptionList);
+                ProscriptionList = new ProscriptionList(basePath + settings.ProscriptionList);
 
                 InitializeCommandProcessor();
 

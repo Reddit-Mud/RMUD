@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace RMUD
 {
@@ -11,7 +13,16 @@ namespace RMUD
 
         public static Account FindAccount(String UserName)
         {
-            return Accounts.FirstOrDefault(a => a.UserName == UserName);
+            var account = Accounts.FirstOrDefault(a => a.UserName == UserName);
+            if (account == null)
+            {
+                account = LoadAccount(UserName);
+                if (account != null)
+                {
+                    Accounts.Add(account);
+                }
+            }
+            return account;
         }
 
         private static String HashPassword(String Password)
@@ -36,6 +47,7 @@ namespace RMUD
             var hashedPassword = HashPassword(Password + UserName + "SECURITAS");
             var newAccount = new Account { UserName = UserName, HashedPassword = hashedPassword };
             Accounts.Add(newAccount);
+            SaveAccount(newAccount);
             return newAccount;
         }
 
@@ -55,6 +67,40 @@ namespace RMUD
             return Account.LoggedInCharacter;
 
             //This should actually create a new actor and load it's data from the database.
+        }
+
+        private static void SaveAccount(Account account)
+        {
+            try
+            {
+                var filename = Mud.AccountsPath + account.UserName + "/account.txt";
+                var json = JsonConvert.SerializeObject(account, Formatting.Indented);
+                File.WriteAllText(filename, json);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR", e.ToString());
+            }
+        }
+
+        private static Account LoadAccount(String UserName)
+        {
+            Account account = null;
+            try 
+            {
+                var filename = Mud.AccountsPath + UserName + "/account.txt";
+                if (File.Exists(filename))
+                {
+                    var json = File.ReadAllText(filename);
+                    account = JsonConvert.DeserializeObject<Account>(json);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR", e.ToString());
+            }
+
+            return account;
         }
     }
 }
