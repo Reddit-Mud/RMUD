@@ -23,4 +23,4 @@ A road-map and task-list will be up within the coming weeks.
 ### Status
 As of September 2014, *RMUD* is currently in active development. 
 The game is **not** in a playable state, although the skeleton
-of the server can be tested at **luna.devrw.com:8669**.
+of the server can be tested at **rmud.trevoke.com:8669**.

@@ -5,9 +5,11 @@ using System.Text;
 
 namespace RMUD
 {
-    public enum TelnetControlCodes
+    // http://www.faqs.org/rfcs/rfc854.html
+    public enum TelnetControlCodes : byte
     {
         NULL = 0,
+        Echo = 1,   // http://www.faqs.org/rfcs/rfc857.html
         LineFeed = 10,
         CarriageReturn = 13,
 

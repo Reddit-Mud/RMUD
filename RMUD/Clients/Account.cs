@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RMUD
 {
@@ -9,7 +6,7 @@ namespace RMUD
     {
         public String UserName;
         public String HashedPassword;
-        public String Character;
+        public String Salt;
         public String AFKMessage = "AFK";
 
         [Newtonsoft.Json.JsonIgnore]

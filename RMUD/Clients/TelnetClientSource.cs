@@ -109,7 +109,11 @@ namespace RMUD
             var Client = _asyncResult.AsyncState as TelnetClient;
             System.Net.EndPoint remoteEndPoint = null;
 
-            if (Client.Socket == null) return;
+            if (Client.Socket == null)
+            {
+                if (!Client.WasRejected) Mud.ClientDisconnected(Client);
+                return;
+            }
 
             try
             {
@@ -139,8 +143,15 @@ namespace RMUD
                 {
                     for (int i = 0; i < DataSize; ++i)
                     {
-                        if (Client.Storage[i] == '\n' || Client.Storage[i] == '\r')
+                        var character = (char)Client.Storage[i];
+                        
+                        if (character == '\n' || character == '\r')
                         {
+                            if (Client.Echo == Echo.All || Client.Echo == Echo.Mask)
+                            {
+                                Client.Send(new byte[] { (byte)character });
+                            }
+
                             if (!String.IsNullOrEmpty(Client.CommandQueue))
                             {
                                 String Command = Client.CommandQueue;
@@ -148,13 +159,28 @@ namespace RMUD
                                 Mud.EnqueuClientCommand(Client, Command);
                             }
                         }
-                        else if (Client.Storage[i] == '\b')
+                        else if (character == '\b')
                         {
                             if (Client.CommandQueue.Length > 0)
+                            {
                                 Client.CommandQueue = Client.CommandQueue.Remove(Client.CommandQueue.Length - 1);
+                                if (Client.Echo == Echo.All || Client.Echo == Echo.Mask)
+                                {
+                                    Client.Send(new byte[] { (byte)character });
+                                }
+                            }
                         }
-                        else if (ValidCharacters.Contains((char)Client.Storage[i]))
-                            Client.CommandQueue += (char)Client.Storage[i];
+                        else if (ValidCharacters.Contains(character))
+                        {
+                            Client.CommandQueue += character;
+                            switch (Client.Echo)
+                            {
+                                case Echo.All: Client.Send(new byte[] { (byte)character }); break;
+                                case Echo.Mask: Client.Send(new byte[] { (byte)'*' }); break;
+                                case Echo.None: break;
+                            }
+                        }
+
                     }
 
                     Client.Socket.BeginReceive(Client.Storage, 0, 1024, System.Net.Sockets.SocketFlags.Partial, OnData, Client);
