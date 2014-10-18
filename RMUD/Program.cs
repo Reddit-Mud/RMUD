@@ -98,8 +98,9 @@ namespace RMUD
                         else if (command.ToUpper() == "SAVE")
                         {
                             Mud.DatabaseLock.WaitOne();
-                            Console.WriteLine("Saving persistent instances to file...");
-                            Mud.SaveActiveInstances();
+                            Console.Write("Saving persistent instances to file...");
+                            var totalInstances = Mud.SaveActiveInstances();
+                            Console.WriteLine(totalInstances + " instances saved");
                         }
                     }
                 }

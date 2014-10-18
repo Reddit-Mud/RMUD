@@ -38,30 +38,36 @@ namespace RMUD
             Object.PersistenceObject = null;
         }
 
-        public static MudObject GetOrCreateInstance(String Path, String InstanceName, Action<String> ReportErrors = null)
+        public static MudObject GetOrCreateInstance(String Path, String Instance, Action<String> ReportErrors = null)
         {
-            if (String.IsNullOrEmpty(InstanceName)) 
-                throw new InvalidOperationException("Instance name can't be empty.");
+            if (String.IsNullOrEmpty(Instance)) 
+                throw new InvalidOperationException("Instance can't be empty.");
             
             Path = Path.Replace('\\', '/');
-            
-            var instanceName = Path + "@" + InstanceName;
-            if (ActiveInstances.ContainsKey(instanceName)) return ActiveInstances[instanceName].Owner;
+
+            string instanceName = Path + "@" + Instance;
+            DTO activeInstance = null;
+            if (ActiveInstances.TryGetValue(instanceName, out activeInstance))
+            {
+                return activeInstance.Owner;
+            }
             
             var baseObject = GetObject(Path, ReportErrors);
 
             //We can't make an instance of nothing; this means that the base object has an error of some kind.
-            if (baseObject == null) return null;
+            if (baseObject == null) {
+                Console.WriteLine("ERROR: Invalid baseObject: " + Path);
+                return null;
+            }
 
             //Create the new instance of the same class as the base type.
-            var assembly = baseObject.GetType().Assembly;
             var newMudObject = Activator.CreateInstance(baseObject.GetType()) as MudObject;
 
             //It should not be possible for newMudObject to be null.
             if (newMudObject != null)
             {
                 newMudObject.Path = Path;
-                newMudObject.Instance = InstanceName;
+                newMudObject.Instance = Instance;
 
                 newMudObject.Initialize(); //Initialize must call 'PersistInstance' to setup persistence.
                 newMudObject.State = ObjectState.Alive;
@@ -74,12 +80,15 @@ namespace RMUD
             }
         }
 
-        public static void SaveActiveInstances()
+        public static int SaveActiveInstances()
         {
+            var counter = 0;
             foreach (var instance in ActiveInstances)
             {
+                ++counter;
                 SaveDTO(instance.Key, instance.Value);
             }
+            return counter;
         }
 
         private static DTO LoadDTO(String Path)

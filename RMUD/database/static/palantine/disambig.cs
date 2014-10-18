@@ -1,4 +1,5 @@
-﻿public class disambig : RMUD.Room
+﻿
+public class disambig : RMUD.Room
 {
 	public override void Initialize()
 	{
@@ -14,6 +15,7 @@
         RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine\\disambig_key"), this);
         RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine\\library_key"), this);
         RMUD.MudObject.Move(new torch(), this);
+        RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine/skull"), this);
 	}
 }
 
