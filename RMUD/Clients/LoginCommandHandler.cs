@@ -22,8 +22,10 @@ namespace RMUD
                 if (Account.LoggedInCharacter.ConnectedClient != null)
                 {
                     Account.LoggedInCharacter.ConnectedClient.Player = null;
+                    Account.LoggedInCharacter.ConnectedClient.Send("You are being disconnected because you have logged into this account from another connection.\r\n");
                     Account.LoggedInCharacter.ConnectedClient.Disconnect();
                 }
+                Client.Send("You were already logged in. You are being connected to that session.\r\n");
                 Client.Player = Account.LoggedInCharacter;
             }
             else
@@ -84,8 +86,6 @@ namespace RMUD
                         "You must supply a password.\r\n")),
                 new CommandProcessorWrapper((Match, Actor) =>
                 {
-                    Mud.CommandTimeoutEnabled = false;
-
                     var client = Match.Arguments["CLIENT"] as Client;
                     var userName = Match.Arguments["USERNAME"].ToString();
                     var password = Match.Arguments["PASSWORD"].ToString();
