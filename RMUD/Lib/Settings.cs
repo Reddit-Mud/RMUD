@@ -14,6 +14,7 @@ namespace RMUD
 
         public String NewPlayerStartRoom;
         public bool UpfrontCompilation = false;
+        public bool UseConsoleCommands = true;
 
         public int AllowedCommandRate = 100; //How many milliseconds to allow between commands - default is to not limit very much.
 

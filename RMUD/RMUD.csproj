@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -62,7 +65,11 @@
     <Compile Include="Core\CommandQueue.cs" />
     <Compile Include="Core\ObjectContainsObject.cs" />
     <Compile Include="Core\PendingMessages.cs" />
+    <Compile Include="Core\Persistence.cs" />
     <Compile Include="Core\Time.cs" />
+    <Compile Include="database\static\palantine\skull.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
@@ -182,6 +189,7 @@
     <Compile Include="RuleDecorators\TakeRules.cs" />
     <Compile Include="Clients\TelnetClientSource.cs" />
     <Compile Include="HelperExtensions.cs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

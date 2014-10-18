@@ -40,62 +40,83 @@ namespace RMUD
                 telnetListener.Listen();
             }
 
-            try
+            if (Mud.SettingsObject.UseConsoleCommands)
             {
-                while (true)
+                try
                 {
-                    var command = Console.ReadLine();
-
-                    if (command.ToUpper() == "STOP")
-                        break;
-                    else if (command.ToUpper() == "CLIENTS")
+                    while (true)
                     {
-                        Mud.DatabaseLock.WaitOne();
+                        var command = Console.ReadLine();
 
-                        foreach (var client in Mud.ConnectedClients)
+                        if (command.ToUpper() == "STOP")
+                            break;
+                        else if (command.ToUpper() == "CLIENTS")
                         {
-                            Console.Write(client.ConnectionDescription);
-                            if (client.Player != null)
-                            {
-                                Console.Write(" -- ");
-                                Console.Write(client.Player.Short);
-                            }
-                            Console.WriteLine();
-                        }
+                            Mud.DatabaseLock.WaitOne();
 
-                        Mud.DatabaseLock.ReleaseMutex();
-                    }
-                    else if (command.ToUpper() == "MEMORY")
-                    {
-                        var mem = System.GC.GetTotalMemory(false);
-                        var kb = mem / 1024.0f;
-                        Console.WriteLine("Memory usage: " + String.Format("{0:n0}", kb) + " kb");
-                        Console.WriteLine("Named objects loaded: " + Mud.NamedObjects.Count);
-                    }
-                    else if (command.ToUpper() == "HEARTBEAT")
-                    {
-                        Mud.DatabaseLock.WaitOne();
-                        Console.WriteLine("Heartbeat interval: {0} Objects: {1} HID: {2}",
-                            Mud.SettingsObject.HeartbeatInterval,
-                            Mud.ObjectsRegisteredForHeartbeat.Count,
-                            Mud.HeartbeatID);
-                        foreach (var Object in Mud.ObjectsRegisteredForHeartbeat)
-                            Console.WriteLine(Object.ToString());
-                        Mud.DatabaseLock.ReleaseMutex();
-                    }
-                    else if (command.ToUpper() == "TIME")
-                    {
-                        Mud.DatabaseLock.WaitOne();
-                        Console.WriteLine("Current time in game: {0}", Mud.TimeOfDay);
-                        Console.WriteLine("Advance rate: {0} per heartbeat",
-                            Mud.SettingsObject.ClockAdvanceRate);
-                        Mud.DatabaseLock.ReleaseMutex();
+                            foreach (var client in Mud.ConnectedClients)
+                            {
+                                Console.Write(client.ConnectionDescription);
+                                if (client.Player != null)
+                                {
+                                    Console.Write(" -- ");
+                                    Console.Write(client.Player.Short);
+                                }
+                                Console.WriteLine();
+                            }
+
+                            Mud.DatabaseLock.ReleaseMutex();
+                        }
+                        else if (command.ToUpper() == "MEMORY")
+                        {
+                            var mem = System.GC.GetTotalMemory(false);
+                            var kb = mem / 1024.0f;
+                            Console.WriteLine("Memory usage: " + String.Format("{0:n0}", kb) + " kb");
+                            Console.WriteLine("Named objects loaded: " + Mud.NamedObjects.Count);
+                        }
+                        else if (command.ToUpper() == "HEARTBEAT")
+                        {
+                            Mud.DatabaseLock.WaitOne();
+                            Console.WriteLine("Heartbeat interval: {0} Objects: {1} HID: {2}",
+                                Mud.SettingsObject.HeartbeatInterval,
+                                Mud.ObjectsRegisteredForHeartbeat.Count,
+                                Mud.HeartbeatID);
+                            foreach (var Object in Mud.ObjectsRegisteredForHeartbeat)
+                                Console.WriteLine(Object.ToString());
+                            Mud.DatabaseLock.ReleaseMutex();
+                        }
+                        else if (command.ToUpper() == "TIME")
+                        {
+                            Mud.DatabaseLock.WaitOne();
+                            Console.WriteLine("Current time in game: {0}", Mud.TimeOfDay);
+                            Console.WriteLine("Advance rate: {0} per heartbeat",
+                                Mud.SettingsObject.ClockAdvanceRate);
+                            Mud.DatabaseLock.ReleaseMutex();
+                        }
+                        else if (command.ToUpper() == "SAVE")
+                        {
+                            Mud.DatabaseLock.WaitOne();
+                            Console.Write("Saving persistent instances to file...");
+                            var totalInstances = Mud.SaveActiveInstances();
+                            Console.WriteLine(totalInstances + " instances saved");
+                        }
+                        else if (command.ToUpper() == "DEBUGON")
+                        {
+                            Mud.CommandTimeoutEnabled = false;
+                            Console.WriteLine("Debugging mode enabled");
+                        }
+                        else if (command.ToUpper() == "DEBUGOFF")
+                        {
+                            Mud.CommandTimeoutEnabled = true;
+                            Console.WriteLine("Debugging mode disabled");
+                        }
                     }
                 }
-            }
-            catch (Exception e) //Who knows what Mono might throw?
-            {
-                while (true) { } //We still don't want to exit.
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROR:", e.Message, e.Source, e.StackTrace, e.Data);
+                }
+
             }
 
             telnetListener.Shutdown();

@@ -11,11 +11,16 @@ namespace RMUD
     public static partial class Mud
     {
         public static String StaticPath { get; private set; }
+        public static String DynamicPath { get; private set; }
+        public static String AccountsPath { get; private set; }
+
         internal static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
 
         internal static void InitializeDatabase(String basePath)
         {
             StaticPath = basePath + "static/";
+            DynamicPath = basePath + "dynamic/";
+            AccountsPath = basePath + "accounts/";
         }
 
         internal static String GetObjectRealPath(String Path)
@@ -102,39 +107,7 @@ namespace RMUD
 
 			return r;
         }
-
-        public static MudObject GetOrCreateInstance(String Path, String InstanceName, Action<String> ReportErrors = null)
-		{
-            Path = Path.Replace('\\', '/');
-			var baseObject = GetObject(Path, ReportErrors);
-
-			//We can't make an instance of nothing; this means that the base object has an error of some kind.
-			if (baseObject == null) return null;
-
-			//Create the new instance of the same class as the base type.
-			var assembly = baseObject.GetType().Assembly;
-			var newMudObject = Activator.CreateInstance(baseObject.GetType()) as MudObject;
-
-			//It should not be possible for newMudObject to be null.
-			if (newMudObject != null)
-			{
-				newMudObject.Path = Path;
-
-				//The 'Get' part of GetOrCreate is some database magic - if this instance exists in the database,
-				//automatically hook up to it. If not, the database should create a new entry for it.
-				newMudObject.Instance = InstanceName;
-
-				newMudObject.Initialize();
-                newMudObject.State = ObjectState.Alive;
-                newMudObject.HandleMarkedUpdate();
-				return newMudObject;
-			}
-			else
-			{
-				throw new InvalidProgramException();
-			}
-		}
-
+        
         public static String LoadSourceFile(String Path, Action<String> ReportErrors, List<String> FilesLoaded)
         {
             Path = Path.Replace('\\', '/');

@@ -40,6 +40,10 @@ namespace RMUD
 
             try
             {
+                if (!System.IO.File.Exists(StorageFilename))
+                {
+                    System.IO.File.WriteAllText(StorageFilename, "");
+                }
                 var proscriptionFile = System.IO.File.OpenText(StorageFilename);
 
                 while (!proscriptionFile.EndOfStream)

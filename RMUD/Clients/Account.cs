@@ -9,6 +9,7 @@ namespace RMUD
         public String Salt;
         public String AFKMessage = "AFK";
 
+        [Newtonsoft.Json.JsonIgnore]
         public Actor LoggedInCharacter;
     }
 }
