@@ -9,6 +9,9 @@ namespace RMUD
 	{
 		public String Banner;
 		public String MessageOfTheDay;
+
+        public int TelnetPort = 8669;
+
         public String NewPlayerStartRoom;
         public bool UpfrontCompilation = false;
 

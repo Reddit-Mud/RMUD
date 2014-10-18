@@ -12,12 +12,10 @@ namespace RMUD
     {
 		internal class CommandLineOptions
 		{
-			public int PORT { get; set; }
 			public String DATABASEPATH { get; set; }
 
 			public CommandLineOptions()
 			{
-				PORT = 8669;
 				DATABASEPATH = "database/";
 			}
 		}
@@ -38,7 +36,7 @@ namespace RMUD
             if (Mud.Start(commandLineOptions.DATABASEPATH))
             {
                 telnetListener = new TelnetClientSource();
-                telnetListener.Port = commandLineOptions.PORT;
+                telnetListener.Port = Mud.SettingsObject.TelnetPort;
                 telnetListener.Listen();
             }
 
