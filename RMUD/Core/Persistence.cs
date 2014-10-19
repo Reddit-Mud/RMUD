@@ -67,14 +67,14 @@ namespace RMUD
         public static void PersistInstance(MudObject Object)
         {
             if (Object.PersistenceObject != null) return; //The object is already persistent.
+            if (ActiveInstances.ContainsKey(Object.GetFullName()))
+                throw new InvalidOperationException("An instance with this name is already persisted.");
 
-            var instanceName = Object.Path + "@" + Object.Instance;
-
-            var dto = LoadDTO(instanceName);
+            var dto = LoadDTO(Object.GetFullName());
             if (dto == null) dto = new DTO();
             dto.Owner = Object;
             Object.PersistenceObject = dto;
-            ActiveInstances.Upsert(instanceName, dto);
+            ActiveInstances.Upsert(Object.GetFullName(), dto);
 
             UpdateOwnerFromDTO(dto);
         }
@@ -90,10 +90,6 @@ namespace RMUD
         public static MudObject CreateInstance(String FullName, Action<String> ReportErrors = null)
         {
             FullName = FullName.Replace('\\', '/');
-
-            DTO activeInstance = null;
-            if (ActiveInstances.TryGetValue(FullName, out activeInstance))
-                throw new InvalidOperationException("Instance already exists.");
 
             String BasePath, InstanceName;
             SplitObjectName(FullName, out BasePath, out InstanceName);
