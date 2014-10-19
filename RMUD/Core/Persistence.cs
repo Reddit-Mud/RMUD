@@ -17,15 +17,23 @@ namespace RMUD
         public Dictionary<String, Object> Data = new Dictionary<String, Object>();
     }
 
+    public class PersistentValueMutator
+    {
+        public virtual Object MutateValue(Object Value)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class PersistAttribute : Attribute
     {
-        internal Func<Object, Object> MutateValue = null;
+        internal PersistentValueMutator Mutator = null;
 
         public PersistAttribute() { }
         
-        public PersistAttribute(Func<Object, Object> MutateValue)
+        public PersistAttribute(Type MutatorType)
         {
-            this.MutateValue = MutateValue;
+            Mutator = Activator.CreateInstance(MutatorType) as PersistentValueMutator;
         }
     }
 
@@ -133,7 +141,7 @@ namespace RMUD
                 if (persistAttribute != null)
                 {
                     var value = property.GetValue(DTO.Owner, null);
-                    if (persistAttribute.MutateValue != null) value = persistAttribute.MutateValue(value);
+                    if (persistAttribute.Mutator != null) value = persistAttribute.Mutator.MutateValue(value);
 
                     DTO.Data.Upsert(property.Name, value);
                 }

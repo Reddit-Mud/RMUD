@@ -42,19 +42,21 @@ namespace RMUD
 		public virtual String Indefinite { get { return Article + " " + Short; } }
 		public virtual String Definite { get { return "the " + Short; } }
 		public NounList Nouns { get; set; }
-		public MudObject Location;
-        public String LocationString
+
+        [Persist(typeof(LocationMutator))]
+        public MudObject Location { get; set; }
+
+        private class LocationMutator : PersistentValueMutator
         {
-            get
+            public override object MutateValue(object Value)
             {
-                if (Location != null)
-                {
-                    return Location.Path + (Location.Instance != null ? "@" + Location.Instance : "");
-                }
-                return null;
+                var mudObject = Value as MudObject;
+                if (mudObject == null) return null;
+                return mudObject.Path; //This is incomplete, but this is likely to be replaced by
+                //persisting the parent container anyway. 
             }
         }
-
+        
 		public MudObject()
 		{
 			Nouns = new NounList();
@@ -106,12 +108,6 @@ namespace RMUD
                     destinationContainer.Add(Object, Location);
                 Object.Location = Destination;
 			}
-
-            if (Object.IsPersistent)
-            {
-                Object.PersistenceObject.Data["L"] = Object.LocationString;
-            }
 		}
-
     }
 }
