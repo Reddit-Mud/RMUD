@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace RMUD
 {
@@ -10,16 +11,22 @@ namespace RMUD
     {
         public DTO() { }
         
-        public DTO(String Location)
-        {
-            Data["L"] = Location;
-        }
-
+        [JsonIgnore]
         public MudObject Owner;
-        public Dictionary<String, String> Data = new Dictionary<String, String>
+
+        public Dictionary<String, Object> Data = new Dictionary<String, Object>();
+    }
+
+    public class PersistAttribute : Attribute
+    {
+        internal Func<Object, Object> MutateValue = null;
+
+        public PersistAttribute() { }
+        
+        public PersistAttribute(Func<Object, Object> MutateValue)
         {
-            {"L", ""} // Location
-        };
+            this.MutateValue = MutateValue;
+        }
     }
 
     public static partial class Mud
@@ -33,10 +40,12 @@ namespace RMUD
             var instanceName = Object.Path + "@" + Object.Instance;
 
             var dto = LoadDTO(instanceName);
-            if (dto == null) dto = new DTO(Object.LocationString);
+            if (dto == null) dto = new DTO();
             dto.Owner = Object;
             Object.PersistenceObject = dto;
-            ActiveInstances.Upsert(instanceName, dto);           
+            ActiveInstances.Upsert(instanceName, dto);     
+      
+            //Iterate MudObject properties, and set their values if they are in the DTO.
         }
 
         public static void ForgetInstance(MudObject Object)
@@ -95,48 +104,64 @@ namespace RMUD
             foreach (var instance in ActiveInstances)
             {
                 ++counter;
+                UpdateDTOFromOwner(instance.Value);
                 SaveDTO(instance.Key, instance.Value);
             }
             return counter;
         }
 
+        /// <summary>
+        /// Use attributes tagging properties of the DTO's owner MudObject to discover values
+        /// to be persisted.
+        /// </summary>
+        /// <param name="DTO"></param>
+        private static void UpdateDTOFromOwner(DTO DTO)
+        {
+            if (DTO.Owner == null) throw new InvalidOperationException("Can't update DTO from null owner.");
+
+            var ownerType = DTO.Owner.GetType();
+            
+            foreach (var property in ownerType.GetProperties())
+            {
+                PersistAttribute persistAttribute = null;
+                foreach (var attribute in property.GetCustomAttributes(false))
+                {
+                    persistAttribute = attribute as PersistAttribute;
+                    if (persistAttribute != null) break;
+                }
+
+                if (persistAttribute != null)
+                {
+                    var value = property.GetValue(DTO.Owner, null);
+                    if (persistAttribute.MutateValue != null) value = persistAttribute.MutateValue(value);
+
+                    DTO.Data.Upsert(property.Name, value);
+                }
+            }
+        }
+
         private static DTO LoadDTO(String Path)
         {
             var filename = DynamicPath + Path + ".txt";
-            if (!File.Exists(filename)) return null;
-            var file = File.OpenText(filename);
 
-            var dto = new DTO();
-
-            while (!file.EndOfStream)
+            if (File.Exists(filename))
             {
-                var line = file.ReadLine();
-                var spot = line.IndexOf(' ');
-                if (spot > 0)
-                {
-                    dto.Data.Add(line.Substring(0, spot), line.Substring(spot + 1));
-                }
+                var json = File.ReadAllText(filename);
+                return JsonConvert.DeserializeObject<DTO>(json);
             }
+            else
+                return null;
 
-            return dto;
         }
 
-        private static void SaveDTO(String Path, DTO Dto)
+        private static void SaveDTO(String Path, DTO DTO)
         {
             var filename = DynamicPath + Path + ".txt";
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(filename));
-                using (var file = new System.IO.StreamWriter(filename))
-                {
-                    foreach (var item in Dto.Data)
-                    {
-                        file.Write(item.Key);
-                        file.Write(" ");
-                        file.WriteLine(item.Value);
-                    }
-                    file.Close();
-                }
+                var json = JsonConvert.SerializeObject(DTO, Formatting.Indented);
+                File.WriteAllText(filename, json);
             }
             catch (Exception e)
             {

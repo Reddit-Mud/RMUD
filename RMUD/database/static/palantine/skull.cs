@@ -6,7 +6,7 @@
     {
         RMUD.Mud.PersistInstance(this);
         if (PersistenceObject.Data.ContainsKey("EC"))
-            System.Int32.TryParse(PersistenceObject.Data["EC"], out ExamineCount);
+            ExamineCount = System.Convert.ToInt32(PersistenceObject.Data["EC"]);
 
         Short = "human skull";
         Nouns.Add("human", "skull");
