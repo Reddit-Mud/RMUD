@@ -42,27 +42,8 @@ namespace RMUD
 		public virtual String Indefinite { get { return Article + " " + Short; } }
 		public virtual String Definite { get { return "the " + Short; } }
 		public NounList Nouns { get; set; }
-
-        [Persist(typeof(LocationMutator))]
         public MudObject Location { get; set; }
 
-        private class LocationMutator : PersistentValueMutator
-        {
-            public override object PackValue(object Value)
-            {
-                var mudObject = Value as MudObject;
-                if (mudObject == null) return null;
-                return mudObject.Path; //This is incomplete, but this is likely to be replaced by
-                //persisting the parent container anyway. 
-            }
-
-            public override object UnpackValue(object StoredValue)
-            {
-                return Mud.GetObject(StoredValue.ToString()); //incomplete. Needs to handle instances,
-                //and account for which list the item is in.
-            }
-        }
-        
 		public MudObject()
 		{
 			Nouns = new NounList();
