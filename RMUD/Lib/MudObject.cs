@@ -48,12 +48,18 @@ namespace RMUD
 
         private class LocationMutator : PersistentValueMutator
         {
-            public override object MutateValue(object Value)
+            public override object PackValue(object Value)
             {
                 var mudObject = Value as MudObject;
                 if (mudObject == null) return null;
                 return mudObject.Path; //This is incomplete, but this is likely to be replaced by
                 //persisting the parent container anyway. 
+            }
+
+            public override object UnpackValue(object StoredValue)
+            {
+                return Mud.GetObject(StoredValue.ToString()); //incomplete. Needs to handle instances,
+                //and account for which list the item is in.
             }
         }
         
