@@ -118,6 +118,13 @@ namespace RMUD
                 }
 
             }
+            else
+            {
+                while (true) 
+                { 
+                    //Todo: Shutdown server command breaks this loop.
+                }
+            }
 
             telnetListener.Shutdown();
             Mud.Shutdown();
