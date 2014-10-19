@@ -17,6 +17,9 @@ namespace RMUD
         public ObjectState State = ObjectState.Unitialized; 
 		public String Path { get; internal set; }
 		public String Instance { get; internal set; }
+
+        public bool IsNamedObject { get { return Path != null; } }
+        public String GetFullName() { return Path + "@" + Instance; }
        
         public DTO PersistenceObject { get; internal set; }
         public bool IsPersistent { get { return PersistenceObject != null; } }

@@ -5,9 +5,30 @@ using System.Text;
 
 namespace RMUD
 {
+    public class ContainerMutator : PersistentValueMutator
+    {
+        public override object PackValue(object Value)
+        {
+            var r = new Dictionary<RelativeLocations, List<String>>();
+            foreach (var relativeLocation in (Value as Dictionary<RelativeLocations, List<MudObject>>))
+                r.Upsert(relativeLocation.Key, new List<String>(relativeLocation.Value.Where(o => o.IsNamedObject).Select(o => o.GetFullName())));
+            return r;
+        }
+
+        public override object UnpackValue(object StoredValue)
+        {
+            var r = new Dictionary<RelativeLocations, List<MudObject>>();
+            foreach (var relativeLocation in (StoredValue as Dictionary<RelativeLocations, List<String>>))
+                r.Upsert(relativeLocation.Key, new List<MudObject>(relativeLocation.Value.Select(s => Mud.GetObject(s))));
+            return r;
+        }
+    }
+
 	public class GenericContainer : MudObject, Container
 	{
+        [Persist(typeof(ContainerMutator))]
         public Dictionary<RelativeLocations, List<MudObject>> Lists = new Dictionary<RelativeLocations, List<MudObject>>();
+
         public RelativeLocations Supported;
         public RelativeLocations Default;
 

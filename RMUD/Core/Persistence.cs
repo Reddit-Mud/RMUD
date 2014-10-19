@@ -87,25 +87,27 @@ namespace RMUD
             Object.PersistenceObject = null;
         }
 
-        public static MudObject GetOrCreateInstance(String Path, String Instance, Action<String> ReportErrors = null)
+        public static MudObject CreateInstance(String FullName, Action<String> ReportErrors = null)
         {
-            if (String.IsNullOrEmpty(Instance)) 
-                throw new InvalidOperationException("Instance can't be empty.");
-            
-            Path = Path.Replace('\\', '/');
+            FullName = FullName.Replace('\\', '/');
 
-            string instanceName = Path + "@" + Instance;
             DTO activeInstance = null;
-            if (ActiveInstances.TryGetValue(instanceName, out activeInstance))
-            {
-                return activeInstance.Owner;
-            }
-            
-            var baseObject = GetObject(Path, ReportErrors);
+            if (ActiveInstances.TryGetValue(FullName, out activeInstance))
+                throw new InvalidOperationException("Instance already exists.");
+
+            String BasePath, InstanceName;
+            SplitObjectName(FullName, out BasePath, out InstanceName);
+
+            if (String.IsNullOrEmpty(InstanceName)) 
+                throw new InvalidOperationException("Instance can't be empty.");
+            if (String.IsNullOrEmpty(BasePath))
+                throw new InvalidOperationException("Basepath can't be empty.");
+                                    
+            var baseObject = GetObject(BasePath, ReportErrors);
 
             //We can't make an instance of nothing; this means that the base object has an error of some kind.
             if (baseObject == null) {
-                Console.WriteLine("ERROR: Invalid baseObject: " + Path);
+                Console.WriteLine("ERROR: Invalid baseObject: " + BasePath);
                 return null;
             }
 
@@ -115,8 +117,8 @@ namespace RMUD
             //It should not be possible for newMudObject to be null.
             if (newMudObject != null)
             {
-                newMudObject.Path = Path;
-                newMudObject.Instance = Instance;
+                newMudObject.Path = BasePath;
+                newMudObject.Instance = InstanceName;
 
                 newMudObject.Initialize(); //Initialize must call 'PersistInstance' to setup persistence.
                 newMudObject.State = ObjectState.Alive;
@@ -191,11 +193,7 @@ namespace RMUD
             if (File.Exists(filename))
             {
                 var json = File.ReadAllText(filename);
-                return JsonConvert.DeserializeObject<DTO>(json, new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All,
-                    TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple
-                });
+                return JsonConvert.DeserializeObject<DTO>(json);
             }
             else
                 return null;
@@ -208,11 +206,7 @@ namespace RMUD
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(filename));
-                var json = JsonConvert.SerializeObject(DTO, Formatting.Indented, new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.All,
-                        TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple
-                    });
+                var json = JsonConvert.SerializeObject(DTO, Formatting.Indented);
                 File.WriteAllText(filename, json);
             }
             catch (Exception e)

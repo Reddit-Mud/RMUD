@@ -84,28 +84,61 @@ namespace RMUD
             }
         }
 
+        public static void SplitObjectName(String FullName, out String BasePath, out String InstanceName)
+        {
+            var split = FullName.IndexOf('@');
+            if (split > 0)
+            {
+                BasePath = FullName.Substring(0, split);
+
+                if (split < FullName.Length - 1)
+                    InstanceName = FullName.Substring(split + 1);
+                else
+                    InstanceName = null;
+            }
+            else
+            {
+                BasePath = FullName;
+                InstanceName = null;
+            }
+        }
+
         public static MudObject GetObject(String Path, Action<String> ReportErrors = null)
         {
             Path = Path.Replace('\\', '/');
 
-            MudObject r = null;
-            
-            if (NamedObjects.ContainsKey(Path)) 
-                r = NamedObjects[Path];
-            else 
+            String BasePath, InstanceName;
+            SplitObjectName(Path, out BasePath, out InstanceName);
+
+            if (!String.IsNullOrEmpty(InstanceName))
             {
-                r = LoadObject(Path, ReportErrors);
-                if (r != null) NamedObjects.Upsert(Path, r);
+                DTO activeInstance = null;
+                if (ActiveInstances.TryGetValue(Path, out activeInstance))
+                    return activeInstance.Owner;
+                else
+                    return CreateInstance(Path);
             }
-
-            if (r != null && r.State == ObjectState.Unitialized)
+            else
             {
-                r.Initialize();
-                r.State = ObjectState.Alive;
-                r.HandleMarkedUpdate();
-			}
+                MudObject r = null;
 
-			return r;
+                if (NamedObjects.ContainsKey(BasePath))
+                    r = NamedObjects[BasePath];
+                else
+                {
+                    r = LoadObject(BasePath, ReportErrors);
+                    if (r != null) NamedObjects.Upsert(BasePath, r);
+                }
+
+                if (r != null && r.State == ObjectState.Unitialized)
+                {
+                    r.Initialize();
+                    r.State = ObjectState.Alive;
+                    r.HandleMarkedUpdate();
+                }
+
+                return r;
+            }
         }
         
         public static String LoadSourceFile(String Path, Action<String> ReportErrors, List<String> FilesLoaded)

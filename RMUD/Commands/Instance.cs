@@ -26,7 +26,7 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["TARGET"].ToString();
-            var newObject = Mud.GetOrCreateInstance(target, Guid.NewGuid().ToString(), s =>
+            var newObject = Mud.CreateInstance(target + "@" + Guid.NewGuid().ToString(), s =>
 				{
 					if (Actor.ConnectedClient != null)
 						Mud.SendMessage(Actor, s + "\r\n");
