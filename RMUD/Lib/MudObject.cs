@@ -25,11 +25,6 @@ namespace RMUD
         public DTO PersistenceObject { get; internal set; }
         public bool IsPersistent { get { return PersistenceObject != null; } }
         
-		public bool Is(String other) 
-		{
-			return Path == other;
-		}
-        
 		public virtual void Initialize() { }
         public virtual void HandleMarkedUpdate() { }
         public virtual void Heartbeat(UInt64 HeartbeatID) { }

@@ -9,17 +9,22 @@ namespace RMUD
     {
         public override object PackValue(object Value)
         {
-            var r = new Dictionary<RelativeLocations, List<String>>();
+            var r = new Dictionary<String, List<String>>();
             foreach (var relativeLocation in (Value as Dictionary<RelativeLocations, List<MudObject>>))
-                r.Upsert(relativeLocation.Key, new List<String>(relativeLocation.Value.Where(o => o.IsNamedObject).Select(o => o.GetFullName())));
+                r.Upsert(relativeLocation.Key.ToString(), new List<String>(relativeLocation.Value.Where(o => o.IsNamedObject).Select(o => o.GetFullName())));
             return r;
         }
 
         public override object UnpackValue(object StoredValue)
         {
             var r = new Dictionary<RelativeLocations, List<MudObject>>();
-            foreach (var relativeLocation in (StoredValue as Dictionary<RelativeLocations, List<String>>))
-                r.Upsert(relativeLocation.Key, new List<MudObject>(relativeLocation.Value.Select(s => Mud.GetObject(s))));
+            foreach (var relativeLocation in (StoredValue as Dictionary<String, List<String>>))
+            {
+                //The string is always of the form 'None, WhatWeActuallyWant'.
+                var relativeLocationTokens = relativeLocation.Key.Split(new String[] { ", " }, StringSplitOptions.None);
+                var relLoc = Enum.Parse(typeof(RelativeLocations), relativeLocationTokens[1]) as RelativeLocations?;
+                r.Upsert(relLoc.Value, new List<MudObject>(relativeLocation.Value.Select(s => Mud.GetObject(s))));
+            }
             return r;
         }
     }
@@ -27,7 +32,7 @@ namespace RMUD
 	public class GenericContainer : MudObject, Container
 	{
         [Persist(typeof(ContainerMutator))]
-        public Dictionary<RelativeLocations, List<MudObject>> Lists = new Dictionary<RelativeLocations, List<MudObject>>();
+        public Dictionary<RelativeLocations, List<MudObject>> Lists { get; set; }
 
         public RelativeLocations Supported;
         public RelativeLocations Default;
@@ -36,6 +41,7 @@ namespace RMUD
         {
             this.Supported = Locations;
             this.Default = Default;
+            this.Lists = new Dictionary<RelativeLocations, List<MudObject>>();
         }
 
 		#region IContainer

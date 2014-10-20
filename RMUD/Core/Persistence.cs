@@ -194,7 +194,11 @@ namespace RMUD
             if (File.Exists(filename))
             {
                 var json = File.ReadAllText(filename);
-                return JsonConvert.DeserializeObject<DTO>(json);
+                return JsonConvert.DeserializeObject<DTO>(json, new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.All,
+                        TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple
+                    });
             }
             else
                 return null;
@@ -207,7 +211,11 @@ namespace RMUD
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(filename));
-                var json = JsonConvert.SerializeObject(DTO, Formatting.Indented);
+                var json = JsonConvert.SerializeObject(DTO, Formatting.Indented, new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.All,
+                        TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple
+                    });
                 File.WriteAllText(filename, json);
             }
             catch (Exception e)
