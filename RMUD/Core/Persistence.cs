@@ -69,14 +69,19 @@ namespace RMUD
             if (Object.PersistenceObject != null) return; //The object is already persistent.
             if (ActiveInstances.ContainsKey(Object.GetFullName()))
                 throw new InvalidOperationException("An instance with this name is already persisted.");
+            if (Object.IsNamedObject)
+            {
 
-            var dto = LoadDTO(Object.GetFullName());
-            if (dto == null) dto = new DTO();
-            dto.Owner = Object;
-            Object.PersistenceObject = dto;
-            ActiveInstances.Upsert(Object.GetFullName(), dto);
+                var dto = LoadDTO(Object.GetFullName());
+                if (dto == null) dto = new DTO();
+                dto.Owner = Object;
+                Object.PersistenceObject = dto;
+                ActiveInstances.Upsert(Object.GetFullName(), dto);
 
-            UpdateOwnerFromDTO(dto);
+                UpdateOwnerFromDTO(dto);
+            }
+            else
+                throw new InvalidOperationException("Anonymous objects cannot be persisted.");
         }
 
         public static void ForgetInstance(MudObject Object)

@@ -19,6 +19,7 @@ namespace RMUD
 		public String Instance { get; internal set; }
 
         public bool IsNamedObject { get { return Path != null; } }
+        public bool IsAnonymousObject { get { return Path == null; } }
         public String GetFullName() { return Path + "@" + Instance; }
        
         public DTO PersistenceObject { get; internal set; }
