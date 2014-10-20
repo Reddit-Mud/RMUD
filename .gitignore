@@ -137,6 +137,8 @@ publish/
 **/packages/*
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
+# Temp fix for heroku nuget problem
+!**/packages/Newtonsoft.Json.6.0.5/lib/net40/
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
 
