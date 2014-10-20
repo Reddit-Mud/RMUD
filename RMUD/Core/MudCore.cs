@@ -95,9 +95,9 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed to start mud engine.");
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                LogError("Failed to start mud engine.");
+                LogError(e.Message);
+                LogError(e.StackTrace);
                 throw e;
             }
             return true;

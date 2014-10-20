@@ -108,7 +108,7 @@ namespace RMUD
 
             //We can't make an instance of nothing; this means that the base object has an error of some kind.
             if (baseObject == null) {
-                Console.WriteLine("ERROR: Invalid baseObject: " + BasePath);
+                Mud.LogError("ERROR: Invalid baseObject: " + BasePath);
                 return null;
             }
 

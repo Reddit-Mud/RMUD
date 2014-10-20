@@ -92,7 +92,7 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR", e.ToString());
+                Mud.LogError(String.Format("While saving account {0} - {1}", account.UserName, e.Message));
             }
         }
 
@@ -110,7 +110,7 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR", e.ToString());
+                Mud.LogError(String.Format("While loading account {0} - {1}", UserName, e.Message));
             }
 
             return account;

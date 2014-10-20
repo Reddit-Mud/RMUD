@@ -40,10 +40,10 @@ namespace RMUD
         public static void LogError(String ErrorString)
         {
             var logfile = new System.IO.StreamWriter(CriticalLog, true);
-            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}", DateTime.Now, ErrorString);
+            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}\n", DateTime.Now, ErrorString);
             logfile.Close();
 
-            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}", DateTime.Now, ErrorString);
+            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}\n", DateTime.Now, ErrorString);
         }
 
         public static void LogWarning(String Warning)
