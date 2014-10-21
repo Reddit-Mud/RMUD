@@ -13,8 +13,8 @@ namespace RMUD
         public int TelnetPort = 8669;
 
         public String NewPlayerStartRoom;
-        public bool UpfrontCompilation = false;
-        public bool UseConsoleCommands = true;
+        public bool UpfrontCompilation = true;
+        public bool UseConsoleCommands = false;
 
         public int AllowedCommandRate = 100; //How many milliseconds to allow between commands - default is to not limit very much.
 
