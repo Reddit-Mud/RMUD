@@ -22,8 +22,26 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
+            if (Actor.ConnectedClient == null) return;
+            var tempCommand = new CommandParser.MatchedCommand(new CommandParser.CommandEntry
+            {
+                Processor = new SecondStagePurgeProcessor(),
+            }, new PossibleMatch[] { Match });
 
+            Actor.ConnectedClient.CommandHandler = new ConfirmCommandHandler(Actor.ConnectedClient, tempCommand, Actor.ConnectedClient.CommandHandler);
 		}
 	}
 
+    internal class SecondStagePurgeProcessor : CommandProcessor
+    {
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            Mud.CommandTimeoutEnabled = false;
+
+            if (System.IO.Directory.Exists(Mud.DynamicPath))
+                System.IO.Directory.Delete(Mud.DynamicPath, true);
+
+            Mud.SendMessage(Actor, "Dynamic data has been purged.\r\n");
+        }
+    }
 }

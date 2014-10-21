@@ -13,7 +13,7 @@ namespace RMUD.Commands
                 new Sequence(
                     new RankGate(500),
                     new KeyWord("SAVE", false)),
-                new PurgeProcessor(),
+                new SaveProcessor(),
                 "Save game state to disc.");
         }
 	}

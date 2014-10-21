@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\Account.cs" />
+    <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
     <Compile Include="Commands\Save.cs" />
     <Compile Include="Commands\Purge.cs" />
