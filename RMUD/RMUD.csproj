@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
+    <Compile Include="Commands\Save.cs" />
+    <Compile Include="Commands\Purge.cs" />
     <Compile Include="Commands\Register.cs" />
     <Compile Include="Commands\Login.cs" />
     <Compile Include="Commands\Quit.cs" />
