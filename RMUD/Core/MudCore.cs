@@ -26,6 +26,7 @@ namespace RMUD
                 client.Player.ConnectedClient = null;
                 client.Account.LoggedInCharacter = null;
                 MudObject.Move(client.Player, null);
+                client.Player.Destroy(true);
             }
             DatabaseLock.ReleaseMutex();
         }
