@@ -24,7 +24,7 @@ namespace RMUD.Commands
 		{
             if (Actor.ConnectedClient == null) return;
 
-            Mud.SendMessage(Actor, "RMUD Veritas IV\r\n");
+            Mud.SendMessage(Actor, "RMUD Moneta I\r\n");
 		}
 	}
 }

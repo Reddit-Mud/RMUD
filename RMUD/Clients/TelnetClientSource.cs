@@ -97,6 +97,18 @@ namespace RMUD
             }
             else
             {
+                // We will handle all the echoing echoing echoing
+                var echoCommand = new byte[]
+                { 
+                    (byte)TelnetControlCodes.IAC, 
+                    (byte)TelnetControlCodes.Will, // TODO: Handle client response denying this request
+                    (byte)TelnetControlCodes.Echo,
+                    (byte)TelnetControlCodes.IAC,
+                    (byte)TelnetControlCodes.Dont,
+                    (byte)TelnetControlCodes.Echo,
+                };
+                ClientSocket.Send(echoCommand);
+
                 ClientSocket.BeginReceive(NewClient.Storage, 0, 1024, System.Net.Sockets.SocketFlags.Partial, OnData, NewClient);
                 Console.WriteLine("New telnet client: " + ClientSocket.RemoteEndPoint.ToString());
             }
