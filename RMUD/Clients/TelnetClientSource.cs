@@ -98,16 +98,16 @@ namespace RMUD
             else
             {
                 // We will handle all the echoing echoing echoing
-                var echoCommand = new byte[]
-                { 
-                    (byte)TelnetControlCodes.IAC, 
-                    (byte)TelnetControlCodes.Will, // TODO: Handle client response denying this request
-                    (byte)TelnetControlCodes.Echo,
-                    (byte)TelnetControlCodes.IAC,
-                    (byte)TelnetControlCodes.Dont,
-                    (byte)TelnetControlCodes.Echo,
-                };
-                ClientSocket.Send(echoCommand);
+                //var echoCommand = new byte[]
+                //{ 
+                //    (byte)TelnetControlCodes.IAC, 
+                //    (byte)TelnetControlCodes.Will, // TODO: Handle client response denying this request
+                //    (byte)TelnetControlCodes.Echo,
+                //    (byte)TelnetControlCodes.IAC,
+                //    (byte)TelnetControlCodes.Dont,
+                //    (byte)TelnetControlCodes.Echo,
+                //};
+                //ClientSocket.Send(echoCommand);
 
                 ClientSocket.BeginReceive(NewClient.Storage, 0, 1024, System.Net.Sockets.SocketFlags.Partial, OnData, NewClient);
                 Console.WriteLine("New telnet client: " + ClientSocket.RemoteEndPoint.ToString());
@@ -159,10 +159,10 @@ namespace RMUD
                         
                         if (character == '\n' || character == '\r')
                         {
-                            if (Client.Echo == Echo.All || Client.Echo == Echo.Mask)
-                            {
-                                Client.Send(new byte[] { (byte)character });
-                            }
+                            //if (Client.Echo == Echo.All || Client.Echo == Echo.Mask)
+                            //{
+                            //    Client.Send(new byte[] { (byte)character });
+                            //}
 
                             if (!String.IsNullOrEmpty(Client.CommandQueue))
                             {
@@ -176,21 +176,21 @@ namespace RMUD
                             if (Client.CommandQueue.Length > 0)
                             {
                                 Client.CommandQueue = Client.CommandQueue.Remove(Client.CommandQueue.Length - 1);
-                                if (Client.Echo == Echo.All || Client.Echo == Echo.Mask)
-                                {
-                                    Client.Send(new byte[] { (byte)character });
-                                }
+                                //if (Client.Echo == Echo.All || Client.Echo == Echo.Mask)
+                                //{
+                                //    Client.Send(new byte[] { (byte)character });
+                                //}
                             }
                         }
                         else if (ValidCharacters.Contains(character))
                         {
                             Client.CommandQueue += character;
-                            switch (Client.Echo)
-                            {
-                                case Echo.All: Client.Send(new byte[] { (byte)character }); break;
-                                case Echo.Mask: Client.Send(new byte[] { (byte)'*' }); break;
-                                case Echo.None: break;
-                            }
+                            //switch (Client.Echo)
+                            //{
+                            //    case Echo.All: Client.Send(new byte[] { (byte)character }); break;
+                            //    case Echo.Mask: Client.Send(new byte[] { (byte)'*' }); break;
+                            //    case Echo.None: break;
+                            //}
                         }
 
                     }
