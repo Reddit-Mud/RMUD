@@ -84,6 +84,12 @@ namespace RMUD
                 throw new InvalidOperationException("Anonymous objects cannot be persisted.");
         }
 
+        public static MudObject GetPersistedInstance(String Path)
+        {
+            if (ActiveInstances.ContainsKey(Path)) return ActiveInstances[Path].Owner;
+            return null;
+        }
+
         public static void ForgetInstance(MudObject Object)
         {
             var instanceName = Object.Path + "@" + Object.Instance;

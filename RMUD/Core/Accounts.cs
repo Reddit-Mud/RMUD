@@ -71,8 +71,12 @@ namespace RMUD
 
         public static Actor GetAccountCharacter(Account Account)
         {
+            var characterName = "account/" + Account.UserName;
+            var existing = GetPersistedInstance(characterName + "@main") as Actor;
+            if (existing != null) return existing;
+
             var character = new Actor();
-            character.Path = "account/" + Account.UserName;
+            character.Path = characterName;
             character.Instance = "main";
             character.Short = Account.UserName;
             character.Nouns.Add(Account.UserName.ToUpper());
