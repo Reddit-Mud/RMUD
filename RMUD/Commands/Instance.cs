@@ -15,7 +15,7 @@ namespace RMUD.Commands
                     new KeyWord("INSTANCE", false),
                     new FailIfNoMatches(
                         new Path("TARGET"),
-                        "It helps if you give me a path.\r\n")),
+                        "It helps if you give me a path.")),
                 new InstanceProcessor(),
                 "Create a new instance of an object.");
         }
@@ -29,15 +29,15 @@ namespace RMUD.Commands
             var newObject = Mud.CreateInstance(target + "@" + Guid.NewGuid().ToString(), s =>
 				{
 					if (Actor.ConnectedClient != null)
-						Mud.SendMessage(Actor, s + "\r\n");
+						Mud.SendMessage(Actor, s);
 				});
 
             if (newObject == null)
-                Mud.SendMessage(Actor, "Failed to instance " + target + "\r\n");
+                Mud.SendMessage(Actor, "Failed to instance " + target);
             else
             {
                 MudObject.Move(newObject, Actor);
-                Mud.SendMessage(Actor, "Instanced " + target + "\r\n");
+                Mud.SendMessage(Actor, "Instanced " + target);
             }
 		}
 	}

@@ -14,9 +14,9 @@ namespace RMUD.Commands
 					new KeyWord("DROP", false),
                     new FailIfNoMatches(
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
-                        "I don't know what object you're talking about.\r\n")),
+                        "I don't know what object you're talking about.")),
 				new DropProcessor(),
-				"Drop someMudObject",
+				"Drop something",
                 "SUBJECT-SCORE");
 		}
 	}
@@ -29,7 +29,7 @@ namespace RMUD.Commands
 
             if (!Mud.ObjectContainsObject(Actor, target))
             {
-                Mud.SendMessage(Actor, "You aren't holding that.\r\n");
+                Mud.SendMessage(Actor, "You aren't holding that.");
                 return;
             }
 
@@ -39,7 +39,7 @@ namespace RMUD.Commands
                 var checkRule = dropRules.Check(Actor);
                 if (!checkRule.Allowed)
                 {
-                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
+                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
                     return;
                 }
             }
@@ -49,8 +49,8 @@ namespace RMUD.Commands
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, "You drop " + target.Indefinite + "\r\n");
-                Mud.SendExternalMessage(Actor, Actor.Short + " drops " + target.Indefinite + "\r\n");
+                Mud.SendMessage(Actor, "You drop " + target.Indefinite + ".");
+                Mud.SendExternalMessage(Actor, Actor.Short + " drops " + target.Indefinite + ".");
                 MudObject.Move(target, Actor.Location);
             }
 

@@ -28,7 +28,7 @@ namespace RMUD.Commands
 			var builder = new StringBuilder();
 
             var heldObjects = Mud.GetContents(Actor as Container, RelativeLocations.Held);
-			if (heldObjects.Count == 0) builder.Append("You have nothing.\r\n");
+			if (heldObjects.Count == 0) builder.Append("You have nothing.");
 			else
 			{
 				builder.Append("You are carrying..\r\n");

@@ -17,7 +17,7 @@ namespace RMUD.Commands
 					    new Or(
 						    new ObjectMatcher("OBJECT", new InScopeObjectSource()),
 						    new KeyWord("HERE", false)),
-                        "I don't see that here.\r\n")),
+                        "I don't see that here.")),
 				new InspectProcessor(),
 				"Inspect internal properties of an object.");
 		}

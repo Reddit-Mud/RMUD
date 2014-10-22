@@ -15,7 +15,7 @@ namespace RMUD.Commands
                         new KeyWord("GO", false),
                         new FailIfNoMatches(
                             new Cardinal("DIRECTION"),
-                            "What way was that?\r\n")),
+                            "What way was that?")),
                     new Cardinal("DIRECTION")),
 				new GoProcessor(),
 				"Move between rooms.");
@@ -31,7 +31,7 @@ namespace RMUD.Commands
 			var link = location.Links.FirstOrDefault(l => l.Direction == direction.Value);
 
 			if (link == null)
-				Mud.SendMessage(Actor, "You can't go that way.\r\n");
+				Mud.SendMessage(Actor, "You can't go that way.");
 			else
 			{
 				if (link.Portal != null)
@@ -39,25 +39,25 @@ namespace RMUD.Commands
 					var openable = link.Portal as OpenableRules;
 					if (openable != null && !openable.Open)
 					{
-						Mud.SendMessage(Actor, "The door is closed.\r\n");
+						Mud.SendMessage(Actor, "The door is closed.");
 						return;
 					}
 				}
 
-				Mud.SendMessage(Actor, "You went " + direction.Value.ToString().ToLower() + ".\r\n");
-				Mud.SendExternalMessage(Actor, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".\r\n");
+				Mud.SendMessage(Actor, "You went " + direction.Value.ToString().ToLower() + ".");
+				Mud.SendExternalMessage(Actor, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".");
 				var destination = Mud.GetObject(link.Destination, s =>
 				{
 					if (Actor.ConnectedClient != null)
-						Mud.SendMessage(Actor, s + "\r\n");
+						Mud.SendMessage(Actor, s);
 				}) as Room;
-				if (destination == null) throw new InvalidOperationException("[ERROR] Link does not lead to room.\r\n");
+				if (destination == null) throw new InvalidOperationException("[ERROR] Link does not lead to room.");
 				MudObject.Move(Actor, destination);
 				Mud.EnqueuClientCommand(Actor.ConnectedClient, "look");
 
                 var arriveMessage = Link.FromMessage(Link.Opposite(direction.Value));
 
-				Mud.SendExternalMessage(Actor, Actor.Short + " arrives " + arriveMessage + ".\r\n");
+				Mud.SendExternalMessage(Actor, Actor.Short + " arrives " + arriveMessage + ".");
 
                 Mud.MarkLocaleForUpdate(location);
                 Mud.MarkLocaleForUpdate(destination);
