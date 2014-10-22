@@ -5,8 +5,8 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Chat : CommandFactory
-	{
+    internal class Chat : CommandFactory
+    {
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
@@ -35,9 +35,9 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 new Sequence(
                     new ChatChannelNameMatcher("CHANNEL"),
-                    //new FailIfNoMatches(
+                //new FailIfNoMatches(
                         new Rest("TEXT")),
-                    //    "You have to actually say someMudObject to use the chat channel.\r\n")),
+                //    "You have to actually say someMudObject to use the chat channel.\r\n")),
                 new ChatProcessor(),
                 "Chat on a channel.");
 
@@ -52,10 +52,10 @@ namespace RMUD.Commands
                 new RecallProcessor(),
                 "Recall past conversation on a channel.");
         }
-	}
+    }
 
-	internal class SubscribeProcessor : CommandProcessor
-	{
+    internal class SubscribeProcessor : CommandProcessor
+    {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
             if (Actor.ConnectedClient == null) return;
@@ -150,12 +150,12 @@ namespace RMUD.Commands
             int count = 20;
             if (Match.Arguments.ContainsKey("COUNT")) count = (Match.Arguments["COUNT"] as int?).Value;
 
-            var start = channel.ChatHistory.Count - count;
-            if (start < 0) start = 0;
-
-            for (int i = start; i < channel.ChatHistory.Count; ++i)
-                Mud.SendMessage(Actor, String.Format("{0} : {1}", channel.ChatHistory[i].Time, channel.ChatHistory[i].Message));
-
+            var logFilename = Mud.ChatLogsPath + channel.Name + ".txt";
+            if (System.IO.File.Exists(logFilename))
+            {
+                foreach (var line in (new ReverseLineReader(logFilename)).Take(count).Reverse())
+                    Mud.SendMessage(Actor, line + "\r\n");
+            }
         }
     }
 }

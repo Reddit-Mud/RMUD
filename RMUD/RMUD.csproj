@@ -128,6 +128,7 @@
     <Compile Include="Lib\NounList.cs" />
     <Compile Include="Parser\Matchers\RelativeLocationMatcher.cs" />
     <Compile Include="Parser\Matchers\FailIfNoMatches.cs" />
+    <Compile Include="ReverseLineReader.cs" />
     <Compile Include="RuleDecorators\CheckRuleResponse.cs" />
     <Compile Include="RuleDecorators\PutRules.cs" />
     <Compile Include="RuleDecorators\EmitsLight.cs" />
