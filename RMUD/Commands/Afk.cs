@@ -14,7 +14,7 @@ namespace RMUD.Commands
                     new KeyWord("AFK", false),
                     new FailIfNoMatches(
                         new Rest("MESSAGE"),
-                        "You have to supply an afk message.\r\n")),
+                        "You have to supply an afk message.")),
                 new AFKProcessor(),
                 "Set your afk message.");
         }
@@ -28,7 +28,7 @@ namespace RMUD.Commands
             Mud.AssembleText(Match.Arguments["MESSAGE"] as LinkedListNode<String>, messageBuilder);
             if (Actor.ConnectedClient != null)
                 Actor.ConnectedClient.Account.AFKMessage = messageBuilder.ToString();
-            Mud.SendMessage(Actor, "AFK message set.\r\n");
+            Mud.SendMessage(Actor, "AFK message set.");
         }        
 	}
 }

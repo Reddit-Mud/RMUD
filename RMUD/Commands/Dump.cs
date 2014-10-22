@@ -15,7 +15,7 @@ namespace RMUD.Commands
                     new KeyWord("DUMP", false),
                     new FailIfNoMatches(
                         new Path("TARGET"),
-                        "It helps if you give me a path.\r\n")),
+                        "It helps if you give me a path.")),
                 new DumpProcessor(),
                 "Dump a database source file.");
         }
@@ -28,7 +28,7 @@ namespace RMUD.Commands
 			var target = Match.Arguments["TARGET"].ToString();
             var source = Mud.LoadRawSourceFile(target);
 
-            Mud.SendMessage(Actor, "[" + target + "]\r\n" + source + "\r\n");
+            Mud.SendMessage(Actor, "[" + target + "]\r\n" + source);
 		}
 	}
 

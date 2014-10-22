@@ -52,8 +52,6 @@ namespace RMUD.Commands
                 builder.Append("\r\n");
             }
             
-            builder.Append("\r\n");
-
             Mud.SendMessage(Actor, builder.ToString());
 		}
 	}
@@ -64,13 +62,13 @@ namespace RMUD.Commands
         {
             if (!Match.Arguments.ContainsKey("GLOB"))
             {
-                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "You need to supply a wildcard mask for the ip address.\r\n");
+                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "You need to supply a wildcard mask for the ip address.");
                 return;
             }
 
             if (!Match.Arguments.ContainsKey("REASON"))
             {
-                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "You must state a reason for the ban.\r\n");
+                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "You must state a reason for the ban.");
                 return;
             }
 
@@ -83,7 +81,7 @@ namespace RMUD.Commands
             Mud.ProscriptionList.Ban(glob, reason);
 
             if (Actor.ConnectedClient != null)
-                Mud.SendMessage(Actor, "You banned " + glob + "\r\n");
+                Mud.SendMessage(Actor, "You banned " + glob);
         }
     }
 
@@ -93,7 +91,7 @@ namespace RMUD.Commands
         {
             if (!Match.Arguments.ContainsKey("GLOB"))
             {
-                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "You need to supply the wildcard mask to unban.\r\n");
+                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "You need to supply the wildcard mask to unban.");
                 return;
             }
 
@@ -102,7 +100,7 @@ namespace RMUD.Commands
             Mud.ProscriptionList.RemoveBan(glob);
 
             if (Actor.ConnectedClient != null)
-                Mud.SendMessage(Actor, "You unbanned " + glob + "\r\n");
+                Mud.SendMessage(Actor, "You unbanned " + glob);
         }
     }
 }

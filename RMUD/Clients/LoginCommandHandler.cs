@@ -35,7 +35,7 @@ namespace RMUD
                 MudObject.Move(Client.Player,
                     Mud.GetObject(
                         (Mud.GetObject("settings") as Settings).NewPlayerStartRoom,
-                        s => Mud.SendMessage(Client, s + "\r\n")));
+                        s => Mud.SendMessage(Client, s)));
                 Mud.EnqueuClientCommand(Client, "look");
             }
 
@@ -65,7 +65,7 @@ namespace RMUD
                     matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], null);
                 }
                 else
-                    Mud.SendMessage(Client, "I do not understand.\r\n");
+                    Mud.SendMessage(Client, "I do not understand.");
 			}
 			catch (Exception e)
 			{

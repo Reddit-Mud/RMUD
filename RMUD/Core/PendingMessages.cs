@@ -26,7 +26,7 @@ namespace RMUD
         internal static void SendPendingMessages()
         {
 			foreach (var message in PendingMessages)
-				message.Destination.Send(message.Message);
+				message.Destination.Send(message.Message + "\r\n");
             PendingMessages.Clear();
         }
 

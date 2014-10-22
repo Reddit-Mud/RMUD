@@ -42,7 +42,7 @@ namespace RMUD
                     Command = Command.Substring("@DEBUG ".Length);
                     if (Client.Rank < 500)
                     {
-                        Mud.SendMessage(Client, "You do not have sufficient rank to use the debug command.\r\n");
+                        Mud.SendMessage(Client, "You do not have sufficient rank to use the debug command.");
                         return;
                     }
 
@@ -65,12 +65,12 @@ namespace RMUD
 
                 if (matchedCommand == null)
                 {
-                    Mud.SendMessage(Client, String.Format("Matched nothing in {0:n0} milliseconds.\r\n",
+                    Mud.SendMessage(Client, String.Format("Matched nothing in {0:n0} milliseconds.",
                         (matchEndTime - startTime).TotalMilliseconds));
                 }
                 else
                 {
-                    Mud.SendMessage(Client, String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.\r\n",
+                    Mud.SendMessage(Client, String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.",
                         matchedCommand.Command.Processor.GetType().Name,
                         (matchEndTime - startTime).TotalMilliseconds,
                         matchedCommand.Matches.Count));
@@ -87,8 +87,6 @@ namespace RMUD
                             builder.Append("] ");
                         }
 
-                        builder.Append("\r\n");
-
                         Mud.SendMessage(Client, builder.ToString());
                     }
                 }
@@ -104,13 +102,13 @@ namespace RMUD
                     matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], Client.Player);
             }
             else
-                Mud.SendMessage(Client, "huh?\r\n");
+                Mud.SendMessage(Client, "huh?");
 
             if (displayTime)
             {
                 var endTime = DateTime.Now;
 
-                Mud.SendMessage(Client, String.Format("Command completed in {0} milliseconds.\r\n", (endTime - startTime).TotalMilliseconds));
+                Mud.SendMessage(Client, String.Format("Command completed in {0} milliseconds.", (endTime - startTime).TotalMilliseconds));
             }
         }
     }

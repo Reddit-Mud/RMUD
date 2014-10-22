@@ -16,7 +16,7 @@ namespace RMUD.Commands
                         new KeyWord("X", false)),
                     new FailIfNoMatches(
                         new ObjectMatcher("OBJECT", new InScopeObjectSource()),
-                        "I don't see that here.\r\n")),
+                        "I don't see that here.")),
                 new ExamineProcessor(),
                 "Look closely at an object.");
 
@@ -28,7 +28,7 @@ namespace RMUD.Commands
                     new KeyWord("AT", false),
                     new FailIfNoMatches(
                         new ObjectMatcher("OBJECT", new InScopeObjectSource()),
-                        "I don't see that here.\r\n")),
+                        "I don't see that here.")),
                 new ExamineProcessor(),
                 "Look closely at an object.");
 
@@ -46,7 +46,7 @@ namespace RMUD.Commands
 			{
                 if (!Mud.IsVisibleTo(Actor, target))
                 {
-                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
                     return;
                 }
 

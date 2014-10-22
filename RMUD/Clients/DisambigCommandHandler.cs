@@ -72,7 +72,7 @@ namespace RMUD
             }
             else
             {
-                Mud.SendMessage(Client, "That command is too ambiguous for me to help you with.\r\n");
+                Mud.SendMessage(Client, "That command is too ambiguous for me to help you with.");
             }
 		}
 
@@ -91,7 +91,7 @@ namespace RMUD
             if (Int32.TryParse(Command, out ordinal))
             {
                 if (ordinal < 0 || ordinal >= DisambigObjects.Count)
-                    Mud.SendMessage(Client, "That wasn't a valid option. I'm aborting disambiguation.\r\n");
+                    Mud.SendMessage(Client, "That wasn't a valid option. I'm aborting disambiguation.");
                 else
                 {
                     var choosenMatches = MatchedCommand.Matches.Where(m => Object.ReferenceEquals(m.Arguments[DisambigArgument], DisambigObjects[ordinal]));
@@ -101,7 +101,7 @@ namespace RMUD
                         MatchedCommand.Command.Processor.Perform(MatchedCommand.Matches[0], Client.Player);
                     else
                     {
-                        Mud.SendMessage(Client, "That helped narrow it down, but I'm still not sure what you mean.\r\n");
+                        Mud.SendMessage(Client, "That helped narrow it down, but I'm still not sure what you mean.");
                         Client.CommandHandler = new DisambigCommandHandler(Client, MatchedCommand, ParentHandler);
                     }
                 }

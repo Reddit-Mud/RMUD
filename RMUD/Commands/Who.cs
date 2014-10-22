@@ -49,8 +49,6 @@ namespace RMUD.Commands
                 builder.Append("\r\n");                
             }
 
-            builder.Append("\r\n");
-
             Mud.SendMessage(Actor, builder.ToString());
 		}
 	}
