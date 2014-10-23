@@ -20,6 +20,20 @@ namespace RMUD.Commands
 				new SayProcessor(SayProcessor.EmoteTypes.Speech),
 				"Say something.");
 
+            Parser.AddCommand(
+                new Generic((pm, context) =>
+                    {
+                        var r = new List<PossibleMatch>();
+                        if (pm.Next == null || pm.Next.Value.Length <= 1 || pm.Next.Value[0] != '\'')
+                            return r;
+
+                        pm.Next.Value = pm.Next.Value.Substring(1); //remove the leading '
+                        r.Add(pm.EndWith("SPEECH", pm.Next));
+                        return r;
+                    }, "' [TEXT]"),
+                new SayProcessor(SayProcessor.EmoteTypes.Speech),
+                "Say something.");
+
 			Parser.AddCommand(
 				new Sequence(
 					new Or(
