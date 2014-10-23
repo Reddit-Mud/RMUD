@@ -24,7 +24,9 @@ namespace RMUD.Commands
 		{
             if (Actor.ConnectedClient == null) return;
 
-            Mud.SendMessage(Actor, "RMUD Moneta I\r\n");
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            Mud.SendMessage(Actor, String.Format("RMUD Moneta {0}", version));
 		}
 	}
 }
