@@ -8,6 +8,7 @@ namespace RMUD
 	public class NPC : Actor
 	{
         public List<ConversationTopic> ConversationTopics = new List<ConversationTopic>();
+        public ConversationTopic DefaultResponse;
 
         public int AddConversationTopic(ConversationTopic Topic)
         {

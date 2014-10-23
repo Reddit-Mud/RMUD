@@ -68,7 +68,6 @@ namespace RMUD.Commands
                 new GreetProcessor(),
                 "Enter into conversation with an NPC.");
 
-            //Todo: Implicitely greet
             Parser.AddCommand(
                 new Sequence(
                     new Or(
@@ -87,7 +86,6 @@ namespace RMUD.Commands
                         new Rest("STRING-TOPIC"))),
                 new DiscussProcessor(),
                 "Discuss something with someone.");
-
         }
     }
 
@@ -101,12 +99,43 @@ namespace RMUD.Commands
                 Mud.SendMessage(For, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Topic)) + ".");
         }
 
-        public static void ImplicitelyGreet(Actor Actor, NPC Whom)
+        public static void GreetLocutor(Actor Actor, NPC Whom)
         {
             //Todo: Greeting rules?
             //Todo: NPC Greeting response
 
             Actor.CurrentInterlocutor = Whom;
+        }
+
+        public static void DiscussTopic(Actor Actor, NPC With, ConversationTopic Topic)
+        {
+            Mud.SendMessage(Actor, String.Format("You discuss '{0}' with {1}.", Topic.Topic, Actor.CurrentInterlocutor.Definite));
+            Mud.SendExternalMessage(Actor, String.Format("{0} discusses '{1}' with {2}.", Actor.Definite, Topic.Topic, Actor.CurrentInterlocutor.Definite));
+
+            if (Topic.ResponseType == ConversationTopic.ResponseTypes.Normal)
+            {
+                var response = Topic.NormalResponse.Expand(Actor, Actor.CurrentInterlocutor);
+                Mud.SendLocaleMessage(Actor, response);
+            }
+            else if (Topic.ResponseType == ConversationTopic.ResponseTypes.Silent)
+            {
+                Topic.SilentResponse(Actor, Actor.CurrentInterlocutor, Topic);
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+
+            var locale = Mud.FindLocale(Actor);
+            if (locale != null)
+                Mud.EnumerateObjects(locale, (mo, relloc) =>
+                {
+                    if (mo is Actor)
+                        (mo as Actor).GrantKnowledgeOfTopic(Actor.CurrentInterlocutor, Topic.ID);
+                    return EnumerateObjectsControl.Continue;
+                });
+
+            ConversationHelper.ListSuggestedTopics(Actor, Actor.CurrentInterlocutor);
         }
     }
 
@@ -127,7 +156,7 @@ namespace RMUD.Commands
                 return;
             }
 
-            ConversationHelper.ImplicitelyGreet(Actor, locutor as NPC);
+            ConversationHelper.GreetLocutor(Actor, locutor as NPC);
             ConversationHelper.ListSuggestedTopics(Actor, locutor as NPC);
         }
     }
@@ -146,7 +175,7 @@ namespace RMUD.Commands
                 }
 
                 if (!Object.ReferenceEquals(newInterlocutor, Actor.CurrentInterlocutor))
-                    ConversationHelper.ImplicitelyGreet(Actor, newInterlocutor);
+                    ConversationHelper.GreetLocutor(Actor, newInterlocutor);
             }
 
             if (Actor.CurrentInterlocutor == null)
@@ -157,8 +186,10 @@ namespace RMUD.Commands
 
             if (!Match.Arguments.ContainsKey("TOPIC"))
             {
-                //Todo: Give NPCs a default response.
-                Mud.SendMessage(Actor, "That doesn't seem to be a topic I understand.");
+                if (Actor.CurrentInterlocutor.DefaultResponse != null)
+                    ConversationHelper.DiscussTopic(Actor, Actor.CurrentInterlocutor, Actor.CurrentInterlocutor.DefaultResponse);
+                else
+                    Mud.SendMessage(Actor, "That doesn't seem to be a topic I understand.");
                 return;
             }
                         
@@ -171,34 +202,7 @@ namespace RMUD.Commands
 
             var topic = Match.Arguments["TOPIC"] as ConversationTopic;
 
-            Mud.SendMessage(Actor, String.Format("You discuss '{0}' with {1}.", topic.Topic, Actor.CurrentInterlocutor.Definite));
-            Mud.SendExternalMessage(Actor, String.Format("{0} discusses '{1}' with {2}.", Actor.Definite, topic.Topic, Actor.CurrentInterlocutor.Definite));
-
-            if (topic.ResponseType == ConversationTopic.ResponseTypes.Normal)
-            {
-                var response = topic.NormalResponse.Expand(Actor, Actor.CurrentInterlocutor);
-                Mud.SendLocaleMessage(Actor, response);
-            }
-            else if (topic.ResponseType == ConversationTopic.ResponseTypes.Silent)
-            {
-                topic.SilentResponse(Actor, Actor.CurrentInterlocutor, topic);
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
-
-            var locale = Mud.FindLocale(Actor);
-            if (locale != null)
-                Mud.EnumerateObjects(locale, (mo, relloc) =>
-                    {
-                        if (mo is Actor)
-                            (mo as Actor).GrantKnowledgeOfTopic(Actor.CurrentInterlocutor, topic.ID);
-                        return EnumerateObjectsControl.Continue;
-                    });
-
-            ConversationHelper.ListSuggestedTopics(Actor, Actor.CurrentInterlocutor);
-
+            ConversationHelper.DiscussTopic(Actor, Actor.CurrentInterlocutor, topic);
         }
     }
 }
