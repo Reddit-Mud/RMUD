@@ -14,7 +14,7 @@ namespace RMUD.Commands
 					new KeyWord("PUT", false),
                     new FailIfNoMatches(
 					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
-                        "You don't seem to have that.\r\n"),
+                        "You don't seem to have that."),
                     new Optional(
                         new RelativeLocationMatcher("RELLOC")),
                     new FailIfNoMatches(
@@ -27,7 +27,7 @@ namespace RMUD.Commands
                             }),
                         "I can't see that here.")),
 				new PutProcessor(),
-				"Put someMudObject on, in, under or behind someMudObject",
+				"Put something on, in, under or behind something",
                 "SUBJECT-SCORE",
                 "OBJECT-SCORE");
 		}
@@ -43,13 +43,13 @@ namespace RMUD.Commands
             if (!Mud.IsVisibleTo(Actor, container as MudObject))
             {
                 if (Actor.ConnectedClient != null)
-                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
                 return;
             }
 
             if (!Mud.ObjectContainsObject(Actor, target as MudObject))
             {
-                Mud.SendMessage(Actor, "You aren't holding that.\r\n");
+                Mud.SendMessage(Actor, "You aren't holding that.");
                 return;
             }
             
@@ -63,7 +63,7 @@ namespace RMUD.Commands
 
             if (container == null || ((container.LocationsSupported & relloc) != relloc))
             {
-                Mud.SendMessage(Actor, String.Format("You can't put MudObjects {0} that.\r\n", Mud.GetRelativeLocationName(relloc)));
+                Mud.SendMessage(Actor, String.Format("You can't put something {0} that.", Mud.GetRelativeLocationName(relloc)));
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace RMUD.Commands
                 var openable = target as OpenableRules;
                 if (openable != null && !openable.Open)
                 {
-                    Mud.SendMessage(Actor, Mud.CapFirst(String.Format("{0} is closed.\r\n", target.Definite)));
+                    Mud.SendMessage(Actor, Mud.CapFirst(String.Format("{0} is closed.", target.Definite)));
                     return;
                 }
             }
@@ -83,7 +83,7 @@ namespace RMUD.Commands
                 var checkRule = dropRules.Check(Actor);
                 if (!checkRule.Allowed)
                 {
-                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
+                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
                     return;
                 }
             }
@@ -94,7 +94,7 @@ namespace RMUD.Commands
                 var checkRule = putRules.Check(Actor, target, relloc);
                 if (!checkRule.Allowed)
                 {
-                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
+                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
                     return;
                 }
             }
@@ -104,8 +104,8 @@ namespace RMUD.Commands
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, String.Format("You put {0} {1} {2}.\r\n", target.Definite, Mud.GetRelativeLocationName(relloc), (container as MudObject).Definite));
-                Mud.SendExternalMessage(Actor, String.Format("{0} puts {1} {2} {3}.\r\n", Actor.Short, target.Indefinite, Mud.GetRelativeLocationName(relloc), (container as MudObject).Definite));
+                Mud.SendMessage(Actor, String.Format("You put {0} {1} {2}.", target.Definite, Mud.GetRelativeLocationName(relloc), (container as MudObject).Definite));
+                Mud.SendExternalMessage(Actor, String.Format("{0} puts {1} {2} {3}.", Actor.Short, target.Indefinite, Mud.GetRelativeLocationName(relloc), (container as MudObject).Definite));
                 MudObject.Move(target, container as MudObject, relloc);
             }
 

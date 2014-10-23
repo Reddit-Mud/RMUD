@@ -24,13 +24,13 @@ namespace RMUD.Commands
 		{
             Mud.CommandTimeoutEnabled = false;
 
-            Mud.SendGlobalMessage("The database is being saved. There may be a brief delay.\r\n");
+            Mud.SendGlobalMessage("The database is being saved. There may be a brief delay.");
             Mud.SendPendingMessages();
 
             var saved = Mud.SaveActiveInstances();
 
-            Mud.SendGlobalMessage("The database has been saved.\r\n");
-            Mud.SendMessage(Actor, String.Format("I saved {0} persistent objects.\r\n", saved));
+            Mud.SendGlobalMessage("The database has been saved.");
+            Mud.SendMessage(Actor, String.Format("I saved {0} persistent objects.", saved));
 		}
 	}
 

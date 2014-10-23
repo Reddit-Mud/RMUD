@@ -41,7 +41,7 @@ namespace RMUD.Commands
             if (System.IO.Directory.Exists(Mud.DynamicPath))
                 System.IO.Directory.Delete(Mud.DynamicPath, true);
 
-            Mud.SendMessage(Actor, "Dynamic data has been purged.\r\n");
+            Mud.SendMessage(Actor, "Dynamic data has been purged.");
         }
     }
 }

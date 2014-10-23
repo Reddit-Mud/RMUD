@@ -15,11 +15,11 @@ namespace RMUD.Commands
 					new KeyWord("MOVE", false),
                     new FailIfNoMatches(
 					    new ObjectMatcher("OBJECT", new InScopeObjectSource()),
-                        "I don't see that here.\r\n"),
+                        "I don't see that here."),
 					new KeyWord("TO", true),
                     new FailIfNoMatches(
 					    new Path("DESTINATION"),
-                        "You have to specify where to move it to.\r\n")),
+                        "You have to specify where to move it to.")),
 				new MoveProcessor(),
 				"Teleport an object to a new location. Bypasses take rules.");
 		}
@@ -37,10 +37,14 @@ namespace RMUD.Commands
                 Mud.MarkLocaleForUpdate(target);
                 MudObject.Move(target, room);
                 Mud.MarkLocaleForUpdate(room);
+
+                Mud.SendMessage(Actor, "Success.");
+                if (Object.ReferenceEquals(target, Actor) && Actor.ConnectedClient != null)
+                    Mud.EnqueuClientCommand(Actor.ConnectedClient, "LOOK");
             }
             else
             {
-                Mud.SendMessage(Actor, "I couldn't find the destination for that move.\r\n");
+                Mud.SendMessage(Actor, "I couldn't find the destination for that move.");
             }
 		}
 	}

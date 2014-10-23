@@ -20,9 +20,9 @@ namespace RMUD.Commands
                                      return MatchPreference.Likely;
                                  return MatchPreference.Unlikely;
                              }),
-                        "I don't see that here.\r\n")),
+                        "I don't see that here.")),
                 new OpenProcessor(),
-                "Open someMudObject",
+                "Open something",
                 "SUBJECT-SCORE");
         }
 	}
@@ -35,14 +35,14 @@ namespace RMUD.Commands
 			if (target == null)
 			{
 				if (Actor.ConnectedClient != null) 
-					Mud.SendMessage(Actor, "I don't think the concept of 'open' and 'closed' applies to that.\r\n");
+					Mud.SendMessage(Actor, "I don't think the concept of 'open' and 'closed' applies to that.");
 			}
 			else
 			{
                 if (!Mud.IsVisibleTo(Actor, target as MudObject))
             {
                 if (Actor.ConnectedClient != null)
-                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
                 return;
             }
 
@@ -56,8 +56,8 @@ namespace RMUD.Commands
                         var MudObject = target as MudObject;
                         if (MudObject != null)
                         {
-                            Mud.SendMessage(Actor, "You open " + MudObject.Definite + "\r\n");
-                            Mud.SendExternalMessage(Actor, Actor.Short + " opens " + MudObject.Definite + "\r\n");
+                            Mud.SendMessage(Actor, "You open " + MudObject.Definite + ".");
+                            Mud.SendExternalMessage(Actor, Actor.Short + " opens " + MudObject.Definite + ".");
                         }
                     }
 
@@ -65,7 +65,7 @@ namespace RMUD.Commands
 				}
 				else
 				{
-					Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
+					Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
 				}
 			}
 		}

@@ -17,12 +17,12 @@ namespace RMUD.Commands
                     new KeyWord("TO", true),
                     new FailIfNoMatches(
                         new ObjectMatcher("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),
-                        "Whom?\r\n"),
+                        "Whom?"),
                     new FailIfNoMatches(
                         new Rest("SPEECH"),
-                        "And what would you like to tell then, hmm?\r\n")),
+                        "And what would you like to tell them, hmm?")),
                 new TellProcessor(),
-                "Tell a player someMudObject privately.");
+                "Tell a player something privately.");
         }
 	}
 
@@ -32,7 +32,7 @@ namespace RMUD.Commands
         {
             if (Object.ReferenceEquals(Actor, Match.Arguments["PLAYER"]))
             {
-                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "Talking to yourself?\r\n");
+                if (Actor.ConnectedClient != null) Mud.SendMessage(Actor, "Talking to yourself?");
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace RMUD.Commands
             speechBuilder.Append(Actor.Short);
             speechBuilder.Append(": \"");
             Mud.AssembleText(Match.Arguments["SPEECH"] as LinkedListNode<String>, speechBuilder);
-            speechBuilder.Append("\"\r\n");
+            speechBuilder.Append("\"");
 
             var player = Match.Arguments["PLAYER"] as Actor;
             if (player.ConnectedClient != null)

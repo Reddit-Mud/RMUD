@@ -32,6 +32,7 @@ namespace RMUD.Commands
 
             if (client != null)
             {
+                client.Send("Goodbye...\r\n");
                 client.Disconnect();
             }
         }

@@ -44,12 +44,12 @@ namespace RMUD.Commands
 
             if (location.AmbientLighting <= LightingLevel.Dark)
             {
-                builder.Append("It is too dark to see.\r\n\r\n");
+                builder.Append("It is too dark to see.\r\n");
                 return builder.ToString();
             }
 
             builder.Append(location.Long.Expand(Actor, location));
-            builder.Append("\r\n\r\n");
+            builder.Append("\r\n");
 
             var visibleMudObjects = new List<MudObject>(location.Contents.Where(t => !Object.ReferenceEquals(t, Actor)));
 
@@ -60,7 +60,7 @@ namespace RMUD.Commands
                 {
                     visibleMudObjects.RemoveAt(i);
                     builder.Append(localeDescribable.LocaleDescription.Expand(Actor, localeDescribable as MudObject));
-                    builder.Append("\r\n\r\n");
+                    builder.Append("\r\n");
                 }
                 else
                 {
@@ -71,7 +71,7 @@ namespace RMUD.Commands
             //Display objects in room
             if (visibleMudObjects.Count > 0)
             {
-                builder.Append("Also here: ");
+                builder.Append("\r\nAlso here: ");
                 builder.Append(String.Join(", ", visibleMudObjects.Select(visibleMudObject =>
                 {
                     var subBuilder = new StringBuilder();
@@ -101,12 +101,12 @@ namespace RMUD.Commands
                     return subBuilder.ToString();
                 })));
 
-                builder.Append("\r\n\r\n");
+                builder.Append("\r\n");
             }
 
             if (IncludeExits && location.Links.Count > 0)
             {
-                builder.Append("Obvious exits:\r\n");
+                builder.Append("\r\nObvious exits:\r\n");
 
                 foreach (var link in location.Links)
                 {
@@ -129,7 +129,6 @@ namespace RMUD.Commands
                     builder.Append(".\r\n");
                 }
 
-                builder.Append("\r\n");
             }
 
             return builder.ToString();

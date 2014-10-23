@@ -16,7 +16,7 @@ namespace RMUD.Commands
 						new KeyWord("'", false)),
                     new FailIfNoMatches(
 					    new Rest("SPEECH"),
-                        "Say what?\r\n")),
+                        "Say what?")),
 				new SayProcessor(SayProcessor.EmoteTypes.Speech),
 				"Say something.");
 
@@ -41,7 +41,7 @@ namespace RMUD.Commands
 						new KeyWord("\"", false)),
                     new FailIfNoMatches(
 					    new Rest("SPEECH"),
-                        "You exist. Actually this is an error message, but that's what you just told me to say.\r\n")),
+                        "You exist. Actually this is an error message, but that's what you just told me to say.")),
 				new SayProcessor(SayProcessor.EmoteTypes.Emote),
 				"Emote something.");
 		}
@@ -75,9 +75,7 @@ namespace RMUD.Commands
             Mud.AssembleText(Match.Arguments["SPEECH"] as LinkedListNode<String>, speechBuilder);
 
 			if (EmoteType == EmoteTypes.Speech)
-				speechBuilder.Append("\"\r\n");
-			else
-				speechBuilder.Append("\r\n");
+				speechBuilder.Append("\"");
 
 			Mud.SendLocaleMessage(Actor, speechBuilder.ToString());
 		}

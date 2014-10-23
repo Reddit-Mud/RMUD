@@ -33,7 +33,7 @@ namespace RMUD.Commands
 
             if (!Mud.IsVisibleTo(Actor, target))
             {
-                Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace RMUD.Commands
 
             if (container == null || ((container.LocationsSupported & relloc) != relloc))
             {
-                Mud.SendMessage(Actor, String.Format("You can't look {0} that.\r\n", Mud.GetRelativeLocationName(relloc)));
+                Mud.SendMessage(Actor, String.Format("You can't look {0} that.", Mud.GetRelativeLocationName(relloc)));
                 return;
             }
 
@@ -49,7 +49,7 @@ namespace RMUD.Commands
             {
                 if (!Mud.IsOpen(target))
                 {
-                    Mud.SendMessage(Actor, Mud.CapFirst(String.Format("{0} is closed.\r\n", target.Definite)));
+                    Mud.SendMessage(Actor, Mud.CapFirst(String.Format("{0} is closed.", target.Definite)));
                     return;
                 }
             }
@@ -61,13 +61,13 @@ namespace RMUD.Commands
 
                 builder.Append(Mud.CapFirst(String.Format("{0} {1} is ", Mud.GetRelativeLocationName(relloc), (target as MudObject).Definite)));
                 builder.Append(String.Join(", ", contents.Select(o => (o as MudObject).Indefinite)));
-                builder.Append(".\r\n");
+                builder.Append(".");
 
                 Mud.SendMessage(Actor, builder.ToString());
             }
             else
             {
-                Mud.SendMessage(Actor, String.Format("There is noMudObject {0} {1}.\r\n", Mud.GetRelativeLocationName(relloc), target.Definite));
+                Mud.SendMessage(Actor, String.Format("There is nothing {0} {1}.", Mud.GetRelativeLocationName(relloc), target.Definite));
             }
         }
 	}

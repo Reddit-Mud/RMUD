@@ -25,7 +25,7 @@ namespace RMUD.Commands
         {
             System.Threading.Thread.Sleep((Match.Arguments["MILLISECONDS"] as int?).Value);
 
-            Mud.SendMessage(Actor, "SLEPT!\r\n");
+            Mud.SendMessage(Actor, "SLEPT!");
         }
     }
 }

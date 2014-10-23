@@ -23,9 +23,9 @@ namespace RMUD.Commands
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             }),
-                        "I don't see that here.\r\n")),
+                        "I don't see that here.")),
                 new TakeProcessor(),
-				"Take someMudObject",
+				"Take something",
                 "SUBJECT-SCORE");
 		}
 	}
@@ -39,13 +39,13 @@ namespace RMUD.Commands
             if (!Mud.IsVisibleTo(Actor, target))
             {
                 if (Actor.ConnectedClient != null)
-                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.\r\n");
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
                 return;
             }
 
             if (Actor.Contains(target, RelativeLocations.Held))
             {
-                Mud.SendMessage(Actor, "You are already holding that.\r\n");
+                Mud.SendMessage(Actor, "You are already holding that.");
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace RMUD.Commands
                 var checkRule = takeRules.Check(Actor);
                 if (!checkRule.Allowed)
                 {
-                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed + "\r\n");
+                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
                     return;
                 }
             }
@@ -65,8 +65,8 @@ namespace RMUD.Commands
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, "You take " + target.Indefinite + "\r\n");
-                Mud.SendExternalMessage(Actor, Actor.Short + " takes " + target.Indefinite + "\r\n");
+                Mud.SendMessage(Actor, "You take " + target.Indefinite + ".");
+                Mud.SendExternalMessage(Actor, Actor.Short + " takes " + target.Indefinite + ".");
                 MudObject.Move(target, Actor);
             }
 

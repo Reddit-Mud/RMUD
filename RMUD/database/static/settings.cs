@@ -2,8 +2,8 @@
 {
 	public override void Initialize()
 	{
-		Banner = "~~== REDDIT MUD ==~~\r\n";
-		MessageOfTheDay = "register username - Create a new account.\r\nlogin username - Log into an existing account.\r\n";
+		Banner = "~~== REDDIT MUD ==~~";
+		MessageOfTheDay = "register username - Create a new account.\r\nlogin username - Log into an existing account.";
         NewPlayerStartRoom = "palantine/antechamber";
 	}
 }

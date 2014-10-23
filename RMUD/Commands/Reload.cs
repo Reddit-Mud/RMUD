@@ -15,7 +15,7 @@ namespace RMUD.Commands
 					new KeyWord("RELOAD", false),
                     new FailIfNoMatches(
 					    new Path("TARGET"),
-                        "It helps if you give me a path.\r\n")),
+                        "It helps if you give me a path.")),
 				new ReloadProcessor(),
 				"Reload an object from disc.");
 
@@ -25,7 +25,7 @@ namespace RMUD.Commands
                     new KeyWord("RESET", false),
                     new FailIfNoMatches(
                         new Path("TARGET"),
-                        "It helps if you give me a path.\r\n")),
+                        "It helps if you give me a path.")),
                 new ResetProcessor(),
                 "Reset an object. It is not reloaded from disc.");
 		}
@@ -39,15 +39,15 @@ namespace RMUD.Commands
 			var newObject = Mud.ReloadObject(target, s =>
 				{
 					if (Actor.ConnectedClient != null)
-						Mud.SendMessage(Actor, s + "\r\n");
+						Mud.SendMessage(Actor, s);
 				});
 
 			if (Actor.ConnectedClient == null) return;
 
 			if (newObject == null)
-				Mud.SendMessage(Actor, "Failed to reload " + target + "\r\n");
+				Mud.SendMessage(Actor, "Failed to reload " + target);
 			else
-				Mud.SendMessage(Actor, "Reloaded " + target + "\r\n");				
+				Mud.SendMessage(Actor, "Reloaded " + target);				
 		}
 	}
 
@@ -59,15 +59,15 @@ namespace RMUD.Commands
             var succeeded = Mud.ResetObject(target, s =>
             {
                 if (Actor.ConnectedClient != null)
-                    Mud.SendMessage(Actor, s + "\r\n");
+                    Mud.SendMessage(Actor, s);
             });
 
             if (Actor.ConnectedClient == null) return;
 
             if (!succeeded)
-                Mud.SendMessage(Actor, "Failed to reset " + target + "\r\n");
+                Mud.SendMessage(Actor, "Failed to reset " + target);
             else
-                Mud.SendMessage(Actor, "Reset " + target + "\r\n");
+                Mud.SendMessage(Actor, "Reset " + target);
         }
     }
 }

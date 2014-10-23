@@ -50,7 +50,7 @@ namespace RMUD
 
             Client.CommandHandler = LoginCommandHandler;
 
-            var settings = GetObject("settings", s => Mud.SendMessage(Client, s + "\r\n")) as Settings;
+            var settings = GetObject("settings", s => Mud.SendMessage(Client, s)) as Settings;
             Mud.SendMessage(Client, settings.Banner);
             Mud.SendMessage(Client, settings.MessageOfTheDay);
 

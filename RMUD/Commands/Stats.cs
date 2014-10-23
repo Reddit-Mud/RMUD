@@ -26,7 +26,7 @@ namespace RMUD.Commands
             if (Actor.ConnectedClient == null) return;
 
             if (!Match.Arguments.ContainsKey("TYPE"))
-                Mud.SendMessage(Actor, "Try one of these options: CLIENTS MEMORY HEARTBEAT TIME\r\n");
+                Mud.SendMessage(Actor, "Try one of these options: CLIENTS MEMORY HEARTBEAT TIME");
             else
             {
                 var type = Match.Arguments["TYPE"].ToString().ToUpper();

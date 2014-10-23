@@ -22,7 +22,7 @@ namespace RMUD.Commands
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-            Mud.SendMessage(Actor, "Not implemented.\r\n");
+            Mud.SendMessage(Actor, "Not implemented. :(");
         }
 	}
 

@@ -14,9 +14,9 @@ namespace RMUD.Commands
                     new KeyWord("LOGIN", false),
                     new FailIfNoMatches(
                         new SingleWord("USERNAME"),
-                        "You must supply a username.\r\n")),
+                        "You must supply a username.")),
                 new LoginProcessor(),
-                "Login to an existing account.\r\n");
+                "Login to an existing account.");
         }
 	}
 
@@ -26,7 +26,7 @@ namespace RMUD.Commands
         {
             if (Actor != null)
             {
-                Mud.SendMessage(Actor.ConnectedClient, "You are already logged in.\r\n");
+                Mud.SendMessage(Actor.ConnectedClient, "You are already logged in.");
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace RMUD.Commands
             var existingAccount = Mud.FindAccount(UserName);
             if (existingAccount == null || Mud.VerifyAccount(existingAccount, Password) == false)
             {
-                Mud.SendMessage(Client, "Could not verify account.\r\n");
+                Mud.SendMessage(Client, "Could not verify account.");
                 return;
             }
 
