@@ -5,12 +5,12 @@ using System.Text;
 
 namespace RMUD
 {
-    internal class Generic : CommandTokenMatcher
+    internal class GenericMatcher : CommandTokenMatcher
     {
         public Func<PossibleMatch, MatchContext, List<PossibleMatch>> MatchFunc;
         public String HelpDescription;
 
-        public Generic(Func<PossibleMatch, MatchContext, List<PossibleMatch>> MatchFunc, String HelpDescription)
+        public GenericMatcher(Func<PossibleMatch, MatchContext, List<PossibleMatch>> MatchFunc, String HelpDescription)
         {
             this.MatchFunc = MatchFunc;
             this.HelpDescription = HelpDescription;

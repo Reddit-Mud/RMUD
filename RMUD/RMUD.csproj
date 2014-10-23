@@ -51,6 +51,7 @@
     <Compile Include="Commands\Login.cs" />
     <Compile Include="Commands\Quit.cs" />
     <Compile Include="Commands\Afk.cs" />
+    <Compile Include="Commands\Conversation.cs" />
     <Compile Include="Commands\Shutdown.cs" />
     <Compile Include="Commands\Stats.cs" />
     <Compile Include="Commands\Dump.cs" />
@@ -68,6 +69,10 @@
     <Compile Include="Core\PendingMessages.cs" />
     <Compile Include="Core\Persistence.cs" />
     <Compile Include="Core\Time.cs" />
+    <Compile Include="database\static\palantine\solar.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="database\static\palantine\soranus.cs" />
     <Compile Include="database\static\palantine\skull.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
@@ -123,9 +128,9 @@
     <None Include="database\static\palantine\dark_room.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="database\static\palantine\antechamber.cs">
+    <Compile Include="database\static\palantine\antechamber.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Compile>
     <Compile Include="Core\EnumerateObjects.cs" />
     <Compile Include="Lib\GenericContainer.cs" />
     <Compile Include="Lib\NounList.cs" />

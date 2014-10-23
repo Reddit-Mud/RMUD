@@ -21,7 +21,7 @@ namespace RMUD.Commands
 				"Say something.");
 
             Parser.AddCommand(
-                new Generic((pm, context) =>
+                new GenericMatcher((pm, context) =>
                     {
                         var r = new List<PossibleMatch>();
                         if (pm.Next == null || pm.Next.Value.Length <= 1 || pm.Next.Value[0] != '\'')

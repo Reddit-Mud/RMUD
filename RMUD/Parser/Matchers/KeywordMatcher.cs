@@ -10,7 +10,7 @@ namespace RMUD
         public String Word;
         public bool Optional = false;
 
-        internal KeyWord(String Word, bool Optional)
+        internal KeyWord(String Word, bool Optional = false)
         {
             this.Word = Word.ToUpper();
             this.Optional = Optional;

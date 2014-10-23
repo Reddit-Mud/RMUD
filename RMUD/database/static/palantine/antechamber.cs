@@ -15,7 +15,8 @@
         RMUD.MudObject.Move(new RMUD.MudObject("old vase", "An old, cracked vase."), table);
 
 
-        OpenLink(RMUD.Direction.NORTH, "palantine\\disambig");
+        OpenLink(RMUD.Direction.NORTH, "palantine/disambig");
+        OpenLink(RMUD.Direction.EAST, "palantine/solar");
 	}
 }
 

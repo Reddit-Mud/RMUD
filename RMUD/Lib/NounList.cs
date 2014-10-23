@@ -7,6 +7,8 @@ namespace RMUD
 {
     public class NounList : List<String>
     {
+        public NounList() { }
+
         public NounList(IEnumerable<String> From)
         {
             AddRange(From);
