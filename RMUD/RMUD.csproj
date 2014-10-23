@@ -72,7 +72,9 @@
     <Compile Include="database\static\palantine\solar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="database\static\palantine\soranus.cs" />
+    <Compile Include="database\static\palantine\soranus.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="database\static\palantine\skull.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

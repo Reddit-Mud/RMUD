@@ -2,7 +2,7 @@
 {
 	public override void Initialize()
 	{
-        RoomType = RMUD.RoomType.Interior;
+        RoomType = RMUD.RoomType.Exterior;
         Short = "Palantine Villa - Solar";
 
         RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine/soranus"), this);
