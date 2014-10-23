@@ -151,7 +151,7 @@ namespace RMUD.Commands
             if (System.IO.File.Exists(logFilename))
             {
                 foreach (var line in (new ReverseLineReader(logFilename)).Take(count).Reverse())
-                    Mud.SendMessage(Actor, line + "\r\n");
+                    Mud.SendMessage(Actor, line);
             }
         }
     }

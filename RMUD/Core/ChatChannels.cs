@@ -33,7 +33,7 @@ namespace RMUD
 
             var chatLogFilename = ChatLogsPath + Channel.Name + ".txt";
             System.IO.Directory.CreateDirectory(ChatLogsPath);
-            System.IO.File.AppendAllText(chatLogFilename, realMessage);
+            System.IO.File.AppendAllText(chatLogFilename, realMessage + "\n");
 
             foreach (var client in Channel.Subscribers.Where(c => c.IsLoggedOn))
                 Mud.SendMessage(client, realMessage);
