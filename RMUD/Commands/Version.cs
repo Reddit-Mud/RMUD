@@ -24,9 +24,14 @@ namespace RMUD.Commands
 		{
             if (Actor.ConnectedClient == null) return;
 
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var buildVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            
+            Mud.SendMessage(Actor, String.Format("Build: RMUD Moneta {0}", buildVersion));
 
-            Mud.SendMessage(Actor, String.Format("RMUD Moneta {0}", version));
+            if (System.IO.File.Exists("version.txt"))
+                Mud.SendMessage(Actor, String.Format("Commit: {0}", System.IO.File.ReadAllText("version.txt")));
+            else
+                Mud.SendMessage(Actor, "Commit version not found.");
 		}
 	}
 }
