@@ -74,6 +74,8 @@
     <Compile Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="Lib\ConversationTopic.cs" />
+    <Compile Include="Lib\NPC.cs" />
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Parser\AuthenticationCommandProcessor.cs" />

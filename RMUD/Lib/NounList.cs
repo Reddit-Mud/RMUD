@@ -7,6 +7,11 @@ namespace RMUD
 {
     public class NounList : List<String>
     {
+        public NounList(IEnumerable<String> From)
+        {
+            AddRange(From);
+        }
+
         new public void Add(String Noun)
         {
             base.Add(Noun.ToUpper());

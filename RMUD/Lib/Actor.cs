@@ -22,5 +22,8 @@ namespace RMUD
         public Actor()
             : base(RelativeLocations.Held | RelativeLocations.Worn, RelativeLocations.Held)
         { }
+
+        public Dictionary<String, System.Collections.BitArray> ConversationKnowledge = new Dictionary<String, System.Collections.BitArray>();
+        public NPC CurrentInterlocutor = null;
 	}
 }
