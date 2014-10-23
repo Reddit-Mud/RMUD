@@ -5,15 +5,13 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Tell : CommandFactory
+	internal class Whisper : CommandFactory
 	{
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
                 new Sequence(
-                    new Or(
-                        new KeyWord("TELL", false),
-                        new KeyWord("WHISPER", false)),
+                    new KeyWord("WHISPER"),
                     new KeyWord("TO", true),
                     new FailIfNoMatches(
                         new ObjectMatcher("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),

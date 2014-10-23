@@ -85,6 +85,7 @@
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
     <Compile Include="Parser\MatchContext.cs" />
+    <Compile Include="Parser\Matchers\FailIf.cs" />
     <Compile Include="Parser\Matchers\NumberMatcher.cs" />
     <Compile Include="Parser\Matchers\GenericMatcher.cs" />
     <Compile Include="Parser\Matchers\ScoreGate.cs" />
@@ -96,7 +97,7 @@
     <Compile Include="Commands\Put.cs" />
     <Compile Include="Commands\Kick.cs" />
     <Compile Include="Commands\Ban.cs" />
-    <Compile Include="Commands\Tell.cs" />
+    <Compile Include="Commands\Whisper.cs" />
     <Compile Include="Commands\Version.cs" />
     <Compile Include="Commands\Who.cs" />
     <Compile Include="Commands\Reload.cs" />
