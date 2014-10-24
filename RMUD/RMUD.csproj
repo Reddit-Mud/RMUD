@@ -69,18 +69,18 @@
     <Compile Include="Core\PendingMessages.cs" />
     <Compile Include="Core\Persistence.cs" />
     <Compile Include="Core\Time.cs" />
-    <Compile Include="database\static\palantine\solar.cs">
+    <None Include="database\static\palantine\solar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\soranus.cs">
+    </None>
+    <None Include="database\static\palantine\soranus.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\skull.cs">
+    </None>
+    <None Include="database\static\palantine\skull.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\sonar.cs">
+    </None>
+    <None Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <Compile Include="Lib\ConversationTopic.cs" />
     <Compile Include="Lib\NPC.cs" />
     <Compile Include="Lib\Portal.cs" />
@@ -131,9 +131,9 @@
     <None Include="database\static\palantine\dark_room.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="database\static\palantine\antechamber.cs">
+    <None Include="database\static\palantine\antechamber.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <Compile Include="Core\EnumerateObjects.cs" />
     <Compile Include="Lib\GenericContainer.cs" />
     <Compile Include="Lib\NounList.cs" />
