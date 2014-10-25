@@ -220,7 +220,6 @@ namespace RMUD
                     errorString.AppendLine();
                 }
                 LogError(errorString.ToString());
-                return null;
             }
 
             return compilationResults.CompiledAssembly;
