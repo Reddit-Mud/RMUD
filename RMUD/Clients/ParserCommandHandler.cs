@@ -99,7 +99,7 @@ namespace RMUD
                 if (matchedCommand.Matches.Count > 1)
                     Client.CommandHandler = new DisambigCommandHandler(Client, matchedCommand, this);
                 else
-                    matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], Client.Player);
+                    Mud.ProcessPlayerCommand(matchedCommand.Command.Processor, matchedCommand.Matches[0], Client.Player);
             }
             else
                 Mud.SendMessage(Client, "huh?");

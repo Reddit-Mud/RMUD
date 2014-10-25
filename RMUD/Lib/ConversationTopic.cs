@@ -16,12 +16,12 @@ namespace RMUD
         public int ID;
         public NounList KeyWords;
         public String Topic;
-        public Func<Actor, NPC, ConversationTopic, bool> AvailabilityRule;
+        public Func<Player, NPC, ConversationTopic, bool> AvailabilityRule;
         public ResponseTypes ResponseType;
         public DescriptiveText NormalResponse;
-        public Action<Actor, NPC, ConversationTopic> SilentResponse;
+        public Action<Player, NPC, ConversationTopic> SilentResponse;
 
-        public bool IsAvailable(Actor Actor, NPC NPC)
+        public bool IsAvailable(Player Actor, NPC NPC)
         {
             if (AvailabilityRule == null) return true;
             return AvailabilityRule(Actor, NPC, this);
@@ -33,7 +33,7 @@ namespace RMUD
             KeyWords = new NounList(keywords);
         }
 
-        public ConversationTopic(String Topic, String Response, Func<Actor, NPC, ConversationTopic, bool> AvailabilityRule = null)
+        public ConversationTopic(String Topic, String Response, Func<Player, NPC, ConversationTopic, bool> AvailabilityRule = null)
         {
             this.ResponseType = ResponseTypes.Normal;
             this.NormalResponse = Response;
@@ -42,7 +42,7 @@ namespace RMUD
             SetKeywords(Topic);
         }
 
-        public ConversationTopic(String Topic, Func<Actor, MudObject, String> LambdaResponse, Func<Actor, NPC, ConversationTopic, bool> AvailabilityRule = null)
+        public ConversationTopic(String Topic, Func<Actor, MudObject, String> LambdaResponse, Func<Player, NPC, ConversationTopic, bool> AvailabilityRule = null)
         {
             this.ResponseType = ResponseTypes.Normal;
             this.NormalResponse = new DescriptiveText(LambdaResponse);
@@ -51,7 +51,7 @@ namespace RMUD
             SetKeywords(Topic);
         }
 
-        public ConversationTopic(String Topic, Action<Actor, NPC, ConversationTopic> SilentResponse, Func<Actor, NPC, ConversationTopic, bool> AvailabilityRule = null)
+        public ConversationTopic(String Topic, Action<Actor, NPC, ConversationTopic> SilentResponse, Func<Player, NPC, ConversationTopic, bool> AvailabilityRule = null)
         {
             this.ResponseType = ResponseTypes.Silent;
             this.SilentResponse = SilentResponse;

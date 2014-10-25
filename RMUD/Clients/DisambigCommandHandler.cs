@@ -98,7 +98,7 @@ namespace RMUD
                     MatchedCommand.Matches = new List<PossibleMatch>(choosenMatches);
 
                     if (MatchedCommand.Matches.Count == 1)
-                        MatchedCommand.Command.Processor.Perform(MatchedCommand.Matches[0], Client.Player);
+                        Mud.ProcessPlayerCommand(MatchedCommand.Command.Processor, MatchedCommand.Matches[0], Client.Player);
                     else
                     {
                         Mud.SendMessage(Client, "That helped narrow it down, but I'm still not sure what you mean.");

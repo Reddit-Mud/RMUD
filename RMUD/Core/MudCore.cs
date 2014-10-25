@@ -108,5 +108,21 @@ namespace RMUD
         {
             ShuttingDown = true;
         }
+
+        public static void ProcessPlayerCommand(CommandProcessor Processor, PossibleMatch Match, Actor Actor)
+        {
+            Processor.Perform(Match, Actor);
+            var player = Actor as Player;
+            if (player != null && player.ActiveQuest != null)
+            {
+                var quest = player.ActiveQuest;
+                if (quest.IsComplete(player, quest))
+                {
+                    player.ActiveQuest = null;
+                    quest.OnCompletion(player, quest);
+                }
+            }
+        }
+
     }
 }

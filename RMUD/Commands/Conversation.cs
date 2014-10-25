@@ -18,15 +18,16 @@ namespace RMUD.Commands
         {
             var r = new List<PossibleMatch>();
             if (State.Next == null) return r;
+            if (!(Context.ExecutingActor is Player)) return r;
 
             NPC locutor = null;
             if (State.Arguments.ContainsKey("NEW-LOCUTOR")) locutor = State.Arguments["NEW-LOCUTOR"] as NPC;
-            else locutor = Context.ExecutingActor.CurrentInterlocutor;
+            else locutor = (Context.ExecutingActor as Player).CurrentInterlocutor;
             if (locutor == null) return r;
 
             foreach (var topic in locutor.ConversationTopics)
             {
-                if (!topic.IsAvailable(Context.ExecutingActor, locutor)) continue;
+                if (!topic.IsAvailable(Context.ExecutingActor as Player, locutor)) continue;
 
                 var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
                 bool matched = false;
@@ -76,7 +77,7 @@ namespace RMUD.Commands
                     new Optional(
                         new ObjectMatcher("NEW-LOCUTOR", new InScopeObjectSource(), (Actor, mudobject) =>
                             {
-                                if (Object.ReferenceEquals(mudobject, Actor.CurrentInterlocutor)) return MatchPreference.VeryLikely;
+                                if (Actor is Player && Object.ReferenceEquals(mudobject, (Actor as Player).CurrentInterlocutor)) return MatchPreference.VeryLikely;
                                 if (mudobject is NPC) return MatchPreference.Likely;
                                 else return MatchPreference.VeryUnlikely;
                             })),
@@ -86,12 +87,17 @@ namespace RMUD.Commands
                         new Rest("STRING-TOPIC"))),
                 new DiscussProcessor(),
                 "Discuss something with someone.");
+
+            Parser.AddCommand(
+                new KeyWord("TOPICS"),
+                new ListTopicsProcessor(),
+                "List the currently available conversation topics.");
         }
     }
 
     public static class ConversationHelper
     {
-        public static void ListSuggestedTopics(Actor For, NPC Of)
+        public static void ListSuggestedTopics(Player For, NPC Of)
         {
             //Get the first 4 available topics that the player hasn't already seen.
             var suggestedTopics = Of.ConversationTopics.Where(topic => topic.IsAvailable(For, Of) && !For.HasKnowledgeOfTopic(Of, topic.ID)).Take(4);
@@ -99,7 +105,7 @@ namespace RMUD.Commands
                 Mud.SendMessage(For, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Topic)) + ".");
         }
 
-        public static void GreetLocutor(Actor Actor, NPC Whom)
+        public static void GreetLocutor(Player Actor, NPC Whom)
         {
             //Todo: Greeting rules?
             //Todo: NPC Greeting response
@@ -107,7 +113,7 @@ namespace RMUD.Commands
             Actor.CurrentInterlocutor = Whom;
         }
 
-        public static void DiscussTopic(Actor Actor, NPC With, ConversationTopic Topic)
+        public static void DiscussTopic(Player Actor, NPC With, ConversationTopic Topic)
         {
             Mud.SendMessage(Actor, String.Format("You discuss '{0}' with {1}.", Topic.Topic, Actor.CurrentInterlocutor.Definite));
             Mud.SendExternalMessage(Actor, String.Format("{0} discusses '{1}' with {2}.", Actor.Definite, Topic.Topic, Actor.CurrentInterlocutor.Definite));
@@ -130,8 +136,8 @@ namespace RMUD.Commands
             if (locale != null)
                 Mud.EnumerateObjects(locale, (mo, relloc) =>
                 {
-                    if (mo is Actor)
-                        (mo as Actor).GrantKnowledgeOfTopic(Actor.CurrentInterlocutor, Topic.ID);
+                    if (mo is Player)
+                        (mo as Player).GrantKnowledgeOfTopic(Actor.CurrentInterlocutor, Topic.ID);
                     return EnumerateObjectsControl.Continue;
                 });
 
@@ -143,6 +149,8 @@ namespace RMUD.Commands
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
+            if (!(Actor is Player)) return;
+
             var locutor = Match.Arguments["LOCUTOR"];
             if (!(locutor is NPC))
             {
@@ -156,8 +164,8 @@ namespace RMUD.Commands
                 return;
             }
 
-            ConversationHelper.GreetLocutor(Actor, locutor as NPC);
-            ConversationHelper.ListSuggestedTopics(Actor, locutor as NPC);
+            ConversationHelper.GreetLocutor(Actor as Player, locutor as NPC);
+            ConversationHelper.ListSuggestedTopics(Actor as Player, locutor as NPC);
         }
     }
 
@@ -165,6 +173,8 @@ namespace RMUD.Commands
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
+            if (!(Actor is Player)) return;
+
             if (Match.Arguments.ContainsKey("NEW-LOCUTOR"))
             {
                 var newInterlocutor = Match.Arguments["NEW-LOCUTOR"] as NPC;
@@ -174,11 +184,11 @@ namespace RMUD.Commands
                     return;
                 }
 
-                if (!Object.ReferenceEquals(newInterlocutor, Actor.CurrentInterlocutor))
-                    ConversationHelper.GreetLocutor(Actor, newInterlocutor);
+                if (!Object.ReferenceEquals(newInterlocutor, (Actor as Player).CurrentInterlocutor))
+                    ConversationHelper.GreetLocutor(Actor as Player, newInterlocutor);
             }
 
-            if (Actor.CurrentInterlocutor == null)
+            if ((Actor as Player).CurrentInterlocutor == null)
             {
                 Mud.SendMessage(Actor, "You aren't talking to anyone.");
                 return;
@@ -186,23 +196,50 @@ namespace RMUD.Commands
 
             if (!Match.Arguments.ContainsKey("TOPIC"))
             {
-                if (Actor.CurrentInterlocutor.DefaultResponse != null)
-                    ConversationHelper.DiscussTopic(Actor, Actor.CurrentInterlocutor, Actor.CurrentInterlocutor.DefaultResponse);
+                if ((Actor as Player).CurrentInterlocutor.DefaultResponse != null)
+                    ConversationHelper.DiscussTopic((Actor as Player), (Actor as Player).CurrentInterlocutor, (Actor as Player).CurrentInterlocutor.DefaultResponse);
                 else
                     Mud.SendMessage(Actor, "That doesn't seem to be a topic I understand.");
                 return;
             }
-                        
-            if (!Mud.IsVisibleTo(Actor, Actor.CurrentInterlocutor))
+
+            if (!Mud.IsVisibleTo(Actor, (Actor as Player).CurrentInterlocutor))
             {
                 Mud.SendMessage(Actor, "They don't seem to be here anymore.");
-                Actor.CurrentInterlocutor = null;
+                (Actor as Player).CurrentInterlocutor = null;
                 return;
             }
 
             var topic = Match.Arguments["TOPIC"] as ConversationTopic;
 
-            ConversationHelper.DiscussTopic(Actor, Actor.CurrentInterlocutor, topic);
+            ConversationHelper.DiscussTopic((Actor as Player), (Actor as Player).CurrentInterlocutor, topic);
+        }
+    }
+
+    public class ListTopicsProcessor : CommandProcessor
+    {
+
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            var player = Actor as Player;
+            if (player == null) return;
+
+            if (player.CurrentInterlocutor == null)
+            {
+                Mud.SendMessage(Actor, "You aren't talking to anyone.");
+                return;
+            }
+
+            var availableTopics = player.CurrentInterlocutor.ConversationTopics.Where(topic => topic.IsAvailable(player, player.CurrentInterlocutor));
+
+            if (availableTopics.Count() == 0)
+                Mud.SendMessage(Actor, "There are no topics to discuss.");
+            else
+            {
+                Mud.SendMessage(Actor, "These topics are available...");
+                foreach (var topic in availableTopics)
+                    Mud.SendMessage(Actor, "   " + topic.Topic);
+            }
         }
     }
 }
