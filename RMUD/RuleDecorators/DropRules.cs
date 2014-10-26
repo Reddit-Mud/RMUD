@@ -10,4 +10,10 @@ namespace RMUD
 		CheckRule Check(Actor Actor);
 		RuleHandlerFollowUp Handle(Actor Actor);
 	}
+
+    //Invoked for every object that witnesses an item being dropped.
+    public interface WitnessDropRules
+    {
+        void Handle(Actor Actor, MudObject Item);
+    }
 }

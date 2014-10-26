@@ -69,13 +69,13 @@ namespace RMUD
             return newAccount;
         }
 
-        public static Actor GetAccountCharacter(Account Account)
+        public static Player GetAccountCharacter(Account Account)
         {
             var characterName = "account/" + Account.UserName;
-            var existing = GetPersistedInstance(characterName + "@main") as Actor;
+            var existing = GetPersistedInstance(characterName + "@main") as Player;
             if (existing != null) return existing;
 
-            var character = new Actor();
+            var character = new Player();
             character.Path = characterName;
             character.Instance = "main";
             character.Short = Account.UserName;

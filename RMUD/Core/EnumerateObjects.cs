@@ -27,5 +27,17 @@ namespace RMUD
                 return EnumerateObjectsControl.Continue;
             });
         }
+
+        public static List<T> GatherObjects<T>(MudObject Source, Func<MudObject, T> Filter)
+        {
+            var result = new List<T>();
+            EnumerateObjects(Source, (obj, relloc) =>
+            {
+                var t = Filter(obj);
+                if (t != null) result.Add(t);
+                return EnumerateObjectsControl.Continue;
+            });
+            return result;
+        }
     }
 }

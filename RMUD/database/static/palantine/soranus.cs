@@ -4,7 +4,17 @@
     {
         AddConversationTopic("who he is", "\"I am Soranus,\" Soranus says.");
         var entrailID = AddConversationTopic("the entrails", "\"These things?\" Soranus asks. \"Nothing special. They're for the wolves.\"");
-        var wolfID = AddConversationTopic("wolves", "Soranus grins, expossing a pair of wicked yellow canines. \"Oh don't worry, they aren't here now.\"", (actor, npc, topic) => actor.HasKnowledgeOfTopic(npc, entrailID));
+        var wolfID = AddConversationTopic("wolves", (actor, npc, topic) =>
+        {
+            RMUD.Mud.SendLocaleMessage(actor, "Soranus grins, expossing a pair of wicked yellow canines. \"Oh don't worry, they aren't here now.\"");
+            var entrails = RMUD.Mud.GetObject("palantine/entrails");
+            if (entrails.Location == null)
+            {
+                RMUD.MudObject.Move(entrails, actor);
+                RMUD.Mud.SendMessage(actor, "Soranus gives you some entrails.");
+            }
+        },
+        (actor, npc, topic) => actor.HasKnowledgeOfTopic(npc, entrailID));
 
         DefaultResponse = new RMUD.ConversationTopic("default", "\"This is my default response,\" Soranus says, showing his sharp little teeth.");
 

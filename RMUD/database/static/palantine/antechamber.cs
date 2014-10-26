@@ -17,7 +17,8 @@
 
         OpenLink(RMUD.Direction.NORTH, "palantine/disambig");
         OpenLink(RMUD.Direction.EAST, "palantine/solar");
-	}
+        OpenLink(RMUD.Direction.WEST, "palantine/garden");
+    }
 }
 
 public class Jupiter : RMUD.Scenery, RMUD.EmitsLight

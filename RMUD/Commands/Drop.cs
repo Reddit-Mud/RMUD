@@ -54,6 +54,15 @@ namespace RMUD.Commands
                 MudObject.Move(target, Actor.Location);
             }
 
+            if (Actor.Location != null)
+            {
+                foreach (var witness in Mud.GatherObjects<WitnessDropRules>(Actor.Location, obj =>
+                {
+                    if (Object.ReferenceEquals(obj, target)) return null;
+                    return obj as WitnessDropRules;
+                })) witness.Handle(Actor, target);
+            }
+
             Mud.MarkLocaleForUpdate(target);
         }
 	}

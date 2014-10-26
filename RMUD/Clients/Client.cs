@@ -21,7 +21,7 @@ namespace RMUD
 
         public bool IsLoggedOn { get { return Player != null; } }
         public Account Account;
-        public Actor Player;
+        public Player Player;
         public int Rank = 0;
 		public ClientCommandHandler CommandHandler;
         public DateTime TimeOfLastCommand = DateTime.Now;
