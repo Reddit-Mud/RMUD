@@ -7,6 +7,7 @@ namespace RMUD
 {
 	public class Player : Actor
 	{
+        public Quest OfferedQuest { get; set; }
         public Quest ActiveQuest { get; set; }
 
         public Dictionary<String, System.Collections.BitArray> ConversationKnowledge = new Dictionary<String, System.Collections.BitArray>();

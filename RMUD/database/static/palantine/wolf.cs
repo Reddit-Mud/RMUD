@@ -1,10 +1,9 @@
 ﻿class wolf : RMUD.NPC, RMUD.WitnessDropRules
 {
-    public int Hunger = 0;
+    public bool IsFed = false;
 
     public override void Initialize()
     {
-        
         DefaultResponse = new RMUD.ConversationTopic("default", "The wolf snarls and howls, showing its large sharp teeth.");
 
         Short = "wolf";
@@ -17,16 +16,8 @@
 
     public override void Heartbeat(ulong HeartbeatID)
     {
-        if (Hunger > 0) Hunger--;
-
-        if (Hunger == 0)
-        {
-            var entrails = RMUD.Mud.GetObject("palantine/entrails");
-            if (RMUD.Mud.ObjectContainsObject(Location, entrails))
-            {
-                RMUD.Mud.SendLocaleMessage(this, "The wolf whines for food.");
-            }
-        }
+        if (!IsFed)
+            RMUD.Mud.SendLocaleMessage(this, "The wolf whines for food.");
     }
 
     void RMUD.WitnessDropRules.Handle(RMUD.Actor Actor, RMUD.MudObject Item)
@@ -35,8 +26,20 @@
         if (System.Object.ReferenceEquals(entrails, Item))
         {
             RMUD.Mud.SendLocaleMessage(this, "The wolf snatches up the entrails.");
-            Hunger = 100;
+            IsFed = true;
             RMUD.MudObject.Move(entrails, null);
         }
     }
+
+    public override bool QueryQuestProperty(string Name)
+    {
+        if (Name == "is-fed") return IsFed;
+        return false;
+    }
+
+    public override void ResetQuest(RMUD.Quest Quest)
+    {
+        IsFed = false;
+    }
+
 }

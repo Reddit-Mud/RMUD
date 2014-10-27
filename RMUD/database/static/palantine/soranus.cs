@@ -7,12 +7,9 @@
         var wolfID = AddConversationTopic("wolves", (actor, npc, topic) =>
         {
             RMUD.Mud.SendLocaleMessage(actor, "Soranus grins, expossing a pair of wicked yellow canines. \"Oh don't worry, they aren't here now.\"");
-            var entrails = RMUD.Mud.GetObject("palantine/entrails");
-            if (entrails.Location == null)
-            {
-                RMUD.MudObject.Move(entrails, actor);
-                RMUD.Mud.SendMessage(actor, "Soranus gives you some entrails.");
-            }
+            var quest = RMUD.Mud.GetObject("palantine/entrail_quest") as RMUD.Quest;
+            if (quest.IsAvailable(actor))
+                RMUD.Mud.OfferQuest(actor, quest, "\"Would you mind feeding them for me?\" Soranus asks.");
         },
         (actor, npc, topic) => actor.HasKnowledgeOfTopic(npc, entrailID));
 

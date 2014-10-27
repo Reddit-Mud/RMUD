@@ -5,12 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
-    public class Quest
+    public class Quest : MudObject
     {
-        public String Name;
-        public String Description;
-
-        public Func<Actor, Quest, bool> IsComplete;
-        public Action<Actor, Quest> OnCompletion;
+        public Player ActiveQuestor { get; set; }
+       
+        public virtual bool IsAvailable(Actor To) { return true; }
+        public virtual bool IsComplete(Actor Questor) { return false; }
+        public virtual void OnAccept(Actor Questor) { }
+        public virtual void OnCompletion(Actor Questor) { }
+        public virtual void OnAbandon(Actor Questor) { }
     }
 }

@@ -46,6 +46,7 @@
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
     <Compile Include="Commands\Errors.cs" />
+    <Compile Include="Commands\AcceptQuest.cs" />
     <Compile Include="Commands\Save.cs" />
     <Compile Include="Commands\Purge.cs" />
     <Compile Include="Commands\Register.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Commands\LookUnderOrBehind.cs" />
     <Compile Include="Commands\Close.cs" />
     <Compile Include="Core\Accounts.cs" />
+    <Compile Include="Core\Quests.cs" />
     <Compile Include="Core\FindLocale.cs" />
     <Compile Include="Core\Heartbeat.cs" />
     <Compile Include="Core\MarkForUpdate.cs" />
@@ -74,6 +76,9 @@
     <None Include="database\static\palantine\solar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="database\static\palantine\entrail_quest.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="database\static\palantine\entrails.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

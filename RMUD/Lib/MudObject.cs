@@ -29,6 +29,9 @@ namespace RMUD
         public virtual void HandleMarkedUpdate() { }
         public virtual void Heartbeat(UInt64 HeartbeatID) { }
 
+        public virtual bool QueryQuestProperty(String Name) { return false; }
+        public virtual void ResetQuest(Quest Quest) { }
+
         public override string ToString()
         {
             if (String.IsNullOrEmpty(Path)) return this.GetType().Name;
