@@ -23,12 +23,11 @@ namespace RMUD
             }
         }
 
-        public static void OfferQuest(Actor Actor, Quest Quest, String Message)
+        public static void OfferQuest(Actor Actor, Quest Quest)
         {
             var player = Actor as Player;
             if (player != null)
             {
-                SendMessage(Actor, Message);
                 SendMessage(Actor, "[To accept this quest, enter the command 'accept quest'.]");
                 if (player.ActiveQuest != null)
                     SendMessage(Actor, "[Accepting this quest will abandon your active quest.]");
