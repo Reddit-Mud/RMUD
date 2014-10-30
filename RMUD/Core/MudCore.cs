@@ -112,7 +112,7 @@ namespace RMUD
         public static void ProcessPlayerCommand(CommandProcessor Processor, PossibleMatch Match, Actor Actor)
         {
             Processor.Perform(Match, Actor);
-            CheckForQuestCompletion(Actor);
+            CheckQuestStatus(Actor);
         }
 
     }

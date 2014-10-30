@@ -31,7 +31,7 @@ namespace RMUD.Commands
                 return;
             }
 
-            if (!player.OfferedQuest.IsAvailable(Actor))
+            if (player.OfferedQuest.CheckQuestStatus(Actor) != QuestStatus.Available)
             {
                 Mud.SendMessage(Actor, "The quest is no longer available.");
                 player.OfferedQuest = null;
@@ -39,11 +39,11 @@ namespace RMUD.Commands
             }
 
             if (player.ActiveQuest != null)
-                player.ActiveQuest.OnAbandon(player);
+                player.ActiveQuest.HandleQuestEvent(QuestEvents.Abandoned, player);
 
             player.ActiveQuest = player.OfferedQuest;
             player.OfferedQuest = null;
-            player.ActiveQuest.OnAccept(player);
+            player.ActiveQuest.HandleQuestEvent(QuestEvents.Accepted, player);
 		}
 	}
 }

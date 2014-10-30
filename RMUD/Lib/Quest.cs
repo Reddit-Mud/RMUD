@@ -5,14 +5,29 @@ using System.Text;
 
 namespace RMUD
 {
+    public enum QuestStatus
+    {
+        Unavailable,
+        Available,
+        InProgress,
+        Completed,
+        Impossible,
+        Abandoned
+    }
+
+    public enum QuestEvents
+    {
+        Accepted,
+        Completed,
+        Abandoned,
+        Impossible
+    }
+
     public class Quest : MudObject
     {
         public Player ActiveQuestor { get; set; }
        
-        public virtual bool IsAvailable(Actor To) { return true; }
-        public virtual bool IsComplete(Actor Questor) { return false; }
-        public virtual void OnAccept(Actor Questor) { }
-        public virtual void OnCompletion(Actor Questor) { }
-        public virtual void OnAbandon(Actor Questor) { }
+        public virtual QuestStatus CheckQuestStatus(Actor To) { return QuestStatus.Available; }
+        public virtual void HandleQuestEvent(QuestEvents Event, Actor Questor) { }
     }
 }

@@ -9,17 +9,21 @@ namespace RMUD
 {
     public static partial class Mud
     {
-        public static void CheckForQuestCompletion(Actor Actor)
+        public static void CheckQuestStatus(Actor Actor)
         {
             var player = Actor as Player;
             if (player != null && player.ActiveQuest != null)
             {
                 var quest = player.ActiveQuest;
-                if (quest.IsComplete(player))
-                {
-                    player.ActiveQuest = null;
-                    quest.OnCompletion(player);
-                }
+                var status = quest.CheckQuestStatus(player);
+                var qevent = QuestEvents.Abandoned;
+                if (status == QuestStatus.Completed) qevent = QuestEvents.Completed;
+                else if (status == QuestStatus.Abandoned) qevent = QuestEvents.Abandoned;
+                else if (status == QuestStatus.Impossible) qevent = QuestEvents.Impossible;
+                else qevent = QuestEvents.Impossible;
+
+                player.ActiveQuest = null;
+                quest.HandleQuestEvent(qevent, player);
             }
         }
 
