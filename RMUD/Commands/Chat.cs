@@ -122,10 +122,29 @@ namespace RMUD.Commands
                 Mud.SendMessage(Actor, "You are now subscribed to " + channel.Name + ".");
             }
 
+            var isEmote = false;
+            var rawMessageBuilder = new StringBuilder();
+            Mud.AssembleText(Match.Arguments["TEXT"] as LinkedListNode<String>, rawMessageBuilder);
+            var rawMessage = rawMessageBuilder.ToString();
+            if (rawMessage.StartsWith("\""))
+            {
+                isEmote = true;
+                rawMessage = rawMessage.Substring(1).Trim();
+            }
+
             var messageBuilder = new StringBuilder();
-            messageBuilder.Append(String.Format("[{0}] {1}: \"", channel.Name, Actor.Short));
-            Mud.AssembleText(Match.Arguments["TEXT"] as LinkedListNode<String>, messageBuilder);
-            messageBuilder.Append("\"");
+            messageBuilder.Append(String.Format("[{0}] {1}", channel.Name, Actor.Short));
+            if (isEmote)
+            {
+                messageBuilder.Append(" ");
+                messageBuilder.Append(rawMessage);
+            }
+            else
+            {
+                messageBuilder.Append(": \"");
+                messageBuilder.Append(rawMessage);
+                messageBuilder.Append("\"");
+            }
 
             Mud.SendChatMessage(channel, messageBuilder.ToString());
         }
