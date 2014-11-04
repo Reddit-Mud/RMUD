@@ -27,6 +27,19 @@ namespace RMUD.Commands
 
 			var builder = new StringBuilder();
 
+            var wornObjects = Mud.GetContents(Actor as Container, RelativeLocations.Worn);
+            if (wornObjects.Count == 0) builder.Append("You are naked.\r\n");
+            else
+            {
+                builder.Append("You are wearing..\r\n");
+                foreach (var item in wornObjects)
+                {
+                    builder.Append("  ");
+                    builder.Append(item.Indefinite);
+                    builder.Append("\r\n");
+                }
+            }
+
             var heldObjects = Mud.GetContents(Actor as Container, RelativeLocations.Held);
 			if (heldObjects.Count == 0) builder.Append("You have nothing.");
 			else

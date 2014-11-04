@@ -47,6 +47,7 @@
     <Compile Include="Clients\PasswordCommandHandler.cs" />
     <Compile Include="Commands\Errors.cs" />
     <Compile Include="Commands\AcceptQuest.cs" />
+    <Compile Include="Commands\Wear.cs" />
     <Compile Include="Commands\Save.cs" />
     <Compile Include="Commands\Purge.cs" />
     <Compile Include="Commands\Register.cs" />
@@ -86,6 +87,9 @@
     <None Include="database\static\palantine\garden.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="database\static\palantine\fedora.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="database\static\palantine\wolf.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
