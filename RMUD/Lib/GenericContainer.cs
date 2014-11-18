@@ -46,7 +46,28 @@ namespace RMUD
 
         public override object ReadValue(object StoredValue, Newtonsoft.Json.JsonReader Reader, MudObject Owner)
         {
-            return null;
+            var r = new Dictionary<RelativeLocations, List<MudObject>>();
+
+            Reader.Read();
+            while (Reader.TokenType != Newtonsoft.Json.JsonToken.EndObject)
+            {
+                var relloc = StringToRelativeLocation(Reader.Value.ToString());
+                var l = new List<MudObject>();
+                Reader.Read();
+                Reader.Read();
+                while (Reader.TokenType != Newtonsoft.Json.JsonToken.EndArray)
+                {
+                    var mudObject = Mud.GetObject(Reader.Value.ToString());
+                    if (mudObject != null) l.Add(mudObject);
+                    mudObject.Location = Owner;
+                    Reader.Read();
+                }
+                Reader.Read();
+                r.Upsert(relloc, l);
+            }
+            Reader.Read();
+
+            return r;
         }
     }
 

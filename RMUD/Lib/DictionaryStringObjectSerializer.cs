@@ -25,7 +25,19 @@ namespace RMUD
 
         public override object ReadValue(object StoredValue, Newtonsoft.Json.JsonReader Reader, MudObject Owner)
         {
-            return null;
+            var r = new Dictionary<String, Object>();
+
+            Reader.Read();
+            while (Reader.TokenType != Newtonsoft.Json.JsonToken.EndObject)
+            {
+                var name = Reader.Value.ToString();
+                Reader.Read();
+                var value = PersistAttribute._ReadValue(null, Reader, Owner);
+                r.Upsert(name, value);
+            }
+            Reader.Read();
+
+            return r;
         }
     }
 }

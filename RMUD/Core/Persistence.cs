@@ -5,82 +5,8 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 
-// http://stackoverflow.com/questions/8297541/how-do-i-change-the-default-type-for-numeric-deserialization
-// Description of the method used to get Newtonsoft.Json to deserialize integers are Int32 rather than Int64.
-// Alternative method would be to check the type before setting the property, and conver the value. 
-// Convert.ChangeType can't handle Int64 to Int32 as they don't implement IConvertible.
-
 namespace RMUD
 {
-    public class PersistentValueSerializer
-    {
-        public Type TargetType;
-
-        public virtual void WriteValue(Object Value, JsonWriter Writer, MudObject Owner)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual Object ReadValue(Object StoredValue, JsonReader Reader, MudObject Owner)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class PersistAttribute : Attribute
-    {
-        internal PersistentValueSerializer Serializer = null;
-
-        public PersistAttribute(Type SerializerType = null)
-        {
-            if (SerializerType != null)
-                Serializer = Activator.CreateInstance(SerializerType) as PersistentValueSerializer;
-        }
-
-        public void WriteValue(Object Value, JsonWriter Writer, MudObject Owner)
-        {
-            if (Serializer != null) Serializer.WriteValue(Value, Writer, Owner);
-            else PersistAttribute._WriteValue(Value, Writer, Owner);
-        }
-
-        public static void _WriteValue(Object Value, JsonWriter Writer, MudObject Owner)
-        {
-            var name = Value.GetType().Name;
-            PersistentValueSerializer serializer = null;
-            if (Mud.GlobalSerializers.TryGetValue(name, out serializer))
-            {
-                Writer.WriteStartObject();
-                Writer.WritePropertyName("$type");
-                Writer.WriteValue(name);
-                Writer.WritePropertyName("$value");
-                serializer.WriteValue(Value, Writer, Owner);
-                Writer.WriteEndObject();
-            }
-            else Writer.WriteValue(Value); //Hope...
-        }
-
-        public Object ReadValue(Object Value, JsonReader Reader, MudObject Owner)
-        {
-            if (Serializer != null) return Serializer.ReadValue(Value, Reader, Owner);
-            if (Reader.TokenType == JsonToken.String) return Reader.ReadAsString();
-            if (Reader.TokenType == JsonToken.Integer) return Reader.ReadAsInt32().Value;
-            if (Reader.TokenType == JsonToken.StartObject)
-            {
-                Reader.Read();
-                PersistentValueSerializer serializer = null;
-                if (Reader.TokenType != JsonToken.PropertyName || Reader.Value != "$type") throw new InvalidOperationException();
-                Reader.Read();
-                if (!Mud.GlobalSerializers.TryGetValue(Reader.ReadAsString(), out serializer))
-                    throw new InvalidOperationException();
-                Reader.Read();
-                var v = serializer.ReadValue(Value, Reader, Owner);
-                Reader.Read();
-                return v;
-            }
-            return Value;
-        }
-    }
-
     public static partial class Mud
     {
         private static Dictionary<String, MudObject> ActiveInstances = new Dictionary<String, MudObject>();
@@ -197,9 +123,6 @@ namespace RMUD
 
         private static void DeserializeObject(MudObject Object)
         {
-            return;
-
-
             var filename = DynamicPath + Object.GetFullName() + ".txt";
             if (!System.IO.File.Exists(filename)) return;
 
@@ -207,13 +130,14 @@ namespace RMUD
             var jsonReader = new JsonTextReader(new System.IO.StreamReader(filename));
 
             jsonReader.Read();
+            jsonReader.Read();
             while (jsonReader.TokenType != JsonToken.EndObject)
             {
-                var propertyName = jsonReader.Value;
-                jsonReader.Read();
+                var propertyName = jsonReader.Value.ToString();
 
                 var prop = persistentProperties.FirstOrDefault(t => t.Item1.Name == propertyName);
                 if (prop == null) throw new InvalidOperationException();
+                jsonReader.Read();
 
                 prop.Item1.SetValue(Object, prop.Item2.ReadValue(prop.Item1.GetValue(Object, null), jsonReader, Object), null);
 
@@ -233,6 +157,4 @@ namespace RMUD
 
 
     }
-
-
 }
