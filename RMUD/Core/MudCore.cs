@@ -67,7 +67,9 @@ namespace RMUD
         {
             try
             {
+                PrepareSerializers();
                 InitializeDatabase(basePath);
+
                 var settings = GetObject("settings") as Settings;
                 if (settings == null) throw new InvalidProgramException("No settings object is defined in the database!");
                 SettingsObject = settings;

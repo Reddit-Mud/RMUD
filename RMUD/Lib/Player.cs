@@ -7,34 +7,54 @@ namespace RMUD
 {
 	public class Player : Actor
 	{
+        public NPC CurrentInterlocutor = null;
+
         public Quest OfferedQuest { get; set; }
         public Quest ActiveQuest { get; set; }
 
-        public Dictionary<String, System.Collections.BitArray> ConversationKnowledge = new Dictionary<String, System.Collections.BitArray>();
-        public NPC CurrentInterlocutor = null;
+        [Persist(typeof(DictionaryStringObjectSerializer))]
+        public Dictionary<String, Object> Memory { get; set; }
 
-        public bool HasKnowledgeOfTopic(NPC Locutor, int TopicID)
+        public Player()
         {
-            if (TopicID < 0) throw new InvalidOperationException();
-            System.Collections.BitArray knowledgeArray;
-            if (!ConversationKnowledge.TryGetValue(Locutor.Path, out knowledgeArray)) return false;
-            if (knowledgeArray.Length <= TopicID) return false;
-            return knowledgeArray[TopicID];
+            Memory = new Dictionary<string, object>();
         }
 
-        public void GrantKnowledgeOfTopic(NPC Locutor, int TopicID)
+        public void Remember(MudObject For, String Key, Object Value)
         {
-            if (TopicID < 0) throw new InvalidOperationException();
+            var valueName = For.GetFullName() + ":" + Key;
+            Memory.Upsert(valueName, Value);
+        }
 
-            System.Collections.BitArray knowledgeArray;
-            if (!ConversationKnowledge.TryGetValue(Locutor.Path, out knowledgeArray))
+        public Object Recall(MudObject For, String Key)
+        {
+            var valueName = For.GetFullName() + ":" + Key;
+            Object value = null;
+            if (Memory.TryGetValue(valueName, out value))
+                return value;
+            else
+                return null;
+        }
+
+        public T Recall<T>(MudObject For, String Key)
+        {
+            var value = Recall(For, Key);
+            if (value != null && value is T) return (T)value;
+            return default(T);
+        }
+
+        public bool TryRecall<T>(MudObject For, String Key, out T Value) where T: class
+        {
+            Value = null;
+            var valueName = For.GetFullName() + ":" + Key;
+            Object value = null;
+            if (Memory.TryGetValue(valueName, out value))
             {
-                knowledgeArray = new System.Collections.BitArray(8);
-                ConversationKnowledge.Upsert(Locutor.Path, knowledgeArray);
+                Value = value as T;
+                return (value is T);
             }
-
-            if (knowledgeArray.Length <= TopicID) knowledgeArray.Length = TopicID + 1;
-            knowledgeArray[TopicID] = true;
+            else
+                return false;            
         }
 	}
 }

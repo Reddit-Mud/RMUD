@@ -14,7 +14,7 @@
                 RMUD.Mud.OfferQuest(actor, quest);
             }
         },
-        (actor, npc, topic) => actor.HasKnowledgeOfTopic(npc, entrailID));
+        (actor, npc, topic) => RMUD.Conversation.HasKnowledgeOfTopic(actor, npc, entrailID));
 
         DefaultResponse = new RMUD.ConversationTopic("default", "\"This is my default response,\" Soranus says, showing his sharp little teeth.");
 
