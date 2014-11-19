@@ -139,7 +139,7 @@ namespace RMUD
                 if (prop == null) throw new InvalidOperationException();
                 jsonReader.Read();
 
-                prop.Item1.SetValue(Object, prop.Item2.ReadValue(prop.Item1.GetValue(Object, null), jsonReader, Object), null);
+                prop.Item1.SetValue(Object, prop.Item2.ReadValue(prop.Item1.PropertyType, jsonReader, Object), null);
 
             }
 

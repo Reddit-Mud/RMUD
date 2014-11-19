@@ -25,7 +25,7 @@ namespace RMUD
             Writer.WriteValue(builder.ToString());
         }
 
-        public override object ReadValue(object StoredValue, Newtonsoft.Json.JsonReader Reader, MudObject Owner)
+        public override object ReadValue(Type ValueType, Newtonsoft.Json.JsonReader Reader, MudObject Owner)
         {
             var value = Reader.Value.ToString();
             var r = new System.Collections.BitArray(value.Length);

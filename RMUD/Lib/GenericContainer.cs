@@ -44,7 +44,7 @@ namespace RMUD
             Writer.WriteEndObject();
         }
 
-        public override object ReadValue(object StoredValue, Newtonsoft.Json.JsonReader Reader, MudObject Owner)
+        public override object ReadValue(Type ValueType, Newtonsoft.Json.JsonReader Reader, MudObject Owner)
         {
             var r = new Dictionary<RelativeLocations, List<MudObject>>();
 

@@ -16,7 +16,7 @@ namespace RMUD
             throw new NotImplementedException();
         }
 
-        public virtual Object ReadValue(Object StoredValue, JsonReader Reader, MudObject Owner)
+        public virtual Object ReadValue(Type ValueType, JsonReader Reader, MudObject Owner)
         {
             throw new NotImplementedException();
         }
