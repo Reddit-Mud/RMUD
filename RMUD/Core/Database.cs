@@ -114,9 +114,9 @@ namespace RMUD
 
             if (!String.IsNullOrEmpty(InstanceName))
             {
-                DTO activeInstance = null;
+                MudObject activeInstance = null;
                 if (ActiveInstances.TryGetValue(Path, out activeInstance))
-                    return activeInstance.Owner;
+                    return activeInstance;
                 else
                     return CreateInstance(Path);
             }

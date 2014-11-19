@@ -20,10 +20,10 @@ namespace RMUD
 
         public bool IsNamedObject { get { return Path != null; } }
         public bool IsAnonymousObject { get { return Path == null; } }
+        public bool IsInstance { get { return IsNamedObject && Instance != null; } }
         public String GetFullName() { return Path + "@" + Instance; }
-       
-        public DTO PersistenceObject { get; internal set; }
-        public bool IsPersistent { get { return PersistenceObject != null; } }
+
+        public bool IsPersistent { get; set; }
         
 		public virtual void Initialize() { }
         public virtual void HandleMarkedUpdate() { }
@@ -50,6 +50,7 @@ namespace RMUD
 		{
 			Nouns = new NounList();
             State = ObjectState.Alive;
+            IsPersistent = false;
 		}
 
         public MudObject(String Short, String Long)

@@ -45,6 +45,9 @@
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
+    <Compile Include="Core\PersistentValueSerializer.cs" />
+    <Compile Include="Core\PersistAttribute.cs" />
+    <Compile Include="Lib\Conversation.cs" />
     <Compile Include="Commands\Errors.cs" />
     <Compile Include="Commands\AcceptQuest.cs" />
     <Compile Include="Commands\Wear.cs" />
@@ -102,6 +105,8 @@
     <None Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="Lib\BitArraySerializer.cs" />
+    <Compile Include="Lib\DictionaryStringObjectSerializer.cs" />
     <Compile Include="Lib\Player.cs" />
     <Compile Include="Lib\ConversationTopic.cs" />
     <Compile Include="Lib\NPC.cs" />

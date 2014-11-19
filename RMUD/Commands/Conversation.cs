@@ -50,7 +50,7 @@ namespace RMUD.Commands
         public String Emit() { return "[TOPIC]"; }
     }
 
-    internal class Conversation : CommandFactory
+    internal class ConversationCommandFactory : CommandFactory
     {
         public override void Create(CommandParser Parser)
         {
@@ -95,56 +95,6 @@ namespace RMUD.Commands
         }
     }
 
-    public static class ConversationHelper
-    {
-        public static void ListSuggestedTopics(Player For, NPC Of)
-        {
-            //Get the first 4 available topics that the player hasn't already seen.
-            var suggestedTopics = Of.ConversationTopics.Where(topic => topic.IsAvailable(For, Of) && !For.HasKnowledgeOfTopic(Of, topic.ID)).Take(4);
-            if (suggestedTopics.Count() != 0)
-                Mud.SendMessage(For, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Topic)) + ".");
-        }
-
-        public static void GreetLocutor(Player Actor, NPC Whom)
-        {
-            //Todo: Greeting rules?
-            //Todo: NPC Greeting response
-
-            Actor.CurrentInterlocutor = Whom;
-        }
-
-        public static void DiscussTopic(Player Actor, NPC With, ConversationTopic Topic)
-        {
-            Mud.SendMessage(Actor, String.Format("You discuss '{0}' with {1}.", Topic.Topic, Actor.CurrentInterlocutor.Definite));
-            Mud.SendExternalMessage(Actor, String.Format("{0} discusses '{1}' with {2}.", Actor.Definite, Topic.Topic, Actor.CurrentInterlocutor.Definite));
-
-            if (Topic.ResponseType == ConversationTopic.ResponseTypes.Normal)
-            {
-                var response = Topic.NormalResponse.Expand(Actor, Actor.CurrentInterlocutor);
-                Mud.SendLocaleMessage(Actor, response);
-            }
-            else if (Topic.ResponseType == ConversationTopic.ResponseTypes.Silent)
-            {
-                Topic.SilentResponse(Actor, Actor.CurrentInterlocutor, Topic);
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
-
-            var locale = Mud.FindLocale(Actor);
-            if (locale != null)
-                Mud.EnumerateObjects(locale, (mo, relloc) =>
-                {
-                    if (mo is Player)
-                        (mo as Player).GrantKnowledgeOfTopic(Actor.CurrentInterlocutor, Topic.ID);
-                    return EnumerateObjectsControl.Continue;
-                });
-
-            ConversationHelper.ListSuggestedTopics(Actor, Actor.CurrentInterlocutor);
-        }
-    }
-
     public class GreetProcessor : CommandProcessor
     {
         public void Perform(PossibleMatch Match, Actor Actor)
@@ -164,8 +114,8 @@ namespace RMUD.Commands
                 return;
             }
 
-            ConversationHelper.GreetLocutor(Actor as Player, locutor as NPC);
-            ConversationHelper.ListSuggestedTopics(Actor as Player, locutor as NPC);
+            Conversation.GreetLocutor(Actor as Player, locutor as NPC);
+            Conversation.ListSuggestedTopics(Actor as Player, locutor as NPC);
         }
     }
 
@@ -185,7 +135,7 @@ namespace RMUD.Commands
                 }
 
                 if (!Object.ReferenceEquals(newInterlocutor, (Actor as Player).CurrentInterlocutor))
-                    ConversationHelper.GreetLocutor(Actor as Player, newInterlocutor);
+                    Conversation.GreetLocutor(Actor as Player, newInterlocutor);
             }
 
             if ((Actor as Player).CurrentInterlocutor == null)
@@ -197,7 +147,7 @@ namespace RMUD.Commands
             if (!Match.Arguments.ContainsKey("TOPIC"))
             {
                 if ((Actor as Player).CurrentInterlocutor.DefaultResponse != null)
-                    ConversationHelper.DiscussTopic((Actor as Player), (Actor as Player).CurrentInterlocutor, (Actor as Player).CurrentInterlocutor.DefaultResponse);
+                    Conversation.DiscussTopic((Actor as Player), (Actor as Player).CurrentInterlocutor, (Actor as Player).CurrentInterlocutor.DefaultResponse);
                 else
                     Mud.SendMessage(Actor, "That doesn't seem to be a topic I understand.");
                 return;
@@ -212,7 +162,7 @@ namespace RMUD.Commands
 
             var topic = Match.Arguments["TOPIC"] as ConversationTopic;
 
-            ConversationHelper.DiscussTopic((Actor as Player), (Actor as Player).CurrentInterlocutor, topic);
+            Conversation.DiscussTopic((Actor as Player), (Actor as Player).CurrentInterlocutor, topic);
         }
     }
 

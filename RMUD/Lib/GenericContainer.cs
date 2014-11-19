@@ -5,33 +5,75 @@ using System.Text;
 
 namespace RMUD
 {
-    public class ContainerMutator : PersistentValueMutator
+    public class ContainerSerializer : PersistentValueSerializer
     {
-        public override object PackValue(object Value)
+        private static String RelativeLocationToString(RelativeLocations Relloc)
         {
-            var r = new Dictionary<String, List<String>>();
-            foreach (var relativeLocation in (Value as Dictionary<RelativeLocations, List<MudObject>>))
-                r.Upsert(relativeLocation.Key.ToString(), new List<String>(relativeLocation.Value.Where(o => o.IsNamedObject).Select(o => o.GetFullName())));
-            return r;
+            var parts = Relloc.ToString().Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length > 2) throw new InvalidOperationException();
+            return parts[1].Trim();
         }
 
-        public override object UnpackValue(object StoredValue)
+        private static RelativeLocations StringToRelativeLocation(String Str)
+        {
+            RelativeLocations r = RelativeLocations.None;
+            if (Enum.TryParse(Str, out r))
+                return r;
+            else
+                throw new InvalidOperationException();
+        }
+
+        public override void WriteValue(object Value, Newtonsoft.Json.JsonWriter Writer, MudObject Owner)
+        {
+            var contents = Value as Dictionary<RelativeLocations, List<MudObject>>;
+            if (contents == null) throw new InvalidOperationException();
+
+            Writer.WriteStartObject();
+            
+            foreach (var relloc in contents)
+            {
+                Writer.WritePropertyName(RelativeLocationToString(relloc.Key));
+                Writer.WriteStartArray();
+
+                foreach (var mudObject in relloc.Value.Where(o => o.IsNamedObject && o.IsInstance))
+                    Writer.WriteValue(mudObject.GetFullName());
+
+                Writer.WriteEndArray();
+            }
+
+            Writer.WriteEndObject();
+        }
+
+        public override object ReadValue(Type ValueType, Newtonsoft.Json.JsonReader Reader, MudObject Owner)
         {
             var r = new Dictionary<RelativeLocations, List<MudObject>>();
-            foreach (var relativeLocation in (StoredValue as Dictionary<String, List<String>>))
+
+            Reader.Read();
+            while (Reader.TokenType != Newtonsoft.Json.JsonToken.EndObject)
             {
-                //The string is always of the form 'None, WhatWeActuallyWant'.
-                var relativeLocationTokens = relativeLocation.Key.Split(new String[] { ", " }, StringSplitOptions.None);
-                var relLoc = Enum.Parse(typeof(RelativeLocations), relativeLocationTokens[1]) as RelativeLocations?;
-                r.Upsert(relLoc.Value, new List<MudObject>(relativeLocation.Value.Select(s => Mud.GetObject(s))));
+                var relloc = StringToRelativeLocation(Reader.Value.ToString());
+                var l = new List<MudObject>();
+                Reader.Read();
+                Reader.Read();
+                while (Reader.TokenType != Newtonsoft.Json.JsonToken.EndArray)
+                {
+                    var mudObject = Mud.GetObject(Reader.Value.ToString());
+                    if (mudObject != null) l.Add(mudObject);
+                    mudObject.Location = Owner;
+                    Reader.Read();
+                }
+                Reader.Read();
+                r.Upsert(relloc, l);
             }
+            Reader.Read();
+
             return r;
         }
     }
 
 	public class GenericContainer : MudObject, Container
 	{
-        [Persist(typeof(ContainerMutator))]
+        [Persist(typeof(ContainerSerializer))]
         public Dictionary<RelativeLocations, List<MudObject>> Lists { get; set; }
 
         public RelativeLocations Supported;
