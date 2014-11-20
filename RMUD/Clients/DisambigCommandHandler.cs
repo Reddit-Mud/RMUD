@@ -67,7 +67,7 @@ namespace RMUD
                 var response = new StringBuilder();
                 response.Append("Which did you mean?\r\n");
                 for (var i = 0; i < DisambigObjects.Count; ++i)
-                    response.Append(String.Format("{0}: {1}\r\n", i, DisambigObjects[i].Definite));
+                    response.Append(String.Format("{0}: {1}\r\n", i, DisambigObjects[i].Definite(Client.Player)));
                 Mud.SendMessage(Client, response.ToString());
             }
             else

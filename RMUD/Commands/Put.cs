@@ -72,7 +72,7 @@ namespace RMUD.Commands
                 var openable = target as OpenableRules;
                 if (openable != null && !openable.Open)
                 {
-                    Mud.SendMessage(Actor, Mud.CapFirst(String.Format("{0} is closed.", target.Definite)));
+                    Mud.SendMessage(Actor, "^<the0> is closed.", target);
                     return;
                 }
             }
@@ -104,8 +104,8 @@ namespace RMUD.Commands
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, String.Format("You put {0} {1} {2}.", target.Definite, Mud.GetRelativeLocationName(relloc), (container as MudObject).Definite));
-                Mud.SendExternalMessage(Actor, String.Format("{0} puts {1} {2} {3}.", Actor.Short, target.Indefinite, Mud.GetRelativeLocationName(relloc), (container as MudObject).Definite));
+                Mud.SendMessage(Actor, String.Format("You put <the0> {0} <the1>.", Mud.GetRelativeLocationName(relloc)), target, (container as MudObject));
+                Mud.SendExternalMessage(Actor, String.Format("<a0> puts <a1> {0} <a2>.", Mud.GetRelativeLocationName(relloc)), Actor, target, (container as MudObject));
                 MudObject.Move(target, container as MudObject, relloc);
             }
 

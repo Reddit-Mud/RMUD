@@ -49,8 +49,8 @@ namespace RMUD.Commands
 
             if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
             {
-                Mud.SendMessage(Actor, "You drop " + target.Indefinite + ".");
-                Mud.SendExternalMessage(Actor, Actor.Short + " drops " + target.Indefinite + ".");
+                Mud.SendMessage(Actor, "You drop <the0>.", target);
+                Mud.SendExternalMessage(Actor, "<0> drops <a1>.", Actor, target);
                 MudObject.Move(target, Actor.Location);
             }
 

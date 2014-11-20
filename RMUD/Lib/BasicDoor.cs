@@ -39,7 +39,7 @@ namespace RMUD
             var otherSide = this.OppositeSide(location);
             if (otherSide != null)
             {
-                Mud.SendLocaleMessage(otherSide as Room, String.Format("{0} opens {1}.", Actor.Short, this.Definite));
+                Mud.SendLocaleMessage(otherSide as Room, "<a0> opens <the1>.", Actor, this);
                 Mud.MarkLocaleForUpdate(otherSide);
             }
 
@@ -61,7 +61,7 @@ namespace RMUD
             var otherSide = this.OppositeSide(location);
             if (otherSide != null)
             {
-                Mud.SendLocaleMessage(otherSide, String.Format("{0} closes {1}.", Actor.Short, this.Definite));
+                Mud.SendLocaleMessage(otherSide, "<a0> closes <a1>.", Actor, this);
                 Mud.MarkLocaleForUpdate(otherSide);
             }
 

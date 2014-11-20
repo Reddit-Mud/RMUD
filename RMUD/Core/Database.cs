@@ -43,26 +43,44 @@ namespace RMUD
             }
         }
 
+        private class FileTableEntry
+        {
+            public String Path;
+            public int FirstLine;
+        }
+
         internal static void BulkCompile(String DirectoryPath, bool Recursive, Action<String> ReportErrors)
         {
             if (NamedObjects.Count != 1) //That is, if anything besides Settings has been loaded...
                 throw new InvalidOperationException("Bulk compilation must happen before any other objects are loaded or bad things happen.");
 
+            var fileTable = new List<FileTableEntry>();
             var source = new StringBuilder();
             source.Append("using System;\nusing System.Collections.Generic;\nusing RMUD;\nnamespace database {\n");
             int namespaceCount = 0;
+            int lineCount = 4;
             EnumerateDatabase(DirectoryPath, Recursive, (s) =>
             {
+                fileTable.Add(new FileTableEntry { Path = s, FirstLine = lineCount });
+                lineCount += 4;
                 source.AppendFormat("namespace __{0} {{\n", namespaceCount);
                 namespaceCount += 1;
-                source.Append(LoadSourceFile(StaticPath + s + ".cs", ReportErrors, null));
+                var fileSource = LoadSourceFile(StaticPath + s + ".cs", ReportErrors, null);
+                lineCount += fileSource.Count(c => c == '\n');
+                source.Append(fileSource);
                 source.Append("\n}\n\n");
+
             });
             source.Append("}\n");
 
             //System.IO.File.WriteAllText("dump.txt", source.ToString());
 
-            var combinedAssembly = CompileCode(source.ToString(), DirectoryPath + "/*", ReportErrors);
+            var combinedAssembly = CompileCode(source.ToString(), DirectoryPath + "/*", ReportErrors, i =>
+                {
+                    var r = fileTable.Reverse<FileTableEntry>().FirstOrDefault(e => e.FirstLine < i);
+                    if (r != null) return r.Path;
+                    return "";
+                });
 
             if (combinedAssembly != null)
             {
@@ -198,7 +216,7 @@ namespace RMUD
             return System.IO.File.ReadAllText(realPath);
         }
 
-        public static Assembly CompileCode(String Source, String ErrorPath, Action<String> ReportErrors)
+        public static Assembly CompileCode(String Source, String ErrorPath, Action<String> ReportErrors, Func<int,String> TranslateBulkFilenames = null)
         {
             CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
 
@@ -208,6 +226,7 @@ namespace RMUD
             parameters.ReferencedAssemblies.Add("RMUD.exe");
 
             CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, Source);
+            bool realError = false;
             if (compilationResults.Errors.Count > 0)
             {
                 var errorString = new StringBuilder();
@@ -215,13 +234,21 @@ namespace RMUD
 
                 foreach (var error in compilationResults.Errors)
                 {
-                    if (ReportErrors != null) ReportErrors(error.ToString());
-                    errorString.Append(error.ToString());
+                    var cError = error as System.CodeDom.Compiler.CompilerError;
+                    if (!cError.IsWarning) realError = true;
+
+                    var filename = cError.FileName;
+                    if (TranslateBulkFilenames != null)
+                        filename = TranslateBulkFilenames(cError.Line);
+
+                    if (ReportErrors != null) ReportErrors(filename + " : " + error.ToString());
+                    errorString.Append(filename + " : " + error.ToString());
                     errorString.AppendLine();
                 }
                 LogError(errorString.ToString());
             }
 
+            if (realError) return null;
             return compilationResults.CompiledAssembly;
         }
 
@@ -239,7 +266,7 @@ namespace RMUD
 
             var source = "using System;\r\nusing System.Collections.Generic;\r\nusing RMUD;\r\n" + LoadSourceFile(Path, ReportErrors, new List<string>());
 
-            var assembly = CompileCode(source, Path, ReportErrors);
+            var assembly = CompileCode(source, Path, ReportErrors, i => Path);
 
             LogError(String.Format("Compiled {0} in {1} milliseconds.", Path, (DateTime.Now - start).TotalMilliseconds));
 
