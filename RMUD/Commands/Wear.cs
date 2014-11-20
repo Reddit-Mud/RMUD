@@ -38,7 +38,7 @@ namespace RMUD.Commands
 			if (!Mud.ObjectContainsObject(Actor, MudObject))
 			{
 				if (Actor.ConnectedClient != null)
-					Mud.SendMessage(Actor, "You'd have to be holding " + MudObject.Definite + " for that to work.");
+					Mud.SendMessage(Actor, "You'd have to be holding " + MudObject.Definite(Actor) + " for that to work.");
 				return;
 			}
 
@@ -53,8 +53,8 @@ namespace RMUD.Commands
             {
                 if (target.HandleWear(Actor) == RuleHandlerFollowUp.Continue)
                 {
-                        Mud.SendMessage(Actor, "You wear " + MudObject.Definite + ".");
-                        Mud.SendExternalMessage(Actor, Actor.Short + " wears " + MudObject.Indefinite + ".");
+                        Mud.SendMessage(Actor, "You wear <the0>.", MudObject);
+                        Mud.SendExternalMessage(Actor, "<a0> wears <a1>.", Actor, MudObject);
                     Mud.Move(MudObject, Actor, RelativeLocations.Worn);
                 }
             }

@@ -5,12 +5,18 @@ using System.Text;
 
 namespace RMUD
 {
+    public enum Gender
+    {
+        Male,
+        Female
+    }
+
 	public class Actor : GenericContainer, TakeRules
 	{
 		public Client ConnectedClient;
 
-		public override string Definite { get { return Short; } }
-		public override string Indefinite { get { return Short; } }
+		public override string Definite(MudObject RequestedBy) { return Short; }
+		public override string Indefinite(MudObject RequestedBy) { return Short; }
 
         CheckRule TakeRules.Check(Actor Actor)
 		{
