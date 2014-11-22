@@ -5,7 +5,7 @@
         AddConversationTopic("who he is", (actor, npc, topic) =>
             {
                 RMUD.Mud.SendLocaleMessage(actor, "\"I am Soranus,\" <the0> says.", this);
-                RMUD.Introduction.GrantKnowledgeOf(actor, npc);
+                RMUD.Introduction.Introduce(npc);
             });
 
         var entrailID = AddConversationTopic("the entrails", "\"These things?\" <the0> asks. \"Nothing special. They're for the wolves.\"");
@@ -28,7 +28,7 @@
         DescriptiveName = "short man";
         Long = "He is a man of average height, perhaps just a little short. He wears the entrails of some animal draped around himself like a toga, and his grin is full of sharp little teeth.";
 
-        Nouns.Add("soranus", a => RMUD.Introduction.HasKnowledgeOf(a, this));
+        Nouns.Add("soranus", a => RMUD.Introduction.ActorKnowsActor(a, this));
         Nouns.Add("short", "man");
     }
 }

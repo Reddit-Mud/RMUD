@@ -7,15 +7,26 @@ namespace RMUD
 {
     public static class Introduction
     {
-        public static bool HasKnowledgeOf(Actor Player, Actor Whom)
+        public static bool ActorKnowsActor(Actor Player, Actor Whom)
         {
             if (Player is Player) return (Player as Player).Recall<bool>(Whom, "knows");
             return false;
         }
 
-        public static void GrantKnowledgeOf(Actor Player, Actor Whom)
+        public static void IntroduceActorToActor(Actor Introductee, Actor ToWhom)
         {
-            if (Player is Player) (Player as Player).Remember(Whom, "knows", true);
+            if (ToWhom is Player) (ToWhom as Player).Remember(Introductee, "knows", true);
+        }
+
+        public static void Introduce(Actor Introductee)
+        {
+            var locale = Mud.FindLocale(Introductee);
+            if (locale != null)
+                Mud.EnumerateObjects(locale, (mo, relloc) =>
+                    {
+                        if (mo is Player) IntroduceActorToActor(Introductee, mo as Player);
+                        return EnumerateObjectsControl.Continue;
+                    });
         }
     }
 }

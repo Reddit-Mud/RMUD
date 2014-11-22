@@ -45,6 +45,7 @@
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
+    <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
     <Compile Include="Core\PersistAttribute.cs" />
     <Compile Include="Lib\Introduction.cs" />

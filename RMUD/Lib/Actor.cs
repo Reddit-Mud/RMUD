@@ -22,13 +22,13 @@ namespace RMUD
 
         public override string Definite(Actor RequestedBy)
         {
-            if (Introduction.HasKnowledgeOf(RequestedBy, this)) return Short;
+            if (Introduction.ActorKnowsActor(RequestedBy, this)) return Short;
             return "the " + DescriptiveName;
         }
 
 		public override string Indefinite(Actor RequestedBy)
         {
-            if (Introduction.HasKnowledgeOf(RequestedBy, this)) return Short;
+            if (Introduction.ActorKnowsActor(RequestedBy, this)) return Short;
             return "a " + DescriptiveName;
         }
 
