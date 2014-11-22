@@ -32,7 +32,7 @@ namespace RMUD
             if (Topic.ResponseType == ConversationTopic.ResponseTypes.Normal)
             {
                 var response = Topic.NormalResponse.Expand(Actor, Actor.CurrentInterlocutor);
-                Mud.SendLocaleMessage(Actor, response);
+                Mud.SendLocaleMessage(Actor, response, Actor.CurrentInterlocutor);
             }
             else if (Topic.ResponseType == ConversationTopic.ResponseTypes.Silent)
             {

@@ -32,7 +32,7 @@ namespace RMUD
         protected RuleHandlerFollowUp ImplementHandleOpen(Actor Actor)
         { 
             Open = true;
-            Nouns.RemoveAll(n => n == "CLOSED");
+            Nouns.RemoveAll(n => n.Value == "CLOSED");
             Nouns.Add("OPEN");
 
             var location = Actor.Location as Room;
@@ -54,7 +54,7 @@ namespace RMUD
         protected RuleHandlerFollowUp ImplementHandleClose(Actor Actor)
         {
             Open = false;
-            Nouns.RemoveAll(n => n == "OPEN");
+            Nouns.RemoveAll(n => n.Value == "OPEN");
             Nouns.Add("CLOSED");
 
             var location = Actor.Location as Room;

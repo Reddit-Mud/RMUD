@@ -90,7 +90,7 @@ namespace RMUD
 			{
 				var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
 				bool matched = false;
-				while (possibleMatch.Next != null && matchableMudObject.Nouns.Contains(possibleMatch.Next.Value.ToUpper()))
+				while (possibleMatch.Next != null && matchableMudObject.Nouns.Match(possibleMatch.Next.Value.ToUpper(), Context.ExecutingActor))
 				{
 					matched = true;
 					possibleMatch.Next = possibleMatch.Next.Next;

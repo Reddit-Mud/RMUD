@@ -9,7 +9,7 @@ namespace RMUD
 {
     public static partial class Mud
     {
-        public static String FormatMessage(MudObject Recipient, String Message, params MudObject[] Objects)
+        public static String FormatMessage(Actor Recipient, String Message, params MudObject[] Objects)
         {
             for (int i = 0; i < Objects.Length; ++i)
             {
@@ -17,7 +17,20 @@ namespace RMUD
                 Message = Message.Replace("<a" + i + ">", Objects[i].Indefinite(Recipient));                
             }
 
-            return Message;
+            var builder = new StringBuilder();
+            var cap = false;
+            for (int i = 0; i < Message.Length; ++i)
+            {
+                if (Message[i] == '^') cap = true;
+                else
+                {
+                    if (cap) builder.Append(new String(Message[i], 1).ToUpper());
+                    else builder.Append(Message[i]);
+                    cap = false;
+                }
+            }
+
+            return builder.ToString();
         }
 
         public static void SendMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
@@ -33,8 +46,9 @@ namespace RMUD
             {
                 container.EnumerateObjects(RelativeLocations.EveryMudObject, (MudObject, loc) =>
                 {
-                    if (MudObject is Actor && (MudObject as Actor).ConnectedClient != null)
-                        PendingMessages.Add(new RawPendingMessage((MudObject as Actor).ConnectedClient, FormatMessage(MudObject, Message, MentionedObjects)));
+                    var actor = MudObject as Actor;
+                    if (actor != null && actor.ConnectedClient != null)
+                        PendingMessages.Add(new RawPendingMessage(actor.ConnectedClient, FormatMessage(actor, Message, MentionedObjects)));
                     return EnumerateObjectsControl.Continue;
                 });
             }

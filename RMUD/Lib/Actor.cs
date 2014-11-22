@@ -15,8 +15,22 @@ namespace RMUD
 	{
 		public Client ConnectedClient;
 
-		public override string Definite(MudObject RequestedBy) { return Short; }
-		public override string Indefinite(MudObject RequestedBy) { return Short; }
+        [Persist(typeof(EnumSerializer<Gender>))]
+        public Gender Gender { get; set; }
+
+        public String DescriptiveName { get; set; }
+
+        public override string Definite(Actor RequestedBy)
+        {
+            if (Introduction.HasKnowledgeOf(RequestedBy, this)) return Short;
+            return "the " + DescriptiveName;
+        }
+
+		public override string Indefinite(Actor RequestedBy)
+        {
+            if (Introduction.HasKnowledgeOf(RequestedBy, this)) return Short;
+            return "a " + DescriptiveName;
+        }
 
         CheckRule TakeRules.Check(Actor Actor)
 		{
@@ -27,7 +41,9 @@ namespace RMUD
 
         public Actor()
             : base(RelativeLocations.Held | RelativeLocations.Worn, RelativeLocations.Held)
-        { }
+        {
+            Gender = RMUD.Gender.Male;
+        }
 
        
 	}

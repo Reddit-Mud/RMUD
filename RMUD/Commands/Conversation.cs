@@ -31,7 +31,7 @@ namespace RMUD.Commands
 
                 var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
                 bool matched = false;
-                while (possibleMatch.Next != null && topic.KeyWords.Contains(possibleMatch.Next.Value.ToUpper()))
+                while (possibleMatch.Next != null && topic.KeyWords.Match(possibleMatch.Next.Value.ToUpper(), Context.ExecutingActor))
                 {
                     matched = true;
                     possibleMatch.Next = possibleMatch.Next.Next;

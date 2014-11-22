@@ -54,7 +54,7 @@ public class Table : RMUD.GenericContainer, RMUD.OpenableRules, RMUD.TakeRules
         RMUD.MudObject.Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
     }
 
-    public override string Indefinite(RMUD.MudObject Actor)
+    public override string Indefinite(RMUD.Actor Actor)
     {
         return "an ancient table";
     }

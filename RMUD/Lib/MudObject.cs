@@ -44,8 +44,8 @@ namespace RMUD
 		public NounList Nouns { get; set; }
         public MudObject Location { get; set; }
 
-        public virtual String Indefinite(MudObject RequestedBy) { return Article + " " + Short; }
-        public virtual String Definite(MudObject RequestedBy) { return "the " + Short; }
+        public virtual String Indefinite(Actor RequestedBy) { return Article + " " + Short; }
+        public virtual String Definite(Actor RequestedBy) { return "the " + Short; }
 
 		public MudObject()
 		{
