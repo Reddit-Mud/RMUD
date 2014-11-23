@@ -45,6 +45,7 @@
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
+    <Compile Include="Commands\Force.cs" />
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Parser\Matchers\FailIf.cs" />
     <Compile Include="Parser\Matchers\NumberMatcher.cs" />
     <Compile Include="Parser\Matchers\GenericMatcher.cs" />
+    <Compile Include="Parser\Matchers\StatusEffectGate.cs" />
     <Compile Include="Parser\Matchers\ScoreGate.cs" />
     <Compile Include="Core\RelativeLocationNames.cs" />
     <Compile Include="Core\ChatChannels.cs" />
