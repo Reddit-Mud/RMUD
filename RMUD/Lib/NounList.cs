@@ -55,6 +55,11 @@ namespace RMUD
                 Add(Nouns[i]);
         }
 
+        public void Remove(String Word)
+        {
+            RemoveAll(n => n.Value == Word.ToUpper());
+        }
+
         public void AddRange(IEnumerable<String> Range)
         {
             foreach (var str in Range)

@@ -14,7 +14,8 @@ namespace RMUD.Commands
                     new KeyWord("INTRODUCE"),
                     new Or(
                         new KeyWord("MYSELF"),
-                        new KeyWord("ME"))),
+                        new KeyWord("ME"),
+                        new KeyWord("SELF"))),
                 new IntroduceSelfProcessor(),
                 "Introduce yourself.");
 

@@ -45,6 +45,7 @@
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
+    <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
     <Compile Include="Core\PersistAttribute.cs" />
@@ -116,6 +117,8 @@
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Lib\Quest.cs" />
+    <Compile Include="Lib\SillyStatusEffect.cs" />
+    <Compile Include="Lib\StatusEffect.cs" />
     <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
     <Compile Include="Parser\MatchContext.cs" />
     <Compile Include="Parser\Matchers\FailIf.cs" />
