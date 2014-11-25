@@ -75,7 +75,7 @@ namespace RMUD.Commands
                 builder.Append(String.Join(", ", visibleMudObjects.Select(visibleMudObject =>
                 {
                     var subBuilder = new StringBuilder();
-                    subBuilder.Append(visibleMudObject.Indefinite);
+                    subBuilder.Append(visibleMudObject.Indefinite(Actor));
 
                     var container = visibleMudObject as Container;
                     if (container != null)
@@ -92,7 +92,7 @@ namespace RMUD.Commands
                             if (subObjects.Count > 0)
                             {
                                 subBuilder.Append(" (on which is ");
-                                subBuilder.Append(String.Join(", ", subObjects.Select(o => o.Indefinite)));
+                                subBuilder.Append(String.Join(", ", subObjects.Select(o => o.Indefinite(Actor))));
                                 subBuilder.Append(")");
                             }
                         }
@@ -116,7 +116,7 @@ namespace RMUD.Commands
                     if (link.Portal != null)
                     {
                         builder.Append(", through ");
-                        builder.Append(link.Portal.Indefinite);
+                        builder.Append(link.Portal.Indefinite(Actor));
                     }
 
                     var destinationRoom = Mud.GetObject(link.Destination) as Room;

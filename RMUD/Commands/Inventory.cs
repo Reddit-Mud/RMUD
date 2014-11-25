@@ -35,7 +35,7 @@ namespace RMUD.Commands
                 foreach (var item in wornObjects)
                 {
                     builder.Append("  ");
-                    builder.Append(item.Indefinite);
+                    builder.Append(item.Indefinite(Actor));
                     builder.Append("\r\n");
                 }
             }
@@ -48,7 +48,7 @@ namespace RMUD.Commands
 				foreach (var item in heldObjects)
 				{
 					builder.Append("  ");
-					builder.Append(item.Indefinite);
+					builder.Append(item.Indefinite(Actor));
 					builder.Append("\r\n");
 				}
 			}

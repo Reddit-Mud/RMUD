@@ -31,8 +31,8 @@ public class kuz_shelf : MudObject, TakeRules, LocaleDescriptionRules
         var newBook = new kuz_book();
         MudObject.Move(newBook, Actor);
 
-        Mud.SendMessage(Actor, String.Format("You take {0}.\r\n", newBook.Indefinite));
-	    Mud.SendExternalMessage(Actor, String.Format("{0} takes {1}.\r\n", Actor.Short, newBook.Indefinite));
+        Mud.SendMessage(Actor, "You take <a0>.", newBook);
+	    Mud.SendExternalMessage(Actor, "<a0> takes <a1>.", Actor, newBook);
 
         //Tell the take command not to emit messages or move this object to the player's inventory.
         return RuleHandlerFollowUp.Stop;

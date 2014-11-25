@@ -25,13 +25,14 @@ namespace RMUD
 
         public static void DiscussTopic(Player Actor, NPC With, ConversationTopic Topic)
         {
-            Mud.SendMessage(Actor, String.Format("You discuss '{0}' with {1}.", Topic.Topic, Actor.CurrentInterlocutor.Definite));
-            Mud.SendExternalMessage(Actor, String.Format("{0} discusses '{1}' with {2}.", Actor.Definite, Topic.Topic, Actor.CurrentInterlocutor.Definite));
+            Mud.SendMessage(Actor, String.Format("You discuss '{0}' with {1}.", Topic.Topic, Actor.CurrentInterlocutor.Definite(Actor)));
+
+            Mud.SendExternalMessage(Actor, String.Format("<0> discusses '{0}' with <1>.", Topic.Topic), Actor, Actor.CurrentInterlocutor);
 
             if (Topic.ResponseType == ConversationTopic.ResponseTypes.Normal)
             {
                 var response = Topic.NormalResponse.Expand(Actor, Actor.CurrentInterlocutor);
-                Mud.SendLocaleMessage(Actor, response);
+                Mud.SendLocaleMessage(Actor, response, Actor.CurrentInterlocutor);
             }
             else if (Topic.ResponseType == ConversationTopic.ResponseTypes.Silent)
             {

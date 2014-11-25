@@ -56,8 +56,8 @@ namespace RMUD.Commands
                         var MudObject = target as MudObject;
                         if (MudObject != null)
                         {
-                            Mud.SendMessage(Actor, "You open " + MudObject.Definite + ".");
-                            Mud.SendExternalMessage(Actor, Actor.Short + " opens " + MudObject.Definite + ".");
+                            Mud.SendMessage(Actor, "You open <the0>.", MudObject);
+                            Mud.SendExternalMessage(Actor, "<a0> opens <a1>.", Actor, MudObject);
                         }
                     }
 

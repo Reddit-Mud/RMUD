@@ -51,6 +51,7 @@ namespace RMUD
 
             if (Reader.TokenType == JsonToken.String) { r = Reader.Value.ToString(); Reader.Read(); }
             else if (Reader.TokenType == JsonToken.Integer) { r = Convert.ToInt32(Reader.Value.ToString()); Reader.Read(); }
+            else if (Reader.TokenType == JsonToken.Boolean) { r = Convert.ToBoolean(Reader.Value.ToString()); Reader.Read(); }
             else 
             {
                 PersistentValueSerializer serializer = null;

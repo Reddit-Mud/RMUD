@@ -49,7 +49,7 @@ namespace RMUD.Commands
             {
                 if (!Mud.IsOpen(target))
                 {
-                    Mud.SendMessage(Actor, Mud.CapFirst(String.Format("{0} is closed.", target.Definite)));
+                    Mud.SendMessage(Actor, "^<the0> is closed.", target);
                     return;
                 }
             }
@@ -59,15 +59,15 @@ namespace RMUD.Commands
             {
                 var builder = new StringBuilder();
 
-                builder.Append(Mud.CapFirst(String.Format("{0} {1} is ", Mud.GetRelativeLocationName(relloc), (target as MudObject).Definite)));
-                builder.Append(String.Join(", ", contents.Select(o => (o as MudObject).Indefinite)));
+                builder.Append(String.Format("^{0} {1} is ", Mud.GetRelativeLocationName(relloc), (target as MudObject).Definite(Actor)));
+                builder.Append(String.Join(", ", contents.Select(o => (o as MudObject).Indefinite(Actor))));
                 builder.Append(".");
 
                 Mud.SendMessage(Actor, builder.ToString());
             }
             else
             {
-                Mud.SendMessage(Actor, String.Format("There is nothing {0} {1}.", Mud.GetRelativeLocationName(relloc), target.Definite));
+                Mud.SendMessage(Actor, String.Format("There is nothing {0} {1}.", Mud.GetRelativeLocationName(relloc), target.Definite(Actor)));
             }
         }
 	}

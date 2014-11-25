@@ -32,14 +32,14 @@ namespace RMUD
         protected RuleHandlerFollowUp ImplementHandleOpen(Actor Actor)
         { 
             Open = true;
-            Nouns.RemoveAll(n => n == "CLOSED");
+            Nouns.RemoveAll(n => n.Value == "CLOSED");
             Nouns.Add("OPEN");
 
             var location = Actor.Location as Room;
             var otherSide = this.OppositeSide(location);
             if (otherSide != null)
             {
-                Mud.SendLocaleMessage(otherSide as Room, String.Format("{0} opens {1}.", Actor.Short, this.Definite));
+                Mud.SendLocaleMessage(otherSide as Room, "<a0> opens <the1>.", Actor, this);
                 Mud.MarkLocaleForUpdate(otherSide);
             }
 
@@ -54,14 +54,14 @@ namespace RMUD
         protected RuleHandlerFollowUp ImplementHandleClose(Actor Actor)
         {
             Open = false;
-            Nouns.RemoveAll(n => n == "OPEN");
+            Nouns.RemoveAll(n => n.Value == "OPEN");
             Nouns.Add("CLOSED");
 
             var location = Actor.Location as Room;
             var otherSide = this.OppositeSide(location);
             if (otherSide != null)
             {
-                Mud.SendLocaleMessage(otherSide, String.Format("{0} closes {1}.", Actor.Short, this.Definite));
+                Mud.SendLocaleMessage(otherSide, "<a0> closes <a1>.", Actor, this);
                 Mud.MarkLocaleForUpdate(otherSide);
             }
 

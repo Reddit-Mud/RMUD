@@ -19,8 +19,8 @@ namespace RMUD
             var R = new List<PossibleMatch>();
             if (Context.ExecutingActor.ConnectedClient != null && Context.ExecutingActor.ConnectedClient.Rank >= RequiredRank)
                 R.Add(State);
-            else
-                throw new CommandParser.MatchAborted("You do not have sufficient rank to use that command.");
+            //else
+            //    throw new CommandParser.MatchAborted("You do not have sufficient rank to use that command.");
 			return R;
         }
 

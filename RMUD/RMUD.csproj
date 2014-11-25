@@ -45,8 +45,12 @@
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
+    <Compile Include="Commands\Force.cs" />
+    <Compile Include="Commands\Silly.cs" />
+    <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
     <Compile Include="Core\PersistAttribute.cs" />
+    <Compile Include="Lib\Introduction.cs" />
     <Compile Include="Lib\Conversation.cs" />
     <Compile Include="Commands\Errors.cs" />
     <Compile Include="Commands\AcceptQuest.cs" />
@@ -106,6 +110,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="Lib\BitArraySerializer.cs" />
+    <Compile Include="Lib\EnumSerializer.cs" />
     <Compile Include="Lib\DictionaryStringObjectSerializer.cs" />
     <Compile Include="Lib\Player.cs" />
     <Compile Include="Lib\ConversationTopic.cs" />
@@ -113,11 +118,14 @@
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Lib\Quest.cs" />
+    <Compile Include="Lib\SillyStatusEffect.cs" />
+    <Compile Include="Lib\StatusEffect.cs" />
     <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
     <Compile Include="Parser\MatchContext.cs" />
     <Compile Include="Parser\Matchers\FailIf.cs" />
     <Compile Include="Parser\Matchers\NumberMatcher.cs" />
     <Compile Include="Parser\Matchers\GenericMatcher.cs" />
+    <Compile Include="Parser\Matchers\StatusEffectGate.cs" />
     <Compile Include="Parser\Matchers\ScoreGate.cs" />
     <Compile Include="Core\RelativeLocationNames.cs" />
     <Compile Include="Core\ChatChannels.cs" />

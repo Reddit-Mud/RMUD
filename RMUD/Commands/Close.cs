@@ -56,8 +56,8 @@ namespace RMUD.Commands
 
                         if (MudObject != null)
                         {
-                            Mud.SendMessage(Actor, "You close " + MudObject.Definite + ".");
-                            Mud.SendExternalMessage(Actor, Actor.Short + " closes " + MudObject.Definite + ".");
+                            Mud.SendMessage(Actor, "You close <the0>.", MudObject);
+                            Mud.SendExternalMessage(Actor, "<a0> closes <a1>.", Actor, MudObject);
                         }
                     }
 

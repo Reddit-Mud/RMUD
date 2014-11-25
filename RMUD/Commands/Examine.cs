@@ -58,9 +58,9 @@ namespace RMUD.Commands
                 if (openable != null)
                 {
                     if (openable.Open)
-                        builder.Append(Mud.CapFirst(String.Format("{0} is open.\r\n", (target as MudObject).Definite)));
+                        builder.Append(Mud.CapFirst(String.Format("{0} is open.\r\n", (target as MudObject).Definite(Actor))));
                     else
-                        builder.Append(Mud.CapFirst(String.Format("{0} is closed.\r\n", (target as MudObject).Definite)));
+                        builder.Append(Mud.CapFirst(String.Format("{0} is closed.\r\n", (target as MudObject).Definite(Actor))));
                 }
 
                 var container = target as Container;
@@ -69,8 +69,8 @@ namespace RMUD.Commands
                     var contents = Mud.GetContents(container, RelativeLocations.On).Where(o => o is MudObject);
                     if (contents.Count() > 0)
                     {
-                        builder.Append(String.Format("\r\nOn {0} is ", (target as MudObject).Definite));
-                        builder.Append(String.Join(", ", contents.Select(o => (o as MudObject).Indefinite)));
+                        builder.Append(String.Format("\r\nOn {0} is ", (target as MudObject).Definite(Actor)));
+                        builder.Append(String.Join(", ", contents.Select(o => (o as MudObject).Indefinite(Actor))));
                         builder.Append(".\r\n");
                     }
                 }
@@ -80,8 +80,8 @@ namespace RMUD.Commands
                     var contents = Mud.GetContents(container, RelativeLocations.In).Where(o => o is MudObject);
                     if (contents.Count() > 0)
                     {
-                        builder.Append(String.Format("\r\nIn {0} is ", (target as MudObject).Definite));
-                        builder.Append(String.Join(", ", contents.Select(o => (o as MudObject).Indefinite)));
+                        builder.Append(String.Format("\r\nIn {0} is ", (target as MudObject).Definite(Actor)));
+                        builder.Append(String.Join(", ", contents.Select(o => (o as MudObject).Indefinite(Actor))));
                         builder.Append(".\r\n");
                     }
                 }

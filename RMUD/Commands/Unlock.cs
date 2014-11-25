@@ -56,7 +56,7 @@ namespace RMUD.Commands
 			if (!Mud.ObjectContainsObject(Actor, key))
 			{
 				if (Actor.ConnectedClient != null)
-					Mud.SendMessage(Actor, "You'd have to be holding " + key.Definite + " for that to work.");
+					Mud.SendMessage(Actor, "You'd have to be holding <the0> for that to work.", key);
 				return;
 			}
 
@@ -74,8 +74,8 @@ namespace RMUD.Commands
                     var MudObject = target as MudObject;
                     if (MudObject != null)
                     {
-                        Mud.SendMessage(Actor, "You unlock " + MudObject.Definite + ".");
-                        Mud.SendExternalMessage(Actor, Actor.Short + " unlocks " + MudObject.Indefinite + " with " + key.Indefinite + ".");
+                        Mud.SendMessage(Actor, "You unlock <a0>.", MudObject);
+                        Mud.SendExternalMessage(Actor, "<a0> unlocks <a1> with <a2>.", Actor, MudObject, key);
                     }
                 }
             }
