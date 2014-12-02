@@ -59,7 +59,7 @@ namespace RMUD
             Nouns = new NounList();
             this.Short = Short;
             this.Long = Long;
-            Nouns.AddRange(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            Nouns.Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
 
             var firstChar = Short.ToLower()[0];
             if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')

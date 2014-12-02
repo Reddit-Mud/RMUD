@@ -9,7 +9,9 @@ namespace RMUD
     {
         public BasicDoor()
         {
-            this.Nouns.Add("DOOR", "CLOSED");
+            this.Nouns.Add("DOOR");
+            this.Nouns.Add("CLOSED", actor => !Open);
+            this.Nouns.Add("OPEN", actor => Open);
             Open = false;
         }
 
@@ -32,8 +34,6 @@ namespace RMUD
         protected RuleHandlerFollowUp ImplementHandleOpen(Actor Actor)
         { 
             Open = true;
-            Nouns.RemoveAll(n => n.Value == "CLOSED");
-            Nouns.Add("OPEN");
 
             var location = Actor.Location as Room;
             var otherSide = this.OppositeSide(location);
@@ -54,8 +54,6 @@ namespace RMUD
         protected RuleHandlerFollowUp ImplementHandleClose(Actor Actor)
         {
             Open = false;
-            Nouns.RemoveAll(n => n.Value == "OPEN");
-            Nouns.Add("CLOSED");
 
             var location = Actor.Location as Room;
             var otherSide = this.OppositeSide(location);

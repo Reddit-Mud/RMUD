@@ -46,6 +46,7 @@
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
     <Compile Include="Commands\Force.cs" />
+    <Compile Include="Commands\Lycanthropy.cs" />
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Lib\Quest.cs" />
+    <Compile Include="Lib\LycanthropeStatusEffect.cs" />
     <Compile Include="Lib\SillyStatusEffect.cs" />
     <Compile Include="Lib\StatusEffect.cs" />
     <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
