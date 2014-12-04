@@ -179,6 +179,7 @@
     <Compile Include="Parser\Matchers\FailIfNoMatches.cs" />
     <Compile Include="ReverseLineReader.cs" />
     <Compile Include="RuleDecorators\CheckRuleResponse.cs" />
+    <Compile Include="RuleDecorators\Rule.cs" />
     <Compile Include="RuleDecorators\WearableRules.cs" />
     <Compile Include="RuleDecorators\PutRules.cs" />
     <Compile Include="RuleDecorators\EmitsLight.cs" />
