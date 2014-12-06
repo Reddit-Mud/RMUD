@@ -43,6 +43,7 @@ namespace RMUD
         public String Article = "a";
 		public NounList Nouns { get; set; }
         public MudObject Location { get; set; }
+        public RuleSet Rules = null;
 
         public virtual String Indefinite(Actor RequestedBy) { return Article + " " + Short; }
         public virtual String Definite(Actor RequestedBy) { return "the " + Short; }
@@ -80,6 +81,24 @@ namespace RMUD
                             child.Destroy(true);
                         return EnumerateObjectsControl.Continue;
                     });
+        }
+
+        public RuleBuilder<T0> AddRule<T0>(String Name)
+        {
+            if (Rules == null) Rules = new RuleSet();
+            return Rules.AddRule<T0>(Name);
+        }
+
+        public RuleBuilder<T0, T1> AddRule<T0, T1>(String Name)
+        {
+            if (Rules == null) Rules = new RuleSet();
+            return Rules.AddRule<T0, T1>(Name);
+        }
+
+        public RuleBuilder<T0, T1, T2> AddRule<T0, T1, T2>(String Name)
+        {
+            if (Rules == null) Rules = new RuleSet();
+            return Rules.AddRule<T0, T1, T2>(Name);
         }
 
 		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)

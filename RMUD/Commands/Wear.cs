@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Wear : CommandFactory
+	internal class Wear : CommandFactory, ActionRules
 	{
         public override void Create(CommandParser Parser)
         {
@@ -19,50 +19,58 @@ namespace RMUD.Commands
                 "Wear something.",
                 "OBJECT-SCORE");
         }
-	}
+
+        public void CreateGlobalRules()
+        {
+            GlobalRuleBooks.DeclareRuleBook<MudObject, MudObject>("can-be-worn");
+            GlobalRuleBooks.DeclareRuleBook<MudObject, MudObject>("can-wear");
+            GlobalRuleBooks.DeclareRuleBook<MudObject, MudObject>("on-donned");
+            GlobalRuleBooks.DeclareRuleBook<MudObject, MudObject>("on-dons");
+
+            GlobalRuleBooks.AddRule<MudObject, MudObject>("can-be-worn").Do((a, b) =>
+                {
+                    Mud.SendMessage(a, "That isn't something you can wear.");
+                    return RuleResult.Disallow;
+                });
+
+            GlobalRuleBooks.AddRule<MudObject, MudObject>("can-wear").Do((a, b) => RuleResult.Allow);
+
+            GlobalRuleBooks.AddRule<MudObject, MudObject>("on-donned").Do((actor, target) =>
+                {
+                    Mud.SendMessage(actor, "You wear <the0>.", target);
+                    Mud.SendExternalMessage(actor, "<a0> wears <a1>.", actor, target);
+                    Mud.Move(target, actor, RelativeLocations.Worn);
+                    return RuleResult.Continue;
+                });
+        }
+    }
 	
 	internal class WearProcessor : CommandProcessor
 	{
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
-			var target = Match.Arguments["OBJECT"] as WearableRules;
-            var MudObject = target as MudObject;
+			var target = Match.Arguments["OBJECT"] as MudObject;
 
-			if (target == null)
+			if (!Mud.ObjectContainsObject(Actor, target))
 			{
-				if (Actor.ConnectedClient != null)
-					Mud.SendMessage(Actor, "I don't see how you would manage that.");
+				Mud.SendMessage(Actor, "You'd have to be holding <the0> for that to work.", target);
 				return;
 			}
 
-			if (!Mud.ObjectContainsObject(Actor, MudObject))
-			{
-				if (Actor.ConnectedClient != null)
-					Mud.SendMessage(Actor, "You'd have to be holding " + MudObject.Definite(Actor) + " for that to work.");
-				return;
-			}
-
-            if (Actor.LocationOf(target as MudObject) == RelativeLocations.Worn)
+            if (Actor.LocationOf(target) == RelativeLocations.Worn)
             {
                 Mud.SendMessage(Actor, "You're already wearing that.");
                 return;
             }
 
-            var checkRule = target.CheckWear(Actor);
-            if (checkRule.Allowed)
+            var canBeWorn = GlobalRuleBooks.ConsiderRuleFamily("can-be-worn", target, Actor, target);
+            if (canBeWorn == RuleResult.Allow) canBeWorn = GlobalRuleBooks.ConsiderRuleFamily("can-wear", Actor, Actor, target);
+
+            if (canBeWorn == RuleResult.Allow)
             {
-                if (target.HandleWear(Actor) == RuleHandlerFollowUp.Continue)
-                {
-                        Mud.SendMessage(Actor, "You wear <the0>.", MudObject);
-                        Mud.SendExternalMessage(Actor, "<a0> wears <a1>.", Actor, MudObject);
-                    Mud.Move(MudObject, Actor, RelativeLocations.Worn);
-                }
-            }
-            else
-            {
-                Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
+                GlobalRuleBooks.ConsiderRuleFamily("on-donned", target, Actor, target);
+                GlobalRuleBooks.ConsiderRuleFamily("on-dons", Actor, Actor, target);
             }
 		}
 	}
-
 }

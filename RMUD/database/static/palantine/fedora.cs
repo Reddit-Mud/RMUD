@@ -6,6 +6,8 @@
         Nouns.Add("fedora", "hat");
         Long = "This hat is so not cool.";
 
+        AddRule<RMUD.MudObject, RMUD.MudObject>("can-be-worn").Do((a, b) => RMUD.RuleResult.Allow);
+
     }
 
     RMUD.CheckRule RMUD.WearableRules.CheckWear(RMUD.Actor Actor)

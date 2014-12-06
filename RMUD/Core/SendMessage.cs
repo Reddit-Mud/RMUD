@@ -9,6 +9,8 @@ namespace RMUD
 {
     public static partial class Mud
     {
+        public static bool SilentFlag = false;
+
         public static String FormatMessage(Actor Recipient, String Message, params MudObject[] Objects)
         {
             for (int i = 0; i < Objects.Length; ++i)
@@ -37,6 +39,12 @@ namespace RMUD
         {
             if (Actor != null && Actor.ConnectedClient != null)
                 PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, FormatMessage(Actor, Message, MentionedObjects)));
+        }
+
+        public static void SendMessage(MudObject MudObject, String Message, params MudObject[] MentionedObjects)
+        {
+            if (MudObject is Actor)
+                SendMessage(MudObject as Actor, Message, MentionedObjects);
         }
 
         public static void SendLocaleMessage(MudObject Object, String Message, params MudObject[] MentionedObjects)
@@ -70,6 +78,12 @@ namespace RMUD
                     return EnumerateObjectsControl.Continue;
                 });
         }
+
+        public static void SendExternalMessage(MudObject Actor, String Message, params MudObject[] MentionedObjects)
+        {
+            SendExternalMessage(Actor as Actor, Message, MentionedObjects);
+        }
+
 
         public static void SendMessage(Client Client, String Message)
         {
