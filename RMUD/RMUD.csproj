@@ -194,7 +194,6 @@
     <Compile Include="Parser\Matchers\OptionalMatcher.cs" />
     <Compile Include="Parser\Matchers\FirstOfMatcher.cs" />
     <Compile Include="Core\ProscriptionList.cs" />
-    <Compile Include="RuleDecorators\LocaleDescriptionRules.cs" />
     <Compile Include="Clients\TelnetClient.cs" />
     <Compile Include="Clients\TelnetControlCodes.cs" />
     <Compile Include="Core\HasVisibleContents.cs" />

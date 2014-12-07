@@ -71,6 +71,8 @@ namespace RMUD
 
                 NextCommand = null;
 
+                Mud.SilentFlag = false;
+
                 CommandFinishedHandle.Set();
             }
         }
