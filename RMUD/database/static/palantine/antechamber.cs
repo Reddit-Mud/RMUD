@@ -21,18 +21,15 @@
     }
 }
 
-public class Jupiter : RMUD.Scenery, RMUD.EmitsLight
+public class Jupiter : RMUD.Scenery
 {
     public Jupiter()
     {
         Nouns.Add("jupiter");
         Long = "Jupiter holds in his left hand a gleaming thunderbolt. It glows bright enough to light the entire chamber. In his right, he holds a chisel.";
         RMUD.Mud.RegisterForHeartbeat(this);
-    }
 
-    public RMUD.LightingLevel EmitsLight
-    {
-        get { return RMUD.LightingLevel.Bright; }
+        AddValueRule<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
     }
 
     public override void Heartbeat(ulong HeartbeatID)
@@ -41,7 +38,7 @@ public class Jupiter : RMUD.Scenery, RMUD.EmitsLight
     }
 }
 
-public class Table : RMUD.GenericContainer, RMUD.OpenableRules, RMUD.TakeRules
+public class Table : RMUD.GenericContainer, RMUD.OpenableRules
 {
     public Table() : base(RMUD.RelativeLocations.On | RMUD.RelativeLocations.Under, RMUD.RelativeLocations.On)
     {
@@ -52,6 +49,12 @@ public class Table : RMUD.GenericContainer, RMUD.OpenableRules, RMUD.TakeRules
         Open = false;
 
         RMUD.MudObject.Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
+
+        AddActionRule<RMUD.MudObject, RMUD.MudObject>("can-take").Do((actor, thing) =>
+        {
+            RMUD.Mud.SendMessage(actor, "It's far too heavy.");
+            return RMUD.RuleResult.Disallow;
+        });
     }
 
     public override string Indefinite(RMUD.Actor Actor)
@@ -85,13 +88,4 @@ public class Table : RMUD.GenericContainer, RMUD.OpenableRules, RMUD.TakeRules
 
     #endregion
 
-    RMUD.CheckRule RMUD.TakeRules.Check(RMUD.Actor Actor)
-    {
-        return RMUD.CheckRule.Disallow("It's far too heavy.");
-    }
-
-    RMUD.RuleHandlerFollowUp RMUD.TakeRules.Handle(RMUD.Actor Actor)
-    {
-        throw new System.NotImplementedException();
-    }
 }

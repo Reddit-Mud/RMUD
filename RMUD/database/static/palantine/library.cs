@@ -1,50 +1,41 @@
-﻿public class library : Room
+﻿public class library : RMUD.Room
 {
 	public override void Initialize()
 	{
 		Short = "Palantine Villa - The Ancient Library of Kuz";
-        MudObject.Move(new kuz_shelf(), this);
+        RMUD.MudObject.Move(new kuz_shelf(), this);
 
         OpenLink(RMUD.Direction.EAST, "palantine/disambig", RMUD.Mud.GetObject("palantine/disambig_blue_door"));
 	}
 }
 
-public class kuz_shelf : MudObject, TakeRules
+public class kuz_shelf : RMUD.MudObject
 {
-    public DescriptiveText LocaleDescription { get; set; }
-
     public kuz_shelf()
     {
         Short = "dusty shelf full of books";
         Long = "There are so many books, and they all look so interesting and inviting. You could just go right ahead and take one.";
-        LocaleDescription = "A massive book shelf looms in the center of the room.";
         Nouns.Add("BOOK", "BOOKS", "SHELF", "DUSTY");
 
-        AddValueRule<MudObject, MudObject, string>("locale-description").Do((actor, item) => "A massive book shelf looms in the center of the room.");
+        AddValueRule<RMUD.MudObject, RMUD.MudObject, string>("locale-description").Do((actor, item) => "A massive book shelf looms in the center of the room.");
+
+        AddActionRule<RMUD.MudObject, RMUD.MudObject>("can-take").Do((a, b) => RMUD.RuleResult.Allow);
+
+        AddActionRule<RMUD.MudObject, RMUD.MudObject>("on-taken").Do((actor, target) =>
+            {
+                var newBook = new kuz_book();
+                RMUD.MudObject.Move(newBook, actor);
+
+                RMUD.Mud.SendMessage(actor, "You take <a0>.", newBook);
+                RMUD.Mud.SendExternalMessage(actor, "<a0> takes <a1>.", actor, newBook);
+                return RMUD.RuleResult.Stop;
+            });
     }
-
-    CheckRule TakeRules.Check(Actor Actor)
-    {
-        return CheckRule.Allow();
-    }
-
-    RuleHandlerFollowUp TakeRules.Handle(Actor Actor)
-    {
-        var newBook = new kuz_book();
-        MudObject.Move(newBook, Actor);
-
-        Mud.SendMessage(Actor, "You take <a0>.", newBook);
-	    Mud.SendExternalMessage(Actor, "<a0> takes <a1>.", Actor, newBook);
-
-        //Tell the take command not to emit messages or move this object to the player's inventory.
-        return RuleHandlerFollowUp.Stop;
-    }
-
 }
 
-public class kuz_book : MudObject
+public class kuz_book : RMUD.MudObject
 {
-    public static List<String> TitlesA = new List<String>(new String[]{
+    public static System.Collections.Generic.List<System.String> TitlesA = new System.Collections.Generic.List<System.String>(new System.String[]{
         "Chronicles of",
         "A Compendium of",
         "Untranslated Analysis of",
@@ -56,7 +47,7 @@ public class kuz_book : MudObject
         "The Complete History of"
                                          });
 
-    public static List<String> TitlesB = new List<String>(new String[]{
+    public static System.Collections.Generic.List<System.String> TitlesB = new System.Collections.Generic.List<System.String>(new System.String[]{
         "History",
         "Forgotten Kings",
         "Antquity",
@@ -67,7 +58,7 @@ public class kuz_book : MudObject
         "the Utterings of Slow Children"
                                         });
 
-    public static List<String> Volumes = new List<String>(new String[]{
+    public static System.Collections.Generic.List<System.String> Volumes = new System.Collections.Generic.List<System.String>(new System.String[]{
         "",
         "volume I",
         "volume II",
@@ -79,16 +70,16 @@ public class kuz_book : MudObject
         "abridged version"
     });
 
-    public static List<String> Covers = new List<String>(new String[]{
+    public static System.Collections.Generic.List<System.String> Covers = new System.Collections.Generic.List<System.String>(new System.String[]{
         "plain",
         "leather bound",
         "ragged",
         "embossed"
     });
 
-    public static Random Random = new Random();
+    public static System.Random Random = new System.Random();
 
-    public static String Latin = "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat...\r\n (It's written in Latin.)";
+    public static System.String Latin = "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat...\r\n (It's written in Latin.)";
 
     public kuz_book()
     {
@@ -96,7 +87,7 @@ public class kuz_book : MudObject
         var volume = Volumes[Random.Next(0, Volumes.Count)];
         var cover = Covers[Random.Next(0, Covers.Count)];
         Short = cover + " copy of " + title;
-        if (!String.IsNullOrEmpty(volume)) Short += ", " + volume;
+        if (!System.String.IsNullOrEmpty(volume)) Short += ", " + volume;
         Nouns.Add("BOOK");
         Long = Latin;
 

@@ -19,16 +19,13 @@ public class disambig : RMUD.Room
 	}
 }
 
-public class torch : RMUD.MudObject, RMUD.EmitsLight
+public class torch : RMUD.MudObject
 {
     public torch()
     {
         Short = "torch";
         Nouns.Add("torch");
-    }
 
-    RMUD.LightingLevel RMUD.EmitsLight.EmitsLight
-    {
-        get { return RMUD.LightingLevel.Bright; }
+        AddValueRule<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
     }
 }

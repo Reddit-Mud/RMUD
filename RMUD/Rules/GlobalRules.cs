@@ -16,32 +16,32 @@ namespace RMUD
 
         public static void DeclareActionRuleBook<T0>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ActionRuleBook { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0) }) });
+            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0)).Description = Description;
         }
 
         public static void DeclareActionRuleBook<T0, T1>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ActionRuleBook { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0), typeof(T1) }) });
+            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1)).Description = Description;
         }
 
         public static void DeclareActionRuleBook<T0, T1, T2>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ActionRuleBook { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0), typeof(T1), typeof(T2) }) });
+            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
         }
 
         public static void DeclareValueRuleBook<T0, RT>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ValueRuleBook<RT> { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0) }) });
+            Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0)).Description = Description;
         }
 
         public static void DeclareValueRuleBook<T0, T1, RT>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ValueRuleBook<RT> { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0), typeof(T1) }) });
+            Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1)).Description = Description;
         }
 
         public static void DeclareValueRuleBook<T0, T1, T2, RT>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ValueRuleBook<RT> { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0), typeof(T1), typeof(T2) }) });
+            Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
         }
 
         public static RuleBuilder<T0, RuleResult> AddActionRule<T0>(String Name)
