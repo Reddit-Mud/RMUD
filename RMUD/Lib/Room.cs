@@ -11,6 +11,15 @@ namespace RMUD
         Interior
     }
 
+    public class RoomLightingRules : DeclaresRules
+    {
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclareValueRuleBook<MudObject, LightingLevel>("emits-light", "[item] -> LightingLevel, How much light does the item emit?");
+            GlobalRules.AddValueRule<MudObject, LightingLevel>("emits-light").Do(item => LightingLevel.Dark);
+        }
+    }
+
 	public class Room : MudObject, Container
 	{
         public RoomType RoomType = RoomType.Exterior;
@@ -143,11 +152,8 @@ namespace RMUD
             {
                 Mud.EnumerateObjects(this, (t,l) =>
                 {
-                    if (t is EmitsLight)
-                    {
-                        var lightingLevel = (t as EmitsLight).EmitsLight;
-                        if (lightingLevel > AmbientLighting) AmbientLighting = lightingLevel;
-                    }
+                    var lightingLevel = GlobalRules.ConsiderValueRuleSilently<LightingLevel>("emits-light", t, t);
+                    if (lightingLevel > AmbientLighting) AmbientLighting = lightingLevel;
                     return EnumerateObjectsControl.Continue;
                 });
             }
