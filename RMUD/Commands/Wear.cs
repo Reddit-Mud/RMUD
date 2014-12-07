@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Wear : CommandFactory, ActionRules
+	internal class Wear : CommandFactory, DeclaresRules
 	{
         public override void Create(CommandParser Parser)
         {
@@ -20,22 +20,21 @@ namespace RMUD.Commands
                 "OBJECT-SCORE");
         }
 
-        public void CreateGlobalRules()
+        public void InitializeGlobalRules()
         {
-            GlobalRuleBooks.DeclareRuleBook<MudObject, MudObject>("can-be-worn");
-            GlobalRuleBooks.DeclareRuleBook<MudObject, MudObject>("can-wear");
-            GlobalRuleBooks.DeclareRuleBook<MudObject, MudObject>("on-donned");
-            GlobalRuleBooks.DeclareRuleBook<MudObject, MudObject>("on-dons");
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-be-worn", "Item based rulebook to decide whether the item is wearable.");
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-wear", "Actor based rulebook to decide if the actor can wear something.");
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("on-donned", "Item based rulebook to handle the item being worn.");
 
-            GlobalRuleBooks.AddRule<MudObject, MudObject>("can-be-worn").Do((a, b) =>
+            GlobalRules.AddActionRule<MudObject, MudObject>("can-be-worn").Do((a, b) =>
                 {
                     Mud.SendMessage(a, "That isn't something you can wear.");
                     return RuleResult.Disallow;
                 });
 
-            GlobalRuleBooks.AddRule<MudObject, MudObject>("can-wear").Do((a, b) => RuleResult.Allow);
+            GlobalRules.AddActionRule<MudObject, MudObject>("can-wear").Do((a, b) => RuleResult.Allow);
 
-            GlobalRuleBooks.AddRule<MudObject, MudObject>("on-donned").Do((actor, target) =>
+            GlobalRules.AddActionRule<MudObject, MudObject>("on-donned").Do((actor, target) =>
                 {
                     Mud.SendMessage(actor, "You wear <the0>.", target);
                     Mud.SendExternalMessage(actor, "<a0> wears <a1>.", actor, target);
@@ -51,11 +50,7 @@ namespace RMUD.Commands
 		{
 			var target = Match.Arguments["OBJECT"] as MudObject;
 
-			if (!Mud.ObjectContainsObject(Actor, target))
-			{
-				Mud.SendMessage(Actor, "You'd have to be holding <the0> for that to work.", target);
-				return;
-			}
+            if (!CommandHelper.CheckHolding(Actor, target)) return;
 
             if (Actor.LocationOf(target) == RelativeLocations.Worn)
             {
@@ -63,13 +58,12 @@ namespace RMUD.Commands
                 return;
             }
 
-            var canBeWorn = GlobalRuleBooks.ConsiderRuleFamily("can-be-worn", target, Actor, target);
-            if (canBeWorn == RuleResult.Allow) canBeWorn = GlobalRuleBooks.ConsiderRuleFamily("can-wear", Actor, Actor, target);
+            var canBeWorn = GlobalRules.ConsiderActionRule("can-be-worn", target, Actor, target);
+            if (canBeWorn == RuleResult.Allow) canBeWorn = GlobalRules.ConsiderActionRule("can-wear", Actor, Actor, target);
 
             if (canBeWorn == RuleResult.Allow)
             {
-                GlobalRuleBooks.ConsiderRuleFamily("on-donned", target, Actor, target);
-                GlobalRuleBooks.ConsiderRuleFamily("on-dons", Actor, Actor, target);
+                GlobalRules.ConsiderActionRule("on-donned", target, Actor, target);
             }
 		}
 	}
