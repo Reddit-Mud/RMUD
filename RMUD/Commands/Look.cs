@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Look : CommandFactory
+	internal class Look : CommandFactory, DeclaresRules
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -16,7 +16,12 @@ namespace RMUD.Commands
 				new LookProcessor(),
 				"Look around at your suroundings.");
 		}
-	}
+
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String>("locale-description", "[Actor, Item] -> String. Value rule to find the locale description of an item.");
+        }
+    }
 
 	public class LookProcessor : CommandProcessor
 	{
@@ -55,11 +60,11 @@ namespace RMUD.Commands
 
             for (int i = 0; i < visibleMudObjects.Count; )
             {
-                var localeDescribable = visibleMudObjects[i] as LocaleDescriptionRules;
-                if (localeDescribable != null)
+                var localeDescription = GlobalRules.ConsiderValueRuleSilently<String>("locale-description", visibleMudObjects[i], Actor, visibleMudObjects[i]);
+                if (localeDescription != null)
                 {
                     visibleMudObjects.RemoveAt(i);
-                    builder.Append(localeDescribable.LocaleDescription.Expand(Actor, localeDescribable as MudObject));
+                    builder.Append(localeDescription);
                     builder.Append("\r\n");
                 }
                 else

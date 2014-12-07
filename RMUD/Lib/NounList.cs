@@ -5,7 +5,13 @@ using System.Text;
 
 namespace RMUD
 {
-    public struct Noun
+    public interface Noun
+    {
+        bool Match(String Word, Actor Actor);
+        bool CouldMatch(String Word);
+    }
+
+    public class BasicNoun : Noun
     {
         public String Value;
         public Func<Actor, bool> Available;
@@ -17,60 +23,100 @@ namespace RMUD
             return true;
         }
 
-        public Noun (String Value, Func<Actor, bool> Available)
+        public bool CouldMatch(String Word)
+        {
+            return Word == Value;
+        }
+
+        public BasicNoun (String Value, Func<Actor, bool> Available)
         {
             this.Value = Value;
             this.Available = Available;
         }
 
-        public Noun (String Value)
+        public BasicNoun (String Value)
         {
             this.Value = Value;
             this.Available = null;
         }
     }
 
-    public class NounList : List<Noun>
+    public class NounSet : Noun
     {
+        public List<String> Value;
+        public Func<Actor, bool> Available;
+
+        public bool Match(String Word, Actor Actor)
+        {
+            if (!Value.Contains(Word)) return false;
+            if (Available != null) return Available(Actor);
+            return true;
+        }
+
+        public bool CouldMatch(String Word)
+        {
+            return Value.Contains(Word);
+        }
+
+        public NounSet (List<String> Value, Func<Actor, bool> Available)
+        {
+            this.Value = Value;
+            this.Available = Available;
+        }
+
+        public NounSet (List<String> Value)
+        {
+            this.Value = Value;
+            this.Available = null;
+        }
+    }
+
+    public class NounList
+    {
+        List<Noun> Nouns = new List<Noun>();
+
         public NounList() { }
 
         public NounList(IEnumerable<String> From)
         {
-            AddRange(From);
+            Add(From);
         }
 
         public void Add(String Noun)
         {
-            base.Add(new Noun(Noun.ToUpper()));
+            Nouns.Add(new BasicNoun(Noun.ToUpper()));
         }
 
         public void Add(String Word, Func<Actor,bool> Available)
         {
-            Add(new Noun(Word.ToUpper(), Available));
+            Nouns.Add(new BasicNoun(Word.ToUpper(), Available));
         }
 
-        public void Add(params String[] Nouns)
+        public void Add(params String[] Range)
         {
-            for (int i = 0; i < Nouns.Length; ++i)
-                Add(Nouns[i]);
+            Nouns.Add(new NounSet(new List<String>(Range.Select(s => s.ToUpper()))));
         }
 
-        public void Remove(String Word)
+        public void Add(IEnumerable<String> Range)
         {
-            RemoveAll(n => n.Value == Word.ToUpper());
+            Nouns.Add(new NounSet(new List<String>(Range.Select(s => s.ToUpper()))));
         }
 
-        public void AddRange(IEnumerable<String> Range)
+        public void Add(List<String> Words, Func<Actor, bool> Available)
         {
-            foreach (var str in Range)
-                Add(str);
+            Nouns.Add(new NounSet(new List<String>(Words.Select(s => s.ToUpper())), Available));
         }
 
         public bool Match(String Word, Actor Actor)
         {
-            foreach (var noun in this)
+            foreach (var noun in Nouns)
                 if (noun.Match(Word, Actor)) return true;
             return false;
+        }
+
+        public void Remove(String Word)
+        {
+            Nouns.RemoveAll(n => n.CouldMatch(Word));
         }
     }
 }

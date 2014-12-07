@@ -10,6 +10,19 @@ namespace RMUD
 		void Perform(PossibleMatch Match, Actor Actor);
     }
 
+    public static class CommandHelper
+    {
+        public static bool CheckHolding(MudObject Actor, MudObject Target)
+        {
+            if (!Mud.ObjectContainsObject(Actor, Target))
+            {
+                Mud.SendMessage(Actor, "You'd have to be holding <the0> for that to work.", Target);
+                return false;
+            }
+            return true;
+        }
+    }
+
 	public class CommandProcessorWrapper : CommandProcessor
 	{
 		private Action<PossibleMatch, Actor> Processor;

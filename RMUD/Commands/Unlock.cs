@@ -5,84 +5,62 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Unlock : CommandFactory
-	{
-		public override void Create(CommandParser Parser)
-		{
-			Parser.AddCommand(
-				new Sequence(
-					new KeyWord("UNLOCK", false),
-				    new FailIfNoMatches(
-                        new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
-                            (actor, matchable) =>
-                            {
-                                if (matchable is LockableRules && (matchable as LockableRules).Locked)
-                                    return MatchPreference.Likely;
-                                return MatchPreference.Unlikely;
-                            }),
+    internal class Unlock : CommandFactory, DeclaresRules
+    {
+        public override void Create(CommandParser Parser)
+        {
+            Parser.AddCommand(
+                new Sequence(
+                    new KeyWord("UNLOCK", false),
+                    new FailIfNoMatches(
+                        new ObjectMatcher("SUBJECT", new InScopeObjectSource()),
                         "I couldn't figure out what you're trying to unlock."),
                     new KeyWord("WITH", true),
                     new FailIfNoMatches(
-					    new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
+                        new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
                         "I couldn't figure out what you're trying to unlock that with.")),
-				new UnlockProcessor(),
-				"Unlock something with something",
+                new UnlockProcessor(),
+                "Unlock something with something.",
                 "SUBJECT-SCORE",
                 "OBJECT-SCORE");
-		}
-	}
-	
-	internal class UnlockProcessor : CommandProcessor
-	{
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-			var target = Match.Arguments["SUBJECT"] as LockableRules;
-			var key = Match.Arguments["OBJECT"] as MudObject;
-			
-			if (target == null)
-			{
-				if (Actor.ConnectedClient != null) 
-					Mud.SendMessage(Actor, "I don't think the concept of 'locked' applies to that.");
-				return;
-			}
+        }
 
-            if (!Mud.IsVisibleTo(Actor, target as MudObject))
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject, MudObject>("on-unlocked-with", "Item based rulebook to handle the item being unlocked with something.");
+
+            GlobalRules.AddActionRule<MudObject, MudObject, MudObject>("on-unlocked-with").Do((actor, target, key) =>
+            {
+                Mud.SendMessage(actor, "You unlock <the0>.", target);
+                Mud.SendExternalMessage(actor, "<a0> unlocks <a1> with <a2>.", actor, target, key);
+                return RuleResult.Continue;
+            });
+        }
+    }
+
+    internal class UnlockProcessor : CommandProcessor
+    {
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            var target = Match.Arguments["SUBJECT"] as MudObject;
+            var key = Match.Arguments["OBJECT"] as MudObject;
+
+            if (!Mud.IsVisibleTo(Actor, target))
             {
                 if (Actor.ConnectedClient != null)
                     Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
                 return;
             }
 
-			if (!Mud.ObjectContainsObject(Actor, key))
-			{
-				if (Actor.ConnectedClient != null)
-					Mud.SendMessage(Actor, "You'd have to be holding <the0> for that to work.", key);
-				return;
-			}
-
-			if (!target.Locked)
-			{
-				Mud.SendMessage(Actor, "It's not locked.");
-				return;
-			}
-
-            var checkRule = target.CheckUnlock(Actor, key);
-            if (checkRule.Allowed)
+            if (!Mud.ObjectContainsObject(Actor, key))
             {
-                if (target.HandleUnlock(Actor, key) == RuleHandlerFollowUp.Continue)
-                {
-                    var MudObject = target as MudObject;
-                    if (MudObject != null)
-                    {
-                        Mud.SendMessage(Actor, "You unlock <a0>.", MudObject);
-                        Mud.SendExternalMessage(Actor, "<a0> unlocks <a1> with <a2>.", Actor, MudObject, key);
-                    }
-                }
+                if (Actor.ConnectedClient != null)
+                    Mud.SendMessage(Actor, "You'd have to be holding " + key.Definite(Actor) + " for that to work.");
+                return;
             }
-            else
-            {
-                Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
-            }
-		}
-	}
+
+            if (GlobalRules.ConsiderActionRule("can-be-locked-with", target, Actor, target, key) == RuleResult.Allow)
+                GlobalRules.ConsiderActionRule("on-unlocked-with", target, Actor, target, key);
+        }
+    }
 }

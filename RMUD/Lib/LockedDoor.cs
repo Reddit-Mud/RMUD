@@ -5,14 +5,42 @@ using System.Text;
 
 namespace RMUD
 {
-	public class LockedDoor : BasicDoor, OpenableRules, LockableRules
+	public class LockedDoor : BasicDoor, OpenableRules
 	{
         public Func<MudObject, bool> IsMatchingKey;
 
 		public LockedDoor()
 		{
 			Locked = true;
-		}
+
+            AddActionRule<MudObject, MudObject, MudObject>("can-be-locked-with").Do((actor, door, key) =>
+                {
+                    if (Open) {
+                        Mud.SendMessage(actor, "You'll have to close it first.");
+                        return RuleResult.Disallow;
+                    }
+
+                    if (!IsMatchingKey(key))
+                    {
+                        Mud.SendMessage(actor, "That is not the right key.");
+                        return RuleResult.Disallow;
+                    }
+
+                    return RuleResult.Allow;
+                });
+
+            AddActionRule<MudObject, MudObject, MudObject>("on-locked-with").Do((a,b,c) =>
+                {
+                    Locked = true;
+                    return RuleResult.Continue;
+                });
+
+             AddActionRule<MudObject, MudObject, MudObject>("on-unlocked-with").Do((a,b,c) =>
+                {
+                    Locked = false;
+                    return RuleResult.Continue;
+                });
+        }
 
 		#region IOpenable
 
@@ -42,42 +70,7 @@ namespace RMUD
 
 		#endregion
         
-		#region ILockableRules
-
 		public bool Locked { get; set; }
 
-		CheckRule LockableRules.CheckLock(Actor Actor, MudObject Key)
-		{
-			if (Open) return CheckRule.Disallow("You'll have to close it first.");
-            if (Locked) return CheckRule.Disallow("It's already locked.");
-            if (IsMatchingKey(Key))
-                return CheckRule.Allow();
-            else
-                return CheckRule.Disallow("That is not the right key.");
-		}
-
-		CheckRule LockableRules.CheckUnlock(Actor Actor, MudObject Key)
-		{
-            if (Open) return CheckRule.Disallow("It's already open.");
-            if (!Locked) return CheckRule.Disallow("It's not locked.");
-            if (IsMatchingKey(Key))
-                return CheckRule.Allow();
-            else
-                return CheckRule.Disallow("That is not the right key.");
-		}
-
-		RuleHandlerFollowUp LockableRules.HandleLock(Actor Actor, MudObject Key)
-		{
-			Locked = true;
-            return RuleHandlerFollowUp.Continue;
-		}
-
-		RuleHandlerFollowUp LockableRules.HandleUnlock(Actor Actor, MudObject Key)
-		{
-			Locked = false;
-            return RuleHandlerFollowUp.Continue;
-		}
-
-		#endregion
 	}
 }

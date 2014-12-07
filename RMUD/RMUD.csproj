@@ -46,6 +46,7 @@
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
     <Compile Include="Commands\Force.cs" />
+    <Compile Include="Commands\Lycanthropy.cs" />
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Lib\Quest.cs" />
+    <Compile Include="Lib\LycanthropeStatusEffect.cs" />
     <Compile Include="Lib\SillyStatusEffect.cs" />
     <Compile Include="Lib\StatusEffect.cs" />
     <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
@@ -177,7 +179,13 @@
     <Compile Include="Parser\Matchers\FailIfNoMatches.cs" />
     <Compile Include="ReverseLineReader.cs" />
     <Compile Include="RuleDecorators\CheckRuleResponse.cs" />
-    <Compile Include="RuleDecorators\WearableRules.cs" />
+    <Compile Include="Rules\GlobalRules.cs" />
+    <Compile Include="Rules\RuleBook.cs" />
+    <Compile Include="Rules\RuleBuilder.cs" />
+    <Compile Include="Rules\RuleSet.cs" />
+    <Compile Include="Rules\RuleDelegateWrapper.cs" />
+    <Compile Include="Rules\RuleResult.cs" />
+    <Compile Include="Rules\Rule.cs" />
     <Compile Include="RuleDecorators\PutRules.cs" />
     <Compile Include="RuleDecorators\EmitsLight.cs" />
     <Compile Include="RuleDecorators\RuleHandlerFollowUp.cs" />
@@ -186,7 +194,6 @@
     <Compile Include="Parser\Matchers\OptionalMatcher.cs" />
     <Compile Include="Parser\Matchers\FirstOfMatcher.cs" />
     <Compile Include="Core\ProscriptionList.cs" />
-    <Compile Include="RuleDecorators\LocaleDescriptionRules.cs" />
     <Compile Include="Clients\TelnetClient.cs" />
     <Compile Include="Clients\TelnetControlCodes.cs" />
     <Compile Include="Core\HasVisibleContents.cs" />
@@ -205,7 +212,6 @@
     <Compile Include="Lib\LockedDoor.cs" />
     <Compile Include="Clients\DisambigCommandHandler.cs" />
     <Compile Include="Parser\Matchers\InScopeObjectSource.cs" />
-    <Compile Include="RuleDecorators\LockableRules.cs" />
     <Compile Include="RuleDecorators\DropRules.cs" />
     <Compile Include="RuleDecorators\OpenableRules.cs" />
     <Compile Include="Lib\Scenery.cs" />

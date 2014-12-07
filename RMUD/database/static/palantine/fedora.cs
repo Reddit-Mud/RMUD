@@ -1,4 +1,4 @@
-﻿public class fedora : RMUD.MudObject, RMUD.WearableRules
+﻿public class fedora : RMUD.MudObject
 {
     public override void Initialize()
     {
@@ -6,25 +6,6 @@
         Nouns.Add("fedora", "hat");
         Long = "This hat is so not cool.";
 
-    }
-
-    RMUD.CheckRule RMUD.WearableRules.CheckWear(RMUD.Actor Actor)
-    {
-        return RMUD.CheckRule.Allow();
-    }
-
-    RMUD.CheckRule RMUD.WearableRules.CheckRemove(RMUD.Actor Actor)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    RMUD.RuleHandlerFollowUp RMUD.WearableRules.HandleWear(RMUD.Actor Actor)
-    {
-        return RMUD.RuleHandlerFollowUp.Continue;
-    }
-
-    RMUD.RuleHandlerFollowUp RMUD.WearableRules.HandleRemove(RMUD.Actor Actor)
-    {
-        throw new System.NotImplementedException();
+        AddActionRule<RMUD.MudObject, RMUD.MudObject>("can-be-worn").Do((a, b) => RMUD.RuleResult.Allow);
     }
 }

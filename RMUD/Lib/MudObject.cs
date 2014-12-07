@@ -43,6 +43,7 @@ namespace RMUD
         public String Article = "a";
 		public NounList Nouns { get; set; }
         public MudObject Location { get; set; }
+        public RuleSet Rules = null;
 
         public virtual String Indefinite(Actor RequestedBy) { return Article + " " + Short; }
         public virtual String Definite(Actor RequestedBy) { return "the " + Short; }
@@ -59,7 +60,7 @@ namespace RMUD
             Nouns = new NounList();
             this.Short = Short;
             this.Long = Long;
-            Nouns.AddRange(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            Nouns.Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
 
             var firstChar = Short.ToLower()[0];
             if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')
@@ -80,6 +81,42 @@ namespace RMUD
                             child.Destroy(true);
                         return EnumerateObjectsControl.Continue;
                     });
+        }
+
+        public RuleBuilder<T0, RuleResult> AddActionRule<T0>(String Name)
+        {
+            if (Rules == null) Rules = new RuleSet();
+            return Rules.AddRule<T0, RuleResult>(Name);
+        }
+
+        public RuleBuilder<T0, T1, RuleResult> AddActionRule<T0, T1>(String Name)
+        {
+            if (Rules == null) Rules = new RuleSet();
+            return Rules.AddRule<T0, T1, RuleResult>(Name);
+        }
+
+        public RuleBuilder<T0, T1, T2, RuleResult> AddActionRule<T0, T1, T2>(String Name)
+        {
+            if (Rules == null) Rules = new RuleSet();
+            return Rules.AddRule<T0, T1, T2, RuleResult>(Name);
+        }
+
+        public RuleBuilder<T0, RT> AddValueRule<T0, RT>(String Name)
+        {
+            if (Rules == null) Rules = new RuleSet();
+            return Rules.AddRule<T0, RT>(Name);
+        }
+
+        public RuleBuilder<T0, T1, RT> AddValueRule<T0, T1, RT>(String Name)
+        {
+            if (Rules == null) Rules = new RuleSet();
+            return Rules.AddRule<T0, T1, RT>(Name);
+        }
+
+        public RuleBuilder<T0, T1, T2, RT> AddValueRule<T0, T1, T2, RT>(String Name)
+        {
+            if (Rules == null) Rules = new RuleSet();
+            return Rules.AddRule<T0, T1, T2, RT>(Name);
         }
 
 		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)

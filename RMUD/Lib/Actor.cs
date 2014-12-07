@@ -19,18 +19,41 @@ namespace RMUD
         [Persist(typeof(EnumSerializer<Gender>))]
         public Gender Gender { get; set; }
 
-        public String DescriptiveName { get; set; }
+        public String DescriptiveName
+        {
+            get
+            {
+                if (Gender == Gender.Male)
+                    return "man";
+                else
+                    return "woman";
+            }
+        }
+
+        private string PrepareName(Actor RequestedBy, String Article)
+        {
+            var introduced = Introduction.ActorKnowsActor(RequestedBy, this);
+            var result = introduced ? Short : DescriptiveName;
+
+            foreach (var statusEffect in AppliedStatusEffects)
+            {
+                var modifiedName = statusEffect.OverrideName(this, result);
+                if (modifiedName.Item1 == true) introduced = false; //True means discard introduction data.
+                result = modifiedName.Item2;
+            }
+
+            if (introduced) return result;
+            else return Article + " " + result;
+        }
 
         public override string Definite(Actor RequestedBy)
         {
-            if (Introduction.ActorKnowsActor(RequestedBy, this)) return Short;
-            return "the " + DescriptiveName;
+            return PrepareName(RequestedBy, "the");
         }
 
-		public override string Indefinite(Actor RequestedBy)
+        public override string Indefinite(Actor RequestedBy)
         {
-            if (Introduction.ActorKnowsActor(RequestedBy, this)) return Short;
-            return "a " + DescriptiveName;
+            return PrepareName(RequestedBy, Article);
         }
 
         CheckRule TakeRules.Check(Actor Actor)
@@ -44,6 +67,8 @@ namespace RMUD
             : base(RelativeLocations.Held | RelativeLocations.Worn, RelativeLocations.Held)
         {
             Gender = RMUD.Gender.Male;
+            Nouns.Add("MAN", (a) => a.Gender == RMUD.Gender.Male);
+            Nouns.Add("WOMAN", (a) => a.Gender == RMUD.Gender.Female);
         }
 
         public override void Heartbeat(ulong HeartbeatID)

@@ -9,7 +9,7 @@
 	}
 }
 
-public class kuz_shelf : MudObject, TakeRules, LocaleDescriptionRules
+public class kuz_shelf : MudObject, TakeRules
 {
     public DescriptiveText LocaleDescription { get; set; }
 
@@ -19,6 +19,8 @@ public class kuz_shelf : MudObject, TakeRules, LocaleDescriptionRules
         Long = "There are so many books, and they all look so interesting and inviting. You could just go right ahead and take one.";
         LocaleDescription = "A massive book shelf looms in the center of the room.";
         Nouns.Add("BOOK", "BOOKS", "SHELF", "DUSTY");
+
+        AddValueRule<MudObject, MudObject, string>("locale-description").Do((actor, item) => "A massive book shelf looms in the center of the room.");
     }
 
     CheckRule TakeRules.Check(Actor Actor)
