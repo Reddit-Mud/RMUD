@@ -112,8 +112,12 @@ namespace RMUD
                         DatabaseLock.WaitOne();
 
                         NextCommand = PendingCommand;
+
+                        //Reset flags that the last command may have changed
                         CommandTimeoutEnabled = true;
                         SilentFlag = false;
+                        GlobalRules.LogRules(null);
+                        
                         CommandReadyHandle.Set(); //Signal worker thread to proceed.
                         if (CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
                         {

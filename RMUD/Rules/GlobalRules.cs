@@ -13,6 +13,9 @@ namespace RMUD
     public static class GlobalRules
     {
         private static RuleSet Rules = null;
+        internal static Client LogTo = null;
+
+        public static void LogRules(Client To) { LogTo = To; }
 
         public static void DeclareActionRuleBook<T0>(String Name, String Description)
         {

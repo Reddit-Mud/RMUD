@@ -40,6 +40,11 @@ namespace RMUD
             {
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
+                    if (GlobalRules.LogTo != null)
+                    {
+                        GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                    }
+
                     var r = rule.BodyClause == null ? RuleResult.Default : rule.BodyClause.Invoke(Args);
                     if (r != RuleResult.Continue) return r;
                 }
@@ -69,6 +74,11 @@ namespace RMUD
             foreach (var rule in Rules)
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
+                    if (GlobalRules.LogTo != null)
+                    {
+                        GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                    }
+
                     ValueReturned = true;
                     return rule.BodyClause.Invoke(Args);
                 }
