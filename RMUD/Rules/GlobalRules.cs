@@ -125,21 +125,6 @@ namespace RMUD
             }
         }
 
-        public static RT ConsiderValueRuleSilently<RT>(String Name, MudObject Object, params Object[] Arguments)
-        {
-            try
-            {
-                Mud.SilentFlag = true;
-                var r = ConsiderValueRule<RT>(Name, Object, Arguments);
-                Mud.SilentFlag = false;
-                return r;
-            }
-            finally
-            {
-                Mud.SilentFlag = false;
-            }
-        }
-
         private static void InitializeGlobalRuleBooks()
         {
             Rules = new RuleSet();

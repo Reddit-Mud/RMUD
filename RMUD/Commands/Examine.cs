@@ -52,12 +52,11 @@ namespace RMUD.Commands
 
                 var builder = new StringBuilder();
                 
-                    builder.Append(target.Long.Expand(Actor, target as MudObject) + "\r\n");
+                builder.Append(target.Long.Expand(Actor, target as MudObject) + "\r\n");
 
-                var openable = target as OpenableRules;
-                if (openable != null)
+                if (GlobalRules.ConsiderValueRule<bool>("openable", target, target))
                 {
-                    if (openable.Open)
+                    if (GlobalRules.ConsiderValueRule<bool>("is-open", target, target))
                         builder.Append(Mud.CapFirst(String.Format("{0} is open.\r\n", (target as MudObject).Definite(Actor))));
                     else
                         builder.Append(Mud.CapFirst(String.Format("{0} is closed.\r\n", (target as MudObject).Definite(Actor))));

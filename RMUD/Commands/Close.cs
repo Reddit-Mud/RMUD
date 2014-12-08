@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class OpenClose : CommandFactory
+	internal class OpenClose : CommandFactory, DeclaresRules
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -16,8 +16,7 @@ namespace RMUD.Commands
 		    			new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                             (actor, openable) =>
                             {
-                                if (openable is OpenableRules && (openable as OpenableRules).Open)
-                                    return MatchPreference.Likely;
+                                if (GlobalRules.ConsiderActionRuleSilently("can-close", openable, actor, openable) == RuleResult.Allow) return MatchPreference.Likely;
                                 return MatchPreference.Unlikely;
                             }),
                         "I don't see that here.")),
@@ -25,50 +24,43 @@ namespace RMUD.Commands
 				"Close something.",
                 "SUBJECT-SCORE");
 		}
-	}
+
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-close", "[Actor, Item] - determine if the item can be closed.");
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("on-closed", "Item based rulebook to handle the item being closed.");
+
+            GlobalRules.AddActionRule<MudObject, MudObject>("can-close").Do((a, b) =>
+            {
+                Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");
+                return RuleResult.Disallow;
+            });
+
+            GlobalRules.AddActionRule<MudObject, MudObject>("on-closed").Do((actor, target) =>
+            {
+                Mud.SendMessage(actor, "You close <the0>.", target);
+                Mud.SendExternalMessage(actor, "<a0> closes <a1>.", actor, target);
+                return RuleResult.Continue;
+            });
+        }
+    }
 	
 	internal class CloseProcessor : CommandProcessor
 	{
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-			var target = Match.Arguments["SUBJECT"] as OpenableRules;
-			var MudObject = target as MudObject;
-			if (target == null)
-			{
-				if (Actor.ConnectedClient != null)
-					Mud.SendMessage(Actor, "I don't think the concept of 'open' and 'closed' applies to that.");
-			}
-			else
-			{
-                if (!Mud.IsVisibleTo(Actor, target as MudObject))
-                {
-                    if (Actor.ConnectedClient != null)
-                        Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
-                    return;
-                }
+        public void Perform(PossibleMatch Match, Actor Actor)
+        {
+            var target = Match.Arguments["SUBJECT"] as MudObject;
 
-                var checkRule = target.CheckClose(Actor);
-				if (checkRule.Allowed)
-				{
-                    if (target.HandleClose(Actor) == RuleHandlerFollowUp.Continue)
-                    {
-                        target.Open = false;
+            if (!Mud.IsVisibleTo(Actor, target))
+            {
+                if (Actor.ConnectedClient != null)
+                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
+                return;
+            }
 
-                        if (MudObject != null)
-                        {
-                            Mud.SendMessage(Actor, "You close <the0>.", MudObject);
-                            Mud.SendExternalMessage(Actor, "<a0> closes <a1>.", Actor, MudObject);
-                        }
-                    }
-
-                    Mud.MarkLocaleForUpdate(target as MudObject);
-				}
-				else
-				{
-					Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
-				}
-			}
-		}
+            if (GlobalRules.ConsiderActionRule("can-close", target, Actor, target) == RuleResult.Allow)
+                GlobalRules.ConsiderActionRule("on-closed", target, Actor, target);
+        }
 	}
 
 }

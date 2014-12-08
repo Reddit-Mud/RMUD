@@ -17,9 +17,7 @@ namespace RMUD
 
             if ((container.LocationsSupported & RelativeLocations.In) == RelativeLocations.In)
             {
-                var openable = Object as OpenableRules;
-                if (openable != null) return openable.Open;
-                return true;
+                return IsOpen(Object);
             }
 
             return false;
@@ -27,8 +25,8 @@ namespace RMUD
 
         public static bool IsOpen(MudObject Object)
         {
-            var openable = Object as OpenableRules;
-            if (openable != null) return openable.Open;
+            if (GlobalRules.ConsiderValueRule<bool>("openable", Object, Object))
+                return GlobalRules.ConsiderValueRule<bool>("is-open", Object, Object);
             return true;
         }
 

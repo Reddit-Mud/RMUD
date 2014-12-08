@@ -38,15 +38,13 @@ public class Jupiter : RMUD.Scenery
     }
 }
 
-public class Table : RMUD.GenericContainer, RMUD.OpenableRules
+public class Table : RMUD.GenericContainer
 {
     public Table() : base(RMUD.RelativeLocations.On | RMUD.RelativeLocations.Under, RMUD.RelativeLocations.On)
     {
         Short = "ancient table";
         Long = "As the years have worn long the wood of this table has dried and shrunk, and split, and what was once a finely crafted table is now pitted and gouged. The top is still mostly smooth, from use but not from care.";
         Nouns.Add("ancient", "table");
-
-        Open = false;
 
         RMUD.MudObject.Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
 
@@ -61,31 +59,4 @@ public class Table : RMUD.GenericContainer, RMUD.OpenableRules
     {
         return "an ancient table";
     }
-
-    #region OpenableRules
-
-    public bool Open { get; set; }
-
-    RMUD.CheckRule RMUD.OpenableRules.CheckOpen(RMUD.Actor Actor)
-    {
-        return RMUD.CheckRule.Allow();
-    }
-
-    RMUD.CheckRule RMUD.OpenableRules.CheckClose(RMUD.Actor Actor)
-    {
-        return RMUD.CheckRule.Allow();
-    }
-
-    RMUD.RuleHandlerFollowUp RMUD.OpenableRules.HandleOpen(RMUD.Actor Actor)
-    {
-        return RMUD.RuleHandlerFollowUp.Continue;
-    }
-
-    RMUD.RuleHandlerFollowUp RMUD.OpenableRules.HandleClose(RMUD.Actor Actor)
-    {
-        return RMUD.RuleHandlerFollowUp.Continue;
-    }
-
-    #endregion
-
 }

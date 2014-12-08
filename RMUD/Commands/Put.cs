@@ -69,12 +69,12 @@ namespace RMUD.Commands
 
             if (relloc == RelativeLocations.In)
             {
-                var openable = target as OpenableRules;
-                if (openable != null && !openable.Open)
-                {
-                    Mud.SendMessage(Actor, "^<the0> is closed.", target);
-                    return;
-                }
+                if (GlobalRules.ConsiderValueRule<bool>("openable", target, target))
+                    if (!GlobalRules.ConsiderValueRule<bool>("is-open", target, target))
+                    {
+                        Mud.SendMessage(Actor, "^<the0> is closed.", target);
+                        return;
+                    }
             }
 
             var dropRules = target as DropRules;

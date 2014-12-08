@@ -60,7 +60,7 @@ namespace RMUD.Commands
 
             for (int i = 0; i < visibleMudObjects.Count; )
             {
-                var localeDescription = GlobalRules.ConsiderValueRuleSilently<String>("locale-description", visibleMudObjects[i], Actor, visibleMudObjects[i]);
+                var localeDescription = GlobalRules.ConsiderValueRule<String>("locale-description", visibleMudObjects[i], Actor, visibleMudObjects[i]);
                 if (localeDescription != null)
                 {
                     visibleMudObjects.RemoveAt(i);

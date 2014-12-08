@@ -50,7 +50,7 @@ namespace RMUD
         public override void AddRule(Rule Rule)
         {
             if (!(Rule is Rule<RuleResult>)) throw new InvalidOperationException();
-            Rules.Add(Rule as Rule<RuleResult>);
+            Rules.Insert(0, Rule as Rule<RuleResult>);
         }
     }
 
@@ -78,7 +78,7 @@ namespace RMUD
         public override void AddRule(Rule Rule)
         {
             if (!(Rule is Rule<RT>)) throw new InvalidOperationException();
-            Rules.Add(Rule as Rule<RT>);
+            Rules.Insert(0, Rule as Rule<RT>);
         }
     }
 }

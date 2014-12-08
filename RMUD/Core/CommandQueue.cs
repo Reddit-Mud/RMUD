@@ -71,8 +71,6 @@ namespace RMUD
 
                 NextCommand = null;
 
-                Mud.SilentFlag = false;
-
                 CommandFinishedHandle.Set();
             }
         }
@@ -115,6 +113,7 @@ namespace RMUD
 
                         NextCommand = PendingCommand;
                         CommandTimeoutEnabled = true;
+                        SilentFlag = false;
                         CommandReadyHandle.Set(); //Signal worker thread to proceed.
                         if (CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
                         {
