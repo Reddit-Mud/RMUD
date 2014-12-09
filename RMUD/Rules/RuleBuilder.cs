@@ -73,4 +73,28 @@ namespace RMUD
             return this;
         }
     }
+
+    public class RuleBuilder<T0, T1, T2, T3, TR>
+    {
+        public Rule<TR> Rule;
+
+        public RuleBuilder<T0, T1, T2, T3, TR> When(Func<T0, T1, T2, T3, bool> Clause)
+        {
+            Rule.WhenClause = RuleDelegateWrapper<T0, T1, T2, T3, bool>.MakeWrapper(Clause);
+            return this;
+        }
+
+        public RuleBuilder<T0, T1, T2, T3, TR> Do(Func<T0, T1, T2, T3, TR> Clause)
+        {
+            Rule.BodyClause = RuleDelegateWrapper<T0, T1, T2, T3, TR>.MakeWrapper(Clause);
+            return this;
+        }
+
+        public RuleBuilder<T0, T1, T2, T3, TR> Name(String Name)
+        {
+            Rule.DescriptiveName = Name;
+            return this;
+        }
+    }
+
 }

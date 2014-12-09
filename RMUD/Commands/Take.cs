@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Take : CommandFactory
+	internal class Take : CommandFactory, DeclaresRules
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -19,7 +19,7 @@ namespace RMUD.Commands
                             (actor, MudObject) => {
                                 if (actor.Contains(MudObject, RelativeLocations.Held)) return MatchPreference.VeryUnlikely;
                                 //Prefer MudObjects that can actually be taken
-                                if (MudObject is TakeRules && !(MudObject as TakeRules).Check(actor).Allowed)
+                                if (GlobalRules.ConsiderActionRuleSilently("can-take", MudObject, actor, MudObject) != RuleResult.Allow)
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             }),
@@ -28,7 +28,23 @@ namespace RMUD.Commands
 				"Take something",
                 "SUBJECT-SCORE");
 		}
-	}
+
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-take", "[Actor, Thing], Action rule to determine if a thing can be taken.");
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("on-taken", "[Actor, Thing], Action rule to handle taken event.");
+
+            GlobalRules.AddActionRule<MudObject, MudObject>("can-take").Do((a, t) => RuleResult.Allow);
+
+            GlobalRules.AddActionRule<MudObject, MudObject>("on-taken").Do((actor, target) =>
+                {
+                    Mud.SendMessage(actor, "You take <a0>.", target);
+                    Mud.SendExternalMessage(actor, "<a0> takes <a1>.", actor, target);
+                    MudObject.Move(target, actor);
+                    return RuleResult.Continue;
+                });
+        }
+    }
 
 	internal class TakeProcessor : CommandProcessor
 	{
@@ -49,26 +65,8 @@ namespace RMUD.Commands
                 return;
             }
 
-            var takeRules = target as TakeRules;
-            if (takeRules != null)
-            {
-                var checkRule = takeRules.Check(Actor);
-                if (!checkRule.Allowed)
-                {
-                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
-                    return;
-                }
-            }
-
-            var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
-            if (takeRules != null) handleRuleFollowUp = takeRules.Handle(Actor);
-
-            if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
-            {
-                Mud.SendMessage(Actor, "You take <a0>.", target);
-                Mud.SendExternalMessage(Actor, "<a0> takes <a1>.", Actor, target);
-                MudObject.Move(target, Actor);
-            }
+            if (GlobalRules.ConsiderActionRule("can-take", target, Actor, target) == RuleResult.Allow)
+                GlobalRules.ConsiderActionRule("on-taken", target, Actor, target);
 
             Mud.MarkLocaleForUpdate(target);
         }

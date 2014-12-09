@@ -152,7 +152,7 @@ namespace RMUD
             {
                 Mud.EnumerateObjects(this, (t,l) =>
                 {
-                    var lightingLevel = GlobalRules.ConsiderValueRuleSilently<LightingLevel>("emits-light", t, t);
+                    var lightingLevel = GlobalRules.ConsiderValueRule<LightingLevel>("emits-light", t, t);
                     if (lightingLevel > AmbientLighting) AmbientLighting = lightingLevel;
                     return EnumerateObjectsControl.Continue;
                 });

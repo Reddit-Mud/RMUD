@@ -34,15 +34,17 @@ namespace RMUD.Commands
 				Mud.SendMessage(Actor, "You can't go that way.");
 			else
 			{
-				if (link.Portal != null)
-				{
-					var openable = link.Portal as OpenableRules;
-					if (openable != null && !openable.Open)
-					{
-						Mud.SendMessage(Actor, "The door is closed.");
-						return;
-					}
-				}
+                if (link.Portal != null)
+                {
+                    if (GlobalRules.ConsiderValueRule<bool>("openable", link.Portal, link.Portal))
+                    {
+                        if (!GlobalRules.ConsiderValueRule<bool>("is-open", link.Portal, link.Portal))
+                        {
+                            Mud.SendMessage(Actor, "The door is closed.");
+                            return;
+                        }
+                    }
+                }
 
 				Mud.SendMessage(Actor, "You went " + direction.Value.ToString().ToLower() + ".");
 				Mud.SendExternalMessage(Actor, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".");

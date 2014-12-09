@@ -48,6 +48,11 @@ namespace RMUD
 
                     Mud.CommandTimeoutEnabled = false;
                 }
+                else if (Command.ToUpper().StartsWith("@RULES "))
+                {
+                    Command = Command.Substring("@RULES ".Length);
+                    GlobalRules.LogRules(Client);
+                }
                 else
                 {
                     Mud.SendMessage(Client, "I don't recognize that debugging command.");

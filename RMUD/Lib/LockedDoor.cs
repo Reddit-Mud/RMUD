@@ -5,9 +5,11 @@ using System.Text;
 
 namespace RMUD
 {
-	public class LockedDoor : BasicDoor, OpenableRules
+	public class LockedDoor : BasicDoor
 	{
         public Func<MudObject, bool> IsMatchingKey;
+
+        public bool Locked { get; set; }
 
 		public LockedDoor()
 		{
@@ -40,37 +42,15 @@ namespace RMUD
                     Locked = false;
                     return RuleResult.Continue;
                 });
+
+             AddActionRule<MudObject, MudObject>("can-open").When((a, b) => Locked).Do((a, b) =>
+                 {
+                     Mud.SendMessage(a, "It seems to be locked.");
+                     return RuleResult.Disallow;
+                 });
+
+             AddActionRule<MudObject, MudObject>("on-closed").Do((a, b) => { Locked = false; return RuleResult.Continue; });
         }
-
-		#region IOpenable
-
-		CheckRule OpenableRules.CheckOpen(Actor Actor)
-		{
-            if (Locked) return CheckRule.Disallow("It seems to be locked.");
-            if (Open) return CheckRule.Disallow("It's already open.");
-            else return CheckRule.Allow();
-		}
-
-		CheckRule OpenableRules.CheckClose(Actor Actor)
-		{
-            if (!Open) return CheckRule.Disallow("It's already closed.");
-            else return CheckRule.Allow();
-		}
-
-		RuleHandlerFollowUp OpenableRules.HandleOpen(Actor Actor)
-		{
-            return ImplementHandleOpen(Actor);
-		}
-
-        RuleHandlerFollowUp OpenableRules.HandleClose(Actor Actor)
-        {
-            Locked = false;
-            return ImplementHandleClose(Actor);
-        }
-
-		#endregion
         
-		public bool Locked { get; set; }
-
 	}
 }

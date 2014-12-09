@@ -5,17 +5,22 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Scenery : MudObject, TakeRules
+    public class SceneryRules : DeclaresRules
+    {
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.AddActionRule<MudObject, MudObject>("can-take").When((actor, thing) => thing is Scenery).Do((actor, thing) =>
+                {
+                    Mud.SendMessage(actor, "That's a terrible idea.");
+                    return RuleResult.Disallow;
+                });
+        }
+    }
+
+	public class Scenery : MudObject
 	{
         public Scenery() { }
 
         public Scenery(String Short, String Long) : base(Short, Long) { }
-
-		CheckRule TakeRules.Check(Actor Actor)
-		{
-			return CheckRule.Disallow("That's a terrible idea.");
-		}
-
-        RuleHandlerFollowUp TakeRules.Handle(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 	}
 }

@@ -11,7 +11,19 @@ namespace RMUD
         Female
     }
 
-	public class Actor : GenericContainer, TakeRules
+    public class ActorRules : DeclaresRules
+    {
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.AddActionRule<MudObject, MudObject>("can-take").When((actor, thing) => thing is Actor).Do((actor, thing) =>
+            {
+                Mud.SendMessage(actor, "You can't take people.");
+                return RuleResult.Disallow;
+            });
+        }
+    }
+
+	public class Actor : GenericContainer
 	{
 		public Client ConnectedClient;
         public List<StatusEffect> AppliedStatusEffects = new List<StatusEffect>();
@@ -55,13 +67,6 @@ namespace RMUD
         {
             return PrepareName(RequestedBy, Article);
         }
-
-        CheckRule TakeRules.Check(Actor Actor)
-		{
-			return CheckRule.Disallow("You can't take people.");
-		}
-
-        RuleHandlerFollowUp TakeRules.Handle(Actor Actor) { return RuleHandlerFollowUp.Continue; }
 
         public Actor()
             : base(RelativeLocations.Held | RelativeLocations.Worn, RelativeLocations.Held)

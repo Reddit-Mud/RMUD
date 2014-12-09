@@ -37,18 +37,24 @@ namespace RMUD
 
         public static void SendMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
         {
+            if (SilentFlag) return;
+
             if (Actor != null && Actor.ConnectedClient != null)
                 PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, FormatMessage(Actor, Message, MentionedObjects)));
         }
 
         public static void SendMessage(MudObject MudObject, String Message, params MudObject[] MentionedObjects)
         {
+            if (SilentFlag) return;
+
             if (MudObject is Actor)
                 SendMessage(MudObject as Actor, Message, MentionedObjects);
         }
 
         public static void SendLocaleMessage(MudObject Object, String Message, params MudObject[] MentionedObjects)
         {
+            if (SilentFlag) return;
+
             var container = Mud.FindLocale(Object) as Container;
             if (container != null)
             {
@@ -64,6 +70,8 @@ namespace RMUD
 
         public static void SendExternalMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
         {
+            if (SilentFlag) return;
+
             if (Actor == null) return;
             var location = Actor.Location as Room;
             if (location == null) return;
@@ -81,17 +89,23 @@ namespace RMUD
 
         public static void SendExternalMessage(MudObject Actor, String Message, params MudObject[] MentionedObjects)
         {
+            if (SilentFlag) return;
+
             SendExternalMessage(Actor as Actor, Message, MentionedObjects);
         }
 
 
         public static void SendMessage(Client Client, String Message)
         {
+            if (SilentFlag) return;
+
             PendingMessages.Add(new RawPendingMessage(Client, Message));
         }
 
         public static void SendGlobalMessage(String Message)
         {
+            if (SilentFlag) return;
+
             foreach (var client in ConnectedClients)
             {
                 if (client.IsLoggedOn)

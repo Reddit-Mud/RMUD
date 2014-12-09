@@ -1,4 +1,4 @@
-﻿class wolf : RMUD.NPC, RMUD.WitnessDropRules
+﻿class wolf : RMUD.NPC
 {
     public bool IsFed = false;
 
@@ -12,23 +12,20 @@
         Nouns.Add("wolf");
 
         RMUD.Mud.RegisterForHeartbeat(this);
+
+        AddActionRule<RMUD.MudObject>("handle-entrail-drop").Do(entrails =>
+            {
+                RMUD.Mud.SendLocaleMessage(this, "The wolf snatches up the entrails.");
+                IsFed = true;
+                RMUD.MudObject.Move(entrails, null);
+                return RMUD.RuleResult.Stop;
+            });
     }
 
     public override void Heartbeat(ulong HeartbeatID)
     {
         if (!IsFed)
             RMUD.Mud.SendLocaleMessage(this, "The wolf whines for food.");
-    }
-
-    void RMUD.WitnessDropRules.Handle(RMUD.Actor Actor, RMUD.MudObject Item)
-    {
-        var entrails = RMUD.Mud.GetObject("palantine/entrails");
-        if (System.Object.ReferenceEquals(entrails, Item))
-        {
-            RMUD.Mud.SendLocaleMessage(this, "The wolf snatches up the entrails.");
-            IsFed = true;
-            RMUD.MudObject.Move(entrails, null);
-        }
     }
 
     public override bool QueryQuestProperty(string Name)

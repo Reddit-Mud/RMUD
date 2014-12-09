@@ -13,35 +13,43 @@ namespace RMUD
     public static class GlobalRules
     {
         private static RuleSet Rules = null;
+        internal static Client LogTo = null;
+
+        public static void LogRules(Client To) { LogTo = To; }
 
         public static void DeclareActionRuleBook<T0>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ActionRuleBook { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0) }) });
+            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0)).Description = Description;
         }
 
         public static void DeclareActionRuleBook<T0, T1>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ActionRuleBook { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0), typeof(T1) }) });
+            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1)).Description = Description;
         }
 
         public static void DeclareActionRuleBook<T0, T1, T2>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ActionRuleBook { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0), typeof(T1), typeof(T2) }) });
+            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
+        }
+
+        public static void DeclareActionRuleBook<T0, T1, T2, T3>(String Name, String Description)
+        {
+            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).Description = Description;
         }
 
         public static void DeclareValueRuleBook<T0, RT>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ValueRuleBook<RT> { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0) }) });
+            Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0)).Description = Description;
         }
 
         public static void DeclareValueRuleBook<T0, T1, RT>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ValueRuleBook<RT> { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0), typeof(T1) }) });
+            Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1)).Description = Description;
         }
 
         public static void DeclareValueRuleBook<T0, T1, T2, RT>(String Name, String Description)
         {
-            Rules.RuleBooks.Add(new ValueRuleBook<RT> { Name = Name, Description = Description, ArgumentTypes = new List<Type>(new Type[] { typeof(T0), typeof(T1), typeof(T2) }) });
+            Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
         }
 
         public static RuleBuilder<T0, RuleResult> AddActionRule<T0>(String Name)
@@ -57,6 +65,11 @@ namespace RMUD
         public static RuleBuilder<T0, T1, T2, RuleResult> AddActionRule<T0, T1, T2>(String Name)
         {
             return Rules.AddRule<T0, T1, T2, RuleResult>(Name);
+        }
+
+        public static RuleBuilder<T0, T1, T2, T3, RuleResult> AddActionRule<T0, T1, T2, T3>(String Name)
+        {
+            return Rules.AddRule<T0, T1, T2, T3, RuleResult>(Name);
         }
 
         public static RuleBuilder<T0, RT> AddValueRule<T0, RT>(String Name)
@@ -116,21 +129,6 @@ namespace RMUD
             {
                 Mud.SilentFlag = true;
                 var r = ConsiderActionRule(Name, Object, Arguments);
-                Mud.SilentFlag = false;
-                return r;
-            }
-            finally
-            {
-                Mud.SilentFlag = false;
-            }
-        }
-
-        public static RT ConsiderValueRuleSilently<RT>(String Name, MudObject Object, params Object[] Arguments)
-        {
-            try
-            {
-                Mud.SilentFlag = true;
-                var r = ConsiderValueRule<RT>(Name, Object, Arguments);
                 Mud.SilentFlag = false;
                 return r;
             }

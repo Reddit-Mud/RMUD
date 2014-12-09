@@ -40,6 +40,11 @@ namespace RMUD
             {
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
+                    if (GlobalRules.LogTo != null)
+                    {
+                        GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                    }
+
                     var r = rule.BodyClause == null ? RuleResult.Default : rule.BodyClause.Invoke(Args);
                     if (r != RuleResult.Continue) return r;
                 }
@@ -50,7 +55,7 @@ namespace RMUD
         public override void AddRule(Rule Rule)
         {
             if (!(Rule is Rule<RuleResult>)) throw new InvalidOperationException();
-            Rules.Add(Rule as Rule<RuleResult>);
+            Rules.Insert(0, Rule as Rule<RuleResult>);
         }
     }
 
@@ -69,6 +74,11 @@ namespace RMUD
             foreach (var rule in Rules)
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
+                    if (GlobalRules.LogTo != null)
+                    {
+                        GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                    }
+
                     ValueReturned = true;
                     return rule.BodyClause.Invoke(Args);
                 }
@@ -78,7 +88,7 @@ namespace RMUD
         public override void AddRule(Rule Rule)
         {
             if (!(Rule is Rule<RT>)) throw new InvalidOperationException();
-            Rules.Add(Rule as Rule<RT>);
+            Rules.Insert(0, Rule as Rule<RT>);
         }
     }
 }
