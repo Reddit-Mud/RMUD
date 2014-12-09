@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Drop : CommandFactory
+	internal class Drop : CommandFactory, DeclaresRules
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -19,7 +19,23 @@ namespace RMUD.Commands
 				"Drop something",
                 "SUBJECT-SCORE");
 		}
-	}
+
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-drop", "[Actor, Item] : Determine if the item can be dropped.");
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("on-dropped", "[Actor, Item] : Handle an item being dropped.");
+
+            GlobalRules.AddActionRule<MudObject, MudObject>("can-drop").Do((a, b) => RuleResult.Allow).Name("Default can drop anything");
+
+            GlobalRules.AddActionRule<MudObject, MudObject>("on-dropped").Do((actor, target) =>
+            {
+                Mud.SendMessage(actor, "You drop <a0>.", target);
+                Mud.SendExternalMessage(actor, "<a0> drops <a1>.", actor, target);
+                MudObject.Move(target, actor.Location);
+                return RuleResult.Continue;
+            }).Name("Default drop handler");
+        }
+    }
 
 	internal class DropProcessor : CommandProcessor
 	{
@@ -33,35 +49,8 @@ namespace RMUD.Commands
                 return;
             }
 
-            var dropRules = target as DropRules;
-            if (dropRules != null)
-            {
-                var checkRule = dropRules.Check(Actor);
-                if (!checkRule.Allowed)
-                {
-                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
-                    return;
-                }
-            }
-
-            var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
-            if (dropRules != null) handleRuleFollowUp = dropRules.Handle(Actor);
-
-            if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
-            {
-                Mud.SendMessage(Actor, "You drop <the0>.", target);
-                Mud.SendExternalMessage(Actor, "<0> drops <a1>.", Actor, target);
-                MudObject.Move(target, Actor.Location);
-            }
-
-            if (Actor.Location != null)
-            {
-                foreach (var witness in Mud.GatherObjects<WitnessDropRules>(Actor.Location, obj =>
-                {
-                    if (Object.ReferenceEquals(obj, target)) return null;
-                    return obj as WitnessDropRules;
-                })) witness.Handle(Actor, target);
-            }
+            if (GlobalRules.ConsiderActionRule("can-drop", target, Actor, target) == RuleResult.Allow)
+                GlobalRules.ConsiderActionRule("on-dropped", target, Actor, target);
 
             Mud.MarkLocaleForUpdate(target);
         }

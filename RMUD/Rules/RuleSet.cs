@@ -60,6 +60,13 @@ namespace RMUD
             FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2)).AddRule(rule);
             return new RuleBuilder<T0, T1, T2, RT> { Rule = rule };
         }
+
+        public RuleBuilder<T0, T1, T2, T3, RT> AddRule<T0, T1, T2, T3, RT>(String Name)
+        {
+            var rule = new Rule<RT>();
+            FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).AddRule(rule);
+            return new RuleBuilder<T0, T1, T2, T3, RT> { Rule = rule };
+        }
         
         public RT ConsiderValueRule<RT>(String Name, out bool ValueReturned, params Object[] Args)
         {

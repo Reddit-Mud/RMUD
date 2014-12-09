@@ -178,7 +178,6 @@
     <Compile Include="Parser\Matchers\RelativeLocationMatcher.cs" />
     <Compile Include="Parser\Matchers\FailIfNoMatches.cs" />
     <Compile Include="ReverseLineReader.cs" />
-    <Compile Include="RuleDecorators\CheckRuleResponse.cs" />
     <Compile Include="Rules\GlobalRules.cs" />
     <Compile Include="Rules\RuleBook.cs" />
     <Compile Include="Rules\RuleBuilder.cs" />
@@ -186,8 +185,6 @@
     <Compile Include="Rules\RuleDelegateWrapper.cs" />
     <Compile Include="Rules\RuleResult.cs" />
     <Compile Include="Rules\Rule.cs" />
-    <Compile Include="RuleDecorators\PutRules.cs" />
-    <Compile Include="RuleDecorators\RuleHandlerFollowUp.cs" />
     <Compile Include="Core\SendMessage.cs" />
     <Compile Include="Parser\Matchers\ConnectedPlayersObjectSource.cs" />
     <Compile Include="Parser\Matchers\OptionalMatcher.cs" />
@@ -211,7 +208,6 @@
     <Compile Include="Lib\LockedDoor.cs" />
     <Compile Include="Clients\DisambigCommandHandler.cs" />
     <Compile Include="Parser\Matchers\InScopeObjectSource.cs" />
-    <Compile Include="RuleDecorators\DropRules.cs" />
     <Compile Include="Lib\Scenery.cs" />
     <Compile Include="Lib\Settings.cs" />
     <Compile Include="Lib\Container.cs" />

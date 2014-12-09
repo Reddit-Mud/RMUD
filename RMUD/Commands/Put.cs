@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Put : CommandFactory
+	internal class Put : CommandFactory, DeclaresRules
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -31,23 +31,67 @@ namespace RMUD.Commands
                 "SUBJECT-SCORE",
                 "OBJECT-SCORE");
 		}
-	}
+
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("can-put", "[Actor, Item, Container, Location] : Determine if the actor can put the item in or on or under the container.");
+            GlobalRules.DeclareActionRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("on-put", "[Actor, Item, Container, Location] : Handle an actor putting the item in or on or under the container.");
+
+            GlobalRules.AddActionRule<MudObject, MudObject, MudObject, RelativeLocations>("can-put").Do((a, b, c, d) => {
+                if (c is Container) return RuleResult.Allow;
+                return RuleResult.Disallow;
+            }).Name("Default can't put things in things that aren't containers rule.");
+
+            GlobalRules.AddActionRule<MudObject, MudObject, MudObject, RelativeLocations>("on-put").Do((actor, item, container, relloc) =>
+                {
+                    Mud.SendMessage(actor, String.Format("You put <the0> {0} <the1>.", Mud.GetRelativeLocationName(relloc)), item, container);
+                    Mud.SendExternalMessage(actor, String.Format("<a0> puts <a1> {0} <a2>.", Mud.GetRelativeLocationName(relloc)), actor, item, container);
+                    MudObject.Move(item, container, relloc);
+                    return RuleResult.Continue;
+                }).Name("Default putting things in things handler.");
+
+            GlobalRules.AddActionRule<MudObject, MudObject, MudObject, RelativeLocations>("can-put").Do((actor, item, container, relloc) =>
+                {
+                    if (relloc == RelativeLocations.In
+                        && GlobalRules.ConsiderValueRule<bool>("openable", container, container)
+                        && !GlobalRules.ConsiderValueRule<bool>("is-open", container, container))
+                    {
+                        Mud.SendMessage(actor, "It seems to be closed.");
+                        return RuleResult.Disallow;
+                    }
+
+                    return RuleResult.Continue;
+                }).Name("Can't put things in closed container rule.");
+
+            GlobalRules.AddActionRule<MudObject, MudObject, MudObject, RelativeLocations>("can-put").Do((actor, item, container, relloc) =>
+                {
+                    var c = container as Container;
+                    if (c == null || (c.LocationsSupported & relloc) != relloc)
+                    {
+                        Mud.SendMessage(actor, String.Format("You can't put something {0} that.", Mud.GetRelativeLocationName(relloc)));
+                        return RuleResult.Disallow;
+                    }
+
+                    return RuleResult.Continue;
+                }).Name("Check supported locations before putting rule.");
+        }
+    }
 
 	internal class PutProcessor : CommandProcessor
 	{
         public void Perform(PossibleMatch Match, Actor Actor)
         {
             var target = Match.Arguments["SUBJECT"] as MudObject;
-            var container = Match.Arguments["OBJECT"] as Container;
+            var container = Match.Arguments["OBJECT"] as MudObject;
 
-            if (!Mud.IsVisibleTo(Actor, container as MudObject))
+            if (!Mud.IsVisibleTo(Actor, container))
             {
                 if (Actor.ConnectedClient != null)
                     Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
                 return;
             }
 
-            if (!Mud.ObjectContainsObject(Actor, target as MudObject))
+            if (!Mud.ObjectContainsObject(Actor, target))
             {
                 Mud.SendMessage(Actor, "You aren't holding that.");
                 return;
@@ -58,56 +102,12 @@ namespace RMUD.Commands
                 relloc = (Match.Arguments["RELLOC"] as RelativeLocations?).Value;
             else
             {
-                if (container != null) relloc = container.DefaultLocation;
+                if (container is Container) relloc = (container as Container).DefaultLocation;
             }
-
-            if (container == null || ((container.LocationsSupported & relloc) != relloc))
-            {
-                Mud.SendMessage(Actor, String.Format("You can't put something {0} that.", Mud.GetRelativeLocationName(relloc)));
-                return;
-            }
-
-            if (relloc == RelativeLocations.In)
-            {
-                if (GlobalRules.ConsiderValueRule<bool>("openable", target, target))
-                    if (!GlobalRules.ConsiderValueRule<bool>("is-open", target, target))
-                    {
-                        Mud.SendMessage(Actor, "^<the0> is closed.", target);
-                        return;
-                    }
-            }
-
-            var dropRules = target as DropRules;
-            if (dropRules != null)
-            {
-                var checkRule = dropRules.Check(Actor);
-                if (!checkRule.Allowed)
-                {
-                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
-                    return;
-                }
-            }
-
-            var putRules = container as PutRules;
-            if (putRules != null)
-            {
-                var checkRule = putRules.Check(Actor, target, relloc);
-                if (!checkRule.Allowed)
-                {
-                    Mud.SendMessage(Actor, checkRule.ReasonDisallowed);
-                    return;
-                }
-            }
-
-            var handleRuleFollowUp = RuleHandlerFollowUp.Continue;
-            if (putRules != null) handleRuleFollowUp = putRules.Handle(Actor, target, relloc);
-
-            if (handleRuleFollowUp == RuleHandlerFollowUp.Continue)
-            {
-                Mud.SendMessage(Actor, String.Format("You put <the0> {0} <the1>.", Mud.GetRelativeLocationName(relloc)), target, (container as MudObject));
-                Mud.SendExternalMessage(Actor, String.Format("<a0> puts <a1> {0} <a2>.", Mud.GetRelativeLocationName(relloc)), Actor, target, (container as MudObject));
-                MudObject.Move(target, container as MudObject, relloc);
-            }
+            
+            if (GlobalRules.ConsiderActionRule("can-drop", target, Actor, target) == RuleResult.Allow)
+                if (GlobalRules.ConsiderActionRule("can-put", container, Actor, target, container, relloc) == RuleResult.Allow)
+                    GlobalRules.ConsiderActionRule("on-put", container, Actor, target, container, relloc);
 
             Mud.MarkLocaleForUpdate(target);
 
