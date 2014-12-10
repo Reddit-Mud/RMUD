@@ -23,6 +23,7 @@ namespace RMUD
         }
 
         public virtual void AddRule(Rule Rule) { throw new NotImplementedException(); }
+        public virtual void DeleteRule(String ID) { throw new NotImplementedException(); }
     }
 
     public class ActionRuleBook : RuleBook
@@ -57,6 +58,11 @@ namespace RMUD
             if (!(Rule is Rule<RuleResult>)) throw new InvalidOperationException();
             Rules.Insert(0, Rule as Rule<RuleResult>);
         }
+
+        public override void DeleteRule(string ID)
+        {
+            Rules.RemoveAll(r => r.ID == ID);
+        }
     }
 
     public class ValueRuleBook<RT> : RuleBook
@@ -89,6 +95,11 @@ namespace RMUD
         {
             if (!(Rule is Rule<RT>)) throw new InvalidOperationException();
             Rules.Insert(0, Rule as Rule<RT>);
+        }
+
+        public override void DeleteRule(string ID)
+        {
+            Rules.RemoveAll(r => r.ID == ID);
         }
     }
 }

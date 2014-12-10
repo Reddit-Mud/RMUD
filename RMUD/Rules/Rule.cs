@@ -10,6 +10,7 @@ namespace RMUD
     public class Rule<RT> : Rule
     {
         public String DescriptiveName;
+        public String ID; 
         public RuleDelegateWrapper<bool> WhenClause;
         public RuleDelegateWrapper<RT> BodyClause;
     }
