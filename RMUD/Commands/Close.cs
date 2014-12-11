@@ -34,14 +34,14 @@ namespace RMUD.Commands
             {
                 Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");
                 return RuleResult.Disallow;
-            });
+            }).Name("Default can't close unopenable things rule.");
 
             GlobalRules.AddActionRule<MudObject, MudObject>("on-closed").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You close <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> closes <a1>.", actor, target);
                 return RuleResult.Continue;
-            });
+            }).Name("Default close reporting rule.");
         }
     }
 	

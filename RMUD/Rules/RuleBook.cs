@@ -11,6 +11,7 @@ namespace RMUD
         public String Description;
         public List<Type> ArgumentTypes = new List<Type>();
         public Type ResultType;
+        internal List<Rule> Rules = new List<Rule>();
 
         public bool CheckArgumentTypes(Type ResultType, params Type[] ArgTypes)
         {
@@ -28,8 +29,6 @@ namespace RMUD
 
     public class ActionRuleBook : RuleBook
     {
-        public List<Rule<RuleResult>> Rules = new List<Rule<RuleResult>>();
-
         public ActionRuleBook()
         {
             ResultType = typeof(RuleResult);
@@ -37,8 +36,9 @@ namespace RMUD
 
         public RuleResult Consider(params Object[] Args)
         {
-            foreach (var rule in Rules)
+            foreach (var _rule in Rules)
             {
+                var rule = _rule as Rule<RuleResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
                     if (GlobalRules.LogTo != null)
@@ -67,8 +67,6 @@ namespace RMUD
 
     public class ValueRuleBook<RT> : RuleBook
     {
-        public List<Rule<RT>> Rules = new List<Rule<RT>>();
-
         public ValueRuleBook()
         {
             ResultType = typeof(RT);
@@ -86,7 +84,7 @@ namespace RMUD
                     }
 
                     ValueReturned = true;
-                    return rule.BodyClause.Invoke(Args);
+                    return (rule as Rule<RT>).BodyClause.Invoke(Args);
                 }
             return default(RT);
         }

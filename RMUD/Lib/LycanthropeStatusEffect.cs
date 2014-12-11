@@ -11,10 +11,10 @@ namespace RMUD
         {
             To.Nouns.Add("beast", "wolf", "were", "werewolf");
 
-            To.AddValueRule<MudObject, MudObject, String, String>("actor-name").Do((viewer, actor, article) =>
-                {
-                    return article + " beast";
-                }).Name("Lycanthrope actor name").ID("LYCANTHROPE");
+            To.AddValueRule<MudObject, MudObject, String, String>("actor-name")
+                .Do((viewer, actor, article) => article + " beast")
+                .Name("Lycanthrope actor name")
+                .ID("LYCANTHROPE");
         }
 
         public override void Remove(Actor From)
