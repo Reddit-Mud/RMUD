@@ -20,6 +20,24 @@ namespace RMUD
                 Mud.SendMessage(actor, "You can't take people.");
                 return RuleResult.Disallow;
             });
+
+            GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String, String>("actor-name", "[Viewer, Actor -> String] : Find the name that should be displayed for an actor.");
+
+            GlobalRules.AddValueRule<MudObject, MudObject, String, String>("actor-name")
+                .Do((viewer, actor, article) => article + " " + (actor as Actor).DescriptiveName)
+                .Name("Default name for unintroduced actor.");
+
+            GlobalRules.AddValueRule<MudObject, MudObject, String, String>("actor-name")
+                .When((viewer, actor, article) =>
+                Introduction.ActorKnowsActor(viewer as Actor, actor as Actor))
+                .Do((viewer, actor, article) => actor.Short)
+                .Name("Name of introduced actor.");
+
+            GlobalRules.AddValueRule<MudObject, MudObject, String, String>("actor-name")
+                .When((viewer, actor, article) =>
+                !(viewer is Actor) || !(actor is Actor))
+                .Do((viewer, actor, article) => article + " " + actor.Short)
+                .Name("Name of non-actor.");
         }
     }
 
@@ -44,18 +62,7 @@ namespace RMUD
 
         private string PrepareName(Actor RequestedBy, String Article)
         {
-            var introduced = Introduction.ActorKnowsActor(RequestedBy, this);
-            var result = introduced ? Short : DescriptiveName;
-
-            foreach (var statusEffect in AppliedStatusEffects)
-            {
-                var modifiedName = statusEffect.OverrideName(this, result);
-                if (modifiedName.Item1 == true) introduced = false; //True means discard introduction data.
-                result = modifiedName.Item2;
-            }
-
-            if (introduced) return result;
-            else return Article + " " + result;
+            return GlobalRules.ConsiderValueRule<String>("actor-name", this, RequestedBy, this, Article);
         }
 
         public override string Definite(Actor RequestedBy)

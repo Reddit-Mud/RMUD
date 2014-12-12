@@ -10,7 +10,5 @@ namespace RMUD
         public virtual void Apply(Actor To) { }
         public virtual void Remove(Actor From) { }
         public virtual void Heartbeat(ulong HeartbeatID, Actor AppliedTo) { }
-
-        public virtual Tuple<bool, String> OverrideName(Actor For, String PreviousName) { return new Tuple<bool,string>(false, PreviousName); }
     }
 }

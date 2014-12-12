@@ -26,6 +26,12 @@ namespace RMUD
             Rule.DescriptiveName = Name;
             return this;
         }
+
+        public RuleBuilder<T0, TR> ID(String ID)
+        {
+            Rule.ID = ID;
+            return this;
+        }
     }
 
     public class RuleBuilder<T0, T1, TR>
@@ -47,6 +53,12 @@ namespace RMUD
         public RuleBuilder<T0, T1, TR> Name(String Name)
         {
             Rule.DescriptiveName = Name;
+            return this;
+        }
+
+        public RuleBuilder<T0, T1, TR> ID(String ID)
+        {
+            Rule.ID = ID;
             return this;
         }
     }
@@ -72,6 +84,12 @@ namespace RMUD
             Rule.DescriptiveName = Name;
             return this;
         }
+
+        public RuleBuilder<T0, T1, T2, TR> ID(String ID)
+        {
+            Rule.ID = ID;
+            return this;
+        }
     }
 
     public class RuleBuilder<T0, T1, T2, T3, TR>
@@ -93,6 +111,12 @@ namespace RMUD
         public RuleBuilder<T0, T1, T2, T3, TR> Name(String Name)
         {
             Rule.DescriptiveName = Name;
+            return this;
+        }
+
+        public RuleBuilder<T0, T1, T2, T3, TR> ID(String ID)
+        {
+            Rule.ID = ID;
             return this;
         }
     }

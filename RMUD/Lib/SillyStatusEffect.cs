@@ -14,11 +14,17 @@ namespace RMUD
             To.Nouns.Add("silly");
             Counter = 100;
             Mud.RegisterForHeartbeat(To);
+
+            To.AddValueRule<MudObject, MudObject, String, String>("actor-name").Do((viewer, actor, article) =>
+                {
+                    return "silly " + (actor as Actor).Short;
+                }).Name("Silly name rule").ID("SILLYSTATUSEFFECT");
         }
 
         public override void Remove(Actor From)
         {
             From.Nouns.Remove("silly");
+            From.Rules.DeleteRule("actor-name", "SILLYSTATUSEFFECT");
         }
 
         public override void Heartbeat(ulong HeartbeatID, Actor AppliedTo)
@@ -29,11 +35,6 @@ namespace RMUD
                 Mud.SendExternalMessage(AppliedTo, "^<the0> is serious now.", AppliedTo);
                 AppliedTo.RemoveStatusEffect(this);
             }
-        }
-
-        public override Tuple<bool,String> OverrideName(Actor For, String PreviousName)
-        {
-            return new Tuple<bool, string>(false, "silly " + PreviousName);
         }
     }
 }

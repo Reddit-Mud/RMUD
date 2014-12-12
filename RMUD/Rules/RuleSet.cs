@@ -61,6 +61,18 @@ namespace RMUD
             return new RuleBuilder<T0, T1, T2, RT> { Rule = rule };
         }
 
+        public void DeleteRule(String RuleBookName, String RuleID)
+        {
+            var book = FindRuleBook(RuleBookName);
+            if (book != null) book.DeleteRule(RuleID);
+        }
+
+        public void DeleteAll(String RuleID)
+        {
+            foreach (var book in RuleBooks)
+                book.DeleteRule(RuleID);
+        }
+
         public RuleBuilder<T0, T1, T2, T3, RT> AddRule<T0, T1, T2, T3, RT>(String Name)
         {
             var rule = new Rule<RT>();

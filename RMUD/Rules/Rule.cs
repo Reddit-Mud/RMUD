@@ -5,12 +5,15 @@ using System.Text;
 
 namespace RMUD
 {
-    public class Rule { }
+    public class Rule 
+    {
+        public String DescriptiveName;
+        public String ID;
+        public RuleDelegateWrapper<bool> WhenClause;
+    }
 
     public class Rule<RT> : Rule
     {
-        public String DescriptiveName;
-        public RuleDelegateWrapper<bool> WhenClause;
         public RuleDelegateWrapper<RT> BodyClause;
     }
 }

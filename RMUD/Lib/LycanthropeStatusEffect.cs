@@ -10,16 +10,18 @@ namespace RMUD
         public override void Apply(Actor To)
         {
             To.Nouns.Add("beast", "wolf", "were", "werewolf");
+
+            To.AddValueRule<MudObject, MudObject, String, String>("actor-name")
+                .Do((viewer, actor, article) => article + " beast")
+                .Name("Lycanthrope actor name")
+                .ID("LYCANTHROPE");
         }
 
         public override void Remove(Actor From)
         {
             From.Nouns.Remove("beast");
+            From.Rules.DeleteAll("LYCANTHROPE");
         }
 
-        public override Tuple<bool,String> OverrideName(Actor For, String PreviousName)
-        {
-            return new Tuple<bool, string>(true, "beast");
-        }
     }
 }
