@@ -23,6 +23,11 @@ namespace RMUD
         {
             Rules.FindOrCreateRuleBook<RT>(Name, <#TypeOfs(i);#>).Description = Description;
         }
+
+		public static void DeclareCheckRuleBook<<#Args(i);#>>(String Name, String Description)
+		{
+			Rules.FindOrCreateRuleBook<CheckRuleResult>(Name, <#TypeOfs(i);#>).Description = Description;
+		}
 				
         public static RuleBuilder<<#Args(i);#>, RuleResult> AddActionRule<<#Args(i);#>>(String Name)
         {
@@ -32,6 +37,11 @@ namespace RMUD
         public static RuleBuilder<<#Args(i);#>, RT> AddValueRule<<#Args(i);#>, RT>(String Name)
         {
             return Rules.AddRule<<#Args(i);#>, RT>(Name);
+        }
+
+		public static RuleBuilder<<#Args(i);#>, CheckRuleResult> AddCheckRule<<#Args(i);#>>(String Name)
+        {
+            return Rules.AddRule<<#Args(i);#>, CheckRuleResult>(Name);
         }
 
 <#}#>

@@ -27,6 +27,45 @@ namespace RMUD
         public virtual void DeleteRule(String ID) { throw new NotImplementedException(); }
     }
 
+    public class CheckRuleBook : RuleBook
+    {
+        public CheckRuleBook()
+        {
+            ResultType = typeof(CheckRuleResult);
+        }
+
+        public CheckRuleResult Consider(params Object[] Args)
+        {
+            foreach (var _rule in Rules)
+            {
+                var rule = _rule as Rule<CheckRuleResult>;
+                if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
+                {
+                    if (GlobalRules.LogTo != null)
+                    {
+                        GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                    }
+
+                    var r = rule.BodyClause == null ? CheckRuleResult.Continue : rule.BodyClause.Invoke(Args);
+                    if (r != CheckRuleResult.Continue) return r;
+                }
+            }
+            return CheckRuleResult.Continue;
+        }
+
+        public override void AddRule(Rule Rule)
+        {
+            if (!(Rule is Rule<CheckRuleResult>)) throw new InvalidOperationException();
+            Rules.Insert(0, Rule);
+        }
+
+        public override void DeleteRule(string ID)
+        {
+            Rules.RemoveAll(r => r.ID == ID);
+        }
+    }
+
+
     public class ActionRuleBook : RuleBook
     {
         public ActionRuleBook()

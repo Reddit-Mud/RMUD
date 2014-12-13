@@ -40,6 +40,18 @@ namespace RMUD
             return r;
         }
 
+        public static CheckRuleResult ConsiderCheckRule(String Name, MudObject Object, params Object[] Arguments)
+        {
+            var r = CheckRuleResult.Continue;
+            if (Object.Rules != null) r = Object.Rules.ConsiderCheckRule(Name, Arguments);
+            if (r == CheckRuleResult.Continue)
+            {
+                if (Rules == null) InitializeGlobalRuleBooks();
+                return Rules.ConsiderCheckRule(Name, Arguments);
+            }
+            return r;
+        }
+
         public static RT ConsiderValueRule<RT>(String Name, MudObject Object, params Object[] Arguments)
         {
             RT r = default(RT);
@@ -59,6 +71,21 @@ namespace RMUD
             {
                 Mud.SilentFlag = true;
                 var r = ConsiderActionRule(Name, Object, Arguments);
+                Mud.SilentFlag = false;
+                return r;
+            }
+            finally
+            {
+                Mud.SilentFlag = false;
+            }
+        }
+
+        public static CheckRuleResult ConsiderCheckRuleSilently(String Name, MudObject Object, params Object[] Arguments)
+        {
+            try
+            {
+                Mud.SilentFlag = true;
+                var r = ConsiderCheckRule(Name, Object, Arguments);
                 Mud.SilentFlag = false;
                 return r;
             }

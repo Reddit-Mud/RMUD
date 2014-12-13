@@ -13,4 +13,11 @@ namespace RMUD
         Stop = 2,
         Disallow = 2,
     }
+
+    public enum CheckRuleResult
+    {
+        Allow = 0,
+        Continue = 1,
+        Disallow = 2
+    }
 }

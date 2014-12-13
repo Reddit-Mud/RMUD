@@ -24,6 +24,8 @@ namespace RMUD
                 {
                     if (typeof(RT) == typeof(RuleResult))
                         r = new ActionRuleBook { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
+                    else if (typeof(RT) == typeof(CheckRuleResult))
+                        r = new CheckRuleBook { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
                     else
                         r = new ValueRuleBook<RT> { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
 
@@ -79,6 +81,20 @@ namespace RMUD
                 return actionBook.Consider(Args);
             }
             return RuleResult.Default;
+        }
+
+        public CheckRuleResult ConsiderCheckRule(String Name, params Object[] Args)
+        {
+            var book = FindRuleBook(Name);
+            if (book != null)
+            {
+                if (!book.CheckArgumentTypes(typeof(RuleResult), Args.Select(o => o.GetType()).ToArray()))
+                    throw new InvalidOperationException();
+                var actionBook = book as CheckRuleBook;
+                if (actionBook == null) throw new InvalidOperationException();
+                return actionBook.Consider(Args);
+            }
+            return CheckRuleResult.Continue;
         }
     }
 }

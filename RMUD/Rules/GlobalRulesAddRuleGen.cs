@@ -15,6 +15,11 @@ namespace RMUD
         {
             Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0)).Description = Description;
         }
+
+		public static void DeclareCheckRuleBook<T0>(String Name, String Description)
+		{
+			Rules.FindOrCreateRuleBook<CheckRuleResult>(Name, typeof(T0)).Description = Description;
+		}
 				
         public static RuleBuilder<T0, RuleResult> AddActionRule<T0>(String Name)
         {
@@ -26,6 +31,11 @@ namespace RMUD
             return Rules.AddRule<T0, RT>(Name);
         }
 
+		public static RuleBuilder<T0, CheckRuleResult> AddCheckRule<T0>(String Name)
+        {
+            return Rules.AddRule<T0, CheckRuleResult>(Name);
+        }
+
 		public static void DeclareActionRuleBook<T0, T1>(String Name, String Description)
 		{
 			Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1)).Description = Description;
@@ -35,6 +45,11 @@ namespace RMUD
         {
             Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1)).Description = Description;
         }
+
+		public static void DeclareCheckRuleBook<T0, T1>(String Name, String Description)
+		{
+			Rules.FindOrCreateRuleBook<CheckRuleResult>(Name, typeof(T0), typeof(T1)).Description = Description;
+		}
 				
         public static RuleBuilder<T0, T1, RuleResult> AddActionRule<T0, T1>(String Name)
         {
@@ -46,6 +61,11 @@ namespace RMUD
             return Rules.AddRule<T0, T1, RT>(Name);
         }
 
+		public static RuleBuilder<T0, T1, CheckRuleResult> AddCheckRule<T0, T1>(String Name)
+        {
+            return Rules.AddRule<T0, T1, CheckRuleResult>(Name);
+        }
+
 		public static void DeclareActionRuleBook<T0, T1, T2>(String Name, String Description)
 		{
 			Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
@@ -55,6 +75,11 @@ namespace RMUD
         {
             Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
         }
+
+		public static void DeclareCheckRuleBook<T0, T1, T2>(String Name, String Description)
+		{
+			Rules.FindOrCreateRuleBook<CheckRuleResult>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
+		}
 				
         public static RuleBuilder<T0, T1, T2, RuleResult> AddActionRule<T0, T1, T2>(String Name)
         {
@@ -66,6 +91,11 @@ namespace RMUD
             return Rules.AddRule<T0, T1, T2, RT>(Name);
         }
 
+		public static RuleBuilder<T0, T1, T2, CheckRuleResult> AddCheckRule<T0, T1, T2>(String Name)
+        {
+            return Rules.AddRule<T0, T1, T2, CheckRuleResult>(Name);
+        }
+
 		public static void DeclareActionRuleBook<T0, T1, T2, T3>(String Name, String Description)
 		{
 			Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).Description = Description;
@@ -75,6 +105,11 @@ namespace RMUD
         {
             Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).Description = Description;
         }
+
+		public static void DeclareCheckRuleBook<T0, T1, T2, T3>(String Name, String Description)
+		{
+			Rules.FindOrCreateRuleBook<CheckRuleResult>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).Description = Description;
+		}
 				
         public static RuleBuilder<T0, T1, T2, T3, RuleResult> AddActionRule<T0, T1, T2, T3>(String Name)
         {
@@ -84,6 +119,11 @@ namespace RMUD
         public static RuleBuilder<T0, T1, T2, T3, RT> AddValueRule<T0, T1, T2, T3, RT>(String Name)
         {
             return Rules.AddRule<T0, T1, T2, T3, RT>(Name);
+        }
+
+		public static RuleBuilder<T0, T1, T2, T3, CheckRuleResult> AddCheckRule<T0, T1, T2, T3>(String Name)
+        {
+            return Rules.AddRule<T0, T1, T2, T3, CheckRuleResult>(Name);
         }
 
 	}
