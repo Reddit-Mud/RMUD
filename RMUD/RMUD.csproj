@@ -191,6 +191,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Rules\MudObjectAddRuleGen.cs">
+      <DependentUpon>MudObjectAddRuleGen.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Rules\RuleSetAddRuleGen.cs">
       <DependentUpon>RuleSetAddRuleGen.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -266,6 +271,10 @@
     <None Include="Rules\GlobalRulesAddRuleGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>GlobalRulesAddRuleGen.cs</LastGenOutput>
+    </None>
+    <None Include="Rules\MudObjectAddRuleGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MudObjectAddRuleGen.cs</LastGenOutput>
     </None>
     <None Include="Rules\RuleSetAddRuleGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
