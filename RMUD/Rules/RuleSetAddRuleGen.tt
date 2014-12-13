@@ -1,0 +1,36 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+//This is generated code. Do not modify this file; modify the template that produces it.
+
+using System;
+
+namespace RMUD
+{
+	public partial class RuleSet
+	{	
+<#for (var i = 1; i < 5; ++i){#>
+		public RuleBuilder<<#=Args(i)#>, RT> AddRule<<#=Args(i)#>, RT>(String Name)
+		{
+			var rule = new Rule<RT>();
+			FindOrCreateRuleBook<RT>(Name, <#for (var x = 0; x < i; ++x){#>typeof(T<#=x#>)<#= x == i - 1 ? "" : ", "#><#}#>)
+				.AddRule(rule);
+			return new RuleBuilder<<#=Args(i)#>, RT> { Rule = rule };
+		}
+
+<#}#>
+	}
+}
+
+<#+
+	public String Args(int x)
+	{
+		var r = "";
+		for (int i = 0; i < x; ++i)
+			r += "T" + i + (i == (x-1) ? "" : ", ");
+		return r;
+	}
+#>
