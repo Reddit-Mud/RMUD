@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿//This is generated code. Do not modify this file; modify the template that produces it.
+
+using System;
 
 namespace RMUD
 {
-     public class RuleBuilder<T0, TR>
+	public class RuleBuilder<T0, TR>
     {
         public Rule<TR> Rule;
 
@@ -34,7 +33,7 @@ namespace RMUD
         }
     }
 
-    public class RuleBuilder<T0, T1, TR>
+	public class RuleBuilder<T0, T1, TR>
     {
         public Rule<TR> Rule;
 
@@ -49,7 +48,7 @@ namespace RMUD
             Rule.BodyClause = RuleDelegateWrapper<T0, T1, TR>.MakeWrapper(Clause);
             return this;
         }
-        
+
         public RuleBuilder<T0, T1, TR> Name(String Name)
         {
             Rule.DescriptiveName = Name;
@@ -63,7 +62,7 @@ namespace RMUD
         }
     }
 
-    public class RuleBuilder<T0, T1, T2, TR>
+	public class RuleBuilder<T0, T1, T2, TR>
     {
         public Rule<TR> Rule;
 
@@ -92,7 +91,7 @@ namespace RMUD
         }
     }
 
-    public class RuleBuilder<T0, T1, T2, T3, TR>
+	public class RuleBuilder<T0, T1, T2, T3, TR>
     {
         public Rule<TR> Rule;
 
@@ -122,3 +121,4 @@ namespace RMUD
     }
 
 }
+

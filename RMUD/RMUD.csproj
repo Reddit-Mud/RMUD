@@ -181,7 +181,11 @@
     <Compile Include="ReverseLineReader.cs" />
     <Compile Include="Rules\GlobalRules.cs" />
     <Compile Include="Rules\RuleBook.cs" />
-    <Compile Include="Rules\RuleBuilder.cs" />
+    <Compile Include="Rules\RuleBuilderGen.cs">
+      <DependentUpon>RuleBuilderGen.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Rules\RuleSetAddRuleGen.cs">
       <DependentUpon>RuleSetAddRuleGen.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -249,6 +253,10 @@
     <Compile Include="Clients\TelnetClientSource.cs" />
     <Compile Include="HelperExtensions.cs" />
     <None Include="packages.config" />
+    <None Include="Rules\RuleBuilderGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RuleBuilderGen.cs</LastGenOutput>
+    </None>
     <None Include="Rules\RuleSetAddRuleGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RuleSetAddRuleGen.cs</LastGenOutput>
