@@ -4,6 +4,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
+<#@ include file="RuleGen.t4" #>
 //This is generated code. Do not modify this file; modify the template that produces it.
 
 using System;
@@ -18,17 +19,17 @@ namespace RMUD
 		}		
 <#for (var i = 1; i < 5; ++i){#>
 		
-		public static RuleDelegateWrapper<TR> MakeWrapper<<#=Args(i)#>>(Func<<#=Args(i)#>, TR> Delegate)
+		public static RuleDelegateWrapper<TR> MakeWrapper<<#Args(i);#>>(Func<<#Args(i);#>, TR> Delegate)
 		{
-			return new RuleDelegateWrapper<<#=Args(i)#>, TR> { Delegate = Delegate };
+			return new RuleDelegateWrapper<<#Args(i);#>, TR> { Delegate = Delegate };
 		}		
 <#}#>
 	}
 <#for (var i = 1; i < 5; ++i){#>
 	
-	public class RuleDelegateWrapper<<#=Args(i)#>, TR> : RuleDelegateWrapper<TR>
+	public class RuleDelegateWrapper<<#Args(i);#>, TR> : RuleDelegateWrapper<TR>
 	{
-		internal Func<<#=Args(i)#>, TR> Delegate;
+		internal Func<<#Args(i);#>, TR> Delegate;
 
 		public override TR Invoke(Object[] Arguments)
 		{
@@ -38,13 +39,3 @@ namespace RMUD
 <#}#>
 
 }
-
-<#+
-	public String Args(int x)
-	{
-		var r = "";
-		for (int i = 0; i < x; ++i)
-			r += "T" + i + (i == (x-1) ? "" : ", ");
-		return r;
-	}
-#>

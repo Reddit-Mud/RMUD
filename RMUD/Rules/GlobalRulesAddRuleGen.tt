@@ -1,0 +1,39 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#@ include file="RuleGen.t4" #>
+//This is generated code. Do not modify this file; modify the template that produces it.
+
+using System;
+
+namespace RMUD
+{
+	public static partial class GlobalRules
+	{	
+<#for (var i = 1; i < 5; ++i){#>
+		public static void DeclareActionRuleBook<<#Args(i);#>>(String Name, String Description)
+		{
+			Rules.FindOrCreateRuleBook<RuleResult>(Name, <#TypeOfs(i);#>).Description = Description;
+		}
+		
+		public static void DeclareValueRuleBook<<#Args(i);#>, RT>(String Name, String Description)
+        {
+            Rules.FindOrCreateRuleBook<RT>(Name, <#TypeOfs(i);#>).Description = Description;
+        }
+				
+        public static RuleBuilder<<#Args(i);#>, RuleResult> AddActionRule<<#Args(i);#>>(String Name)
+        {
+            return Rules.AddRule<<#Args(i);#>, RuleResult>(Name);
+        }
+		
+        public static RuleBuilder<<#Args(i);#>, RT> AddValueRule<<#Args(i);#>, RT>(String Name)
+        {
+            return Rules.AddRule<<#Args(i);#>, RT>(Name);
+        }
+
+<#}#>
+	}
+}

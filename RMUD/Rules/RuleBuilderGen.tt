@@ -4,6 +4,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
+<#@ include file="RuleGen.t4" #>
 //This is generated code. Do not modify this file; modify the template that produces it.
 
 using System;
@@ -11,29 +12,29 @@ using System;
 namespace RMUD
 {
 <#for (var i = 1; i < 5; ++i){#>
-	public class RuleBuilder<<#=Args(i)#>, TR>
+	public class RuleBuilder<<# Args(i); #>, TR>
     {
         public Rule<TR> Rule;
 
-        public RuleBuilder<<#=Args(i)#>, TR> When(Func<<#=Args(i)#>, bool> Clause)
+        public RuleBuilder<<#Args(i);#>, TR> When(Func<<#Args(i);#>, bool> Clause)
         {
-            Rule.WhenClause = RuleDelegateWrapper<<#=Args(i)#>, bool>.MakeWrapper(Clause);
+            Rule.WhenClause = RuleDelegateWrapper<<#Args(i);#>, bool>.MakeWrapper(Clause);
             return this;
         }
 
-        public RuleBuilder<<#=Args(i)#>, TR> Do(Func<<#=Args(i)#>, TR> Clause)
+        public RuleBuilder<<#Args(i);#>, TR> Do(Func<<#Args(i);#>, TR> Clause)
         {
-            Rule.BodyClause = RuleDelegateWrapper<<#=Args(i)#>, TR>.MakeWrapper(Clause);
+            Rule.BodyClause = RuleDelegateWrapper<<#Args(i);#>, TR>.MakeWrapper(Clause);
             return this;
         }
 
-        public RuleBuilder<<#=Args(i)#>, TR> Name(String Name)
+        public RuleBuilder<<#Args(i);#>, TR> Name(String Name)
         {
             Rule.DescriptiveName = Name;
             return this;
         }
 
-        public RuleBuilder<<#=Args(i)#>, TR> ID(String ID)
+        public RuleBuilder<<#Args(i);#>, TR> ID(String ID)
         {
             Rule.ID = ID;
             return this;
@@ -42,13 +43,3 @@ namespace RMUD
 
 <#}#>
 }
-
-<#+
-	public String Args(int x)
-	{
-		var r = "";
-		for (int i = 0; i < x; ++i)
-			r += "T" + i + (i == (x-1) ? "" : ", ");
-		return r;
-	}
-#>

@@ -186,6 +186,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Rules\GlobalRulesAddRuleGen.cs">
+      <DependentUpon>GlobalRulesAddRuleGen.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Rules\RuleSetAddRuleGen.cs">
       <DependentUpon>RuleSetAddRuleGen.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -253,9 +258,14 @@
     <Compile Include="Clients\TelnetClientSource.cs" />
     <Compile Include="HelperExtensions.cs" />
     <None Include="packages.config" />
+    <None Include="Rules\RuleGen.t4" />
     <None Include="Rules\RuleBuilderGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RuleBuilderGen.cs</LastGenOutput>
+    </None>
+    <None Include="Rules\GlobalRulesAddRuleGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GlobalRulesAddRuleGen.cs</LastGenOutput>
     </None>
     <None Include="Rules\RuleSetAddRuleGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
