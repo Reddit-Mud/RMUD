@@ -29,17 +29,17 @@ namespace RMUD
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, <#TypeOfs(i);#>).Description = Description;
 		}
 				
-        public static RuleBuilder<<#Args(i);#>, PerformResult> AddPerformRule<<#Args(i);#>>(String Name)
+        public static RuleBuilder<<#Args(i);#>, PerformResult> Perform<<#Args(i);#>>(String Name)
         {
             return Rules.AddRule<<#Args(i);#>, PerformResult>(Name);
         }
 		
-        public static RuleBuilder<<#Args(i);#>, RT> AddValueRule<<#Args(i);#>, RT>(String Name)
+        public static RuleBuilder<<#Args(i);#>, RT> Value<<#Args(i);#>, RT>(String Name)
         {
             return Rules.AddRule<<#Args(i);#>, RT>(Name);
         }
 
-		public static RuleBuilder<<#Args(i);#>, CheckResult> AddCheckRule<<#Args(i);#>>(String Name)
+		public static RuleBuilder<<#Args(i);#>, CheckResult> Check<<#Args(i);#>>(String Name)
         {
             return Rules.AddRule<<#Args(i);#>, CheckResult>(Name);
         }

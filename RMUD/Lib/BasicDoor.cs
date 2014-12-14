@@ -14,10 +14,10 @@ namespace RMUD
             this.Nouns.Add("OPEN", actor => Open);
             Open = false;
 
-            AddValueRule<MudObject, bool>("openable").Do(a => true);
-            AddValueRule<MudObject, bool>("is-open").Do(a => Open);
+            Value<MudObject, bool>("openable").Do(a => true);
+            Value<MudObject, bool>("is-open").Do(a => Open);
 
-            AddCheckRule<MudObject, MudObject>("can-open").Do((a, b) => 
+            Check<MudObject, MudObject>("can-open").Do((a, b) => 
                 {
                     if (Open)
                     {
@@ -27,7 +27,7 @@ namespace RMUD
                     return CheckResult.Allow;
                 });
 
-            AddCheckRule<MudObject, MudObject>("can-close").Do((a, b) =>
+            Check<MudObject, MudObject>("can-close").Do((a, b) =>
             {
                 if (!Open)
                 {
@@ -37,7 +37,7 @@ namespace RMUD
                 return CheckResult.Allow;
             });
             
-            AddPerformRule<MudObject, MudObject>("on-opened").Do((a, b) =>
+            Perform<MudObject, MudObject>("on-opened").Do((a, b) =>
             {
                 Open = true;
 
@@ -52,7 +52,7 @@ namespace RMUD
                 return PerformResult.Continue;
             });
 
-            AddPerformRule<MudObject, MudObject>("on-closed").Do((a, b) =>
+            Perform<MudObject, MudObject>("on-closed").Do((a, b) =>
             {
                 Open = false;
 

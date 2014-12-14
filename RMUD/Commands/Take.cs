@@ -34,9 +34,9 @@ namespace RMUD.Commands
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-take", "[Actor, Thing], Action rule to determine if a thing can be taken.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-taken", "[Actor, Thing], Action rule to handle taken event.");
 
-            GlobalRules.AddCheckRule<MudObject, MudObject>("can-take").Do((a, t) => CheckResult.Allow);
+            GlobalRules.Check<MudObject, MudObject>("can-take").Do((a, t) => CheckResult.Allow);
 
-            GlobalRules.AddPerformRule<MudObject, MudObject>("on-taken").Do((actor, target) =>
+            GlobalRules.Perform<MudObject, MudObject>("on-taken").Do((actor, target) =>
                 {
                     Mud.SendMessage(actor, "You take <a0>.", target);
                     Mud.SendExternalMessage(actor, "<a0> takes <a1>.", actor, target);

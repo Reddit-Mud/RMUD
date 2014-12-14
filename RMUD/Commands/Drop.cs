@@ -25,9 +25,9 @@ namespace RMUD.Commands
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-drop", "[Actor, Item] : Determine if the item can be dropped.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-dropped", "[Actor, Item] : Handle an item being dropped.");
 
-            GlobalRules.AddCheckRule<MudObject, MudObject>("can-drop").Do((a, b) => CheckResult.Allow).Name("Default can drop anything");
+            GlobalRules.Check<MudObject, MudObject>("can-drop").Do((a, b) => CheckResult.Allow).Name("Default can drop anything");
 
-            GlobalRules.AddPerformRule<MudObject, MudObject>("on-dropped").Do((actor, target) =>
+            GlobalRules.Perform<MudObject, MudObject>("on-dropped").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You drop <a0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> drops <a1>.", actor, target);

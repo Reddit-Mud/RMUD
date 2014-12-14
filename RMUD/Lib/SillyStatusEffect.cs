@@ -15,7 +15,7 @@ namespace RMUD
             Counter = 100;
             Mud.RegisterForHeartbeat(To);
 
-            To.AddValueRule<MudObject, MudObject, String, String>("actor-name").Do((viewer, actor, article) =>
+            To.Value<MudObject, MudObject, String, String>("actor-name").Do((viewer, actor, article) =>
                 {
                     return "silly " + (actor as Actor).Short;
                 }).Name("Silly name rule").ID("SILLYSTATUSEFFECT");

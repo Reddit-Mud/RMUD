@@ -26,15 +26,15 @@ namespace RMUD.Commands
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-wear", "Actor based rulebook to decide if the actor can wear something.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-donned", "Item based rulebook to handle the item being worn.");
 
-            GlobalRules.AddCheckRule<MudObject, MudObject>("can-be-worn").Do((a, b) =>
+            GlobalRules.Check<MudObject, MudObject>("can-be-worn").Do((a, b) =>
                 {
                     Mud.SendMessage(a, "That isn't something you can wear.");
                     return CheckResult.Disallow;
                 });
 
-            GlobalRules.AddCheckRule<MudObject, MudObject>("can-wear").Do((a, b) => CheckResult.Allow);
+            GlobalRules.Check<MudObject, MudObject>("can-wear").Do((a, b) => CheckResult.Allow);
 
-            GlobalRules.AddPerformRule<MudObject, MudObject>("on-donned").Do((actor, target) =>
+            GlobalRules.Perform<MudObject, MudObject>("on-donned").Do((actor, target) =>
                 {
                     Mud.SendMessage(actor, "You wear <the0>.", target);
                     Mud.SendExternalMessage(actor, "<a0> wears <a1>.", actor, target);

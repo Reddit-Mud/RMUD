@@ -15,7 +15,7 @@ namespace RMUD
 		{
 			Locked = true;
 
-            AddCheckRule<MudObject, MudObject, MudObject>("can-be-locked-with").Do((actor, door, key) =>
+            Check<MudObject, MudObject, MudObject>("can-be-locked-with").Do((actor, door, key) =>
                 {
                     if (Open) {
                         Mud.SendMessage(actor, "You'll have to close it first.");
@@ -31,25 +31,25 @@ namespace RMUD
                     return CheckResult.Allow;
                 });
 
-            AddPerformRule<MudObject, MudObject, MudObject>("on-locked-with").Do((a,b,c) =>
+            Perform<MudObject, MudObject, MudObject>("on-locked-with").Do((a,b,c) =>
                 {
                     Locked = true;
                     return PerformResult.Continue;
                 });
 
-             AddPerformRule<MudObject, MudObject, MudObject>("on-unlocked-with").Do((a,b,c) =>
+             Perform<MudObject, MudObject, MudObject>("on-unlocked-with").Do((a,b,c) =>
                 {
                     Locked = false;
                     return PerformResult.Continue;
                 });
 
-             AddCheckRule<MudObject, MudObject>("can-open").When((a, b) => Locked).Do((a, b) =>
+             Check<MudObject, MudObject>("can-open").When((a, b) => Locked).Do((a, b) =>
                  {
                      Mud.SendMessage(a, "It seems to be locked.");
                      return CheckResult.Disallow;
                  });
 
-             AddPerformRule<MudObject, MudObject>("on-closed").Do((a, b) => { Locked = false; return PerformResult.Continue; });
+             Perform<MudObject, MudObject>("on-closed").Do((a, b) => { Locked = false; return PerformResult.Continue; });
         }
         
 	}

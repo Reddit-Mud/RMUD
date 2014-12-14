@@ -29,7 +29,7 @@ public class Jupiter : RMUD.Scenery
         Long = "Jupiter holds in his left hand a gleaming thunderbolt. It glows bright enough to light the entire chamber. In his right, he holds a chisel.";
         //RMUD.Mud.RegisterForHeartbeat(this);
 
-        AddValueRule<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
+        Value<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
     }
 
     public override void Heartbeat(ulong HeartbeatID)
@@ -48,7 +48,7 @@ public class Table : RMUD.GenericContainer
 
         RMUD.MudObject.Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
 
-        AddCheckRule<RMUD.MudObject, RMUD.MudObject>("can-take").Do((actor, thing) =>
+        Check<RMUD.MudObject, RMUD.MudObject>("can-take").Do((actor, thing) =>
         {
             RMUD.Mud.SendMessage(actor, "It's far too heavy.");
             return RMUD.CheckResult.Disallow;

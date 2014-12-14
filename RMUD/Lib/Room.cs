@@ -16,7 +16,7 @@ namespace RMUD
         public void InitializeGlobalRules()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, LightingLevel>("emits-light", "[item] -> LightingLevel, How much light does the item emit?");
-            GlobalRules.AddValueRule<MudObject, LightingLevel>("emits-light").Do(item => LightingLevel.Dark);
+            GlobalRules.Value<MudObject, LightingLevel>("emits-light").Do(item => LightingLevel.Dark);
         }
     }
 

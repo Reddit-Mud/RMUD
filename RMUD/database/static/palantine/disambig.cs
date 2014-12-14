@@ -26,6 +26,6 @@ public class torch : RMUD.MudObject
         Short = "torch";
         Nouns.Add("torch");
 
-        AddValueRule<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
+        Value<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
     }
 }

@@ -21,17 +21,17 @@ namespace RMUD
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0)).Description = Description;
 		}
 				
-        public static RuleBuilder<T0, PerformResult> AddPerformRule<T0>(String Name)
+        public static RuleBuilder<T0, PerformResult> Perform<T0>(String Name)
         {
             return Rules.AddRule<T0, PerformResult>(Name);
         }
 		
-        public static RuleBuilder<T0, RT> AddValueRule<T0, RT>(String Name)
+        public static RuleBuilder<T0, RT> Value<T0, RT>(String Name)
         {
             return Rules.AddRule<T0, RT>(Name);
         }
 
-		public static RuleBuilder<T0, CheckResult> AddCheckRule<T0>(String Name)
+		public static RuleBuilder<T0, CheckResult> Check<T0>(String Name)
         {
             return Rules.AddRule<T0, CheckResult>(Name);
         }
@@ -51,17 +51,17 @@ namespace RMUD
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0), typeof(T1)).Description = Description;
 		}
 				
-        public static RuleBuilder<T0, T1, PerformResult> AddPerformRule<T0, T1>(String Name)
+        public static RuleBuilder<T0, T1, PerformResult> Perform<T0, T1>(String Name)
         {
             return Rules.AddRule<T0, T1, PerformResult>(Name);
         }
 		
-        public static RuleBuilder<T0, T1, RT> AddValueRule<T0, T1, RT>(String Name)
+        public static RuleBuilder<T0, T1, RT> Value<T0, T1, RT>(String Name)
         {
             return Rules.AddRule<T0, T1, RT>(Name);
         }
 
-		public static RuleBuilder<T0, T1, CheckResult> AddCheckRule<T0, T1>(String Name)
+		public static RuleBuilder<T0, T1, CheckResult> Check<T0, T1>(String Name)
         {
             return Rules.AddRule<T0, T1, CheckResult>(Name);
         }
@@ -81,17 +81,17 @@ namespace RMUD
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
 		}
 				
-        public static RuleBuilder<T0, T1, T2, PerformResult> AddPerformRule<T0, T1, T2>(String Name)
+        public static RuleBuilder<T0, T1, T2, PerformResult> Perform<T0, T1, T2>(String Name)
         {
             return Rules.AddRule<T0, T1, T2, PerformResult>(Name);
         }
 		
-        public static RuleBuilder<T0, T1, T2, RT> AddValueRule<T0, T1, T2, RT>(String Name)
+        public static RuleBuilder<T0, T1, T2, RT> Value<T0, T1, T2, RT>(String Name)
         {
             return Rules.AddRule<T0, T1, T2, RT>(Name);
         }
 
-		public static RuleBuilder<T0, T1, T2, CheckResult> AddCheckRule<T0, T1, T2>(String Name)
+		public static RuleBuilder<T0, T1, T2, CheckResult> Check<T0, T1, T2>(String Name)
         {
             return Rules.AddRule<T0, T1, T2, CheckResult>(Name);
         }
@@ -111,17 +111,17 @@ namespace RMUD
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).Description = Description;
 		}
 				
-        public static RuleBuilder<T0, T1, T2, T3, PerformResult> AddPerformRule<T0, T1, T2, T3>(String Name)
+        public static RuleBuilder<T0, T1, T2, T3, PerformResult> Perform<T0, T1, T2, T3>(String Name)
         {
             return Rules.AddRule<T0, T1, T2, T3, PerformResult>(Name);
         }
 		
-        public static RuleBuilder<T0, T1, T2, T3, RT> AddValueRule<T0, T1, T2, T3, RT>(String Name)
+        public static RuleBuilder<T0, T1, T2, T3, RT> Value<T0, T1, T2, T3, RT>(String Name)
         {
             return Rules.AddRule<T0, T1, T2, T3, RT>(Name);
         }
 
-		public static RuleBuilder<T0, T1, T2, T3, CheckResult> AddCheckRule<T0, T1, T2, T3>(String Name)
+		public static RuleBuilder<T0, T1, T2, T3, CheckResult> Check<T0, T1, T2, T3>(String Name)
         {
             return Rules.AddRule<T0, T1, T2, T3, CheckResult>(Name);
         }

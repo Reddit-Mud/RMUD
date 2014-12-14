@@ -5,7 +5,7 @@
         Short = "entrails";
         Nouns.Add("entrails");
 
-        AddPerformRule<RMUD.MudObject, RMUD.MudObject>("on-dropped").Do((actor, item) =>
+        Perform<RMUD.MudObject, RMUD.MudObject>("on-dropped").Do((actor, item) =>
             {
                 var wolf = RMUD.Mud.GetObject("palantine/wolf");
                 if (wolf.Location == actor.Location)

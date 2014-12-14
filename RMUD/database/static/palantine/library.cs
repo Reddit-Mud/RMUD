@@ -17,11 +17,11 @@ public class kuz_shelf : RMUD.MudObject
         Long = "There are so many books, and they all look so interesting and inviting. You could just go right ahead and take one.";
         Nouns.Add("BOOK", "BOOKS", "SHELF", "DUSTY");
 
-        AddValueRule<RMUD.MudObject, RMUD.MudObject, string>("locale-description").Do((actor, item) => "A massive book shelf looms in the center of the room.");
+        Value<RMUD.MudObject, RMUD.MudObject, string>("locale-description").Do((actor, item) => "A massive book shelf looms in the center of the room.");
 
-        AddCheckRule<RMUD.MudObject, RMUD.MudObject>("can-take").Do((a, b) => RMUD.CheckResult.Allow);
+        Check<RMUD.MudObject, RMUD.MudObject>("can-take").Do((a, b) => RMUD.CheckResult.Allow);
 
-        AddPerformRule<RMUD.MudObject, RMUD.MudObject>("on-taken").Do((actor, target) =>
+        Perform<RMUD.MudObject, RMUD.MudObject>("on-taken").Do((actor, target) =>
             {
                 var newBook = new kuz_book();
                 RMUD.MudObject.Move(newBook, actor);

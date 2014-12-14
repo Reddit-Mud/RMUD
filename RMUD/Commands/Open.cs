@@ -33,16 +33,16 @@ namespace RMUD.Commands
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-opened", "Item based rulebook to handle the item being opened.");
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("is-open", "[Item -> bool] Is the item open?");
 
-            GlobalRules.AddCheckRule<MudObject, MudObject>("can-open").Do((a, b) =>
+            GlobalRules.Check<MudObject, MudObject>("can-open").Do((a, b) =>
             {
                 Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");
                 return CheckResult.Disallow;
             });
 
-            GlobalRules.AddValueRule<MudObject, bool>("is-open").Do(a => false);
-            GlobalRules.AddValueRule<MudObject, bool>("openable").Do(a => false);
+            GlobalRules.Value<MudObject, bool>("is-open").Do(a => false);
+            GlobalRules.Value<MudObject, bool>("openable").Do(a => false);
 
-            GlobalRules.AddPerformRule<MudObject, MudObject>("on-opened").Do((actor, target) =>
+            GlobalRules.Perform<MudObject, MudObject>("on-opened").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You open <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> opens <a1>.", actor, target);

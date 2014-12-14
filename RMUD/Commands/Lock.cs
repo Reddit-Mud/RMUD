@@ -30,13 +30,13 @@ namespace RMUD.Commands
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject>("can-be-locked-with", "Item based rulebook to decide wether the item can be locked using another item.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("on-locked-with", "Item based rulebook to handle the item being locked with something.");
 
-            GlobalRules.AddCheckRule<MudObject, MudObject, MudObject>("can-be-locked-with").Do((a, b, c) =>
+            GlobalRules.Check<MudObject, MudObject, MudObject>("can-be-locked-with").Do((a, b, c) =>
             {
                 Mud.SendMessage(a, "I don't think the concept of 'locked' applies to that.");
                 return CheckResult.Disallow;
             });
 
-            GlobalRules.AddPerformRule<MudObject, MudObject, MudObject>("on-locked-with").Do((actor, target, key) =>
+            GlobalRules.Perform<MudObject, MudObject, MudObject>("on-locked-with").Do((actor, target, key) =>
             {
                 Mud.SendMessage(actor, "You lock <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> locks <a1> with <a2>.", actor, target, key);

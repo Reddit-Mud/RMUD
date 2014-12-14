@@ -29,7 +29,7 @@ namespace RMUD.Commands
         {
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("on-unlocked-with", "Item based rulebook to handle the item being unlocked with something.");
 
-            GlobalRules.AddPerformRule<MudObject, MudObject, MudObject>("on-unlocked-with").Do((actor, target, key) =>
+            GlobalRules.Perform<MudObject, MudObject, MudObject>("on-unlocked-with").Do((actor, target, key) =>
             {
                 Mud.SendMessage(actor, "You unlock <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> unlocks <a1> with <a2>.", actor, target, key);

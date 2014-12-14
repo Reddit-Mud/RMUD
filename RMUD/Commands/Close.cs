@@ -30,13 +30,13 @@ namespace RMUD.Commands
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-close", "[Actor, Item] - determine if the item can be closed.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-closed", "Item based rulebook to handle the item being closed.");
 
-            GlobalRules.AddCheckRule<MudObject, MudObject>("can-close").Do((a, b) =>
+            GlobalRules.Check<MudObject, MudObject>("can-close").Do((a, b) =>
             {
                 Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");
                 return CheckResult.Disallow;
             }).Name("Default can't close unopenable things rule.");
 
-            GlobalRules.AddPerformRule<MudObject, MudObject>("on-closed").Do((actor, target) =>
+            GlobalRules.Perform<MudObject, MudObject>("on-closed").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You close <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> closes <a1>.", actor, target);
