@@ -13,7 +13,7 @@ namespace RMUD
 {
 	public static partial class GlobalRules
 	{	
-<#for (var i = 1; i < 5; ++i){#>
+<#for (var i = 1; i < ac; ++i){#>
 		public static void DeclarePerformRuleBook<<#Args(i);#>>(String Name, String Description)
 		{
 			Rules.FindOrCreateRuleBook<PerformResult>(Name, <#TypeOfs(i);#>).Description = Description;

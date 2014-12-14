@@ -15,18 +15,19 @@ namespace RMUD
     {
         public void InitializeGlobalRules()
         {
-            GlobalRules.Check<MudObject, MudObject>("can-take").When((actor, thing) => thing is Actor).Do((actor, thing) =>
+            GlobalRules.Check<MudObject, MudObject>("can-take").First.When((actor, thing) => thing is Actor).Do((actor, thing) =>
             {
                 Mud.SendMessage(actor, "You can't take people.");
                 return CheckResult.Disallow;
             });
 
             GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String, String>("actor-name", "[Viewer, Actor -> String] : Find the name that should be displayed for an actor.");
-
+            
             GlobalRules.Value<MudObject, MudObject, String, String>("actor-name")
-                .Do((viewer, actor, article) => article + " " + (actor as Actor).DescriptiveName)
-                .Name("Default name for unintroduced actor.");
-
+                .When((viewer, actor, article) => !(viewer is Actor) || !(actor is Actor))
+                .Do((viewer, actor, article) => article + " " + actor.Short)
+                .Name("Name of non-actor.");
+            
             GlobalRules.Value<MudObject, MudObject, String, String>("actor-name")
                 .When((viewer, actor, article) =>
                 Introduction.ActorKnowsActor(viewer as Actor, actor as Actor))
@@ -34,10 +35,8 @@ namespace RMUD
                 .Name("Name of introduced actor.");
 
             GlobalRules.Value<MudObject, MudObject, String, String>("actor-name")
-                .When((viewer, actor, article) =>
-                !(viewer is Actor) || !(actor is Actor))
-                .Do((viewer, actor, article) => article + " " + actor.Short)
-                .Name("Name of non-actor.");
+                .Do((viewer, actor, article) => article + " " + (actor as Actor).DescriptiveName)
+                .Name("Default name for unintroduced actor.");
         }
     }
 

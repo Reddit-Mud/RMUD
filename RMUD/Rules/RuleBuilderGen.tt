@@ -39,6 +39,18 @@ namespace RMUD
             Rule.ID = ID;
             return this;
         }
+
+		public RuleBuilder<<#Args(i);#>, TR> First {
+		get {
+			Rule.Priority = RulePriority.First;
+			return this;
+		}}
+
+		public RuleBuilder<<#Args(i);#>, TR> Last {
+		get {
+			Rule.Priority = RulePriority.Last;
+			return this;
+		}}
     }
 
 <#}#>

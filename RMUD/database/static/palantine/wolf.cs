@@ -20,6 +20,8 @@
                 RMUD.MudObject.Move(entrails, null);
                 return RMUD.PerformResult.Stop;
             });
+
+        Value<RMUD.MudObject, RMUD.MudObject, string, string>("actor-name").First.Do((viewer, item, article) => article + " wolf");
     }
 
     public override void Heartbeat(ulong HeartbeatID)

@@ -31,6 +31,18 @@ namespace RMUD
             Rule.ID = ID;
             return this;
         }
+
+		public RuleBuilder<T0, TR> First {
+		get {
+			Rule.Priority = RulePriority.First;
+			return this;
+		}}
+
+		public RuleBuilder<T0, TR> Last {
+		get {
+			Rule.Priority = RulePriority.Last;
+			return this;
+		}}
     }
 
 	public class RuleBuilder<T0, T1, TR>
@@ -60,6 +72,18 @@ namespace RMUD
             Rule.ID = ID;
             return this;
         }
+
+		public RuleBuilder<T0, T1, TR> First {
+		get {
+			Rule.Priority = RulePriority.First;
+			return this;
+		}}
+
+		public RuleBuilder<T0, T1, TR> Last {
+		get {
+			Rule.Priority = RulePriority.Last;
+			return this;
+		}}
     }
 
 	public class RuleBuilder<T0, T1, T2, TR>
@@ -89,6 +113,18 @@ namespace RMUD
             Rule.ID = ID;
             return this;
         }
+
+		public RuleBuilder<T0, T1, T2, TR> First {
+		get {
+			Rule.Priority = RulePriority.First;
+			return this;
+		}}
+
+		public RuleBuilder<T0, T1, T2, TR> Last {
+		get {
+			Rule.Priority = RulePriority.Last;
+			return this;
+		}}
     }
 
 	public class RuleBuilder<T0, T1, T2, T3, TR>
@@ -118,6 +154,18 @@ namespace RMUD
             Rule.ID = ID;
             return this;
         }
+
+		public RuleBuilder<T0, T1, T2, T3, TR> First {
+		get {
+			Rule.Priority = RulePriority.First;
+			return this;
+		}}
+
+		public RuleBuilder<T0, T1, T2, T3, TR> Last {
+		get {
+			Rule.Priority = RulePriority.Last;
+			return this;
+		}}
     }
 
 }

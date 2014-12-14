@@ -24,6 +24,21 @@ namespace RMUD
         }
 
         public virtual void AddRule(Rule Rule) { throw new NotImplementedException(); }
+        
+        protected void _addRule(Rule Rule)
+        {
+            if (Rule.Priority == RulePriority.First)
+                Rules.Insert(0, Rule);
+            else if (Rule.Priority == RulePriority.Last)
+                Rules.Add(Rule);
+            else
+            {
+                var index = Rules.FindIndex(r => r.Priority == RulePriority.Last);
+                if (index < 0) index = Rules.Count;
+                Rules.Insert(index, Rule);
+            }
+        }
+
         public virtual void DeleteRule(String ID) { throw new NotImplementedException(); }
     }
 
@@ -56,7 +71,7 @@ namespace RMUD
         public override void AddRule(Rule Rule)
         {
             if (!(Rule is Rule<CheckResult>)) throw new InvalidOperationException();
-            Rules.Insert(0, Rule);
+            _addRule(Rule);
         }
 
         public override void DeleteRule(string ID)
@@ -95,7 +110,7 @@ namespace RMUD
         public override void AddRule(Rule Rule)
         {
             if (!(Rule is Rule<PerformResult>)) throw new InvalidOperationException();
-            Rules.Insert(0, Rule as Rule<PerformResult>);
+            _addRule(Rule);
         }
 
         public override void DeleteRule(string ID)
@@ -131,7 +146,7 @@ namespace RMUD
         public override void AddRule(Rule Rule)
         {
             if (!(Rule is Rule<RT>)) throw new InvalidOperationException();
-            Rules.Insert(0, Rule as Rule<RT>);
+            _addRule(Rule);
         }
 
         public override void DeleteRule(string ID)
