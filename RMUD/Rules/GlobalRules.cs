@@ -28,11 +28,11 @@ namespace RMUD
             return book.CheckArgumentTypes(ResultType, ArgumentTypes);
         }
 
-        public static RuleResult ConsiderActionRule(String Name, MudObject Object, params Object[] Arguments)
+        public static PerformResult ConsiderPerformRule(String Name, MudObject Object, params Object[] Arguments)
         {
-            var r = RuleResult.Continue;
+            var r = PerformResult.Continue;
             if (Object.Rules != null) r = Object.Rules.ConsiderActionRule(Name, Arguments);
-            if (r == RuleResult.Continue)
+            if (r == PerformResult.Continue)
             {
                 if (Rules == null) InitializeGlobalRuleBooks();
                 return Rules.ConsiderActionRule(Name, Arguments);
@@ -40,11 +40,11 @@ namespace RMUD
             return r;
         }
 
-        public static CheckRuleResult ConsiderCheckRule(String Name, MudObject Object, params Object[] Arguments)
+        public static CheckResult ConsiderCheckRule(String Name, MudObject Object, params Object[] Arguments)
         {
-            var r = CheckRuleResult.Continue;
+            var r = CheckResult.Continue;
             if (Object.Rules != null) r = Object.Rules.ConsiderCheckRule(Name, Arguments);
-            if (r == CheckRuleResult.Continue)
+            if (r == CheckResult.Continue)
             {
                 if (Rules == null) InitializeGlobalRuleBooks();
                 return Rules.ConsiderCheckRule(Name, Arguments);
@@ -65,22 +65,7 @@ namespace RMUD
             return r;
         }
 
-        public static RuleResult ConsiderActionRuleSilently(String Name, MudObject Object, params Object[] Arguments)
-        {
-            try
-            {
-                Mud.SilentFlag = true;
-                var r = ConsiderActionRule(Name, Object, Arguments);
-                Mud.SilentFlag = false;
-                return r;
-            }
-            finally
-            {
-                Mud.SilentFlag = false;
-            }
-        }
-
-        public static CheckRuleResult ConsiderCheckRuleSilently(String Name, MudObject Object, params Object[] Arguments)
+        public static CheckResult ConsiderCheckRuleSilently(String Name, MudObject Object, params Object[] Arguments)
         {
             try
             {

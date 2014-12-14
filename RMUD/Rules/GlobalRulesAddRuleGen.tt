@@ -14,9 +14,9 @@ namespace RMUD
 	public static partial class GlobalRules
 	{	
 <#for (var i = 1; i < 5; ++i){#>
-		public static void DeclareActionRuleBook<<#Args(i);#>>(String Name, String Description)
+		public static void DeclarePerformRuleBook<<#Args(i);#>>(String Name, String Description)
 		{
-			Rules.FindOrCreateRuleBook<RuleResult>(Name, <#TypeOfs(i);#>).Description = Description;
+			Rules.FindOrCreateRuleBook<PerformResult>(Name, <#TypeOfs(i);#>).Description = Description;
 		}
 		
 		public static void DeclareValueRuleBook<<#Args(i);#>, RT>(String Name, String Description)
@@ -26,12 +26,12 @@ namespace RMUD
 
 		public static void DeclareCheckRuleBook<<#Args(i);#>>(String Name, String Description)
 		{
-			Rules.FindOrCreateRuleBook<CheckRuleResult>(Name, <#TypeOfs(i);#>).Description = Description;
+			Rules.FindOrCreateRuleBook<CheckResult>(Name, <#TypeOfs(i);#>).Description = Description;
 		}
 				
-        public static RuleBuilder<<#Args(i);#>, RuleResult> AddActionRule<<#Args(i);#>>(String Name)
+        public static RuleBuilder<<#Args(i);#>, PerformResult> AddPerformRule<<#Args(i);#>>(String Name)
         {
-            return Rules.AddRule<<#Args(i);#>, RuleResult>(Name);
+            return Rules.AddRule<<#Args(i);#>, PerformResult>(Name);
         }
 		
         public static RuleBuilder<<#Args(i);#>, RT> AddValueRule<<#Args(i);#>, RT>(String Name)
@@ -39,9 +39,9 @@ namespace RMUD
             return Rules.AddRule<<#Args(i);#>, RT>(Name);
         }
 
-		public static RuleBuilder<<#Args(i);#>, CheckRuleResult> AddCheckRule<<#Args(i);#>>(String Name)
+		public static RuleBuilder<<#Args(i);#>, CheckResult> AddCheckRule<<#Args(i);#>>(String Name)
         {
-            return Rules.AddRule<<#Args(i);#>, CheckRuleResult>(Name);
+            return Rules.AddRule<<#Args(i);#>, CheckResult>(Name);
         }
 
 <#}#>

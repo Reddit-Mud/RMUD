@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public enum RuleResult
+    public enum PerformResult
     {
         Allow = 0,
         Default = 1,
@@ -14,7 +14,7 @@ namespace RMUD
         Disallow = 2,
     }
 
-    public enum CheckRuleResult
+    public enum CheckResult
     {
         Allow = 0,
         Continue = 1,

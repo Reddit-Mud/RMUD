@@ -48,10 +48,10 @@ public class Table : RMUD.GenericContainer
 
         RMUD.MudObject.Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
 
-        AddActionRule<RMUD.MudObject, RMUD.MudObject>("can-take").Do((actor, thing) =>
+        AddCheckRule<RMUD.MudObject, RMUD.MudObject>("can-take").Do((actor, thing) =>
         {
             RMUD.Mud.SendMessage(actor, "It's far too heavy.");
-            return RMUD.RuleResult.Disallow;
+            return RMUD.CheckResult.Disallow;
         });
     }
 

@@ -27,20 +27,20 @@ namespace RMUD.Commands
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject, MudObject>("can-be-locked-with", "Item based rulebook to decide wether the item can be locked using another item.");
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject, MudObject>("on-locked-with", "Item based rulebook to handle the item being locked with something.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject>("can-be-locked-with", "Item based rulebook to decide wether the item can be locked using another item.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("on-locked-with", "Item based rulebook to handle the item being locked with something.");
 
-            GlobalRules.AddActionRule<MudObject, MudObject, MudObject>("can-be-locked-with").Do((a, b, c) =>
+            GlobalRules.AddCheckRule<MudObject, MudObject, MudObject>("can-be-locked-with").Do((a, b, c) =>
             {
                 Mud.SendMessage(a, "I don't think the concept of 'locked' applies to that.");
-                return RuleResult.Disallow;
+                return CheckResult.Disallow;
             });
 
-            GlobalRules.AddActionRule<MudObject, MudObject, MudObject>("on-locked-with").Do((actor, target, key) =>
+            GlobalRules.AddPerformRule<MudObject, MudObject, MudObject>("on-locked-with").Do((actor, target, key) =>
             {
                 Mud.SendMessage(actor, "You lock <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> locks <a1> with <a2>.", actor, target, key);
-                return RuleResult.Continue;
+                return PerformResult.Continue;
             });
         }
     }
@@ -66,8 +66,8 @@ namespace RMUD.Commands
 				return;
 			}
 
-            if (GlobalRules.ConsiderActionRule("can-be-locked-with", target, Actor, target, key) == RuleResult.Allow)
-                GlobalRules.ConsiderActionRule("on-locked-with", target, Actor, target, key);
+            if (GlobalRules.ConsiderCheckRule("can-be-locked-with", target, Actor, target, key) == CheckResult.Allow)
+                GlobalRules.ConsiderPerformRule("on-locked-with", target, Actor, target, key);
 		}
 	}
 }

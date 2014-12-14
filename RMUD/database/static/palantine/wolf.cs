@@ -13,12 +13,12 @@
 
         RMUD.Mud.RegisterForHeartbeat(this);
 
-        AddActionRule<RMUD.MudObject>("handle-entrail-drop").Do(entrails =>
+        AddPerformRule<RMUD.MudObject>("handle-entrail-drop").Do(entrails =>
             {
                 RMUD.Mud.SendLocaleMessage(this, "The wolf snatches up the entrails.");
                 IsFed = true;
                 RMUD.MudObject.Move(entrails, null);
-                return RMUD.RuleResult.Stop;
+                return RMUD.PerformResult.Stop;
             });
     }
 

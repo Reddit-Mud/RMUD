@@ -19,16 +19,16 @@ public class kuz_shelf : RMUD.MudObject
 
         AddValueRule<RMUD.MudObject, RMUD.MudObject, string>("locale-description").Do((actor, item) => "A massive book shelf looms in the center of the room.");
 
-        AddActionRule<RMUD.MudObject, RMUD.MudObject>("can-take").Do((a, b) => RMUD.RuleResult.Allow);
+        AddCheckRule<RMUD.MudObject, RMUD.MudObject>("can-take").Do((a, b) => RMUD.CheckResult.Allow);
 
-        AddActionRule<RMUD.MudObject, RMUD.MudObject>("on-taken").Do((actor, target) =>
+        AddPerformRule<RMUD.MudObject, RMUD.MudObject>("on-taken").Do((actor, target) =>
             {
                 var newBook = new kuz_book();
                 RMUD.MudObject.Move(newBook, actor);
 
                 RMUD.Mud.SendMessage(actor, "You take <a0>.", newBook);
                 RMUD.Mud.SendExternalMessage(actor, "<a0> takes <a1>.", actor, newBook);
-                return RMUD.RuleResult.Stop;
+                return RMUD.PerformResult.Stop;
             });
     }
 }

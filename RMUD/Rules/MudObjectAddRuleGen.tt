@@ -14,10 +14,10 @@ namespace RMUD
 	public partial class MudObject
 	{	
 <#for (var i = 1; i < 5; ++i){#>
-		public RuleBuilder<<#Args(i);#>, RuleResult> AddActionRule<<#Args(i);#>>(String Name)
+		public RuleBuilder<<#Args(i);#>, PerformResult> AddPerformRule<<#Args(i);#>>(String Name)
 		{
 			if (Rules == null) Rules = new RuleSet();
-			return Rules.AddRule<<#Args(i);#>, RuleResult>(Name);
+			return Rules.AddRule<<#Args(i);#>, PerformResult>(Name);
 		}
 
 		public RuleBuilder<<#Args(i);#>, RT> AddValueRule<<#Args(i);#>, RT>(String Name)
@@ -26,10 +26,10 @@ namespace RMUD
 			return Rules.AddRule<<#Args(i);#>, RT>(Name);
 		}
 
-		public RuleBuilder<<#Args(i);#>, CheckRuleResult> AddCheckRule<<#Args(i);#>>(String Name)
+		public RuleBuilder<<#Args(i);#>, CheckResult> AddCheckRule<<#Args(i);#>>(String Name)
 		{
 			if (Rules == null) Rules = new RuleSet();
-			return Rules.AddRule<<#Args(i);#>, CheckRuleResult>(Name);
+			return Rules.AddRule<<#Args(i);#>, CheckResult>(Name);
 		}
 <#}#>
 	}

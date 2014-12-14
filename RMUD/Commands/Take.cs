@@ -19,7 +19,7 @@ namespace RMUD.Commands
                             (actor, MudObject) => {
                                 if (actor.Contains(MudObject, RelativeLocations.Held)) return MatchPreference.VeryUnlikely;
                                 //Prefer MudObjects that can actually be taken
-                                if (GlobalRules.ConsiderActionRuleSilently("can-take", MudObject, actor, MudObject) != RuleResult.Allow)
+                                if (GlobalRules.ConsiderCheckRuleSilently("can-take", MudObject, actor, MudObject) != CheckResult.Allow)
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             }),
@@ -31,17 +31,17 @@ namespace RMUD.Commands
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-take", "[Actor, Thing], Action rule to determine if a thing can be taken.");
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("on-taken", "[Actor, Thing], Action rule to handle taken event.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-take", "[Actor, Thing], Action rule to determine if a thing can be taken.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-taken", "[Actor, Thing], Action rule to handle taken event.");
 
-            GlobalRules.AddActionRule<MudObject, MudObject>("can-take").Do((a, t) => RuleResult.Allow);
+            GlobalRules.AddCheckRule<MudObject, MudObject>("can-take").Do((a, t) => CheckResult.Allow);
 
-            GlobalRules.AddActionRule<MudObject, MudObject>("on-taken").Do((actor, target) =>
+            GlobalRules.AddPerformRule<MudObject, MudObject>("on-taken").Do((actor, target) =>
                 {
                     Mud.SendMessage(actor, "You take <a0>.", target);
                     Mud.SendExternalMessage(actor, "<a0> takes <a1>.", actor, target);
                     MudObject.Move(target, actor);
-                    return RuleResult.Continue;
+                    return PerformResult.Continue;
                 });
         }
     }
@@ -65,8 +65,8 @@ namespace RMUD.Commands
                 return;
             }
 
-            if (GlobalRules.ConsiderActionRule("can-take", target, Actor, target) == RuleResult.Allow)
-                GlobalRules.ConsiderActionRule("on-taken", target, Actor, target);
+            if (GlobalRules.ConsiderCheckRule("can-take", target, Actor, target) == CheckResult.Allow)
+                GlobalRules.ConsiderPerformRule("on-taken", target, Actor, target);
 
             Mud.MarkLocaleForUpdate(target);
         }

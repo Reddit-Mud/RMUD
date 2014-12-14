@@ -22,17 +22,17 @@ namespace RMUD.Commands
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-drop", "[Actor, Item] : Determine if the item can be dropped.");
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("on-dropped", "[Actor, Item] : Handle an item being dropped.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-drop", "[Actor, Item] : Determine if the item can be dropped.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-dropped", "[Actor, Item] : Handle an item being dropped.");
 
-            GlobalRules.AddActionRule<MudObject, MudObject>("can-drop").Do((a, b) => RuleResult.Allow).Name("Default can drop anything");
+            GlobalRules.AddCheckRule<MudObject, MudObject>("can-drop").Do((a, b) => CheckResult.Allow).Name("Default can drop anything");
 
-            GlobalRules.AddActionRule<MudObject, MudObject>("on-dropped").Do((actor, target) =>
+            GlobalRules.AddPerformRule<MudObject, MudObject>("on-dropped").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You drop <a0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> drops <a1>.", actor, target);
                 MudObject.Move(target, actor.Location);
-                return RuleResult.Continue;
+                return PerformResult.Continue;
             }).Name("Default drop handler");
         }
     }
@@ -49,8 +49,8 @@ namespace RMUD.Commands
                 return;
             }
 
-            if (GlobalRules.ConsiderActionRule("can-drop", target, Actor, target) == RuleResult.Allow)
-                GlobalRules.ConsiderActionRule("on-dropped", target, Actor, target);
+            if (GlobalRules.ConsiderCheckRule("can-drop", target, Actor, target) == CheckResult.Allow)
+                GlobalRules.ConsiderPerformRule("on-dropped", target, Actor, target);
 
             Mud.MarkLocaleForUpdate(target);
         }

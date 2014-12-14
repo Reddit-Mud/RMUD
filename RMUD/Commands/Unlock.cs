@@ -27,13 +27,13 @@ namespace RMUD.Commands
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject, MudObject>("on-unlocked-with", "Item based rulebook to handle the item being unlocked with something.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("on-unlocked-with", "Item based rulebook to handle the item being unlocked with something.");
 
-            GlobalRules.AddActionRule<MudObject, MudObject, MudObject>("on-unlocked-with").Do((actor, target, key) =>
+            GlobalRules.AddPerformRule<MudObject, MudObject, MudObject>("on-unlocked-with").Do((actor, target, key) =>
             {
                 Mud.SendMessage(actor, "You unlock <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> unlocks <a1> with <a2>.", actor, target, key);
-                return RuleResult.Continue;
+                return PerformResult.Continue;
             });
         }
     }
@@ -59,8 +59,8 @@ namespace RMUD.Commands
                 return;
             }
 
-            if (GlobalRules.ConsiderActionRule("can-be-locked-with", target, Actor, target, key) == RuleResult.Allow)
-                GlobalRules.ConsiderActionRule("on-unlocked-with", target, Actor, target, key);
+            if (GlobalRules.ConsiderCheckRule("can-be-locked-with", target, Actor, target, key) == CheckResult.Allow)
+                GlobalRules.ConsiderPerformRule("on-unlocked-with", target, Actor, target, key);
         }
     }
 }

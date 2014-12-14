@@ -9,10 +9,10 @@ namespace RMUD
     {
         public void InitializeGlobalRules()
         {
-            GlobalRules.AddActionRule<MudObject, MudObject>("can-take").When((actor, thing) => thing is Portal).Do((actor, thing) =>
+            GlobalRules.AddCheckRule<MudObject, MudObject>("can-take").When((actor, thing) => thing is Portal).Do((actor, thing) =>
             {
                 Mud.SendMessage(actor, "Portals cannot be taken.");
-                return RuleResult.Disallow;
+                return CheckResult.Disallow;
             });
         }
     }

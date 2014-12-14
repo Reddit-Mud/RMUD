@@ -15,10 +15,10 @@ namespace RMUD
     {
         public void InitializeGlobalRules()
         {
-            GlobalRules.AddActionRule<MudObject, MudObject>("can-take").When((actor, thing) => thing is Actor).Do((actor, thing) =>
+            GlobalRules.AddCheckRule<MudObject, MudObject>("can-take").When((actor, thing) => thing is Actor).Do((actor, thing) =>
             {
                 Mud.SendMessage(actor, "You can't take people.");
-                return RuleResult.Disallow;
+                return CheckResult.Disallow;
             });
 
             GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String, String>("actor-name", "[Viewer, Actor -> String] : Find the name that should be displayed for an actor.");

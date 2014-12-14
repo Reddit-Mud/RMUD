@@ -5,15 +5,15 @@
         Short = "entrails";
         Nouns.Add("entrails");
 
-        AddActionRule<RMUD.MudObject, RMUD.MudObject>("on-dropped").Do((actor, item) =>
+        AddPerformRule<RMUD.MudObject, RMUD.MudObject>("on-dropped").Do((actor, item) =>
             {
                 var wolf = RMUD.Mud.GetObject("palantine/wolf");
                 if (wolf.Location == actor.Location)
                 {
-                    RMUD.GlobalRules.ConsiderActionRule("handle-entrail-drop", wolf, this);
-                    return RMUD.RuleResult.Stop;
+                    RMUD.GlobalRules.ConsiderPerformRule("handle-entrail-drop", wolf, this);
+                    return RMUD.PerformResult.Stop;
                 }
-                return RMUD.RuleResult.Continue;
+                return RMUD.PerformResult.Continue;
             });
     }
 }

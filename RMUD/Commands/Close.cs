@@ -16,7 +16,7 @@ namespace RMUD.Commands
 		    			new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                             (actor, openable) =>
                             {
-                                if (GlobalRules.ConsiderActionRuleSilently("can-close", openable, actor, openable) == RuleResult.Allow) return MatchPreference.Likely;
+                                if (GlobalRules.ConsiderCheckRuleSilently("can-close", openable, actor, openable) == CheckResult.Allow) return MatchPreference.Likely;
                                 return MatchPreference.Unlikely;
                             }),
                         "I don't see that here.")),
@@ -27,20 +27,20 @@ namespace RMUD.Commands
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-close", "[Actor, Item] - determine if the item can be closed.");
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("on-closed", "Item based rulebook to handle the item being closed.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-close", "[Actor, Item] - determine if the item can be closed.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-closed", "Item based rulebook to handle the item being closed.");
 
-            GlobalRules.AddActionRule<MudObject, MudObject>("can-close").Do((a, b) =>
+            GlobalRules.AddCheckRule<MudObject, MudObject>("can-close").Do((a, b) =>
             {
                 Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");
-                return RuleResult.Disallow;
+                return CheckResult.Disallow;
             }).Name("Default can't close unopenable things rule.");
 
-            GlobalRules.AddActionRule<MudObject, MudObject>("on-closed").Do((actor, target) =>
+            GlobalRules.AddPerformRule<MudObject, MudObject>("on-closed").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You close <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> closes <a1>.", actor, target);
-                return RuleResult.Continue;
+                return PerformResult.Continue;
             }).Name("Default close reporting rule.");
         }
     }
@@ -58,8 +58,8 @@ namespace RMUD.Commands
                 return;
             }
 
-            if (GlobalRules.ConsiderActionRule("can-close", target, Actor, target) == RuleResult.Allow)
-                GlobalRules.ConsiderActionRule("on-closed", target, Actor, target);
+            if (GlobalRules.ConsiderCheckRule("can-close", target, Actor, target) == CheckResult.Allow)
+                GlobalRules.ConsiderPerformRule("on-closed", target, Actor, target);
         }
 	}
 

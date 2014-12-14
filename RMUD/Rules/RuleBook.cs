@@ -31,14 +31,14 @@ namespace RMUD
     {
         public CheckRuleBook()
         {
-            ResultType = typeof(CheckRuleResult);
+            ResultType = typeof(CheckResult);
         }
 
-        public CheckRuleResult Consider(params Object[] Args)
+        public CheckResult Consider(params Object[] Args)
         {
             foreach (var _rule in Rules)
             {
-                var rule = _rule as Rule<CheckRuleResult>;
+                var rule = _rule as Rule<CheckResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
                     if (GlobalRules.LogTo != null)
@@ -46,16 +46,16 @@ namespace RMUD
                         GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
                     }
 
-                    var r = rule.BodyClause == null ? CheckRuleResult.Continue : rule.BodyClause.Invoke(Args);
-                    if (r != CheckRuleResult.Continue) return r;
+                    var r = rule.BodyClause == null ? CheckResult.Continue : rule.BodyClause.Invoke(Args);
+                    if (r != CheckResult.Continue) return r;
                 }
             }
-            return CheckRuleResult.Continue;
+            return CheckResult.Continue;
         }
 
         public override void AddRule(Rule Rule)
         {
-            if (!(Rule is Rule<CheckRuleResult>)) throw new InvalidOperationException();
+            if (!(Rule is Rule<CheckResult>)) throw new InvalidOperationException();
             Rules.Insert(0, Rule);
         }
 
@@ -70,14 +70,14 @@ namespace RMUD
     {
         public ActionRuleBook()
         {
-            ResultType = typeof(RuleResult);
+            ResultType = typeof(PerformResult);
         }
 
-        public RuleResult Consider(params Object[] Args)
+        public PerformResult Consider(params Object[] Args)
         {
             foreach (var _rule in Rules)
             {
-                var rule = _rule as Rule<RuleResult>;
+                var rule = _rule as Rule<PerformResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
                     if (GlobalRules.LogTo != null)
@@ -85,17 +85,17 @@ namespace RMUD
                         GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
                     }
 
-                    var r = rule.BodyClause == null ? RuleResult.Default : rule.BodyClause.Invoke(Args);
-                    if (r != RuleResult.Continue) return r;
+                    var r = rule.BodyClause == null ? PerformResult.Default : rule.BodyClause.Invoke(Args);
+                    if (r != PerformResult.Continue) return r;
                 }
             }
-            return RuleResult.Default;
+            return PerformResult.Default;
         }
 
         public override void AddRule(Rule Rule)
         {
-            if (!(Rule is Rule<RuleResult>)) throw new InvalidOperationException();
-            Rules.Insert(0, Rule as Rule<RuleResult>);
+            if (!(Rule is Rule<PerformResult>)) throw new InvalidOperationException();
+            Rules.Insert(0, Rule as Rule<PerformResult>);
         }
 
         public override void DeleteRule(string ID)
