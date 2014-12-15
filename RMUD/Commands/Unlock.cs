@@ -12,17 +12,19 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 new Sequence(
                     new KeyWord("UNLOCK", false),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("SUBJECT", new InScopeObjectSource()),
-                        "I couldn't figure out what you're trying to unlock."),
+                    new ScoreGate(
+                        new FailIfNoMatches(
+                            new ObjectMatcher("SUBJECT", new InScopeObjectSource()),
+                            "I couldn't figure out what you're trying to unlock."),
+                        "SUBJECT"),
                     new KeyWord("WITH", true),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
-                        "I couldn't figure out what you're trying to unlock that with.")),
+                    new ScoreGate(
+                        new FailIfNoMatches(
+                            new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
+                            "I couldn't figure out what you're trying to unlock that with."),
+                        "OBJECT")),
                 new UnlockProcessor(),
-                "Unlock something with something.",
-                "SUBJECT-SCORE",
-                "OBJECT-SCORE");
+                "Unlock something with something.");
         }
 
         public void InitializeGlobalRules()

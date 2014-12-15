@@ -12,18 +12,19 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 new Sequence(
                     new KeyWord("OPEN", false),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
-                             (actor, openable) =>
-                             {
-                                 if (GlobalRules.ConsiderCheckRuleSilently("can-be-opened", openable, actor, openable) == CheckResult.Allow)
-                                     return MatchPreference.Likely;
-                                 return MatchPreference.Unlikely;
-                             }),
-                        "I don't see that here.")),
+                    new ScoreGate(
+                        new FailIfNoMatches(
+                            new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
+                                (actor, openable) =>
+                                {
+                                    if (GlobalRules.ConsiderCheckRuleSilently("can-be-opened", openable, actor, openable) == CheckResult.Allow)
+                                        return MatchPreference.Likely;
+                                    return MatchPreference.Unlikely;
+                                }),
+                            "I don't see that here."),
+                        "SUBJECT")),
                 new OpenProcessor(),
-                "Open something",
-                "SUBJECT-SCORE");
+                "Open something");
         }
 
         public void InitializeGlobalRules()

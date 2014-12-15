@@ -5,22 +5,61 @@ using System.Text;
 
 namespace RMUD
 {
+    public class CommandEntry
+    {
+        internal CommandTokenMatcher Matcher;
+        internal CommandProcessor Processor;
+        internal String HelpText;
+        public CheckRuleBook CheckRules;
+
+        private void PrepareCheckRuleBook()
+        {
+            if (CheckRules == null)
+                CheckRules = new CheckRuleBook
+                {
+                    ArgumentTypes = new List<Type>(new Type[] {
+                        typeof(PossibleMatch),
+                        typeof(Actor)
+                    })
+                };
+        }
+
+        public CommandEntry MustBeVisible(String ObjectName)
+        {
+            PrepareCheckRuleBook();
+
+            var builder = new RuleBuilder<PossibleMatch, Actor, CheckResult> { Rule = new Rule<CheckResult>() }.Do((pm, actor) =>
+            {
+                if (!pm.Arguments.ContainsKey(ObjectName))
+                {
+                    Mud.SendMessage(actor, "There was an error in the implementation of that command.");
+                    return CheckResult.Disallow;
+                }
+
+                var obj = pm.Arguments[ObjectName] as MudObject;
+                if (!Mud.IsVisibleTo(actor, obj))
+                {
+                    Mud.SendMessage(actor, "That doesn't seem to be here anymore.");
+                    return CheckResult.Disallow;
+                }
+
+                return CheckResult.Continue;
+            });
+            CheckRules.AddRule(builder.Rule);
+            return this;
+        }
+    }
+
     public partial class CommandParser
     {
-		public class CommandEntry
-		{
-			internal CommandTokenMatcher Matcher;
-            internal List<String> ScoreArguments;
-			internal CommandProcessor Processor;
-			internal String HelpText;
-		}
 
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
 
-        public void AddCommand(CommandTokenMatcher Matcher, CommandProcessor Processor, String HelpText, params String[] ScoreArguments)
+        public CommandEntry AddCommand(CommandTokenMatcher Matcher, CommandProcessor Processor, String HelpText)
         {
-            var Entry = new CommandEntry { Matcher = Matcher, Processor = Processor, HelpText = HelpText, ScoreArguments = new List<string>(ScoreArguments) };
+            var Entry = new CommandEntry { Matcher = Matcher, Processor = Processor, HelpText = HelpText };
 			Commands.Add(Entry);
+            return Entry;
         }
 
 		public class MatchedCommand
@@ -51,8 +90,8 @@ namespace RMUD
 			//Find all objects in scope
 			var matchContext = new MatchContext { ExecutingActor = Actor };
 
-			foreach (var command in Commands)
-			{
+            foreach (var command in Commands)
+            {
                 IEnumerable<PossibleMatch> matches;
 
                 try
@@ -61,7 +100,7 @@ namespace RMUD
                 }
                 catch (MatchAborted ma)
                 {
-                    return new MatchedCommand(new CommandEntry { Processor = new Commands.ReportError(ma.Message) }, new PossibleMatch[] { new PossibleMatch(new Dictionary<string,object>(), null) });
+                    return new MatchedCommand(new CommandEntry { Processor = new Commands.ReportError(ma.Message) }, new PossibleMatch[] { new PossibleMatch(new Dictionary<string, object>(), null) });
                 }
 
                 //Only accept matches that consumed all of the input.
@@ -69,25 +108,8 @@ namespace RMUD
 
                 //If we did, however, consume all of the input, we will assume this match is successful.
                 if (matches.Count() > 0)
-                {
-                    if (command.ScoreArguments != null)
-                    {
-                        foreach (var scoreArgumentName in command.ScoreArguments)
-                        {
-                            var highestScoreFound = MatchPreference.VeryUnlikely;
-                            foreach (var match in matches)
-                            {
-                                var score = GetScore(match, scoreArgumentName);
-                                if (score > highestScoreFound) highestScoreFound = score;
-                            }
-                            matches = matches.Where(m => highestScoreFound == GetScore(m, scoreArgumentName));
-                        }
-                    }
-
-                    System.Diagnostics.Debug.Assert(matches.Count() > 0);
                     return new MatchedCommand(command, matches);
-                }
-			}
+            }
             return null;
         }
 

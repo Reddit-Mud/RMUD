@@ -14,19 +14,20 @@ namespace RMUD.Commands
 					new Or(
 						new KeyWord("GET", false),
 						new KeyWord("TAKE", false)),
-                    new FailIfNoMatches(
-					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
-                            (actor, MudObject) => {
-                                if (actor.Contains(MudObject, RelativeLocations.Held)) return MatchPreference.VeryUnlikely;
-                                //Prefer MudObjects that can actually be taken
-                                if (GlobalRules.ConsiderCheckRuleSilently("can-take", MudObject, actor, MudObject) != CheckResult.Allow)
-                                    return MatchPreference.Unlikely;
-                                return MatchPreference.Plausible;
-                            }),
-                        "I don't see that here.")),
+                    new ScoreGate(
+                        new FailIfNoMatches(
+					        new ObjectMatcher("SUBJECT", new InScopeObjectSource(), 
+                                (actor, MudObject) => {
+                                    if (actor.Contains(MudObject, RelativeLocations.Held)) return MatchPreference.VeryUnlikely;
+                                    //Prefer MudObjects that can actually be taken
+                                    if (GlobalRules.ConsiderCheckRuleSilently("can-take", MudObject, actor, MudObject) != CheckResult.Allow)
+                                        return MatchPreference.Unlikely;
+                                    return MatchPreference.Plausible;
+                                }),
+                            "I don't see that here."),
+                        "SUBJECT")),
                 new TakeProcessor(),
-				"Take something",
-                "SUBJECT-SCORE");
+				"Take something");
 		}
 
         public void InitializeGlobalRules()

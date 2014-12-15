@@ -12,12 +12,13 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 new Sequence(
                     new KeyWord("WEAR", false),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
-                        "I couldn't figure out what you're trying to wear.")),
+                    new ScoreGate(
+                        new FailIfNoMatches(
+                            new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
+                            "I couldn't figure out what you're trying to wear."),
+                        "OBJECT")),
                 new WearProcessor(),
-                "Wear something.",
-                "OBJECT-SCORE");
+                "Wear something.");
         }
 
         public void InitializeGlobalRules()

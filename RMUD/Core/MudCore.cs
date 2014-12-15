@@ -111,10 +111,13 @@ namespace RMUD
             ShuttingDown = true;
         }
 
-        public static void ProcessPlayerCommand(CommandProcessor Processor, PossibleMatch Match, Actor Actor)
+        public static void ProcessPlayerCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
         {
-            Processor.Perform(Match, Actor);
-            CheckQuestStatus(Actor);
+            if (Command.CheckRules == null || Command.CheckRules.Consider(Match, Actor) != CheckResult.Disallow)
+            {
+                Command.Processor.Perform(Match, Actor);
+                CheckQuestStatus(Actor);
+            }
         }
 
     }

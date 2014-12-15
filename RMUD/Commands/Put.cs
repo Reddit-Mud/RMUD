@@ -9,27 +9,28 @@ namespace RMUD.Commands
 	{
 		public override void Create(CommandParser Parser)
 		{
-			Parser.AddCommand(
-				new Sequence(
-					new KeyWord("PUT", false),
-                    new FailIfNoMatches(
-					    new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
-                        "You don't seem to have that."),
-                    new Optional(
-                        new RelativeLocationMatcher("RELLOC")),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("OBJECT", new InScopeObjectSource(), (Actor, Object) =>
-                            {
-                                //Prefer objects that are actually containers. No means curently to prefer
-                                //objects that actually support the relloc we matched previously.
-                                if (Object is Container) return MatchPreference.Likely;
-                                return MatchPreference.Plausible;
-                            }),
-                        "I can't see that here.")),
-				new PutProcessor(),
-				"Put something on, in, under or behind something",
-                "SUBJECT-SCORE",
-                "OBJECT-SCORE");
+            Parser.AddCommand(
+                new Sequence(
+                    new KeyWord("PUT", false),
+                    new ScoreGate(
+                        new FailIfNoMatches(
+                            new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
+                            "You don't seem to have that."),
+                        "SUBJECT"),
+                    new Optional(new RelativeLocationMatcher("RELLOC")),
+                    new ScoreGate(
+                        new FailIfNoMatches(
+                            new ObjectMatcher("OBJECT", new InScopeObjectSource(), (Actor, Object) =>
+                                {
+                                    //Prefer objects that are actually containers. No means curently to prefer
+                                    //objects that actually support the relloc we matched previously.
+                                    if (Object is Container) return MatchPreference.Likely;
+                                    return MatchPreference.Plausible;
+                                }),
+                            "I can't see that here."),
+                       "OBJECT")),
+                new PutProcessor(),
+                "Put something on, in, under or behind something");
 		}
 
         public void InitializeGlobalRules()
@@ -37,7 +38,7 @@ namespace RMUD.Commands
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("can-put", "[Actor, Item, Container, Location] : Determine if the actor can put the item in or on or under the container.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("on-put", "[Actor, Item, Container, Location] : Handle an actor putting the item in or on or under the container.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").Do((a, b, c, d) =>
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").First.Do((a, b, c, d) =>
             {
                 if (c is Container) return CheckResult.Allow;
                 return CheckResult.Disallow;
@@ -51,7 +52,7 @@ namespace RMUD.Commands
                     return PerformResult.Continue;
                 }).Name("Default putting things in things handler.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").Do((actor, item, container, relloc) =>
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").First.Do((actor, item, container, relloc) =>
                 {
                     if (relloc == RelativeLocations.In
                         && GlobalRules.ConsiderValueRule<bool>("openable", container, container)
@@ -64,7 +65,7 @@ namespace RMUD.Commands
                     return CheckResult.Continue;
                 }).Name("Can't put things in closed container rule.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").Do((actor, item, container, relloc) =>
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").First.Do((actor, item, container, relloc) =>
                 {
                     var c = container as Container;
                     if (c == null || (c.LocationsSupported & relloc) != relloc)

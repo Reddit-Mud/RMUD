@@ -10,19 +10,21 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("LOCK", false),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("SUBJECT", new InScopeObjectSource()),
-                        "I couldn't figure out what you're trying to lock."),
-                    new KeyWord("WITH", true),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("KEY", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
-                        "I couldn't figure out what you're trying to lock that with.")),
+                new ScoreGate(
+                    new ScoreGate(
+                        new Sequence(
+                            new KeyWord("LOCK"),
+                            new FailIfNoMatches(
+                                new ObjectMatcher("SUBJECT", new InScopeObjectSource()),
+                                "I couldn't figure out what you're trying to lock."),
+                            new KeyWord("WITH", true),
+                            new FailIfNoMatches(
+                                new ObjectMatcher("KEY", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
+                                "I couldn't figure out what you're trying to lock that with.")),
+                        "SUBJECT"),
+                    "KEY"),
                 new LockProcessor(),
-                "Lock something with something.",
-                "SUBJECT-SCORE",
-                "KEY-SCORE");
+                "Lock something with something.");
         }
 
         public void InitializeGlobalRules()
