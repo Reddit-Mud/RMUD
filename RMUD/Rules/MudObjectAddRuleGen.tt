@@ -1,0 +1,36 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#@ include file="RuleGen.t4" #>
+//This is generated code. Do not modify this file; modify the template that produces it.
+
+using System;
+
+namespace RMUD
+{
+	public partial class MudObject
+	{	
+<#for (var i = 1; i < 5; ++i){#>
+		public RuleBuilder<<#Args(i);#>, PerformResult> Perform<<#Args(i);#>>(String Name)
+		{
+			if (Rules == null) Rules = new RuleSet();
+			return Rules.AddRule<<#Args(i);#>, PerformResult>(Name);
+		}
+
+		public RuleBuilder<<#Args(i);#>, RT> Value<<#Args(i);#>, RT>(String Name)
+		{
+			if (Rules == null) Rules = new RuleSet();
+			return Rules.AddRule<<#Args(i);#>, RT>(Name);
+		}
+
+		public RuleBuilder<<#Args(i);#>, CheckResult> Check<<#Args(i);#>>(String Name)
+		{
+			if (Rules == null) Rules = new RuleSet();
+			return Rules.AddRule<<#Args(i);#>, CheckResult>(Name);
+		}
+<#}#>
+	}
+}

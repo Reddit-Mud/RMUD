@@ -57,7 +57,7 @@ namespace RMUD.Commands
                 else
                 {
                     Mud.SendMessage(Actor, "Enacting your will.");
-                    Mud.ProcessPlayerCommand(matchedCommand.Command.Processor, matchedCommand.Matches[0], targetActor);
+                    Mud.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], targetActor);
                 }
             }
             else

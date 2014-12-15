@@ -10,37 +10,39 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("LOCK", false),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("SUBJECT", new InScopeObjectSource()),
-                        "I couldn't figure out what you're trying to lock."),
-                    new KeyWord("WITH", true),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("KEY", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
-                        "I couldn't figure out what you're trying to lock that with.")),
+                new ScoreGate(
+                    new ScoreGate(
+                        new Sequence(
+                            new KeyWord("LOCK"),
+                            new FailIfNoMatches(
+                                new ObjectMatcher("SUBJECT", new InScopeObjectSource()),
+                                "I couldn't figure out what you're trying to lock."),
+                            new KeyWord("WITH", true),
+                            new FailIfNoMatches(
+                                new ObjectMatcher("KEY", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
+                                "I couldn't figure out what you're trying to lock that with.")),
+                        "SUBJECT"),
+                    "KEY"),
                 new LockProcessor(),
-                "Lock something with something.",
-                "SUBJECT-SCORE",
-                "KEY-SCORE");
+                "Lock something with something.");
         }
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject, MudObject>("can-be-locked-with", "Item based rulebook to decide wether the item can be locked using another item.");
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject, MudObject>("on-locked-with", "Item based rulebook to handle the item being locked with something.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject>("can-be-locked-with", "Item based rulebook to decide wether the item can be locked using another item.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("on-locked-with", "Item based rulebook to handle the item being locked with something.");
 
-            GlobalRules.AddActionRule<MudObject, MudObject, MudObject>("can-be-locked-with").Do((a, b, c) =>
+            GlobalRules.Check<MudObject, MudObject, MudObject>("can-be-locked-with").Do((a, b, c) =>
             {
                 Mud.SendMessage(a, "I don't think the concept of 'locked' applies to that.");
-                return RuleResult.Disallow;
+                return CheckResult.Disallow;
             });
 
-            GlobalRules.AddActionRule<MudObject, MudObject, MudObject>("on-locked-with").Do((actor, target, key) =>
+            GlobalRules.Perform<MudObject, MudObject, MudObject>("on-locked-with").Do((actor, target, key) =>
             {
                 Mud.SendMessage(actor, "You lock <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> locks <a1> with <a2>.", actor, target, key);
-                return RuleResult.Continue;
+                return PerformResult.Continue;
             });
         }
     }
@@ -66,8 +68,8 @@ namespace RMUD.Commands
 				return;
 			}
 
-            if (GlobalRules.ConsiderActionRule("can-be-locked-with", target, Actor, target, key) == RuleResult.Allow)
-                GlobalRules.ConsiderActionRule("on-locked-with", target, Actor, target, key);
+            if (GlobalRules.ConsiderCheckRule("can-be-locked-with", target, Actor, target, key) == CheckResult.Allow)
+                GlobalRules.ConsiderPerformRule("on-locked-with", target, Actor, target, key);
 		}
 	}
 }

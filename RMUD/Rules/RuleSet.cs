@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public class RuleSet
+    public partial class RuleSet
     {
         public List<RuleBook> RuleBooks = new List<RuleBook>();
 
@@ -22,8 +22,10 @@ namespace RMUD
             {
                 if (GlobalRules.CheckGlobalRuleBookTypes(Name, typeof(RT), ArgumentTypes))
                 {
-                    if (typeof(RT) == typeof(RuleResult))
+                    if (typeof(RT) == typeof(PerformResult))
                         r = new ActionRuleBook { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
+                    else if (typeof(RT) == typeof(CheckResult))
+                        r = new CheckRuleBook { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
                     else
                         r = new ValueRuleBook<RT> { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
 
@@ -39,28 +41,7 @@ namespace RMUD
 
             return r;
         }
-
-        public RuleBuilder<T0, RT> AddRule<T0, RT>(String Name)
-        {
-            var rule = new Rule<RT>();
-            FindOrCreateRuleBook<RT>(Name, typeof(T0)).AddRule(rule);
-            return new RuleBuilder<T0, RT> { Rule = rule };
-        }
-
-        public RuleBuilder<T0, T1, RT> AddRule<T0, T1, RT>(String Name)
-        {
-            var rule = new Rule<RT>();
-            FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1)).AddRule(rule);
-            return new RuleBuilder<T0, T1, RT> { Rule = rule };
-        }
-
-        public RuleBuilder<T0, T1, T2, RT> AddRule<T0, T1, T2, RT>(String Name)
-        {
-            var rule = new Rule<RT>();
-            FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2)).AddRule(rule);
-            return new RuleBuilder<T0, T1, T2, RT> { Rule = rule };
-        }
-
+                
         public void DeleteRule(String RuleBookName, String RuleID)
         {
             var book = FindRuleBook(RuleBookName);
@@ -73,13 +54,6 @@ namespace RMUD
                 book.DeleteRule(RuleID);
         }
 
-        public RuleBuilder<T0, T1, T2, T3, RT> AddRule<T0, T1, T2, T3, RT>(String Name)
-        {
-            var rule = new Rule<RT>();
-            FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).AddRule(rule);
-            return new RuleBuilder<T0, T1, T2, T3, RT> { Rule = rule };
-        }
-        
         public RT ConsiderValueRule<RT>(String Name, out bool ValueReturned, params Object[] Args)
         {
             ValueReturned = false;
@@ -95,18 +69,32 @@ namespace RMUD
             return default(RT);
         }
 
-        public RuleResult ConsiderActionRule(String Name, params Object[] Args)
+        public PerformResult ConsiderActionRule(String Name, params Object[] Args)
         {
             var book = FindRuleBook(Name);
             if (book != null)
             {
-                if (!book.CheckArgumentTypes(typeof(RuleResult), Args.Select(o => o.GetType()).ToArray()))
+                if (!book.CheckArgumentTypes(typeof(PerformResult), Args.Select(o => o.GetType()).ToArray()))
                     throw new InvalidOperationException();
                 var actionBook = book as ActionRuleBook;
                 if (actionBook == null) throw new InvalidOperationException();
                 return actionBook.Consider(Args);
             }
-            return RuleResult.Default;
+            return PerformResult.Default;
+        }
+
+        public CheckResult ConsiderCheckRule(String Name, params Object[] Args)
+        {
+            var book = FindRuleBook(Name);
+            if (book != null)
+            {
+                if (!book.CheckArgumentTypes(typeof(PerformResult), Args.Select(o => o.GetType()).ToArray()))
+                    throw new InvalidOperationException();
+                var actionBook = book as CheckRuleBook;
+                if (actionBook == null) throw new InvalidOperationException();
+                return actionBook.Consider(Args);
+            }
+            return CheckResult.Continue;
         }
     }
 }

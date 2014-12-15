@@ -10,82 +10,12 @@ namespace RMUD
         void InitializeGlobalRules();
     }
 
-    public static class GlobalRules
+    public static partial class GlobalRules
     {
         internal static RuleSet Rules = null;
         internal static Client LogTo = null;
 
         public static void LogRules(Client To) { LogTo = To; }
-
-        public static void DeclareActionRuleBook<T0>(String Name, String Description)
-        {
-            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0)).Description = Description;
-        }
-
-        public static void DeclareActionRuleBook<T0, T1>(String Name, String Description)
-        {
-            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1)).Description = Description;
-        }
-
-        public static void DeclareActionRuleBook<T0, T1, T2>(String Name, String Description)
-        {
-            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
-        }
-
-        public static void DeclareActionRuleBook<T0, T1, T2, T3>(String Name, String Description)
-        {
-            Rules.FindOrCreateRuleBook<RuleResult>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).Description = Description;
-        }
-
-        public static void DeclareValueRuleBook<T0, RT>(String Name, String Description)
-        {
-            Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0)).Description = Description;
-        }
-
-        public static void DeclareValueRuleBook<T0, T1, RT>(String Name, String Description)
-        {
-            Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1)).Description = Description;
-        }
-
-        public static void DeclareValueRuleBook<T0, T1, T2, RT>(String Name, String Description)
-        {
-            Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
-        }
-
-        public static RuleBuilder<T0, RuleResult> AddActionRule<T0>(String Name)
-        {
-            return Rules.AddRule<T0, RuleResult>(Name);
-        }
-
-        public static RuleBuilder<T0, T1, RuleResult> AddActionRule<T0, T1>(String Name)
-        {
-            return Rules.AddRule<T0, T1, RuleResult>(Name);
-        }
-
-        public static RuleBuilder<T0, T1, T2, RuleResult> AddActionRule<T0, T1, T2>(String Name)
-        {
-            return Rules.AddRule<T0, T1, T2, RuleResult>(Name);
-        }
-
-        public static RuleBuilder<T0, T1, T2, T3, RuleResult> AddActionRule<T0, T1, T2, T3>(String Name)
-        {
-            return Rules.AddRule<T0, T1, T2, T3, RuleResult>(Name);
-        }
-
-        public static RuleBuilder<T0, RT> AddValueRule<T0, RT>(String Name)
-        {
-            return Rules.AddRule<T0, RT>(Name);
-        }
-
-        public static RuleBuilder<T0, T1, RT> AddValueRule<T0, T1, RT>(String Name)
-        {
-            return Rules.AddRule<T0, T1, RT>(Name);
-        }
-
-        public static RuleBuilder<T0, T1, T2, RT> AddValueRule<T0, T1, T2, RT>(String Name)
-        {
-            return Rules.AddRule<T0, T1, T2, RT>(Name);
-        }
 
         public static bool CheckGlobalRuleBookTypes(String Name, Type ResultType, params Type[] ArgumentTypes)
         {
@@ -98,14 +28,26 @@ namespace RMUD
             return book.CheckArgumentTypes(ResultType, ArgumentTypes);
         }
 
-        public static RuleResult ConsiderActionRule(String Name, MudObject Object, params Object[] Arguments)
+        public static PerformResult ConsiderPerformRule(String Name, MudObject Object, params Object[] Arguments)
         {
-            var r = RuleResult.Continue;
+            var r = PerformResult.Continue;
             if (Object.Rules != null) r = Object.Rules.ConsiderActionRule(Name, Arguments);
-            if (r == RuleResult.Continue)
+            if (r == PerformResult.Continue)
             {
                 if (Rules == null) InitializeGlobalRuleBooks();
                 return Rules.ConsiderActionRule(Name, Arguments);
+            }
+            return r;
+        }
+
+        public static CheckResult ConsiderCheckRule(String Name, MudObject Object, params Object[] Arguments)
+        {
+            var r = CheckResult.Continue;
+            if (Object.Rules != null) r = Object.Rules.ConsiderCheckRule(Name, Arguments);
+            if (r == CheckResult.Continue)
+            {
+                if (Rules == null) InitializeGlobalRuleBooks();
+                return Rules.ConsiderCheckRule(Name, Arguments);
             }
             return r;
         }
@@ -123,12 +65,12 @@ namespace RMUD
             return r;
         }
 
-        public static RuleResult ConsiderActionRuleSilently(String Name, MudObject Object, params Object[] Arguments)
+        public static CheckResult ConsiderCheckRuleSilently(String Name, MudObject Object, params Object[] Arguments)
         {
             try
             {
                 Mud.SilentFlag = true;
-                var r = ConsiderActionRule(Name, Object, Arguments);
+                var r = ConsiderCheckRule(Name, Object, Arguments);
                 Mud.SilentFlag = false;
                 return r;
             }

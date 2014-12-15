@@ -12,34 +12,35 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 new Sequence(
                     new KeyWord("WEAR", false),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
-                        "I couldn't figure out what you're trying to wear.")),
+                    new ScoreGate(
+                        new FailIfNoMatches(
+                            new ObjectMatcher("OBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
+                            "I couldn't figure out what you're trying to wear."),
+                        "OBJECT")),
                 new WearProcessor(),
-                "Wear something.",
-                "OBJECT-SCORE");
+                "Wear something.");
         }
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-be-worn", "Item based rulebook to decide whether the item is wearable.");
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("can-wear", "Actor based rulebook to decide if the actor can wear something.");
-            GlobalRules.DeclareActionRuleBook<MudObject, MudObject>("on-donned", "Item based rulebook to handle the item being worn.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-be-worn", "Item based rulebook to decide whether the item is wearable.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-wear", "Actor based rulebook to decide if the actor can wear something.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-donned", "Item based rulebook to handle the item being worn.");
 
-            GlobalRules.AddActionRule<MudObject, MudObject>("can-be-worn").Do((a, b) =>
+            GlobalRules.Check<MudObject, MudObject>("can-be-worn").Do((a, b) =>
                 {
                     Mud.SendMessage(a, "That isn't something you can wear.");
-                    return RuleResult.Disallow;
+                    return CheckResult.Disallow;
                 });
 
-            GlobalRules.AddActionRule<MudObject, MudObject>("can-wear").Do((a, b) => RuleResult.Allow);
+            GlobalRules.Check<MudObject, MudObject>("can-wear").Do((a, b) => CheckResult.Allow);
 
-            GlobalRules.AddActionRule<MudObject, MudObject>("on-donned").Do((actor, target) =>
+            GlobalRules.Perform<MudObject, MudObject>("on-donned").Do((actor, target) =>
                 {
                     Mud.SendMessage(actor, "You wear <the0>.", target);
                     Mud.SendExternalMessage(actor, "<a0> wears <a1>.", actor, target);
                     Mud.Move(target, actor, RelativeLocations.Worn);
-                    return RuleResult.Continue;
+                    return PerformResult.Continue;
                 });
         }
     }
@@ -58,12 +59,12 @@ namespace RMUD.Commands
                 return;
             }
 
-            var canBeWorn = GlobalRules.ConsiderActionRule("can-be-worn", target, Actor, target);
-            if (canBeWorn == RuleResult.Allow) canBeWorn = GlobalRules.ConsiderActionRule("can-wear", Actor, Actor, target);
+            var canBeWorn = GlobalRules.ConsiderCheckRule("can-be-worn", target, Actor, target);
+            if (canBeWorn == CheckResult.Allow) canBeWorn = GlobalRules.ConsiderCheckRule("can-wear", Actor, Actor, target);
 
-            if (canBeWorn == RuleResult.Allow)
+            if (canBeWorn == CheckResult.Allow)
             {
-                GlobalRules.ConsiderActionRule("on-donned", target, Actor, target);
+                GlobalRules.ConsiderPerformRule("on-donned", target, Actor, target);
             }
 		}
 	}

@@ -181,9 +181,32 @@
     <Compile Include="ReverseLineReader.cs" />
     <Compile Include="Rules\GlobalRules.cs" />
     <Compile Include="Rules\RuleBook.cs" />
-    <Compile Include="Rules\RuleBuilder.cs" />
+    <Compile Include="Rules\RuleBuilderGen.cs">
+      <DependentUpon>RuleBuilderGen.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Rules\GlobalRulesAddRuleGen.cs">
+      <DependentUpon>GlobalRulesAddRuleGen.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Rules\MudObjectAddRuleGen.cs">
+      <DependentUpon>MudObjectAddRuleGen.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Rules\RuleSetAddRuleGen.cs">
+      <DependentUpon>RuleSetAddRuleGen.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Rules\RuleDelegatesGen.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RuleDelegatesGen.tt</DependentUpon>
+    </Compile>
     <Compile Include="Rules\RuleSet.cs" />
-    <Compile Include="Rules\RuleDelegateWrapper.cs" />
     <Compile Include="Rules\RuleResult.cs" />
     <Compile Include="Rules\Rule.cs" />
     <Compile Include="Core\SendMessage.cs" />
@@ -240,8 +263,31 @@
     <Compile Include="Clients\TelnetClientSource.cs" />
     <Compile Include="HelperExtensions.cs" />
     <None Include="packages.config" />
+    <None Include="Rules\RuleGen.t4" />
+    <None Include="Rules\RuleBuilderGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RuleBuilderGen.cs</LastGenOutput>
+    </None>
+    <None Include="Rules\GlobalRulesAddRuleGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GlobalRulesAddRuleGen.cs</LastGenOutput>
+    </None>
+    <None Include="Rules\MudObjectAddRuleGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MudObjectAddRuleGen.cs</LastGenOutput>
+    </None>
+    <None Include="Rules\RuleSetAddRuleGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RuleSetAddRuleGen.cs</LastGenOutput>
+    </None>
+    <None Include="Rules\RuleDelegatesGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RuleDelegatesGen.cs</LastGenOutput>
+    </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

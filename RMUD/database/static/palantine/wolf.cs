@@ -13,13 +13,15 @@
 
         RMUD.Mud.RegisterForHeartbeat(this);
 
-        AddActionRule<RMUD.MudObject>("handle-entrail-drop").Do(entrails =>
+        Perform<RMUD.MudObject>("handle-entrail-drop").Do(entrails =>
             {
                 RMUD.Mud.SendLocaleMessage(this, "The wolf snatches up the entrails.");
                 IsFed = true;
                 RMUD.MudObject.Move(entrails, null);
-                return RMUD.RuleResult.Stop;
+                return RMUD.PerformResult.Stop;
             });
+
+        Value<RMUD.MudObject, RMUD.MudObject, string, string>("actor-name").First.Do((viewer, item, article) => article + " wolf");
     }
 
     public override void Heartbeat(ulong HeartbeatID)

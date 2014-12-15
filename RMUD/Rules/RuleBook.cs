@@ -24,21 +24,36 @@ namespace RMUD
         }
 
         public virtual void AddRule(Rule Rule) { throw new NotImplementedException(); }
+        
+        protected void _addRule(Rule Rule)
+        {
+            if (Rule.Priority == RulePriority.First)
+                Rules.Insert(0, Rule);
+            else if (Rule.Priority == RulePriority.Last)
+                Rules.Add(Rule);
+            else
+            {
+                var index = Rules.FindIndex(r => r.Priority == RulePriority.Last);
+                if (index < 0) index = Rules.Count;
+                Rules.Insert(index, Rule);
+            }
+        }
+
         public virtual void DeleteRule(String ID) { throw new NotImplementedException(); }
     }
 
-    public class ActionRuleBook : RuleBook
+    public class CheckRuleBook : RuleBook
     {
-        public ActionRuleBook()
+        public CheckRuleBook()
         {
-            ResultType = typeof(RuleResult);
+            ResultType = typeof(CheckResult);
         }
 
-        public RuleResult Consider(params Object[] Args)
+        public CheckResult Consider(params Object[] Args)
         {
             foreach (var _rule in Rules)
             {
-                var rule = _rule as Rule<RuleResult>;
+                var rule = _rule as Rule<CheckResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
                     if (GlobalRules.LogTo != null)
@@ -46,17 +61,56 @@ namespace RMUD
                         GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
                     }
 
-                    var r = rule.BodyClause == null ? RuleResult.Default : rule.BodyClause.Invoke(Args);
-                    if (r != RuleResult.Continue) return r;
+                    var r = rule.BodyClause == null ? CheckResult.Continue : rule.BodyClause.Invoke(Args);
+                    if (r != CheckResult.Continue) return r;
                 }
             }
-            return RuleResult.Default;
+            return CheckResult.Continue;
         }
 
         public override void AddRule(Rule Rule)
         {
-            if (!(Rule is Rule<RuleResult>)) throw new InvalidOperationException();
-            Rules.Insert(0, Rule as Rule<RuleResult>);
+            if (!(Rule is Rule<CheckResult>)) throw new InvalidOperationException();
+            _addRule(Rule);
+        }
+
+        public override void DeleteRule(string ID)
+        {
+            Rules.RemoveAll(r => r.ID == ID);
+        }
+    }
+
+
+    public class ActionRuleBook : RuleBook
+    {
+        public ActionRuleBook()
+        {
+            ResultType = typeof(PerformResult);
+        }
+
+        public PerformResult Consider(params Object[] Args)
+        {
+            foreach (var _rule in Rules)
+            {
+                var rule = _rule as Rule<PerformResult>;
+                if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
+                {
+                    if (GlobalRules.LogTo != null)
+                    {
+                        GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                    }
+
+                    var r = rule.BodyClause == null ? PerformResult.Default : rule.BodyClause.Invoke(Args);
+                    if (r != PerformResult.Continue) return r;
+                }
+            }
+            return PerformResult.Default;
+        }
+
+        public override void AddRule(Rule Rule)
+        {
+            if (!(Rule is Rule<PerformResult>)) throw new InvalidOperationException();
+            _addRule(Rule);
         }
 
         public override void DeleteRule(string ID)
@@ -92,7 +146,7 @@ namespace RMUD
         public override void AddRule(Rule Rule)
         {
             if (!(Rule is Rule<RT>)) throw new InvalidOperationException();
-            Rules.Insert(0, Rule as Rule<RT>);
+            _addRule(Rule);
         }
 
         public override void DeleteRule(string ID)

@@ -1,0 +1,41 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#@ include file="RuleGen.t4" #>
+//This is generated code. Do not modify this file; modify the template that produces it.
+
+using System;
+
+namespace RMUD
+{
+	public class RuleDelegateWrapper<TR>
+	{
+		public virtual TR Invoke(Object[] Arguments)
+		{
+			throw new NotImplementedException();
+		}		
+<#for (var i = 1; i < 5; ++i){#>
+		
+		public static RuleDelegateWrapper<TR> MakeWrapper<<#Args(i);#>>(Func<<#Args(i);#>, TR> Delegate)
+		{
+			return new RuleDelegateWrapper<<#Args(i);#>, TR> { Delegate = Delegate };
+		}		
+<#}#>
+	}
+<#for (var i = 1; i < 5; ++i){#>
+	
+	public class RuleDelegateWrapper<<#Args(i);#>, TR> : RuleDelegateWrapper<TR>
+	{
+		internal Func<<#Args(i);#>, TR> Delegate;
+
+		public override TR Invoke(Object[] Arguments)
+		{
+			return (TR)Delegate.DynamicInvoke(Arguments);
+		}
+	}
+<#}#>
+
+}

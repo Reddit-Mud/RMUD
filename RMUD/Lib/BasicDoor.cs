@@ -14,30 +14,30 @@ namespace RMUD
             this.Nouns.Add("OPEN", actor => Open);
             Open = false;
 
-            AddValueRule<MudObject, bool>("openable").Do(a => true);
-            AddValueRule<MudObject, bool>("is-open").Do(a => Open);
+            Value<MudObject, bool>("openable").Do(a => true);
+            Value<MudObject, bool>("is-open").Do(a => Open);
 
-            AddActionRule<MudObject, MudObject>("can-open").Do((a, b) => 
+            Check<MudObject, MudObject>("can-open").Do((a, b) => 
                 {
                     if (Open)
                     {
                         Mud.SendMessage(a, "It is already open.");
-                        return RuleResult.Disallow;
+                        return CheckResult.Disallow;
                     }
-                    return RuleResult.Allow;
+                    return CheckResult.Allow;
                 });
 
-            AddActionRule<MudObject, MudObject>("can-close").Do((a, b) =>
+            Check<MudObject, MudObject>("can-close").Do((a, b) =>
             {
                 if (!Open)
                 {
                     Mud.SendMessage(a, "It is already closed.");
-                    return RuleResult.Disallow;
+                    return CheckResult.Disallow;
                 }
-                return RuleResult.Allow;
+                return CheckResult.Allow;
             });
             
-            AddActionRule<MudObject, MudObject>("on-opened").Do((a, b) =>
+            Perform<MudObject, MudObject>("on-opened").Do((a, b) =>
             {
                 Open = true;
 
@@ -49,10 +49,10 @@ namespace RMUD
                     Mud.MarkLocaleForUpdate(otherSide);
                 }
 
-                return RuleResult.Continue;
+                return PerformResult.Continue;
             });
 
-            AddActionRule<MudObject, MudObject>("on-closed").Do((a, b) =>
+            Perform<MudObject, MudObject>("on-closed").Do((a, b) =>
             {
                 Open = false;
 
@@ -64,7 +64,7 @@ namespace RMUD
                     Mud.MarkLocaleForUpdate(otherSide);
                 }
 
-                return RuleResult.Continue;
+                return PerformResult.Continue;
             });
         }
 

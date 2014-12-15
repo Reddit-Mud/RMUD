@@ -15,41 +15,41 @@ namespace RMUD
 		{
 			Locked = true;
 
-            AddActionRule<MudObject, MudObject, MudObject>("can-be-locked-with").Do((actor, door, key) =>
+            Check<MudObject, MudObject, MudObject>("can-be-locked-with").Do((actor, door, key) =>
                 {
                     if (Open) {
                         Mud.SendMessage(actor, "You'll have to close it first.");
-                        return RuleResult.Disallow;
+                        return CheckResult.Disallow;
                     }
 
                     if (!IsMatchingKey(key))
                     {
                         Mud.SendMessage(actor, "That is not the right key.");
-                        return RuleResult.Disallow;
+                        return CheckResult.Disallow;
                     }
 
-                    return RuleResult.Allow;
+                    return CheckResult.Allow;
                 });
 
-            AddActionRule<MudObject, MudObject, MudObject>("on-locked-with").Do((a,b,c) =>
+            Perform<MudObject, MudObject, MudObject>("on-locked-with").Do((a,b,c) =>
                 {
                     Locked = true;
-                    return RuleResult.Continue;
+                    return PerformResult.Continue;
                 });
 
-             AddActionRule<MudObject, MudObject, MudObject>("on-unlocked-with").Do((a,b,c) =>
+             Perform<MudObject, MudObject, MudObject>("on-unlocked-with").Do((a,b,c) =>
                 {
                     Locked = false;
-                    return RuleResult.Continue;
+                    return PerformResult.Continue;
                 });
 
-             AddActionRule<MudObject, MudObject>("can-open").When((a, b) => Locked).Do((a, b) =>
+             Check<MudObject, MudObject>("can-open").When((a, b) => Locked).Do((a, b) =>
                  {
                      Mud.SendMessage(a, "It seems to be locked.");
-                     return RuleResult.Disallow;
+                     return CheckResult.Disallow;
                  });
 
-             AddActionRule<MudObject, MudObject>("on-closed").Do((a, b) => { Locked = false; return RuleResult.Continue; });
+             Perform<MudObject, MudObject>("on-closed").Do((a, b) => { Locked = false; return PerformResult.Continue; });
         }
         
 	}

@@ -23,7 +23,7 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
             if (Actor.ConnectedClient == null) return;
-            var tempCommand = new CommandParser.MatchedCommand(new CommandParser.CommandEntry
+            var tempCommand = new CommandParser.MatchedCommand(new CommandEntry
             {
                 Processor = new SecondStagePurgeProcessor(),
             }, new PossibleMatch[] { Match });
