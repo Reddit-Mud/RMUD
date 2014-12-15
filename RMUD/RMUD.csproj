@@ -124,6 +124,7 @@
     <Compile Include="Lib\SillyStatusEffect.cs" />
     <Compile Include="Lib\StatusEffect.cs" />
     <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
+    <Compile Include="Parser\CommandEntry.cs" />
     <Compile Include="Parser\MatchContext.cs" />
     <Compile Include="Parser\Matchers\FailIf.cs" />
     <Compile Include="Parser\Matchers\NumberMatcher.cs" />

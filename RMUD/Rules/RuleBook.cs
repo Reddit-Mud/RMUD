@@ -12,6 +12,7 @@ namespace RMUD
         public List<Type> ArgumentTypes = new List<Type>();
         public Type ResultType;
         internal List<Rule> Rules = new List<Rule>();
+        private bool NeedsSort = false;
 
         public bool CheckArgumentTypes(Type ResultType, params Type[] ArgTypes)
         {
@@ -27,16 +28,21 @@ namespace RMUD
         
         protected void _addRule(Rule Rule)
         {
-            if (Rule.Priority == RulePriority.First)
-                Rules.Insert(0, Rule);
-            else if (Rule.Priority == RulePriority.Last)
-                Rules.Add(Rule);
-            else
-            {
-                var index = Rules.FindIndex(r => r.Priority == RulePriority.Last);
-                if (index < 0) index = Rules.Count;
-                Rules.Insert(index, Rule);
-            }
+            Rules.Add(Rule);
+            NeedsSort = true;
+        }
+
+        protected void SortRules()
+        {
+            var newList = new List<Rule>[]{ new List<Rule>(), new List<Rule>(), new List<Rule>() };
+            foreach (var rule in Rules)
+                newList[(int)rule.Priority].Add(rule);
+
+            Rules.Clear();
+            foreach (var sublist in newList)
+                Rules.AddRange(sublist);
+
+            NeedsSort = false;
         }
 
         public virtual void DeleteRule(String ID) { throw new NotImplementedException(); }
@@ -51,6 +57,8 @@ namespace RMUD
 
         public CheckResult Consider(params Object[] Args)
         {
+            SortRules();
+
             foreach (var _rule in Rules)
             {
                 var rule = _rule as Rule<CheckResult>;
@@ -90,6 +98,8 @@ namespace RMUD
 
         public PerformResult Consider(params Object[] Args)
         {
+            SortRules();
+
             foreach (var _rule in Rules)
             {
                 var rule = _rule as Rule<PerformResult>;
@@ -128,6 +138,8 @@ namespace RMUD
 
         public RT Consider(out bool ValueReturned, params Object[] Args)
         {
+            SortRules();
+
             ValueReturned = false;
             foreach (var rule in Rules)
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))

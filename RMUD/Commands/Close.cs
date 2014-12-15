@@ -9,21 +9,22 @@ namespace RMUD.Commands
 	{
 		public override void Create(CommandParser Parser)
 		{
-			Parser.AddCommand(
-				new Sequence(
-					new KeyWord("CLOSE", false),
+            Parser.AddCommand(
+                new Sequence(
+                    new KeyWord("CLOSE", false),
                     new ScoreGate(
                         new FailIfNoMatches(
-		    			    new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
+                            new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
                                 (actor, openable) =>
                                 {
                                     if (GlobalRules.ConsiderCheckRuleSilently("can-close", openable, actor, openable) == CheckResult.Allow) return MatchPreference.Likely;
                                     return MatchPreference.Unlikely;
                                 }),
-                            "I don't see that here."), 
+                            "I don't see that here."),
                         "SUBJECT")),
-				new CloseProcessor(),
-				"Close something.");
+                new CloseProcessor(),
+                "Close something.")
+                .MustBeVisible("SUBJECT");
 		}
 
         public void InitializeGlobalRules()
@@ -51,14 +52,7 @@ namespace RMUD.Commands
         public void Perform(PossibleMatch Match, Actor Actor)
         {
             var target = Match.Arguments["SUBJECT"] as MudObject;
-
-            if (!Mud.IsVisibleTo(Actor, target))
-            {
-                if (Actor.ConnectedClient != null)
-                    Mud.SendMessage(Actor, "That doesn't seem to be here anymore.");
-                return;
-            }
-
+            
             if (GlobalRules.ConsiderCheckRule("can-close", target, Actor, target) == CheckResult.Allow)
                 GlobalRules.ConsiderPerformRule("on-closed", target, Actor, target);
         }

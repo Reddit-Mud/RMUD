@@ -88,7 +88,7 @@ namespace RMUD
             var book = FindRuleBook(Name);
             if (book != null)
             {
-                if (!book.CheckArgumentTypes(typeof(PerformResult), Args.Select(o => o.GetType()).ToArray()))
+                if (!book.CheckArgumentTypes(typeof(CheckResult), Args.Select(o => o.GetType()).ToArray()))
                     throw new InvalidOperationException();
                 var actionBook = book as CheckRuleBook;
                 if (actionBook == null) throw new InvalidOperationException();
