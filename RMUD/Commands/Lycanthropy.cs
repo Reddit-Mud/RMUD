@@ -22,18 +22,18 @@ namespace RMUD.Commands
     {
         public void Perform(PossibleMatch Match, Actor Actor)
         {
-            if (Actor.HasStatusEffect(typeof(LycanthropeStatusEffect)))
-            {
-                Mud.SendMessage(Actor, "You transform into a human.");
-                Mud.SendExternalMessage(Actor, "<the0> transforms into a human.", Actor);
-                Actor.RemoveStatusEffect(Actor.GetStatusEffect<LycanthropeStatusEffect>());
-            }
-            else
-            {
-                Mud.SendMessage(Actor, "You transform into a wolf.");
-                Mud.SendExternalMessage(Actor, "<the0> transforms into a wolf.", Actor);
-                Actor.ApplyStatusEffect(new LycanthropeStatusEffect());
-            }
+            //if (Actor.HasStatusEffect(typeof(LycanthropeStatusEffect)))
+            //{
+            //    Mud.SendMessage(Actor, "You transform into a human.");
+            //    Mud.SendExternalMessage(Actor, "<the0> transforms into a human.", Actor);
+            //    Actor.RemoveStatusEffect(Actor.GetStatusEffect<LycanthropeStatusEffect>());
+            //}
+            //else
+            //{
+            //    Mud.SendMessage(Actor, "You transform into a wolf.");
+            //    Mud.SendExternalMessage(Actor, "<the0> transforms into a wolf.", Actor);
+            //    Actor.ApplyStatusEffect(new LycanthropeStatusEffect());
+            //}
         }
     }
 }

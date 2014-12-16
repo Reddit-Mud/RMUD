@@ -33,10 +33,9 @@ namespace RMUD
         }
     }
 
-	public class Actor : GenericContainer
-	{
-		public Client ConnectedClient;
-        public List<StatusEffect> AppliedStatusEffects = new List<StatusEffect>();
+    public class Actor : GenericContainer
+    {
+        public Client ConnectedClient;
 
         [Persist(typeof(EnumSerializer<Gender>))]
         public Gender Gender { get; set; }
@@ -60,29 +59,5 @@ namespace RMUD
             Nouns.Add("WOMAN", (a) => a.Gender == RMUD.Gender.Female);
         }
 
-        public void ApplyStatusEffect(StatusEffect Effect)
-        {
-            AppliedStatusEffects.Add(Effect);
-            Effect.Apply(this);
-        }
-
-        public void RemoveStatusEffect(StatusEffect Effect)
-        {
-            AppliedStatusEffects.Remove(Effect);
-            Effect.Remove(this);
-        }
-
-        public bool HasStatusEffect(Type StatusEffectType)
-        {
-            return AppliedStatusEffects.Count(se => StatusEffectType == se.GetType()) > 0;
-        }
-
-        public T GetStatusEffect<T>() where T: StatusEffect
-        {
-            foreach (var se in AppliedStatusEffects)
-                if (se.GetType() == typeof(T)) return se as T;
-            return null;
-        }
-       
-	}
+    }
 }

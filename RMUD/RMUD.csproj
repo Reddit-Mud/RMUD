@@ -120,16 +120,12 @@
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Lib\Quest.cs" />
-    <Compile Include="Lib\LycanthropeStatusEffect.cs" />
-    <Compile Include="Lib\SillyStatusEffect.cs" />
-    <Compile Include="Lib\StatusEffect.cs" />
     <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
     <Compile Include="Parser\CommandEntry.cs" />
     <Compile Include="Parser\MatchContext.cs" />
     <Compile Include="Parser\Matchers\FailIf.cs" />
     <Compile Include="Parser\Matchers\NumberMatcher.cs" />
     <Compile Include="Parser\Matchers\GenericMatcher.cs" />
-    <Compile Include="Parser\Matchers\StatusEffectGate.cs" />
     <Compile Include="Parser\Matchers\ScoreGate.cs" />
     <Compile Include="Core\RelativeLocationNames.cs" />
     <Compile Include="Core\ChatChannels.cs" />
