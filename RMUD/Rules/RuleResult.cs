@@ -7,11 +7,8 @@ namespace RMUD
 {
     public enum PerformResult
     {
-        Allow = 0,
-        Default = 1,
         Continue = 1,
         Stop = 2,
-        Disallow = 2,
     }
 
     public enum CheckResult

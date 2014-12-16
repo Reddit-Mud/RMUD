@@ -80,7 +80,7 @@ namespace RMUD
                 if (actionBook == null) throw new InvalidOperationException();
                 return actionBook.Consider(Args);
             }
-            return PerformResult.Default;
+            return PerformResult.Continue;
         }
 
         public CheckResult ConsiderCheckRule(String Name, params Object[] Args)

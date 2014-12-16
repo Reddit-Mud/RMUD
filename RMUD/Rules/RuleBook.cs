@@ -112,11 +112,11 @@ namespace RMUD
                         GlobalRules.LogTo.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
                     }
 
-                    var r = rule.BodyClause == null ? PerformResult.Default : rule.BodyClause.Invoke(Args);
+                    var r = rule.BodyClause == null ? PerformResult.Continue : rule.BodyClause.Invoke(Args);
                     if (r != PerformResult.Continue) return r;
                 }
             }
-            return PerformResult.Default;
+            return PerformResult.Continue;
         }
 
         public override void AddRule(Rule Rule)

@@ -38,10 +38,10 @@ namespace RMUD.Commands
             {
                 Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");
                 return CheckResult.Disallow;
-            });
+            }).Name("Default things are not open rule.");
 
-            GlobalRules.Value<MudObject, bool>("is-open").Do(a => false);
-            GlobalRules.Value<MudObject, bool>("openable").Do(a => false);
+            GlobalRules.Value<MudObject, bool>("is-open").Do(a => false).Name("Things closed by default rule.");
+            GlobalRules.Value<MudObject, bool>("openable").Do(a => false).Name("Things unopenable by default rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("on-opened").Do((actor, target) =>
             {
