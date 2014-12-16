@@ -59,7 +59,8 @@ namespace RMUD
         {
             SortRules();
 
-            foreach (var _rule in Rules)
+            var rulesCopy = new List<Rule>(Rules);
+            foreach (var _rule in rulesCopy)
             {
                 var rule = _rule as Rule<CheckResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
@@ -100,7 +101,8 @@ namespace RMUD
         {
             SortRules();
 
-            foreach (var _rule in Rules)
+            var rulesCopy = new List<Rule>(Rules);
+            foreach (var _rule in rulesCopy)
             {
                 var rule = _rule as Rule<PerformResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
@@ -141,7 +143,8 @@ namespace RMUD
             SortRules();
 
             ValueReturned = false;
-            foreach (var rule in Rules)
+            var rulesCopy = new List<Rule>(Rules);
+            foreach (var rule in rulesCopy)
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
                     if (GlobalRules.LogTo != null)

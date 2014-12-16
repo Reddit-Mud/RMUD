@@ -28,10 +28,35 @@ namespace RMUD
             return book.CheckArgumentTypes(ResultType, ArgumentTypes);
         }
 
+        public static CheckResult IsVisibleTo(MudObject Actor, MudObject Item)
+        {
+            if (!Mud.IsVisibleTo(Actor, Item))
+            {
+                Mud.SendMessage(Actor, "That doesn't seem to be here any more.");
+                return CheckResult.Disallow;
+            }
+            return CheckResult.Continue;
+        }
+
+        public static CheckResult IsHolding(MudObject Actor, MudObject Item)
+        {
+            if (!Mud.ObjectContainsObject(Actor, Item))
+            {
+                Mud.SendMessage(Actor, "You don't have that.");
+                return CheckResult.Disallow;
+            }
+            return CheckResult.Continue;
+        }
+
+        public static void DeleteRule(String RuleBookName, String RuleID)
+        {
+            Rules.DeleteRule(RuleBookName, RuleID);
+        }
+
         public static PerformResult ConsiderPerformRule(String Name, MudObject Object, params Object[] Arguments)
         {
             var r = PerformResult.Continue;
-            if (Object.Rules != null) r = Object.Rules.ConsiderActionRule(Name, Arguments);
+            if (Object != null && Object.Rules != null) r = Object.Rules.ConsiderActionRule(Name, Arguments);
             if (r == PerformResult.Continue)
             {
                 if (Rules == null) InitializeGlobalRuleBooks();

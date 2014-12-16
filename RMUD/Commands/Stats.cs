@@ -54,15 +54,6 @@ namespace RMUD.Commands
                     builder.Append("Memory usage: " + String.Format("{0:n0}", kb) + " kb\r\n");
                     builder.Append("Named objects loaded: " + Mud.NamedObjects.Count + "\r\n");
                 }
-                else if (type == "HEARTBEAT")
-                {
-                    builder.AppendFormat("Heartbeat interval: {0} Objects: {1} HID: {2}\r\n",
-                        Mud.SettingsObject.HeartbeatInterval,
-                        Mud.ObjectsRegisteredForHeartbeat.Count,
-                        Mud.HeartbeatID);
-                    foreach (var Object in Mud.ObjectsRegisteredForHeartbeat)
-                        builder.Append(Object.ToString() + "\r\n");
-                }
                 else if (type == "TIME")
                 {
                     builder.AppendFormat("Current time in game: {0}\r\n", Mud.TimeOfDay);

@@ -11,6 +11,48 @@ using System;
 
 namespace RMUD
 {
+
+	public class RuleBuilder<TR>
+    {
+        public Rule<TR> Rule;
+
+        public RuleBuilder<TR> When(Func<bool> Clause)
+        {
+            Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
+            return this;
+        }
+
+        public RuleBuilder<TR> Do(Func<TR> Clause)
+        {
+            Rule.BodyClause = RuleDelegateWrapper<TR>.MakeWrapper(Clause);
+            return this;
+        }
+
+        public RuleBuilder<TR> Name(String Name)
+        {
+            Rule.DescriptiveName = Name;
+            return this;
+        }
+
+        public RuleBuilder<TR> ID(String ID)
+        {
+            Rule.ID = ID;
+            return this;
+        }
+
+		public RuleBuilder<TR> First {
+		get {
+			Rule.Priority = RulePriority.First;
+			return this;
+		}}
+
+		public RuleBuilder<TR> Last {
+		get {
+			Rule.Priority = RulePriority.Last;
+			return this;
+		}}
+    }
+
 <#for (var i = 1; i < 5; ++i){#>
 	public class RuleBuilder<<# Args(i); #>, TR>
     {
@@ -18,13 +60,13 @@ namespace RMUD
 
         public RuleBuilder<<#Args(i);#>, TR> When(Func<<#Args(i);#>, bool> Clause)
         {
-            Rule.WhenClause = RuleDelegateWrapper<<#Args(i);#>, bool>.MakeWrapper(Clause);
+            Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
             return this;
         }
 
         public RuleBuilder<<#Args(i);#>, TR> Do(Func<<#Args(i);#>, TR> Clause)
         {
-            Rule.BodyClause = RuleDelegateWrapper<<#Args(i);#>, TR>.MakeWrapper(Clause);
+            Rule.BodyClause = RuleDelegateWrapper<TR>.MakeWrapper(Clause);
             return this;
         }
 

@@ -27,15 +27,10 @@ public class Jupiter : RMUD.Scenery
     {
         Nouns.Add("jupiter");
         Long = "Jupiter holds in his left hand a gleaming thunderbolt. It glows bright enough to light the entire chamber. In his right, he holds a chisel.";
-        //RMUD.Mud.RegisterForHeartbeat(this);
 
         Value<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
     }
 
-    public override void Heartbeat(ulong HeartbeatID)
-    {
-        RMUD.Mud.SendLocaleMessage(this, string.Format("Jupiter's thunderbolt sparkles for the {0}th time.\r\n", HeartbeatID));
-    }
 }
 
 public class Table : RMUD.GenericContainer
@@ -53,10 +48,7 @@ public class Table : RMUD.GenericContainer
             RMUD.Mud.SendMessage(actor, "It's far too heavy.");
             return RMUD.CheckResult.Disallow;
         });
-    }
 
-    public override string Indefinite(RMUD.Actor Actor)
-    {
-        return "an ancient table";
+        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed-name").Do((viewer, thing, article) => "an ancient table");
     }
 }

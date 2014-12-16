@@ -13,28 +13,30 @@ namespace RMUD
         {
             To.Nouns.Add("silly");
             Counter = 100;
-            Mud.RegisterForHeartbeat(To);
 
-            To.Value<MudObject, MudObject, String, String>("actor-name").Do((viewer, actor, article) =>
+            To.Value<MudObject, MudObject, String, String>("printed-name")
+                .Do((viewer, actor, article) =>
                 {
                     return "silly " + (actor as Actor).Short;
-                }).Name("Silly name rule").ID("SILLYSTATUSEFFECT");
+                })
+                .Name("Silly name rule")
+                .ID("SILLYSTATUSEFFECT");
+
+            GlobalRules.Perform("heartbeat")
+                .Do(() =>
+                {
+                    Counter -= 1;
+                    if (Counter <= 0)
+                    {
+                        Mud.SendExternalMessage(To, "^<the0> is serious now.", To);
+                        To.Nouns.Remove("silly");
+                        To.Rules.DeleteAll("SILLYSTATUSEFFECT");
+                        GlobalRules.DeleteRule("heartbeat", "SILLYSTATUSEFFECT");
+                    }
+                    return PerformResult.Continue;
+                })
+                .ID("SILLYSTATUSEFFECT");
         }
 
-        public override void Remove(Actor From)
-        {
-            From.Nouns.Remove("silly");
-            From.Rules.DeleteRule("actor-name", "SILLYSTATUSEFFECT");
-        }
-
-        public override void Heartbeat(ulong HeartbeatID, Actor AppliedTo)
-        {
-            Counter -= 1;
-            if (Counter <= 0)
-            {
-                Mud.SendExternalMessage(AppliedTo, "^<the0> is serious now.", AppliedTo);
-                AppliedTo.RemoveStatusEffect(this);
-            }
-        }
     }
 }

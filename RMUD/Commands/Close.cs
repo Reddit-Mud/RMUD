@@ -23,8 +23,7 @@ namespace RMUD.Commands
                             "I don't see that here."),
                         "SUBJECT")),
                 new CloseProcessor(),
-                "Close something.")
-                .MustBeVisible("SUBJECT");
+                "Close something.");
 		}
 
         public void InitializeGlobalRules()
@@ -44,6 +43,8 @@ namespace RMUD.Commands
                 Mud.SendExternalMessage(actor, "<a0> closes <a1>.", actor, target);
                 return PerformResult.Continue;
             }).Name("Default close reporting rule.");
+
+            GlobalRules.Check<MudObject, MudObject>("can-close").First.Do((actor, item) => GlobalRules.IsVisibleTo(actor, item)).Name("Item must be visible rule.");
         }
     }
 	

@@ -105,12 +105,12 @@
     <Compile Include="database\static\palantine\soranus.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <None Include="database\static\palantine\skull.cs">
+    <Compile Include="database\static\palantine\skull.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="database\static\palantine\sonar.cs">
+    </Compile>
+    <Compile Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Compile>
     <Compile Include="Lib\BitArraySerializer.cs" />
     <Compile Include="Lib\EnumSerializer.cs" />
     <Compile Include="Lib\DictionaryStringObjectSerializer.cs" />

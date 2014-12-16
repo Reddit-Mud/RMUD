@@ -15,7 +15,8 @@
             else return RMUD.QuestStatus.Unavailable;
         }
 
-        if (RMUD.Mud.GetObject("palantine/wolf").QueryQuestProperty("is-fed") == true) return RMUD.QuestStatus.Completed;
+        var wolf = RMUD.Mud.GetObject("palantine/wolf");
+        if (RMUD.GlobalRules.ConsiderValueRule<bool>("entrail-quest-is-fed", wolf, wolf)) return RMUD.QuestStatus.Completed;
 
         var entrails = RMUD.Mud.GetObject("palantine/entrails");
         if (entrails.Location == null) return RMUD.QuestStatus.Impossible;
@@ -42,13 +43,13 @@
                 break;
             case RMUD.QuestEvents.Completed:
                 RMUD.Mud.SendMessage(Questor, "Entrail quest completed.");
-                RMUD.Mud.GetObject("palantine/wolf").ResetQuest(this);
-                RMUD.Mud.GetObject("palantine/soranus").ResetQuest(this);
+                ResetObject(RMUD.Mud.GetObject("palantine/wolf"));
+                ResetObject(RMUD.Mud.GetObject("palantine/soranus"));
                 Active = false;
                 break;
             case RMUD.QuestEvents.Abandoned:
-                RMUD.Mud.GetObject("palantine/wolf").ResetQuest(this);
-                RMUD.Mud.GetObject("palantine/soranus").ResetQuest(this);
+                ResetObject(RMUD.Mud.GetObject("palantine/wolf"));
+                ResetObject(RMUD.Mud.GetObject("palantine/soranus"));
                 RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine/entrails"), null);
                 Active = false;
                 break;

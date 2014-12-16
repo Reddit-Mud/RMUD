@@ -63,7 +63,7 @@ namespace RMUD
             var startTime = DateTime.Now;
 
             var matchedCommand = Parser.ParseCommand(Command, Client.Player);
-            
+
             if (displayMatches)
             {
                 var matchEndTime = DateTime.Now;
@@ -95,19 +95,22 @@ namespace RMUD
                         Mud.SendMessage(Client, builder.ToString());
                     }
                 }
-
-                return;
-            }
-
-            if (matchedCommand != null)
-            {
-                if (matchedCommand.Matches.Count > 1)
-                    Client.CommandHandler = new DisambigCommandHandler(Client, matchedCommand, this);
-                else
-                    Mud.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Client.Player);
             }
             else
-                Mud.SendMessage(Client, "huh?");
+            {
+
+                if (matchedCommand != null)
+                {
+                    if (matchedCommand.Matches.Count > 1)
+                        Client.CommandHandler = new DisambigCommandHandler(Client, matchedCommand, this);
+                    else
+                        Mud.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Client.Player);
+                }
+                else
+                    Mud.SendMessage(Client, "huh?");
+            }
+
+            GlobalRules.LogRules(null);
 
             if (displayTime)
             {

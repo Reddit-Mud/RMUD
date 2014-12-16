@@ -6,6 +6,13 @@ namespace RMUD
 {
 	public partial class RuleSet
 	{	
+		public RuleBuilder<RT> AddRule<RT>(String Name)
+		{
+			var rule = new Rule<RT>();
+			FindOrCreateRuleBook<RT>(Name).AddRule(rule);
+			return new RuleBuilder<RT> { Rule = rule };
+		}
+
 		public RuleBuilder<T0, RT> AddRule<T0, RT>(String Name)
 		{
 			var rule = new Rule<RT>();

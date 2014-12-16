@@ -11,6 +11,29 @@ namespace RMUD
     {
         public static bool SilentFlag = false;
 
+        private static bool OutputQueryTriggered = false;
+
+        public static void BeginOutputQuery()
+        {
+            OutputQueryTriggered = false;
+        }
+
+        public static bool CheckOutputQuery()
+        {
+            return OutputQueryTriggered;
+        }
+
+        public static String UnformattedItemList(int StartIndex, int Count)
+        {
+            var builder = new StringBuilder();
+            for (int i = StartIndex; i < StartIndex + Count; ++i)
+            {
+                builder.Append("<a" + i + ">");
+                if (i != (StartIndex + Count - 1)) builder.Append(", ");
+            }
+            return builder.ToString();
+        }
+
         public static String FormatMessage(Actor Recipient, String Message, params MudObject[] Objects)
         {
             for (int i = 0; i < Objects.Length; ++i)

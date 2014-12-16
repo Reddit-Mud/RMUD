@@ -10,29 +10,46 @@ namespace RMUD
 		{
 			throw new NotImplementedException();
 		}		
+
+		public static RuleDelegateWrapper<TR> MakeWrapper(Func<TR> Delegate)
+		{
+			return new RuleDelegateWrapperImpl<TR> { Delegate = Delegate };
+		}
+
 		
 		public static RuleDelegateWrapper<TR> MakeWrapper<T0>(Func<T0, TR> Delegate)
 		{
-			return new RuleDelegateWrapper<T0, TR> { Delegate = Delegate };
+			return new RuleDelegateWrapperImpl<T0, TR> { Delegate = Delegate };
 		}		
 		
 		public static RuleDelegateWrapper<TR> MakeWrapper<T0, T1>(Func<T0, T1, TR> Delegate)
 		{
-			return new RuleDelegateWrapper<T0, T1, TR> { Delegate = Delegate };
+			return new RuleDelegateWrapperImpl<T0, T1, TR> { Delegate = Delegate };
 		}		
 		
 		public static RuleDelegateWrapper<TR> MakeWrapper<T0, T1, T2>(Func<T0, T1, T2, TR> Delegate)
 		{
-			return new RuleDelegateWrapper<T0, T1, T2, TR> { Delegate = Delegate };
+			return new RuleDelegateWrapperImpl<T0, T1, T2, TR> { Delegate = Delegate };
 		}		
 		
 		public static RuleDelegateWrapper<TR> MakeWrapper<T0, T1, T2, T3>(Func<T0, T1, T2, T3, TR> Delegate)
 		{
-			return new RuleDelegateWrapper<T0, T1, T2, T3, TR> { Delegate = Delegate };
+			return new RuleDelegateWrapperImpl<T0, T1, T2, T3, TR> { Delegate = Delegate };
 		}		
 	}
+
+	public class RuleDelegateWrapperImpl<TR> : RuleDelegateWrapper<TR>
+	{
+		internal Func<TR> Delegate;
+
+		public override TR Invoke(Object[] Arguments)
+		{
+			return (TR)Delegate.DynamicInvoke(Arguments);
+		}
+	}
+
 	
-	public class RuleDelegateWrapper<T0, TR> : RuleDelegateWrapper<TR>
+	public class RuleDelegateWrapperImpl<T0, TR> : RuleDelegateWrapper<TR>
 	{
 		internal Func<T0, TR> Delegate;
 
@@ -42,7 +59,7 @@ namespace RMUD
 		}
 	}
 	
-	public class RuleDelegateWrapper<T0, T1, TR> : RuleDelegateWrapper<TR>
+	public class RuleDelegateWrapperImpl<T0, T1, TR> : RuleDelegateWrapper<TR>
 	{
 		internal Func<T0, T1, TR> Delegate;
 
@@ -52,7 +69,7 @@ namespace RMUD
 		}
 	}
 	
-	public class RuleDelegateWrapper<T0, T1, T2, TR> : RuleDelegateWrapper<TR>
+	public class RuleDelegateWrapperImpl<T0, T1, T2, TR> : RuleDelegateWrapper<TR>
 	{
 		internal Func<T0, T1, T2, TR> Delegate;
 
@@ -62,7 +79,7 @@ namespace RMUD
 		}
 	}
 	
-	public class RuleDelegateWrapper<T0, T1, T2, T3, TR> : RuleDelegateWrapper<TR>
+	public class RuleDelegateWrapperImpl<T0, T1, T2, T3, TR> : RuleDelegateWrapper<TR>
 	{
 		internal Func<T0, T1, T2, T3, TR> Delegate;
 

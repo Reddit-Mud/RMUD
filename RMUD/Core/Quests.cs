@@ -22,8 +22,11 @@ namespace RMUD
                 else if (status == QuestStatus.Impossible) qevent = QuestEvents.Impossible;
                 else qevent = QuestEvents.Impossible;
 
-                player.ActiveQuest = null;
-                quest.HandleQuestEvent(qevent, player);
+                if (status != QuestStatus.InProgress)
+                {
+                    player.ActiveQuest = null;
+                    quest.HandleQuestEvent(qevent, player);
+                }
             }
         }
 

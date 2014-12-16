@@ -74,17 +74,6 @@ namespace RMUD
                             Console.WriteLine("Memory usage: " + String.Format("{0:n0}", kb) + " kb");
                             Console.WriteLine("Named objects loaded: " + Mud.NamedObjects.Count);
                         }
-                        else if (command.ToUpper() == "HEARTBEAT")
-                        {
-                            Mud.DatabaseLock.WaitOne();
-                            Console.WriteLine("Heartbeat interval: {0} Objects: {1} HID: {2}",
-                                Mud.SettingsObject.HeartbeatInterval,
-                                Mud.ObjectsRegisteredForHeartbeat.Count,
-                                Mud.HeartbeatID);
-                            foreach (var Object in Mud.ObjectsRegisteredForHeartbeat)
-                                Console.WriteLine(Object.ToString());
-                            Mud.DatabaseLock.ReleaseMutex();
-                        }
                         else if (command.ToUpper() == "TIME")
                         {
                             Mud.DatabaseLock.WaitOne();

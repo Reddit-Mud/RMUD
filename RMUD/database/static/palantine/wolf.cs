@@ -11,8 +11,6 @@
 
         Nouns.Add("wolf");
 
-        RMUD.Mud.RegisterForHeartbeat(this);
-
         Perform<RMUD.MudObject>("handle-entrail-drop").Do(entrails =>
             {
                 RMUD.Mud.SendLocaleMessage(this, "The wolf snatches up the entrails.");
@@ -21,24 +19,19 @@
                 return RMUD.PerformResult.Stop;
             });
 
-        Value<RMUD.MudObject, RMUD.MudObject, string, string>("actor-name").First.Do((viewer, item, article) => article + " wolf");
-    }
+        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed-name").First.Do((viewer, item, article) => article + " wolf");
 
-    public override void Heartbeat(ulong HeartbeatID)
-    {
-        if (!IsFed)
-            RMUD.Mud.SendLocaleMessage(this, "The wolf whines for food.");
-    }
+        Value<RMUD.MudObject, bool>("entrail-quest-is-fed").Do(wolf => IsFed);
+        Perform<RMUD.MudObject, RMUD.MudObject>("reset-quest")
+            .When((quest, item) => quest.Path == "palantine/entrail_quest")
+            .Do((quest, item) => { IsFed = false; return RMUD.PerformResult.Stop; });
 
-    public override bool QueryQuestProperty(string Name)
-    {
-        if (Name == "is-fed") return IsFed;
-        return false;
-    }
-
-    public override void ResetQuest(RMUD.Quest Quest)
-    {
-        IsFed = false;
+        RMUD.GlobalRules.Perform("heartbeat").Do(() =>
+        {
+            if (!IsFed)
+                RMUD.Mud.SendLocaleMessage(this, "The wolf whines for food.");
+            return RMUD.PerformResult.Continue;
+        });
     }
 
 }

@@ -6,6 +6,36 @@ namespace RMUD
 {
 	public static partial class GlobalRules
 	{	
+		public static void DeclarePerformRuleBook(String Name, String Description)
+		{
+			Rules.FindOrCreateRuleBook<PerformResult>(Name).Description = Description;
+		}
+		
+		public static void DeclareValueRuleBook<RT>(String Name, String Description)
+        {
+            Rules.FindOrCreateRuleBook<RT>(Name).Description = Description;
+        }
+
+		public static void DeclareCheckRuleBook(String Name, String Description)
+		{
+			Rules.FindOrCreateRuleBook<CheckResult>(Name).Description = Description;
+		}
+				
+        public static RuleBuilder<PerformResult> Perform(String Name)
+        {
+            return Rules.AddRule<PerformResult>(Name);
+        }
+		
+        public static RuleBuilder<RT> Value<RT>(String Name)
+        {
+            return Rules.AddRule<RT>(Name);
+        }
+
+		public static RuleBuilder<CheckResult> Check(String Name)
+        {
+            return Rules.AddRule<CheckResult>(Name);
+        }
+
 		public static void DeclarePerformRuleBook<T0>(String Name, String Description)
 		{
 			Rules.FindOrCreateRuleBook<PerformResult>(Name, typeof(T0)).Description = Description;

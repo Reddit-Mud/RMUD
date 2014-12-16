@@ -9,6 +9,5 @@ namespace RMUD
     {
         public virtual void Apply(Actor To) { }
         public virtual void Remove(Actor From) { }
-        public virtual void Heartbeat(ulong HeartbeatID, Actor AppliedTo) { }
     }
 }

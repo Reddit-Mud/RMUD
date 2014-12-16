@@ -12,6 +12,19 @@ namespace RMUD
         Destroyed,
     }
 
+    public class MudObjectRules : DeclaresRules
+    {
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String, String>("printed-name", "[Viewer, Object, Article -> String] : Find the name that should be displayed for an object.");
+
+            GlobalRules.Value<MudObject, MudObject, String, String>("printed-name")
+               .Last
+               .Do((viewer, thing, article) => article + " " + thing.Short)
+               .Name("Default name of a thing.");
+       }
+    }
+
 	public partial class MudObject
     {
         public ObjectState State = ObjectState.Unitialized; 
@@ -27,10 +40,6 @@ namespace RMUD
         
 		public virtual void Initialize() { }
         public virtual void HandleMarkedUpdate() { }
-        public virtual void Heartbeat(UInt64 HeartbeatID) { }
-
-        public virtual bool QueryQuestProperty(String Name) { return false; }
-        public virtual void ResetQuest(Quest Quest) { }
 
         public override string ToString()
         {
@@ -39,14 +48,21 @@ namespace RMUD
         }
 
         public String Short;
-		public DescriptiveText Long { get; set; }
+        public String Long;
         public String Article = "a";
 		public NounList Nouns { get; set; }
         public MudObject Location { get; set; }
         public RuleSet Rules = null;
+        
+        public String Indefinite(MudObject RequestedBy) 
+        {
+            return GlobalRules.ConsiderValueRule<String>("printed-name", this, RequestedBy, this, Article);
+        }
 
-        public virtual String Indefinite(Actor RequestedBy) { return Article + " " + Short; }
-        public virtual String Definite(Actor RequestedBy) { return "the " + Short; }
+        public String Definite(MudObject RequestedBy)
+        {
+            return GlobalRules.ConsiderValueRule<String>("printed-name", this, RequestedBy, this, "the");
+        }
 
 		public MudObject()
 		{

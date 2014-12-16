@@ -17,17 +17,34 @@ namespace RMUD
 		{
 			throw new NotImplementedException();
 		}		
+
+		public static RuleDelegateWrapper<TR> MakeWrapper(Func<TR> Delegate)
+		{
+			return new RuleDelegateWrapperImpl<TR> { Delegate = Delegate };
+		}
+
 <#for (var i = 1; i < 5; ++i){#>
 		
 		public static RuleDelegateWrapper<TR> MakeWrapper<<#Args(i);#>>(Func<<#Args(i);#>, TR> Delegate)
 		{
-			return new RuleDelegateWrapper<<#Args(i);#>, TR> { Delegate = Delegate };
+			return new RuleDelegateWrapperImpl<<#Args(i);#>, TR> { Delegate = Delegate };
 		}		
 <#}#>
 	}
+
+	public class RuleDelegateWrapperImpl<TR> : RuleDelegateWrapper<TR>
+	{
+		internal Func<TR> Delegate;
+
+		public override TR Invoke(Object[] Arguments)
+		{
+			return (TR)Delegate.DynamicInvoke(Arguments);
+		}
+	}
+
 <#for (var i = 1; i < 5; ++i){#>
 	
-	public class RuleDelegateWrapper<<#Args(i);#>, TR> : RuleDelegateWrapper<TR>
+	public class RuleDelegateWrapperImpl<<#Args(i);#>, TR> : RuleDelegateWrapper<TR>
 	{
 		internal Func<<#Args(i);#>, TR> Delegate;
 

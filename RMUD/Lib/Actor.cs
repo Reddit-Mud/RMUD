@@ -21,20 +21,13 @@ namespace RMUD
                 return CheckResult.Disallow;
             });
 
-            GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String, String>("actor-name", "[Viewer, Actor -> String] : Find the name that should be displayed for an actor.");
-            
-            GlobalRules.Value<MudObject, MudObject, String, String>("actor-name")
-                .When((viewer, actor, article) => !(viewer is Actor) || !(actor is Actor))
-                .Do((viewer, actor, article) => article + " " + actor.Short)
-                .Name("Name of non-actor.");
-            
-            GlobalRules.Value<MudObject, MudObject, String, String>("actor-name")
-                .When((viewer, actor, article) =>
-                Introduction.ActorKnowsActor(viewer as Actor, actor as Actor))
+            GlobalRules.Value<MudObject, MudObject, String, String>("printed-name")
+                .When((viewer, thing, article) => viewer is Actor && thing is Actor && Introduction.ActorKnowsActor(viewer as Actor, thing as Actor))
                 .Do((viewer, actor, article) => actor.Short)
                 .Name("Name of introduced actor.");
 
-            GlobalRules.Value<MudObject, MudObject, String, String>("actor-name")
+            GlobalRules.Value<MudObject, MudObject, String, String>("printed-name")
+                .When((viewer, thing, article) => thing is Actor)
                 .Do((viewer, actor, article) => article + " " + (actor as Actor).DescriptiveName)
                 .Name("Default name for unintroduced actor.");
         }
@@ -59,34 +52,12 @@ namespace RMUD
             }
         }
 
-        private string PrepareName(Actor RequestedBy, String Article)
-        {
-            return GlobalRules.ConsiderValueRule<String>("actor-name", this, RequestedBy, this, Article);
-        }
-
-        public override string Definite(Actor RequestedBy)
-        {
-            return PrepareName(RequestedBy, "the");
-        }
-
-        public override string Indefinite(Actor RequestedBy)
-        {
-            return PrepareName(RequestedBy, Article);
-        }
-
         public Actor()
             : base(RelativeLocations.Held | RelativeLocations.Worn, RelativeLocations.Held)
         {
             Gender = RMUD.Gender.Male;
             Nouns.Add("MAN", (a) => a.Gender == RMUD.Gender.Male);
             Nouns.Add("WOMAN", (a) => a.Gender == RMUD.Gender.Female);
-        }
-
-        public override void Heartbeat(ulong HeartbeatID)
-        {
-            foreach (var effect in new List<StatusEffect>(AppliedStatusEffects))
-                effect.Heartbeat(HeartbeatID, this);
-            base.Heartbeat(HeartbeatID);
         }
 
         public void ApplyStatusEffect(StatusEffect Effect)

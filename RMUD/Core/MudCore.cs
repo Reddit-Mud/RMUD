@@ -113,12 +113,8 @@ namespace RMUD
 
         public static void ProcessPlayerCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
         {
-            if (Command.CheckRules == null || Command.CheckRules.Consider(Match, Actor) != CheckResult.Disallow)
-            {
-                Command.Processor.Perform(Match, Actor);
-                CheckQuestStatus(Actor);
-            }
+            Command.Processor.Perform(Match, Actor);
+            CheckQuestStatus(Actor);
         }
-
     }
 }
