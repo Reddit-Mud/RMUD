@@ -61,6 +61,7 @@ namespace RMUD
         public static void SendMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
         {
             if (SilentFlag) return;
+            OutputQueryTriggered = true;
 
             if (Actor != null && Actor.ConnectedClient != null)
                 PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, FormatMessage(Actor, Message, MentionedObjects)));
@@ -69,6 +70,7 @@ namespace RMUD
         public static void SendMessage(MudObject MudObject, String Message, params MudObject[] MentionedObjects)
         {
             if (SilentFlag) return;
+            OutputQueryTriggered = true;
 
             if (MudObject is Actor)
                 SendMessage(MudObject as Actor, Message, MentionedObjects);
@@ -77,6 +79,7 @@ namespace RMUD
         public static void SendLocaleMessage(MudObject Object, String Message, params MudObject[] MentionedObjects)
         {
             if (SilentFlag) return;
+            OutputQueryTriggered = true;
 
             var container = Mud.FindLocale(Object) as Container;
             if (container != null)
@@ -94,6 +97,7 @@ namespace RMUD
         public static void SendExternalMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
         {
             if (SilentFlag) return;
+            OutputQueryTriggered = true;
 
             if (Actor == null) return;
             var location = Actor.Location as Room;
@@ -113,6 +117,7 @@ namespace RMUD
         public static void SendExternalMessage(MudObject Actor, String Message, params MudObject[] MentionedObjects)
         {
             if (SilentFlag) return;
+            OutputQueryTriggered = true;
 
             SendExternalMessage(Actor as Actor, Message, MentionedObjects);
         }
@@ -121,6 +126,7 @@ namespace RMUD
         public static void SendMessage(Client Client, String Message)
         {
             if (SilentFlag) return;
+            OutputQueryTriggered = true;
 
             PendingMessages.Add(new RawPendingMessage(Client, Message));
         }
@@ -128,6 +134,7 @@ namespace RMUD
         public static void SendGlobalMessage(String Message)
         {
             if (SilentFlag) return;
+            OutputQueryTriggered = true;
 
             foreach (var client in ConnectedClients)
             {
