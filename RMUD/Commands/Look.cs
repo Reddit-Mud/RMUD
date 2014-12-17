@@ -72,7 +72,7 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject>("describe-locale")
                 .Do((viewer, room) =>
                 {
-                    var visibleThings = (room as Room).Contents.Where(t => !Object.ReferenceEquals(t, viewer));
+                    var visibleThings = (room as Room).Contents.Where(t => !System.Object.ReferenceEquals(t, viewer));
                     var normalContents = new List<MudObject>();
 
                     foreach (var thing in visibleThings)

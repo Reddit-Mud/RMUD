@@ -5,6 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher FirstOf(params CommandTokenMatcher[] Subs)
+        {
+            return new FirstOf(Subs);
+        }
+    }
+
     public class FirstOf : CommandTokenMatcher
     {
         internal List<CommandTokenMatcher> Matchers = new List<CommandTokenMatcher>();

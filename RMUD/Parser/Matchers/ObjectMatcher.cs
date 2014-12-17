@@ -26,6 +26,22 @@ namespace RMUD
         VeryLikely = 2
     }
 
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher Object(String CaptureName, IObjectSource Source, ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
+        {
+            return new ObjectMatcher(CaptureName, Source, Settings);
+        }
+
+        public static CommandTokenMatcher Object(String CaptureName, IObjectSource Source, Func<Actor, MudObject, MatchPreference> ScoreFunc, ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
+        {
+            return new ObjectMatcher(CaptureName, Source, ScoreFunc, Settings);
+        }
+
+        public static IObjectSource InScope { get { return new InScopeObjectSource(); } }
+        public static Func<Actor, MudObject, MatchPreference> PreferHeld { get { return ObjectMatcher.PreferHeld; } }
+    }
+
     public class ObjectMatcher : CommandTokenMatcher
     {
 		public String CaptureName;

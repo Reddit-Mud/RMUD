@@ -10,12 +10,9 @@ namespace RMUD
 	{
 		internal CommandParser Parser;
 
-		public ParserCommandHandler()
+		public ParserCommandHandler(CommandParser Parser)
 		{
-			Parser = new CommandParser();
-
-			foreach (var cmd in CommandFactory.AllCommands)
-			    CommandFactory.GetCommand(cmd.Key).Create(Parser);
+            this.Parser = Parser;
 		}
 
         public void HandleCommand(Client Client, String Command)

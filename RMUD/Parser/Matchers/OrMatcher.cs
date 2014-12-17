@@ -5,6 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher Or(params CommandTokenMatcher[] Subs)
+        {
+            return new Or(Subs);
+        }
+    }
+
     public class Or : CommandTokenMatcher
     {
         internal List<CommandTokenMatcher> Matchers = new List<CommandTokenMatcher>();

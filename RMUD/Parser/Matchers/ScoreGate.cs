@@ -5,6 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher BestScore(String ScoreArgument, CommandTokenMatcher Sub)
+        {
+            return new ScoreGate(Sub, ScoreArgument);
+        }
+    }
+
     internal class ScoreGate : CommandTokenMatcher
     {
         public String ScoreArgument;

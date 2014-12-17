@@ -17,6 +17,13 @@ namespace RMUD
             return Entry;
         }
 
+        public CommandEntry AddCommand(CommandTokenMatcher Matcher, String HelpText)
+        {
+            var Entry = new CommandEntry { Matcher = Matcher, Processor = null, HelpText = HelpText };
+            Commands.Add(Entry);
+            return Entry;
+        }
+
 		public class MatchedCommand
 		{
 			public CommandEntry Command;

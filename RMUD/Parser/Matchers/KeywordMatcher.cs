@@ -5,6 +5,19 @@ using System.Text;
 
 namespace RMUD
 {
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher KeyWord(String Word)
+        {
+            return new KeyWord(Word);
+        }
+
+        public static CommandTokenMatcher OptionalKeyWord(String Word)
+        {
+            return new KeyWord(Word, true);
+        }
+    }
+
     internal class KeyWord : CommandTokenMatcher
     {
         public String Word;

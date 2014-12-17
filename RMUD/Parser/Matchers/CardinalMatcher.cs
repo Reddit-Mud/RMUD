@@ -5,6 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher Cardinal(String ArgumentName)
+        {
+            return new Cardinal(ArgumentName);
+        }
+    }
+
     internal class Cardinal : CommandTokenMatcher
     {
         public String ArgumentName;

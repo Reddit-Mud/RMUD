@@ -5,6 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher Check(Func<PossibleMatch, MatchContext, bool> Test, String FailureMessage)
+        {
+            return new FailIf(Test, FailureMessage);
+        }
+    }
+
     internal class FailIf : CommandTokenMatcher
     {
         public Func<PossibleMatch, MatchContext, bool> Test;

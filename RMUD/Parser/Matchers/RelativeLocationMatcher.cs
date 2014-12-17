@@ -5,6 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher RelativeLocation(String CaptureName)
+        {
+            return new RelativeLocationMatcher(CaptureName);
+        }
+    }
+
     internal class RelativeLocationMatcher : CommandTokenMatcher
     {
         public String ArgumentName;

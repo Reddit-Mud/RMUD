@@ -5,6 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher Generic(Func<PossibleMatch, MatchContext, List<PossibleMatch>> MatchFunc, String HelpDescription)
+        {
+            return new GenericMatcher(MatchFunc, HelpDescription);
+        }
+    }
+
     internal class GenericMatcher : CommandTokenMatcher
     {
         public Func<PossibleMatch, MatchContext, List<PossibleMatch>> MatchFunc;

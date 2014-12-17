@@ -5,6 +5,14 @@ using System.Text;
 
 namespace RMUD
 {
+    public partial class CommandFactory
+    {
+        public static CommandTokenMatcher RequiredRank(int Rank)
+        {
+            return new RankGate(Rank);
+        }
+    }
+
     internal class RankGate : CommandTokenMatcher
     {
         public int RequiredRank;

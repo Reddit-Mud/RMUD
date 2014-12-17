@@ -77,7 +77,7 @@ namespace RMUD.Commands
                     new Optional(
                         new ObjectMatcher("NEW-LOCUTOR", new InScopeObjectSource(), (Actor, mudobject) =>
                             {
-                                if (Actor is Player && Object.ReferenceEquals(mudobject, (Actor as Player).CurrentInterlocutor)) return MatchPreference.VeryLikely;
+                                if (Actor is Player && System.Object.ReferenceEquals(mudobject, (Actor as Player).CurrentInterlocutor)) return MatchPreference.VeryLikely;
                                 if (mudobject is NPC) return MatchPreference.Likely;
                                 else return MatchPreference.VeryUnlikely;
                             })),
