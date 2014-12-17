@@ -9,7 +9,8 @@ namespace RMUD
     {
         First = 0,
         Neutral = 1,
-        Last = 2
+        Last = 2,
+        Delete = 3
     }
 
     public class Rule 

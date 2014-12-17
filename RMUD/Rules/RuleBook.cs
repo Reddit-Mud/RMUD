@@ -24,19 +24,23 @@ namespace RMUD
             return true;
         }
 
-        public virtual void AddRule(Rule Rule) { throw new NotImplementedException(); }
+        public virtual void CheckRule(Rule Rule) { throw new NotImplementedException(); }
         
-        protected void _addRule(Rule Rule)
+        public void AddRule(Rule Rule)
         {
+            CheckRule(Rule);
             Rules.Add(Rule);
             NeedsSort = true;
         }
 
         protected void SortRules()
         {
+            if (!NeedsSort) return;
+
             var newList = new List<Rule>[]{ new List<Rule>(), new List<Rule>(), new List<Rule>() };
             foreach (var rule in Rules)
-                newList[(int)rule.Priority].Add(rule);
+                if (rule.Priority != RulePriority.Delete)
+                    newList[(int)rule.Priority].Add(rule);
 
             Rules.Clear();
             foreach (var sublist in newList)
@@ -45,7 +49,12 @@ namespace RMUD
             NeedsSort = false;
         }
 
-        public virtual void DeleteRule(String ID) { throw new NotImplementedException(); }
+        public void DeleteRule(string ID)
+        {
+            foreach (var rule in Rules)
+                if (rule.ID == ID) rule.Priority = RulePriority.Delete;
+            NeedsSort = true;
+        }
     }
 
     public class CheckRuleBook : RuleBook
@@ -59,8 +68,7 @@ namespace RMUD
         {
             SortRules();
 
-            var rulesCopy = new List<Rule>(Rules);
-            foreach (var _rule in rulesCopy)
+            foreach (var _rule in Rules)
             {
                 var rule = _rule as Rule<CheckResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
@@ -77,18 +85,11 @@ namespace RMUD
             return CheckResult.Continue;
         }
 
-        public override void AddRule(Rule Rule)
+        public override void CheckRule(Rule Rule)
         {
             if (!(Rule is Rule<CheckResult>)) throw new InvalidOperationException();
-            _addRule(Rule);
-        }
-
-        public override void DeleteRule(string ID)
-        {
-            Rules.RemoveAll(r => r.ID == ID);
         }
     }
-
 
     public class ActionRuleBook : RuleBook
     {
@@ -101,8 +102,7 @@ namespace RMUD
         {
             SortRules();
 
-            var rulesCopy = new List<Rule>(Rules);
-            foreach (var _rule in rulesCopy)
+            foreach (var _rule in Rules)
             {
                 var rule = _rule as Rule<PerformResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
@@ -119,15 +119,9 @@ namespace RMUD
             return PerformResult.Continue;
         }
 
-        public override void AddRule(Rule Rule)
+        public override void CheckRule(Rule Rule)
         {
             if (!(Rule is Rule<PerformResult>)) throw new InvalidOperationException();
-            _addRule(Rule);
-        }
-
-        public override void DeleteRule(string ID)
-        {
-            Rules.RemoveAll(r => r.ID == ID);
         }
     }
 
@@ -143,8 +137,7 @@ namespace RMUD
             SortRules();
 
             ValueReturned = false;
-            var rulesCopy = new List<Rule>(Rules);
-            foreach (var rule in rulesCopy)
+            foreach (var rule in Rules)
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
                     if (GlobalRules.LogTo != null)
@@ -158,15 +151,9 @@ namespace RMUD
             return default(RT);
         }
 
-        public override void AddRule(Rule Rule)
+        public override void CheckRule(Rule Rule)
         {
             if (!(Rule is Rule<RT>)) throw new InvalidOperationException();
-            _addRule(Rule);
-        }
-
-        public override void DeleteRule(string ID)
-        {
-            Rules.RemoveAll(r => r.ID == ID);
         }
     }
 }
