@@ -41,6 +41,7 @@ namespace RMUD
         {
 			var tokens = new LinkedList<String>(Command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
 			var rootMatch = new PossibleMatch(tokens.First);
+            rootMatch.Arguments.Upsert("ACTOR", Actor);
 
 			//Find all objects in scope
 			var matchContext = new MatchContext { ExecutingActor = Actor };

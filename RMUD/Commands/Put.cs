@@ -7,8 +7,8 @@ namespace RMUD.Commands
 {
 	internal class Put : CommandFactory, DeclaresRules
 	{
-		public override void Create(CommandParser Parser)
-		{
+        public override void Create(CommandParser Parser)
+        {
             Parser.AddCommand(
                 new Sequence(
                     new KeyWord("PUT", false),
@@ -29,9 +29,24 @@ namespace RMUD.Commands
                                 }),
                             "I can't see that here."),
                        "OBJECT")),
-                new PutProcessor(),
-                "Put something on, in, under or behind something");
-		}
+                null,
+                "Put something on, in, under or behind something")
+                .ProceduralRule((match, actor) =>
+                {
+                    if (!match.Arguments.ContainsKey("RELLOC"))
+                    {
+                        if (match.Arguments["OBJECT"] is Container)
+                            match.Arguments.Upsert("RELLOC", (match.Arguments["OBJECT"] as Container).DefaultLocation);
+                        else
+                            match.Arguments.Upsert("RELLOC", RelativeLocations.On);
+                    }
+                    return PerformResult.Continue;
+                }, "Supply default for optional relloc procedural rule.")
+                .Check("can-put", "OBJECT", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
+                .Perform("on-put", "OBJECT", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
+                .MarkLocaleForUpdate();
+
+        }
 
         public void InitializeGlobalRules()
         {
@@ -40,9 +55,13 @@ namespace RMUD.Commands
 
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").Last.Do((a, b, c, d) => CheckResult.Allow).Name("Allow putting as default rule.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").Do((a, b, c, d) =>
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").Do((actor, item, container, relloc) =>
             {
-                if (!(c is Container)) return CheckResult.Disallow;
+                if (!(container is Container))
+                {
+                    Mud.SendMessage(actor, "You can't put things " + Mud.GetRelativeLocationName(relloc) + " that.");
+                    return CheckResult.Disallow;
+                }
                 return CheckResult.Continue;
             }).Name("Can't put things in things that aren't containers rule.");
 
@@ -91,27 +110,4 @@ namespace RMUD.Commands
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put").First.Do((actor, item, container, relloc) => GlobalRules.IsHolding(actor, item)).Name("Must be holding item rule.");
         }
     }
-
-	internal class PutProcessor : CommandProcessor
-	{
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            var target = Match.Arguments["SUBJECT"] as MudObject;
-            var container = Match.Arguments["OBJECT"] as MudObject;
-
-            RelativeLocations relloc = RelativeLocations.In;
-            if (Match.Arguments.ContainsKey("RELLOC"))
-                relloc = (Match.Arguments["RELLOC"] as RelativeLocations?).Value;
-            else
-            {
-                if (container is Container) relloc = (container as Container).DefaultLocation;
-            }
-            
-            if (GlobalRules.ConsiderCheckRule("can-put", container, Actor, target, container, relloc) == CheckResult.Allow)
-                 GlobalRules.ConsiderPerformRule("on-put", container, Actor, target, container, relloc);
-
-            Mud.MarkLocaleForUpdate(target);
-
-        }
-	}
 }
