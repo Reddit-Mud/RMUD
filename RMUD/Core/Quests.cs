@@ -15,17 +15,16 @@ namespace RMUD
             if (player != null && player.ActiveQuest != null)
             {
                 var quest = player.ActiveQuest;
-                var status = quest.CheckQuestStatus(player);
-                var qevent = QuestEvents.Abandoned;
-                if (status == QuestStatus.Completed) qevent = QuestEvents.Completed;
-                else if (status == QuestStatus.Abandoned) qevent = QuestEvents.Abandoned;
-                else if (status == QuestStatus.Impossible) qevent = QuestEvents.Impossible;
-                else qevent = QuestEvents.Impossible;
 
-                if (status != QuestStatus.InProgress)
+                if (GlobalRules.ConsiderValueRule<bool>("quest complete?", quest, player, quest))
                 {
                     player.ActiveQuest = null;
-                    quest.HandleQuestEvent(qevent, player);
+                    GlobalRules.ConsiderPerformRule("quest completed", quest, player, quest);
+                }
+                else if (GlobalRules.ConsiderValueRule<bool>("quest failed?", quest, player, quest))
+                {
+                    player.ActiveQuest = null;
+                    GlobalRules.ConsiderPerformRule("quest failed", quest, player, quest);
                 }
             }
         }

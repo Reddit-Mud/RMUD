@@ -22,7 +22,8 @@
         Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed-name").First.Do((viewer, item, article) => article + " wolf");
 
         Value<RMUD.MudObject, bool>("entrail-quest-is-fed").Do(wolf => IsFed);
-        Perform<RMUD.MudObject, RMUD.MudObject>("reset-quest")
+
+        Perform<RMUD.MudObject, RMUD.MudObject>("quest reset")
             .When((quest, item) => quest.Path == "palantine/entrail_quest")
             .Do((quest, item) => { IsFed = false; return RMUD.PerformResult.Stop; });
 

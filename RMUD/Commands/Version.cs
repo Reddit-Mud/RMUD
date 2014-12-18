@@ -26,7 +26,7 @@ namespace RMUD.Commands
 
             var buildVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             
-            Mud.SendMessage(Actor, String.Format("Build: RMUD Moneta {0}", buildVersion));
+            Mud.SendMessage(Actor, String.Format("Build: RMUD Hadad {0}", buildVersion));
 
             if (System.IO.File.Exists("version.txt"))
                 Mud.SendMessage(Actor, String.Format("Commit: {0}", System.IO.File.ReadAllText("version.txt")));

@@ -14,7 +14,7 @@
         {
             RMUD.Mud.SendLocaleMessage(actor, "^<the0> grins, expossing a pair of wicked yellow canines. \"Oh don't worry, they aren't here now.\"", this);
             var quest = RMUD.Mud.GetObject("palantine/entrail_quest") as RMUD.Quest;
-            if (quest.CheckQuestStatus(actor) == RMUD.QuestStatus.Available)
+            if (RMUD.GlobalRules.ConsiderValueRule<bool>("quest available?", quest, actor, quest))
             {
                 RMUD.Mud.SendMessage(actor, "\"Would you mind feeding them for me?\" <the0> asks.", this);
                 RMUD.Mud.OfferQuest(actor, quest);

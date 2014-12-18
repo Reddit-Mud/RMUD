@@ -3,59 +3,50 @@
     public override void Initialize()
     {
         Short = "entrails";
-    }
 
-    public bool Active = false;
+        bool Active = false;
 
-    public override RMUD.QuestStatus CheckQuestStatus(RMUD.Actor To)
-    {
-        if (!Active)
+        Value<RMUD.MudObject, RMUD.MudObject, bool>("quest available?").Do((actor, quest) => !Active && RMUD.Mud.IsVisibleTo(actor, RMUD.Mud.GetObject("palantine/soranus")));
+
+        Value<RMUD.MudObject, RMUD.MudObject, bool>("quest complete?").Do((actor, quest) =>
         {
-            if (RMUD.Mud.IsVisibleTo(To, RMUD.Mud.GetObject("palantine/soranus"))) return RMUD.QuestStatus.Available;
-            else return RMUD.QuestStatus.Unavailable;
-        }
+            var wolf = RMUD.Mud.GetObject("palantine/wolf");
+            return RMUD.GlobalRules.ConsiderValueRule<bool>("entrail-quest-is-fed", wolf, wolf);
+        });
 
-        var wolf = RMUD.Mud.GetObject("palantine/wolf");
-        if (RMUD.GlobalRules.ConsiderValueRule<bool>("entrail-quest-is-fed", wolf, wolf)) return RMUD.QuestStatus.Completed;
+        Value<RMUD.MudObject, RMUD.MudObject, bool>("quest failed?").Do((actor, quest) => !RMUD.Mud.ObjectContainsObject(actor, RMUD.Mud.GetObject("palantine/entrails")));
 
-        var entrails = RMUD.Mud.GetObject("palantine/entrails");
-        if (entrails.Location == null) return RMUD.QuestStatus.Impossible;
-        if (!RMUD.Mud.ObjectContainsObject(To, entrails)) return RMUD.QuestStatus.Abandoned;
-        return RMUD.QuestStatus.InProgress;
-    }
+        Perform<RMUD.MudObject, RMUD.MudObject>("quest accepted").Do((questor, quest) =>
+            {
+                Active = true;
+                RMUD.Mud.SendMessage(questor, "You have accepted the entrail quest.");
 
-    public override void HandleQuestEvent(RMUD.QuestEvents Event, RMUD.Actor Questor)
-    {
-        switch (Event)
-        {
-            case RMUD.QuestEvents.Accepted:
+                var entrails = RMUD.Mud.GetObject("palantine/entrails");
+                if (entrails.Location == null)
                 {
-                    Active = true;
-                    RMUD.Mud.SendMessage(Questor, "You have accepted the entrail quest.");
-
-                    var entrails = RMUD.Mud.GetObject("palantine/entrails");
-                    if (entrails.Location == null)
-                    {
-                        RMUD.MudObject.Move(entrails, Questor);
-                        RMUD.Mud.SendMessage(Questor, "Soranus gives you some entrails.");
-                    }
+                    RMUD.MudObject.Move(entrails, questor);
+                    RMUD.Mud.SendMessage(questor, "^<the0> gives you some entrails.", RMUD.Mud.GetObject("palantine/soranus"));
                 }
-                break;
-            case RMUD.QuestEvents.Completed:
-                RMUD.Mud.SendMessage(Questor, "Entrail quest completed.");
+                return RMUD.PerformResult.Continue;
+            });
+
+        Perform<RMUD.MudObject, RMUD.MudObject>("quest completed").Do((questor, quest) =>
+            {
+                RMUD.Mud.SendMessage(questor, "Entrail quest completed.");
                 ResetObject(RMUD.Mud.GetObject("palantine/wolf"));
                 ResetObject(RMUD.Mud.GetObject("palantine/soranus"));
                 Active = false;
-                break;
-            case RMUD.QuestEvents.Abandoned:
+                return RMUD.PerformResult.Continue;
+            });
+
+        Perform<RMUD.MudObject, RMUD.MudObject>("quest failed").Do((questor, quest) =>
+            {
+                RMUD.Mud.SendMessage(questor, "Entrail quest failed.");
                 ResetObject(RMUD.Mud.GetObject("palantine/wolf"));
                 ResetObject(RMUD.Mud.GetObject("palantine/soranus"));
                 RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine/entrails"), null);
                 Active = false;
-                break;
-            case RMUD.QuestEvents.Impossible:
-                Active = false;
-                break;
-        }
+                return RMUD.PerformResult.Continue;
+            });
     }
 }
