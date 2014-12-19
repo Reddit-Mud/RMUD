@@ -33,7 +33,7 @@ namespace RMUD
         }
     }
 
-    public class Actor : GenericContainer
+    public class Actor : Container
     {
         public Client ConnectedClient;
 

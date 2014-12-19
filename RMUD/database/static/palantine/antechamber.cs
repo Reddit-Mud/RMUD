@@ -33,7 +33,7 @@ public class Jupiter : RMUD.Scenery
 
 }
 
-public class Table : RMUD.GenericContainer
+public class Table : RMUD.Container
 {
     public Table() : base(RMUD.RelativeLocations.On | RMUD.RelativeLocations.Under, RMUD.RelativeLocations.On)
     {

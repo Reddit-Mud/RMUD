@@ -25,8 +25,8 @@ namespace RMUD
 
         public static bool IsOpen(MudObject Object)
         {
-            if (GlobalRules.ConsiderValueRule<bool>("openable", Object, Object))
-                return GlobalRules.ConsiderValueRule<bool>("is-open", Object, Object);
+            if (GlobalRules.ConsiderValueRule<bool>("openable?", Object, Object))
+                return GlobalRules.ConsiderValueRule<bool>("open?", Object, Object);
             return true;
         }
 

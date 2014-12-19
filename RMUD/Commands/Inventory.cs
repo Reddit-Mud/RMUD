@@ -27,7 +27,7 @@ namespace RMUD.Commands
 
 			var builder = new StringBuilder();
 
-            var wornObjects = Mud.GetContents(Actor as Container, RelativeLocations.Worn);
+            var wornObjects = Actor.GetContents(RelativeLocations.Worn);
             if (wornObjects.Count == 0) builder.Append("You are naked.\r\n");
             else
             {
@@ -40,7 +40,7 @@ namespace RMUD.Commands
                 }
             }
 
-            var heldObjects = Mud.GetContents(Actor as Container, RelativeLocations.Held);
+            var heldObjects = Actor.GetContents(RelativeLocations.Held);
 			if (heldObjects.Count == 0) builder.Append("You have nothing.");
 			else
 			{

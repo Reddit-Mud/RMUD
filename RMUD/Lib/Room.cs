@@ -20,7 +20,7 @@ namespace RMUD
         }
     }
 
-	public class Room : GenericContainer
+	public class Room : Container
 	{
         public RoomType RoomType = RoomType.Exterior;
 

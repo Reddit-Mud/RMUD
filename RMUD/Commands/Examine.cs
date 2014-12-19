@@ -75,7 +75,7 @@ namespace RMUD.Commands
                 .When((viewer, item) => (item is Container) && ((item as Container).LocationsSupported & RelativeLocations.On) == RelativeLocations.On)
                 .Do((viewer, item) =>
                 {
-                    var contents = Mud.GetContents(item as Container, RelativeLocations.On);
+                    var contents = (item as Container).GetContents(RelativeLocations.On);
                     if (contents.Count() > 0)
                     {
                         contents.Insert(0, item);
@@ -89,7 +89,7 @@ namespace RMUD.Commands
                 .When((viewer, item) => Mud.HasVisibleContents(item))
                 .Do((viewer, item) =>
                 {
-                    var contents = Mud.GetContents(item as Container, RelativeLocations.In);
+                    var contents = (item as Container).GetContents(RelativeLocations.In);
                     if (contents.Count() > 0)
                     {
                         contents.Insert(0, item);

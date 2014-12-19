@@ -37,13 +37,6 @@ namespace RMUD
             var builder = new StringBuilder();
             AssembleText(_node, builder);
             return builder.ToString();
-        }
-
-        public static List<MudObject> GetContents(Container Container, RelativeLocations Locations)
-        {
-            var r = new List<MudObject>();
-            Container.EnumerateObjects(Locations, (o, l) => { r.Add(o); return EnumerateObjectsControl.Continue; });
-            return r;
-        }
+        }       
     }
 }

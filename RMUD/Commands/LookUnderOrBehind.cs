@@ -54,7 +54,7 @@ namespace RMUD.Commands
                 }
             }
 
-            var contents = Mud.GetContents(container, relloc).Where(o => o is MudObject);
+            var contents = container.GetContents(relloc);
             if (contents.Count() > 0)
             {
                 var builder = new StringBuilder();
