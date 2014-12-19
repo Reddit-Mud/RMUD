@@ -22,41 +22,38 @@ namespace RMUD.Commands
                                 }),
                             "I don't see that here."),
                         "SUBJECT")),
-                new CloseProcessor(),
-                "Close something.");
+                "Close something.")
+                .Check("can close?", "SUBJECT", "ACTOR", "SUBJECT")
+                .Perform("closed", "SUBJECT", "ACTOR", "SUBJECT");
 		}
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-close", "[Actor, Item] - determine if the item can be closed.");
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-closed", "Item based rulebook to handle the item being closed.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can close?", "[Actor, Item] : Determine if the item can be closed.");
 
-            GlobalRules.Check<MudObject, MudObject>("can-close").Do((a, b) =>
-            {
-                Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");
-                return CheckResult.Disallow;
-            }).Name("Default can't close unopenable things rule.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("closed", "[Actor, Item] : Handle the item being closed.");
 
-            GlobalRules.Perform<MudObject, MudObject>("on-closed").Do((actor, target) =>
+            GlobalRules.Check<MudObject, MudObject>("can close?")
+                .When((actor, item) => !GlobalRules.ConsiderValueRule<bool>("openable?", item, item))
+                .Do((a, b) =>
+                {
+                    Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");
+                    return CheckResult.Disallow;
+                })
+                .Name("Default can't close unopenable things rule.");
+
+            GlobalRules.Check<MudObject, MudObject>("can close?")
+                .Do((actor, item) => CheckResult.Allow)
+                .Name("Default close things rule.");
+
+            GlobalRules.Perform<MudObject, MudObject>("closed").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You close <the0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> closes <a1>.", actor, target);
                 return PerformResult.Continue;
             }).Name("Default close reporting rule.");
 
-            GlobalRules.Check<MudObject, MudObject>("can-close").First.Do((actor, item) => GlobalRules.IsVisibleTo(actor, item)).Name("Item must be visible rule.");
+            GlobalRules.Check<MudObject, MudObject>("can close?").First.Do((actor, item) => GlobalRules.IsVisibleTo(actor, item)).Name("Item must be visible rule.");
         }
     }
-	
-	internal class CloseProcessor : CommandProcessor
-	{
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            var target = Match.Arguments["SUBJECT"] as MudObject;
-            
-            if (GlobalRules.ConsiderCheckRule("can-close", target, Actor, target) == CheckResult.Allow)
-                GlobalRules.ConsiderPerformRule("on-closed", target, Actor, target);
-        }
-	}
-
 }

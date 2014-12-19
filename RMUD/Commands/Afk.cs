@@ -10,25 +10,18 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("AFK", false),
-                    new FailIfNoMatches(
-                        new Rest("MESSAGE"),
-                        "You have to supply an afk message.")),
-                new AFKProcessor(),
-                "Set your afk message.");
+                Sequence(
+                    KeyWord("AFK"),
+                    MustMatch("You have to supply an afk message.",
+                        Rest("MESSAGE"))),
+                "Set your afk message.")
+                .ProceduralRule((match, actor) =>
+                {
+                    if (actor.ConnectedClient != null)
+                        actor.ConnectedClient.Account.AFKMessage = Mud.RestText(match.Arguments["MESSAGE"]);
+                    Mud.SendMessage(actor, "AFK message set.");
+                    return PerformResult.Continue;
+                });
         }
-	}
-
-	internal class AFKProcessor : CommandProcessor
-	{
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            var messageBuilder = new StringBuilder();
-            Mud.AssembleText(Match.Arguments["MESSAGE"] as LinkedListNode<String>, messageBuilder);
-            if (Actor.ConnectedClient != null)
-                Actor.ConnectedClient.Account.AFKMessage = messageBuilder.ToString();
-            Mud.SendMessage(Actor, "AFK message set.");
-        }        
 	}
 }

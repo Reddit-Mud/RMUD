@@ -30,6 +30,15 @@ namespace RMUD
             Builder.Remove(Builder.Length - 1, 1);
         }
 
+        public static String RestText(Object Node)
+        {
+            var _node = Node as LinkedListNode<String>;
+            if (_node == null) return "";
+            var builder = new StringBuilder();
+            AssembleText(_node, builder);
+            return builder.ToString();
+        }
+
         public static List<MudObject> GetContents(Container Container, RelativeLocations Locations)
         {
             var r = new List<MudObject>();

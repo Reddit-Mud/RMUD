@@ -43,13 +43,16 @@ namespace RMUD
                     return PerformResult.Continue;
                 });
 
-             Check<MudObject, MudObject>("can-open").When((a, b) => Locked).Do((a, b) =>
+             Check<MudObject, MudObject>("can open?")
+                 .When((a, b) => Locked)
+                 .Do((a, b) =>
                  {
                      Mud.SendMessage(a, "It seems to be locked.");
                      return CheckResult.Disallow;
                  });
 
-             Perform<MudObject, MudObject>("on-closed").Do((a, b) => { Locked = false; return PerformResult.Continue; });
+             Perform<MudObject, MudObject>("closed")
+                 .Do((a, b) => { Locked = false; return PerformResult.Continue; });
         }
         
 	}
