@@ -28,7 +28,7 @@ namespace RMUD.Commands
 		{
 			var direction = Match.Arguments["DIRECTION"] as Direction?;
 			var location = Actor.Location as Room;
-			var link = location.Links.FirstOrDefault(l => l.Direction == direction.Value);
+            var link = location.EnumerateObjects().FirstOrDefault(thing => thing is Link && (thing as Link).Direction == direction.Value) as Link;
 
 			if (link == null)
 				Mud.SendMessage(Actor, "You can't go that way.");
@@ -36,9 +36,9 @@ namespace RMUD.Commands
 			{
                 if (link.Portal != null)
                 {
-                    if (GlobalRules.ConsiderValueRule<bool>("openable", link.Portal, link.Portal))
+                    if (GlobalRules.ConsiderValueRule<bool>("openable?", link.Portal, link.Portal))
                     {
-                        if (!GlobalRules.ConsiderValueRule<bool>("is-open", link.Portal, link.Portal))
+                        if (!GlobalRules.ConsiderValueRule<bool>("open?", link.Portal, link.Portal))
                         {
                             Mud.SendMessage(Actor, "The door is closed.");
                             return;

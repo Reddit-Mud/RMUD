@@ -35,14 +35,18 @@ namespace RMUD
             var ceilingActor = Mud.FindLocale(Actor);
             if (ceilingActor == null) return false;
 
-            var ceilingObject = Mud.FindLocale(Object);
-            
-            if (!System.Object.ReferenceEquals(ceilingObject, Object)) 
+            if (Object is Portal)
+            {
+                var ceilingA = Mud.FindLocale((Object as Portal).FrontSide);
+                var ceilingB = Mud.FindLocale((Object as Portal).BackSide);
+
+                return System.Object.ReferenceEquals(ceilingActor, ceilingA) || System.Object.ReferenceEquals(ceilingActor, ceilingB);
+            }
+            else
+            {
+                var ceilingObject = Mud.FindLocale(Object);
                 return System.Object.ReferenceEquals(ceilingActor, ceilingObject);
-            else if (ceilingActor is Room)
-                    return (ceilingActor as Room).Links.Count(l => System.Object.ReferenceEquals(l.Portal, Object)) > 0;
-            
-            return false;
+            }
         }
     }
 }

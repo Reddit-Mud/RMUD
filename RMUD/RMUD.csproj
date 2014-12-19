@@ -108,9 +108,9 @@
     <Compile Include="database\static\palantine\skull.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="database\static\palantine\sonar.cs">
+    <None Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <Compile Include="Lib\BitArraySerializer.cs" />
     <Compile Include="Lib\EnumSerializer.cs" />
     <Compile Include="Lib\DictionaryStringObjectSerializer.cs" />

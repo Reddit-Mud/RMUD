@@ -72,7 +72,7 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject>("describe-locale")
                 .Do((viewer, room) =>
                 {
-                    var visibleThings = (room as Room).Contents.Where(t => !System.Object.ReferenceEquals(t, viewer));
+                    var visibleThings = (room as Room).EnumerateObjects(RelativeLocations.Contents).Where(t => !System.Object.ReferenceEquals(t, viewer));
                     var normalContents = new List<MudObject>();
 
                     foreach (var thing in visibleThings)
@@ -125,11 +125,11 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject>("describe-locale")
                 .Do((viewer, room) =>
                 {
-                    if ((room as Room).Links.Count > 0)
+                    if ((room as Room).EnumerateObjects(RelativeLocations.Links).Count() > 0)
                     {
                         Mud.SendMessage(viewer, "Obvious exits:");
 
-                        foreach (var link in (room as Room).Links)
+                        foreach (var link in (room as Room).EnumerateObjects<Link>(RelativeLocations.Links))
                         {
                             var builder = new StringBuilder();
                             builder.Append("  ");

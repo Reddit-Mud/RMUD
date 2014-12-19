@@ -97,6 +97,14 @@ namespace RMUD
             }
         }
 
+        public int RemoveAll(Predicate<MudObject> Func)
+        {
+            var r = 0;
+            foreach (var list in Lists)
+                r += list.Value.RemoveAll(Func);
+            return r;
+        }
+
 		public void Add(MudObject Object, RelativeLocations Locations)
 		{
             if (Locations == RelativeLocations.Default) Locations = Default;
@@ -119,6 +127,36 @@ namespace RMUD
                         if (Callback(MudObject, list.Key) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
             }
             return EnumerateObjectsControl.Continue;
+        }
+
+        public IEnumerable<MudObject> EnumerateObjects()
+        {
+            foreach (var list in Lists)
+                foreach (var item in list.Value)
+                    yield return item;
+        }
+
+        public IEnumerable<T> EnumerateObjects<T>() where T: MudObject
+        {
+            foreach (var list in Lists)
+                foreach (var item in list.Value)
+                    if (item is T) yield return item as T;
+        }
+
+        public IEnumerable<MudObject> EnumerateObjects(RelativeLocations Locations)
+        {
+            foreach (var list in Lists)
+                if ((list.Key & Locations) == list.Key)
+                    foreach (var item in list.Value)
+                        yield return item;
+        }
+
+        public IEnumerable<T> EnumerateObjects<T>(RelativeLocations Locations) where T: MudObject
+        {
+            foreach (var list in Lists)
+                if ((list.Key & Locations) == list.Key)
+                    foreach (var item in list.Value)
+                        if (item is T) yield return item as T;
         }
 
         public bool Contains(MudObject Object, RelativeLocations Locations)

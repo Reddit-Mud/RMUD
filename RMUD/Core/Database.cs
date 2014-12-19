@@ -56,7 +56,7 @@ namespace RMUD
 
             var fileTable = new List<FileTableEntry>();
             var source = new StringBuilder();
-            source.Append("using System;\nusing System.Collections.Generic;\nusing RMUD;\nnamespace database {\n");
+            source.Append("using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\nnamespace database {\n");
             int namespaceCount = 0;
             int lineCount = 4;
             EnumerateDatabase(DirectoryPath, Recursive, (s) =>
@@ -224,6 +224,12 @@ namespace RMUD
             parameters.GenerateInMemory = true;
             parameters.GenerateExecutable = false;
             parameters.ReferencedAssemblies.Add("RMUD.exe");
+
+            parameters.ReferencedAssemblies.Add("mscorlib.dll");
+            parameters.ReferencedAssemblies.Add("System.dll");
+            parameters.ReferencedAssemblies.Add("System.Core.dll");
+            parameters.ReferencedAssemblies.Add("System.Data.Linq.dll");
+            parameters.ReferencedAssemblies.Add("System.Data.Entity.dll");
 
             CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, Source);
             bool realError = false;

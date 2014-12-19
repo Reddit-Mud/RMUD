@@ -65,8 +65,9 @@
         }
         MapGrid[X, Y] = Symbol;
 
-        foreach (var link in Location.Links)
+        foreach (var _link in Location.EnumerateObjects().Where(t => t is RMUD.Link))
         {
+            var link = _link as RMUD.Link;
             var destination = RMUD.Mud.GetObject(link.Destination) as RMUD.Room;
             var directionVector = RMUD.Link.GetAsVector(link.Direction);
             PlaceEdge(MapGrid, X + directionVector.X, Y + directionVector.Y, link.Direction);
