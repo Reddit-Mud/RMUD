@@ -10,18 +10,15 @@ namespace RMUD.Commands
 		public override void Create(CommandParser Parser)
 		{
             Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("CLOSE", false),
-                    new ScoreGate(
-                        new FailIfNoMatches(
-                            new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
-                                (actor, openable) =>
+                Sequence(
+                    KeyWord("CLOSE"),
+                    BestScore("SUBJECT",
+                        MustMatch("I don't see that here.",
+                            Object("SUBJECT", InScope, (actor, thing) =>
                                 {
-                                    if (GlobalRules.ConsiderCheckRuleSilently("can-close", openable, actor, openable) == CheckResult.Allow) return MatchPreference.Likely;
+                                    if (GlobalRules.ConsiderCheckRuleSilently("can close?", thing, actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
                                     return MatchPreference.Unlikely;
-                                }),
-                            "I don't see that here."),
-                        "SUBJECT")),
+                                })))),
                 "Close something.")
                 .Check("can close?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("closed", "SUBJECT", "ACTOR", "SUBJECT");
@@ -49,7 +46,7 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject>("closed").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You close <the0>.", target);
-                Mud.SendExternalMessage(actor, "<a0> closes <a1>.", actor, target);
+                Mud.SendExternalMessage(actor, "^<a0> closes <a1>.", actor, target);
                 return PerformResult.Continue;
             }).Name("Default close reporting rule.");
 

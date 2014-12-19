@@ -10,19 +10,15 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("OPEN", false),
-                    new ScoreGate(
-                        new FailIfNoMatches(
-                            new ObjectMatcher("SUBJECT", new InScopeObjectSource(),
-                                (actor, openable) =>
-                                {
-                                    if (GlobalRules.ConsiderCheckRuleSilently("can-be-opened", openable, actor, openable) == CheckResult.Allow)
-                                        return MatchPreference.Likely;
-                                    return MatchPreference.Unlikely;
-                                }),
-                            "I don't see that here."),
-                        "SUBJECT")),
+                Sequence(
+                    KeyWord("OPEN"),
+                    BestScore("SUBJECT",
+                        MustMatch("I don't see that here.",
+                            Object("SUBJECT", InScope, (actor, thing) =>
+                            {
+                                if (GlobalRules.ConsiderCheckRuleSilently("can open?", thing, actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
+                                return MatchPreference.Unlikely;
+                            })))),
                 "Open something")
                 .Check("can open?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("opened", "SUBJECT", "ACTOR", "SUBJECT");
@@ -58,7 +54,7 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject>("opened").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You open <the0>.", target);
-                Mud.SendExternalMessage(actor, "<a0> opens <a1>.", actor, target);
+                Mud.SendExternalMessage(actor, "^<a0> opens <a1>.", actor, target);
                 return PerformResult.Continue;
             }).Name("Default report opening rule.");
 
