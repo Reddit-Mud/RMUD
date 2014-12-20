@@ -17,10 +17,12 @@ namespace RMUD
             if (container != null)
             {
                 var relloc = container.LocationOf(Of);
-                if (relloc == RelativeLocations.In) //Consider the openable rules.
+                if (relloc == RelativeLocations.In) //Consider the open rules.
                 {
-                    if (IsOpen(Of.Location)) return FindLocale(Of.Location);
-                    else return Of.Location;
+                    if (GlobalRules.ConsiderValueRule<bool>("open?", Of.Location, Of.Location))
+                        return FindLocale(Of.Location);
+                    else 
+                        return Of.Location;
                 }
             }
 

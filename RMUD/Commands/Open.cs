@@ -47,7 +47,7 @@ namespace RMUD.Commands
                 .Do((a, b) => CheckResult.Allow)
                 .Name("Default go ahead and open it rule.");
 
-            GlobalRules.Value<MudObject, bool>("open?").Do(a => false).Name("Things closed by default rule.");
+            GlobalRules.Value<MudObject, bool>("open?").Do(a => true).Name("Things open by default rule.");
 
             GlobalRules.Value<MudObject, bool>("openable?").Do(a => false).Name("Things unopenable by default rule.");
 

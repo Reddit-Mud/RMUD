@@ -10,26 +10,6 @@ namespace RMUD
 {
     public static partial class Mud
     {
-        public static bool HasVisibleContents(MudObject Object)
-        {
-            var container = Object as Container;
-            if (container == null) return false;
-
-            if ((container.LocationsSupported & RelativeLocations.In) == RelativeLocations.In)
-            {
-                return IsOpen(Object);
-            }
-
-            return false;
-        }
-
-        public static bool IsOpen(MudObject Object)
-        {
-            if (GlobalRules.ConsiderValueRule<bool>("openable?", Object, Object))
-                return GlobalRules.ConsiderValueRule<bool>("open?", Object, Object);
-            return true;
-        }
-
         public static bool IsVisibleTo(MudObject Actor, MudObject Object)
         {
             var ceilingActor = Mud.FindLocale(Actor);

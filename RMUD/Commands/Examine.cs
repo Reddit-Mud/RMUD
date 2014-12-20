@@ -86,7 +86,13 @@ namespace RMUD.Commands
                 .Name("List things on container in description rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => Mud.HasVisibleContents(item))
+                .When((viewer, item) => 
+                    {
+                        if (!(item is Container)) return false;
+                        if (!GlobalRules.ConsiderValueRule<bool>("open?", item, item)) return false;
+                        if ((item as Container).EnumerateObjects(RelativeLocations.In).Count() == 0) return false;
+                        return true;
+                    })
                 .Do((viewer, item) =>
                 {
                     var contents = (item as Container).GetContents(RelativeLocations.In);

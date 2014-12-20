@@ -47,7 +47,7 @@ namespace RMUD.Commands
 
             if (relloc == RelativeLocations.In)
             {
-                if (!Mud.IsOpen(target))
+                if (!GlobalRules.ConsiderValueRule<bool>("open?", target, target))
                 {
                     Mud.SendMessage(Actor, "^<the0> is closed.", target);
                     return;
