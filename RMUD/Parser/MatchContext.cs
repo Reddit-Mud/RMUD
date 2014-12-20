@@ -15,45 +15,9 @@ namespace RMUD
             get
             {
                 if (CachedObjectsInScope != null) return CachedObjectsInScope;
-                CachedObjectsInScope = new List<MudObject>();
-
-                var location = ExecutingActor.Location as Room;
-                if (location != null)
-                    location.EnumerateObjects(RelativeLocations.Room, EnumerateCallback(CachedObjectsInScope));
-
+                CachedObjectsInScope = new List<MudObject>(Mud.EnumerateVisibleTree(Mud.FindLocale(ExecutingActor)));
                 return CachedObjectsInScope;
             }
-        }
-
-        private static Func<MudObject, RelativeLocations, EnumerateObjectsControl> EnumerateCallback(List<MudObject> Into)
-        {
-            return (o, l) =>
-                {
-                    Into.Add(o);
-
-                    if (o is Container)
-                    {
-                        EnumerateContainer(o, RelativeLocations.On, Into);
-                        if (Mud.IsOpen(o))
-                            EnumerateContainer(o, RelativeLocations.In, Into);
-                        EnumerateContainer(o, RelativeLocations.Behind, Into);
-                        EnumerateContainer(o, RelativeLocations.Under, Into);
-
-                        if (o is Actor) 
-                            EnumerateContainer(o, RelativeLocations.Player, Into);
-                    }
-
-                    return EnumerateObjectsControl.Continue;
-                };
-        }
-
-        private static void EnumerateContainer(MudObject Container, RelativeLocations Location, List<MudObject> Into)
-        {
-            (Container as Container).EnumerateObjects(Location, (o, l) =>
-                {
-                        Into.Add(o);
-                    return EnumerateObjectsControl.Continue;
-                });
         }
     }
 }

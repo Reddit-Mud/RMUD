@@ -43,14 +43,8 @@ namespace RMUD
                 throw new InvalidOperationException();
             }
 
-            var locale = Mud.FindLocale(Actor);
-            if (locale != null)
-                Mud.EnumerateObjects(locale, (mo, relloc) =>
-                {
-                    if (mo is Player)
-                        GrantKnowledgeOfTopic(mo as Player, Actor.CurrentInterlocutor, Topic.ID);
-                    return EnumerateObjectsControl.Continue;
-                });
+            foreach (var player in Mud.EnumerateObjectTree(Mud.FindLocale(Actor)).Where(o => o is Player).Select(o => o as Player))
+                GrantKnowledgeOfTopic(player, Actor.CurrentInterlocutor, Topic.ID);
 
             Conversation.ListSuggestedTopics(Actor, Actor.CurrentInterlocutor);
         }

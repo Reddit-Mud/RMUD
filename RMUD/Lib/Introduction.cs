@@ -22,11 +22,8 @@ namespace RMUD
         {
             var locale = Mud.FindLocale(Introductee);
             if (locale != null)
-                Mud.EnumerateObjects(locale, (mo, relloc) =>
-                    {
-                        if (mo is Player) IntroduceActorToActor(Introductee, mo as Player);
-                        return EnumerateObjectsControl.Continue;
-                    });
+                foreach (var player in Mud.EnumerateObjectTree(locale).Where(o => o is Player).Select(o => o as Player))
+                    IntroduceActorToActor(Introductee, player);
         }
     }
 }

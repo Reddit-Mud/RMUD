@@ -13,33 +13,44 @@ namespace RMUD
     
     public static partial class Mud
     {
-        public static EnumerateObjectsControl EnumerateObjects(MudObject Source, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback)
+        private static IEnumerable<MudObject> _enumerateObjectTree(MudObject C)
         {
-            var container = Source as Container;
-            if (container == null) return EnumerateObjectsControl.Continue;
-
-            return container.EnumerateObjects(RelativeLocations.EveryMudObject, (subObject, loc) =>
+            if (C != null)
             {
-                if (Callback(subObject, loc) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
-                if (EnumerateObjects(subObject, Callback) == EnumerateObjectsControl.Stop)
-                    return EnumerateObjectsControl.Stop;
-
-                return EnumerateObjectsControl.Continue;
-            });
+                yield return C;
+                if (C is Container)
+                    foreach (var item in (C as Container).EnumerateObjects())
+                        foreach (var sub in _enumerateObjectTree(item))
+                            yield return sub;
+            }
         }
 
-        public static List<T> GatherObjects<T>(MudObject Source, Func<MudObject, T> Filter)
+        public static IEnumerable<MudObject> EnumerateObjectTree(MudObject Root)
         {
-            var result = new List<T>();
-            EnumerateObjects(Source, (obj, relloc) =>
-            {
-                var t = Filter(obj);
-                if (t != null) result.Add(t);
-                return EnumerateObjectsControl.Continue;
-            });
-            return result;
+            foreach (var item in _enumerateObjectTree(Root))
+                yield return item;
         }
 
-        
+        private static IEnumerable<MudObject> _enumerateVisibleTree(MudObject C)
+        {
+            if (C != null)
+            {
+                yield return C;
+                if (C is Container)
+                    foreach (var list in (C as Container).Lists)
+                    {
+                        if (list.Key == RelativeLocations.In && GlobalRules.ConsiderValueRule<bool>("openable?", C, C) && !GlobalRules.ConsiderValueRule<bool>("open?", C, C)) continue;
+                        foreach (var item in list.Value)
+                            foreach (var sub in _enumerateVisibleTree(item))
+                                yield return sub;
+                    }
+            }
+        }
+
+        public static IEnumerable<MudObject> EnumerateVisibleTree(MudObject Root)
+        {
+            foreach (var item in _enumerateVisibleTree(Root))
+                yield return item;
+        }
     }
 }
