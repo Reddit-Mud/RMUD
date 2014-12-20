@@ -23,9 +23,9 @@ public class kuz_shelf : RMUD.MudObject
                 return RMUD.PerformResult.Continue;
             });
 
-        Check<RMUD.MudObject, RMUD.MudObject>("can-take").Do((a, b) => RMUD.CheckResult.Allow);
+        Check<RMUD.MudObject, RMUD.MudObject>("can take?").Do((a, b) => RMUD.CheckResult.Allow);
 
-        Perform<RMUD.MudObject, RMUD.MudObject>("on-taken").Do((actor, target) =>
+        Perform<RMUD.MudObject, RMUD.MudObject>("taken").Do((actor, target) =>
             {
                 var newBook = new kuz_book();
                 RMUD.MudObject.Move(newBook, actor);

@@ -15,11 +15,15 @@ namespace RMUD
     {
         public void InitializeGlobalRules()
         {
-            GlobalRules.Check<MudObject, MudObject>("can-take").First.When((actor, thing) => thing is Actor).Do((actor, thing) =>
-            {
-                Mud.SendMessage(actor, "You can't take people.");
-                return CheckResult.Disallow;
-            });
+            GlobalRules.Check<MudObject, MudObject>("can take?")
+                .First
+                .When((actor, thing) => thing is Actor)
+                .Do((actor, thing) =>
+                {
+                    Mud.SendMessage(actor, "You can't take people.");
+                    return CheckResult.Disallow;
+                })
+                .Name("Can't take people rule.");
 
             GlobalRules.Value<MudObject, MudObject, String, String>("printed-name")
                 .When((viewer, thing, article) => viewer is Actor && thing is Actor && Introduction.ActorKnowsActor(viewer as Actor, thing as Actor))

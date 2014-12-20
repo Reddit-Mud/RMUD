@@ -46,7 +46,6 @@
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
     <Compile Include="Commands\Force.cs" />
-    <Compile Include="Commands\Lycanthropy.cs" />
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Commands\Rules.cs" />
@@ -213,7 +212,7 @@
     <Compile Include="Core\ProscriptionList.cs" />
     <Compile Include="Clients\TelnetClient.cs" />
     <Compile Include="Clients\TelnetControlCodes.cs" />
-    <Compile Include="Core\HasVisibleContents.cs" />
+    <Compile Include="Core\IsVisibleTo.cs" />
     <Compile Include="Core\TextUtility.cs" />
     <Compile Include="database\static\palantine\library.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

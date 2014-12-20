@@ -9,11 +9,14 @@ namespace RMUD
     {
         public void InitializeGlobalRules()
         {
-            GlobalRules.Check<MudObject, MudObject>("can-take").When((actor, thing) => thing is Scenery).Do((actor, thing) =>
+            GlobalRules.Check<MudObject, MudObject>("can take?")
+                .When((actor, thing) => thing is Scenery)
+                .Do((actor, thing) =>
                 {
                     Mud.SendMessage(actor, "That's a terrible idea.");
                     return CheckResult.Disallow;
-                });
+                })
+                .Name("Can't take scenery rule.");
         }
     }
 
