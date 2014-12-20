@@ -17,7 +17,9 @@ namespace RMUD
             Value<MudObject, bool>("openable?").Do(a => true);
             Value<MudObject, bool>("open?").Do(a => Open);
 
-            Check<MudObject, MudObject>("can open?").Do((a, b) => 
+            Check<MudObject, MudObject>("can open?")
+                .Last
+                .Do((a, b) =>
                 {
                     if (Open)
                     {
@@ -25,17 +27,20 @@ namespace RMUD
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Allow;
-                });
+                })
+                .Name("Can open doors rule.");
 
-            Check<MudObject, MudObject>("can close?").Do((a, b) =>
-            {
-                if (!Open)
+            Check<MudObject, MudObject>("can close?")
+                .Last
+                .Do((a, b) =>
                 {
-                    Mud.SendMessage(a, "It is already closed.");
-                    return CheckResult.Disallow;
-                }
-                return CheckResult.Allow;
-            });
+                    if (!Open)
+                    {
+                        Mud.SendMessage(a, "It is already closed.");
+                        return CheckResult.Disallow;
+                    }
+                    return CheckResult.Allow;
+                });
             
             Perform<MudObject, MudObject>("opened").Do((a, b) =>
             {

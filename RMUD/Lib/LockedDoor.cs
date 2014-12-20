@@ -44,12 +44,14 @@ namespace RMUD
                 });
 
              Check<MudObject, MudObject>("can open?")
+                 .First
                  .When((a, b) => Locked)
                  .Do((a, b) =>
                  {
                      Mud.SendMessage(a, "It seems to be locked.");
                      return CheckResult.Disallow;
-                 });
+                 })
+                 .Name("Can't open locked door rule.");
 
              Perform<MudObject, MudObject>("closed")
                  .Do((a, b) => { Locked = false; return PerformResult.Continue; });
