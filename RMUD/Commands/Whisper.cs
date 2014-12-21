@@ -38,7 +38,7 @@ namespace RMUD.Commands
             speechBuilder.Append("[privately{0}] ");
             speechBuilder.Append(Actor.Short);
             speechBuilder.Append(": \"");
-            Mud.AssembleText(Match.Arguments["SPEECH"] as LinkedListNode<String>, speechBuilder);
+            speechBuilder.Append(Match.Arguments["SPEECH"].ToString());
             speechBuilder.Append("\"");
 
             var player = Match.Arguments["PLAYER"] as Actor;

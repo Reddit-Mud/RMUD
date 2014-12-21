@@ -53,20 +53,19 @@ namespace RMUD.Commands
         {
             if (Actor.ConnectedClient == null) return;
 
-            var bookNameBuilder = new StringBuilder();
+            String bookName = "";
             if (Match.Arguments.ContainsKey("BOOK-NAME"))
-                Mud.AssembleText(Match.Arguments["BOOK-NAME"] as LinkedListNode<String>, bookNameBuilder);
-
+                bookName = Match.Arguments["BOOK-NAME"].ToString();
 
             if (Match.Arguments.ContainsKey("OBJECT"))
             {
                 if (Match.Arguments.ContainsKey("BOOK-NAME"))
-                    DisplaySingleBook(Actor, (Match.Arguments["OBJECT"] as MudObject).Rules, bookNameBuilder.ToString());
+                    DisplaySingleBook(Actor, (Match.Arguments["OBJECT"] as MudObject).Rules, bookName);
                 else
                     DisplayBookList(Actor, (Match.Arguments["OBJECT"] as MudObject).Rules);
             }
             else if (Match.Arguments.ContainsKey("BOOK-NAME"))
-                DisplaySingleBook(Actor, GlobalRules.Rules, bookNameBuilder.ToString());
+                DisplaySingleBook(Actor, GlobalRules.Rules, bookName);
             else
                 DisplayBookList(Actor, GlobalRules.Rules);
         }

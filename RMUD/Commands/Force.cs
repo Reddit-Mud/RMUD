@@ -45,9 +45,7 @@ namespace RMUD.Commands
                 return;
             }
 
-            var builder = new StringBuilder();
-            Mud.AssembleText(Match.Arguments["COMMAND"] as LinkedListNode<String>, builder);
-            var command = builder.ToString();
+            var command = Match.Arguments["COMMAND"].ToString();
             var matchedCommand = Mud.ParserCommandHandler.Parser.ParseCommand(command, targetActor);
             
             if (matchedCommand != null)

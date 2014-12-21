@@ -100,9 +100,7 @@ namespace RMUD.Commands
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
                 .Do((actor, item, container, relloc) =>
                 {
-                    if (relloc == RelativeLocations.In
-                        && GlobalRules.ConsiderValueRule<bool>("openable", container, container)
-                        && !GlobalRules.ConsiderValueRule<bool>("is-open", container, container))
+                    if (relloc == RelativeLocations.In && !GlobalRules.ConsiderValueRule<bool>("open?", container, container))
                     {
                         Mud.SendMessage(actor, "It seems to be closed.");
                         return CheckResult.Disallow;

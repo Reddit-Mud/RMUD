@@ -123,9 +123,7 @@ namespace RMUD.Commands
             }
 
             var isEmote = false;
-            var rawMessageBuilder = new StringBuilder();
-            Mud.AssembleText(Match.Arguments["TEXT"] as LinkedListNode<String>, rawMessageBuilder);
-            var rawMessage = rawMessageBuilder.ToString();
+            var rawMessage = Match.Arguments["TEXT"].ToString();
             if (rawMessage.StartsWith("\""))
             {
                 isEmote = true;

@@ -72,7 +72,7 @@ namespace RMUD.Commands
             else
                 speechBuilder.Append(" ");
 
-            Mud.AssembleText(Match.Arguments["SPEECH"] as LinkedListNode<String>, speechBuilder);
+            speechBuilder.Append(Match.Arguments["SPEECH"].ToString());
 
 			if (EmoteType == EmoteTypes.Speech)
 				speechBuilder.Append("\"");

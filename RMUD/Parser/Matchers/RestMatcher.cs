@@ -25,8 +25,21 @@ namespace RMUD
         public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
         {
             var r = new List<PossibleMatch>();
+
             if (State.Next != null)
-                r.Add(State.EndWith(ArgumentName, State.Next));
+            {
+                var builder = new StringBuilder();
+                var node = State.Next;
+                for (; node != null; node = node.Next)
+                {
+                    builder.Append(node.Value);
+                    builder.Append(" ");
+                }
+
+                builder.Remove(builder.Length - 1, 1);
+                r.Add(State.EndWith(ArgumentName, builder.ToString()));
+            }
+
 			return r;
         }
 
