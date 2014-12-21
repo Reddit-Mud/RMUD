@@ -29,7 +29,7 @@ namespace RMUD.Commands
 				{
 					builder.Append(command.Matcher.Emit());
 					builder.Append(" -- ");
-					builder.Append(command.HelpText);
+					builder.Append(command.BriefDescription);
 					builder.Append("\r\n");
 				}
 

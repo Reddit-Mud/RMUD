@@ -123,15 +123,18 @@ namespace RMUD
         }
 
 
-        public static void SendMessage(Client Client, String Message)
+        public static void SendMessage(Client Client, String Message, params MudObject[] MentionedObjects)
         {
             if (SilentFlag) return;
             OutputQueryTriggered = true;
 
-            PendingMessages.Add(new RawPendingMessage(Client, Message));
+            PendingMessages.Add(new RawPendingMessage(Client,
+                Client.IsLoggedOn ?
+                    FormatMessage(Client.Account.LoggedInCharacter, Message, MentionedObjects) :
+                    Message));
         }
 
-        public static void SendGlobalMessage(String Message)
+        public static void SendGlobalMessage(String Message, params MudObject[] MentionedObjects)
         {
             if (SilentFlag) return;
             OutputQueryTriggered = true;
@@ -139,7 +142,7 @@ namespace RMUD
             foreach (var client in ConnectedClients)
             {
                 if (client.IsLoggedOn)
-                    PendingMessages.Add(new RawPendingMessage(client, Message));
+                    SendMessage(client, Message, MentionedObjects);
             }
         }
     }

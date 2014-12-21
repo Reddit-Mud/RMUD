@@ -9,8 +9,19 @@ namespace RMUD
     {
         internal CommandTokenMatcher Matcher;
         internal CommandProcessor Processor;
-        internal String HelpText;
+        internal String BriefDescription;
         internal ActionRuleBook ProceduralRules;
+
+        public CommandEntry Manual(String Manual)
+        {
+            return this;
+        }
+
+        public CommandEntry Brief(String Brief)
+        {
+            this.BriefDescription = Brief;
+            return this;
+        }
 
         private void PrepareProceduralRuleBook()
         {
