@@ -44,6 +44,9 @@ namespace RMUD
             foreach (var cmd in CommandFactory.AllCommands)
                 CommandFactory.GetCommand(cmd).Create(DefaultParser);
 
+            foreach (var cmd in DefaultParser.Commands)
+                cmd.VerifyCompleteness();
+
             ParserCommandHandler = new ParserCommandHandler(DefaultParser);
             LoginCommandHandler = new LoginCommandHandler();
 

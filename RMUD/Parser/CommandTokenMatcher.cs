@@ -8,6 +8,7 @@ namespace RMUD
     public interface CommandTokenMatcher
     {
         List<PossibleMatch> Match(PossibleMatch State, MatchContext Context);
+        String FindFirstKeyWord();
 		String Emit();
     }
 }

@@ -69,9 +69,7 @@ namespace RMUD
             return r;
         }
 
-        public string Emit()
-        {
-            return "[CHANNEL]";
-        }
+        public String FindFirstKeyWord() { return null; }
+        public string Emit() { return "[CHANNEL]"; }
     }
 }

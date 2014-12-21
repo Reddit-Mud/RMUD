@@ -39,6 +39,7 @@ namespace RMUD
             return R;
         }
 
+        public String FindFirstKeyWord() { return Word; }
 		public String Emit() { return Optional ? (Word.ToLower() + "?") : Word.ToLower(); }
     }
 }

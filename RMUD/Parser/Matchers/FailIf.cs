@@ -32,6 +32,7 @@ namespace RMUD
             return r;
         }
 
+        public String FindFirstKeyWord() { return null; }
         public String Emit() { return "[FAIL-IF]"; }
     }
 }

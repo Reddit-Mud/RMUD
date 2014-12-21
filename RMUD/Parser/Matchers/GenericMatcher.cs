@@ -29,6 +29,7 @@ namespace RMUD
             return MatchFunc(State, Context);
         }
 
+        public String FindFirstKeyWord() { return null; }
         public String Emit() { return HelpDescription; }
     }
 }

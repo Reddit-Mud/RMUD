@@ -32,6 +32,7 @@ namespace RMUD
 			return R;
         }
 
+        public String FindFirstKeyWord() { return null; }
 		public String Emit() { return "<Rank must be >= " + RequiredRank + ">"; }
     }
 }

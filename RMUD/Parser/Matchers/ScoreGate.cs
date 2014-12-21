@@ -36,6 +36,7 @@ namespace RMUD
             return new List<PossibleMatch>(r.Where(m => highestScoreFound == GetScore(m, ScoreArgument)));
         }
 
+        public String FindFirstKeyWord() { return Sub.FindFirstKeyWord(); }
         public String Emit() { return "<BEST " + Sub.Emit() + ">"; }
 
         private static MatchPreference GetScore(PossibleMatch Match, String ScoreArgumentName)

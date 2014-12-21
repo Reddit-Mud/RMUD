@@ -5,15 +5,38 @@ using System.Text;
 
 namespace RMUD
 {
-    public class CommandEntry
+    public class CommandEntry : ManPage
     {
         internal CommandTokenMatcher Matcher;
         internal CommandProcessor Processor;
-        internal String BriefDescription;
+        internal String FamilyName = "";
+        internal String BriefDescription = "";
+        internal String ManualPage = "";
+        internal StringBuilder GeneratedManual = null;
         internal ActionRuleBook ProceduralRules;
+
+        public void VerifyCompleteness()
+        {
+            if (String.IsNullOrEmpty(FamilyName))
+                Mud.LogWarning("Command does not have name set - " + Matcher.Emit());
+            if (String.IsNullOrEmpty(ManualPage))
+                Mud.LogWarning("No manual for command " + FamilyName);
+        }
+
+        public CommandEntry()
+        {
+            Mud.ManPages.Add(this);
+        }
+
+        public CommandEntry Name(String Name)
+        {
+            this.FamilyName = Name.ToUpper();
+            return this;
+        }
 
         public CommandEntry Manual(String Manual)
         {
+            this.ManualPage = Manual;
             return this;
         }
 
@@ -26,15 +49,20 @@ namespace RMUD
         private void PrepareProceduralRuleBook()
         {
             if (ProceduralRules == null)
+            {
+                GeneratedManual = new StringBuilder();
                 ProceduralRules = new ActionRuleBook
                 {
                     ArgumentTypes = new List<Type>(new Type[] { typeof(PossibleMatch), typeof(Actor) }),
                 };
+            }
         }
 
-        public CommandEntry ProceduralRule(Func<PossibleMatch, Actor, PerformResult> Rule, String Name = "")
+        public CommandEntry ProceduralRule(Func<PossibleMatch, Actor, PerformResult> Rule, String Name = "an unamed proceddural rule")
         {
             PrepareProceduralRuleBook();
+            GeneratedManual.AppendLine("Consider " + Name);
+
             var rule = new Rule<PerformResult>
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper(Rule),
@@ -47,6 +75,8 @@ namespace RMUD
         public CommandEntry Check(String RuleName, String Target, params String[] RuleArguments)
         {
             PrepareProceduralRuleBook();
+            GeneratedManual.AppendLine("Consider the check rulebook '" + RuleName + "' on " + Target + " with arguments " + String.Join(", ", RuleArguments));
+
             var rule = new Rule<PerformResult>
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
@@ -66,6 +96,8 @@ namespace RMUD
         public CommandEntry Perform(String RuleName, String Target, params String[] RuleArguments)
         {
             PrepareProceduralRuleBook();
+            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + "' on " + Target + " with arguments " + String.Join(", ", RuleArguments));
+
             var rule = new Rule<PerformResult>
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
@@ -84,6 +116,8 @@ namespace RMUD
         public CommandEntry MarkLocaleForUpdate()
         {
             PrepareProceduralRuleBook();
+            GeneratedManual.AppendLine("Consider the mark locale for update rule");
+
             var rule = new Rule<PerformResult>
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
@@ -96,6 +130,22 @@ namespace RMUD
             };
             ProceduralRules.AddRule(rule);
             return this;
+        }
+
+        string ManPage.Name
+        {
+            get { return FamilyName; }
+        }
+
+        void ManPage.SendManPage(MudObject To)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine(FamilyName);
+            builder.AppendLine(Matcher.Emit());
+            builder.AppendLine();
+            if (GeneratedManual != null) builder.AppendLine(GeneratedManual.ToString());
+            builder.Append(ManualPage);
+            Mud.SendMessage(To, builder.ToString());
         }
     }
 }

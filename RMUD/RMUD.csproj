@@ -49,6 +49,7 @@
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Commands\Rules.cs" />
+    <Compile Include="Core\ManPages.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
     <Compile Include="Core\PersistAttribute.cs" />
     <Compile Include="Lib\Introduction.cs" />

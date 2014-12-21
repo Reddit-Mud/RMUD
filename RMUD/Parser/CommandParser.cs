@@ -13,6 +13,7 @@ namespace RMUD
         public CommandEntry AddCommand(CommandTokenMatcher Matcher, CommandProcessor Processor, String HelpText)
         {
             var Entry = new CommandEntry { Matcher = Matcher, Processor = Processor, BriefDescription = HelpText };
+            Entry.FamilyName = Matcher.FindFirstKeyWord();
 			Commands.Add(Entry);
             return Entry;
         }
@@ -20,6 +21,7 @@ namespace RMUD
         public CommandEntry AddCommand(CommandTokenMatcher Matcher, String HelpText)
         {
             var Entry = new CommandEntry { Matcher = Matcher, Processor = null, BriefDescription = HelpText };
+            Entry.FamilyName = Matcher.FindFirstKeyWord();
             Commands.Add(Entry);
             return Entry;
         }

@@ -32,6 +32,7 @@ namespace RMUD
             return R;
         }
 
+        public String FindFirstKeyWord() { return Sub.FindFirstKeyWord(); }
         public String Emit() { return Sub.Emit(); }
     }
 }

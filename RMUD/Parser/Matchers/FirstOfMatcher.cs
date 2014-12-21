@@ -33,6 +33,16 @@ namespace RMUD
             return Matches;
         }
 
+        public String FindFirstKeyWord()
+        {
+            foreach (var sub in Matchers)
+            {
+                var s = sub.FindFirstKeyWord(); 
+                if (!String.IsNullOrEmpty(s)) return s;
+            }
+            return null;
+        }
+
 		public String Emit() { return "( " + String.Join(" | ", Matchers.Select(m => m.Emit())) + " )"; }
     }
 

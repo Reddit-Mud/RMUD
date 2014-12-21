@@ -77,6 +77,7 @@ namespace RMUD
                 ProscriptionList = new ProscriptionList(basePath + settings.ProscriptionList);
 
                 InitializeCommandProcessor();
+                InitializeStaticManPages();
 
                 if (settings.UpfrontCompilation)
                 {
