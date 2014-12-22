@@ -31,6 +31,6 @@ namespace RMUD
         }
 
         public String FindFirstKeyWord() { return null; }
-		public String Emit() { return "[WORD]"; }
+		public String Emit() { return "[WORD => '" + ArgumentName + "']"; }
     }
 }

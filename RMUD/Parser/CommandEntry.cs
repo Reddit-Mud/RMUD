@@ -9,7 +9,7 @@ namespace RMUD
     {
         internal CommandTokenMatcher Matcher;
         internal CommandProcessor Processor;
-        internal String FamilyName = "";
+        internal String ManualName = "";
         internal String BriefDescription = "";
         internal String ManualPage = "";
         internal StringBuilder GeneratedManual = null;
@@ -17,10 +17,12 @@ namespace RMUD
 
         public void VerifyCompleteness()
         {
-            if (String.IsNullOrEmpty(FamilyName))
+            if (String.IsNullOrEmpty(ManualName))
                 Mud.LogWarning("Command does not have name set - " + Matcher.Emit());
             if (String.IsNullOrEmpty(ManualPage))
-                Mud.LogWarning("No manual for command " + FamilyName);
+                Mud.LogWarning("No manual for command " + ManualName);
+            if (Processor != null)
+                Mud.LogWarning("Command uses old style processor - " + ManualName);
         }
 
         public CommandEntry()
@@ -30,7 +32,7 @@ namespace RMUD
 
         public CommandEntry Name(String Name)
         {
-            this.FamilyName = Name.ToUpper();
+            this.ManualName = Name.ToUpper();
             return this;
         }
 
@@ -93,6 +95,28 @@ namespace RMUD
             return this;
         }
 
+        public CommandEntry Value<T>(String RuleName, T ExpectedValue, String Target, params String[] RuleArguments)
+        {
+            PrepareProceduralRuleBook();
+            GeneratedManual.AppendLine("Assert that the value rulebook '" + RuleName + "' on " + Target + " with arguments " + String.Join(", ", RuleArguments) + " results in " + ExpectedValue.ToString());
+
+            var rule = new Rule<PerformResult>
+            {
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
+                (match, actor) =>
+                {
+                    var ruleTarget = match.Arguments[Target];
+                    var ruleResult = GlobalRules.ConsiderValueRule<T>(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.Arguments[a]).ToArray());
+                    if (EqualityComparer<T>.Default.Equals(ruleResult, ExpectedValue))
+                        return PerformResult.Continue;
+                    return PerformResult.Stop;
+                }),
+                DescriptiveName = "Procedural rule to assert on " + RuleName
+            };
+            ProceduralRules.AddRule(rule);
+            return this;
+        }
+
         public CommandEntry Perform(String RuleName, String Target, params String[] RuleArguments)
         {
             PrepareProceduralRuleBook();
@@ -134,13 +158,13 @@ namespace RMUD
 
         string ManPage.Name
         {
-            get { return FamilyName; }
+            get { return ManualName; }
         }
 
         void ManPage.SendManPage(MudObject To)
         {
             var builder = new StringBuilder();
-            builder.AppendLine(FamilyName);
+            builder.AppendLine(ManualName);
             builder.AppendLine(Matcher.Emit());
             builder.AppendLine();
             if (GeneratedManual != null) builder.AppendLine(GeneratedManual.ToString());

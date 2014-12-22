@@ -40,6 +40,6 @@ namespace RMUD
         }
 
         public String FindFirstKeyWord() { return null; }
-		public String Emit() { return "[RELLOC]"; }
+		public String Emit() { return "[RELLOC => '" + ArgumentName + "']"; }
     }
 }

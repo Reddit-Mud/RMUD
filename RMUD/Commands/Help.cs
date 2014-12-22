@@ -12,9 +12,9 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 Sequence(
                     Or(
-                        KeyWord("HELP"),
+                        KeyWord("MAN"),
                         KeyWord("?")),
-                    Optional(SingleWord("COMMAND"))),
+                    Optional(Rest("COMMAND"))),
                 "Display a list of all defined commands.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -22,9 +22,9 @@ namespace RMUD.Commands
                     {
                         Mud.SendMessage(actor, "Available help topics");
                         var line = "";
-                        foreach (var manPage in Mud.ManPages)
+                        foreach (var manPage in Mud.ManPages.Select(p => p.Name).Distinct().OrderBy(s => s))
                         {
-                            line += manPage.Name;
+                            line += manPage;
                             if (line.Length < 20) line += new String(' ', 20 - line.Length);
                             else if (line.Length < 40) line += new String(' ', 40 - line.Length);
                             else
@@ -37,9 +37,10 @@ namespace RMUD.Commands
                     else
                     {
                         var manPageName = match.Arguments["COMMAND"].ToString().ToUpper();
-                        var manPage = Mud.ManPages.FirstOrDefault(p => p.Name == manPageName);
-                        if (manPage != null)
-                            manPage.SendManPage(actor);
+                        var pages = new List<ManPage>(Mud.ManPages.Where(p => p.Name == manPageName));
+                        if (pages.Count > 0)
+                            foreach (var manPage in pages)
+                                manPage.SendManPage(actor);
                         else
                             Mud.SendMessage(actor, "No help for that topic.");
 

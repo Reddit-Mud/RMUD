@@ -37,7 +37,7 @@ namespace RMUD
         }
 
         public String FindFirstKeyWord() { return Sub.FindFirstKeyWord(); }
-        public String Emit() { return "<BEST " + Sub.Emit() + ">"; }
+        public String Emit() { return Sub.Emit(); }
 
         private static MatchPreference GetScore(PossibleMatch Match, String ScoreArgumentName)
         {

@@ -35,6 +35,7 @@ namespace RMUD
 		
         internal static void EnumerateDatabase(String DirectoryPath, bool Recursive, Action<String> OnFile)
         {
+            
             var path = StaticPath + DirectoryPath;
             foreach (var file in System.IO.Directory.EnumerateFiles(path))
                 if (System.IO.Path.GetExtension(file) == ".cs") 
@@ -56,6 +57,35 @@ namespace RMUD
         {
             if (NamedObjects.Count != 1) //That is, if anything besides Settings has been loaded...
                 throw new InvalidOperationException("Bulk compilation must happen before any other objects are loaded or bad things happen.");
+
+            //try
+            //{
+            //    var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("Reddit-Mud"));
+
+            //    var codeSearch = new Octokit.SearchCodeRequest(".cs")
+            //    {
+            //        Repo = "Reddit-Mud/RMUD-DB",
+            //        In = new[] { Octokit.CodeInQualifier.Path },
+            //        Page = 1
+            //    };
+
+            //    var fileList = new List<String>();
+            //    Octokit.SearchCodeResult codeResult = null;
+            //    do
+            //    {
+            //        codeResult = githubClient.Search.SearchCode(codeSearch).Result;
+            //        fileList.AddRange(codeResult.Items.Select(i => i.Path.Substring("static/".Length)));
+            //        codeSearch.Page += 1;
+            //    } while (fileList.Count < codeResult.TotalCount);
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("Github filelist discovery failed.");
+            //    Console.WriteLine(e.Message);
+            //}
+
+            //var test = new System.Net.WebClient();
+            //var ts = test.DownloadString("https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/window.cs");
 
             var fileTable = new List<FileTableEntry>();
             var source = new StringBuilder();

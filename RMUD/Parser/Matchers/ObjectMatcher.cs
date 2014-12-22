@@ -139,6 +139,6 @@ namespace RMUD
 		}
 
         public String FindFirstKeyWord() { return null; }
-		public String Emit() { return "[OBJECT]"; }
+		public String Emit() { return "[OBJECT => '" + CaptureName + "']"; }
     }
 }
