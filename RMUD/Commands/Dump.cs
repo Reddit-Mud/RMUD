@@ -26,7 +26,7 @@ namespace RMUD.Commands
 		public void Perform(PossibleMatch Match, Actor Actor)
 		{
 			var target = Match.Arguments["TARGET"].ToString();
-            var source = Mud.LoadRawSourceFile(target);
+            var source = Mud.LoadRawLocalSourceFile(target);
 
             Mud.SendMessage(Actor, "[" + target + "]\r\n" + source);
 		}

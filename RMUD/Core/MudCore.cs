@@ -85,7 +85,7 @@ namespace RMUD
 
                     var start = DateTime.Now;
                     var errorReported = false;
-                    BulkCompile("", true, (s) => {
+                    InitialBulkCompile((s) => {
                         LogError(s);
                         errorReported = true;
                     });

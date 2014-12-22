@@ -15,6 +15,7 @@ namespace RMUD
         public static String AccountsPath { get; private set; }
         public static String ChatLogsPath { get; private set; }
         public static String WorldDatabaseURL { get; private set; }
+        private static String UsingDeclarations = "using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\n";
 
         internal static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
 
@@ -33,17 +34,47 @@ namespace RMUD
             return StaticPath + Path + ".cs";
         }
 		
-        internal static void EnumerateDatabase(String DirectoryPath, bool Recursive, Action<String> OnFile)
+        internal static List<String> EnumerateLocalDatabase(String DirectoryPath)
         {
-            
             var path = StaticPath + DirectoryPath;
+            var r = new List<String>();
             foreach (var file in System.IO.Directory.EnumerateFiles(path))
-                if (System.IO.Path.GetExtension(file) == ".cs") 
-                    OnFile(file.Substring(StaticPath.Length, file.Length - StaticPath.Length - 3).Replace("\\", "/"));
-            if (Recursive)
+                if (System.IO.Path.GetExtension(file) == ".cs")
+                    r.Add(file.Substring(StaticPath.Length, file.Length - StaticPath.Length - 3).Replace("\\", "/"));
+            foreach (var directory in System.IO.Directory.EnumerateDirectories(path))
+                r.AddRange(EnumerateLocalDatabase(directory.Substring(StaticPath.Length)));
+            return r;
+        }
+
+        internal static List<String> EnumerateGithubDatabase()
+        {
+            try
             {
-                foreach (var directory in System.IO.Directory.EnumerateDirectories(path))
-                    EnumerateDatabase(directory.Substring(StaticPath.Length), true, OnFile);
+                var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("Reddit-Mud"));
+
+                var codeSearch = new Octokit.SearchCodeRequest(".cs")
+                {
+                    Repo = "Reddit-Mud/RMUD-DB",
+                    In = new[] { Octokit.CodeInQualifier.Path },
+                    Page = 1
+                };
+
+                var fileList = new List<String>();
+                Octokit.SearchCodeResult codeResult = null;
+                do
+                {
+                    codeResult = githubClient.Search.SearchCode(codeSearch).Result;
+                    fileList.AddRange(codeResult.Items.Select(i => i.Path.Substring("static/".Length)));
+                    codeSearch.Page += 1;
+                } while (fileList.Count < codeResult.TotalCount);
+
+                return fileList;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Github filelist discovery failed.");
+                Console.WriteLine(e.Message);
+                return new List<string>();
             }
         }
 
@@ -53,62 +84,46 @@ namespace RMUD
             public int FirstLine;
         }
 
-        internal static void BulkCompile(String DirectoryPath, bool Recursive, Action<String> ReportErrors)
+        private enum FileLocation
+        {
+            Local,
+            Github
+        }
+
+        internal static void InitialBulkCompile(Action<String> ReportErrors)
         {
             if (NamedObjects.Count != 1) //That is, if anything besides Settings has been loaded...
                 throw new InvalidOperationException("Bulk compilation must happen before any other objects are loaded or bad things happen.");
 
-            //try
-            //{
-            //    var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("Reddit-Mud"));
-
-            //    var codeSearch = new Octokit.SearchCodeRequest(".cs")
-            //    {
-            //        Repo = "Reddit-Mud/RMUD-DB",
-            //        In = new[] { Octokit.CodeInQualifier.Path },
-            //        Page = 1
-            //    };
-
-            //    var fileList = new List<String>();
-            //    Octokit.SearchCodeResult codeResult = null;
-            //    do
-            //    {
-            //        codeResult = githubClient.Search.SearchCode(codeSearch).Result;
-            //        fileList.AddRange(codeResult.Items.Select(i => i.Path.Substring("static/".Length)));
-            //        codeSearch.Page += 1;
-            //    } while (fileList.Count < codeResult.TotalCount);
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine("Github filelist discovery failed.");
-            //    Console.WriteLine(e.Message);
-            //}
 
             //var test = new System.Net.WebClient();
             //var ts = test.DownloadString("https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/window.cs");
 
             var fileTable = new List<FileTableEntry>();
             var source = new StringBuilder();
-            source.Append("using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\nnamespace database {\n");
+            source.Append(UsingDeclarations + "namespace database {\n");
             int namespaceCount = 0;
             int lineCount = 4;
-            EnumerateDatabase(DirectoryPath, Recursive, (s) =>
+
+            var fileList = EnumerateLocalDatabase("");
+            foreach (var s in fileList)
             {
                 fileTable.Add(new FileTableEntry { Path = s, FirstLine = lineCount });
                 lineCount += 4;
                 source.AppendFormat("namespace __{0} {{\n", namespaceCount);
                 namespaceCount += 1;
-                var fileSource = LoadSourceFile(StaticPath + s + ".cs", ReportErrors, null);
+                var fileSource = LoadLocalSourceFile(StaticPath + s + ".cs", ReportErrors, null);
                 lineCount += fileSource.Count(c => c == '\n');
                 source.Append(fileSource);
                 source.Append("\n}\n\n");
 
-            });
+            }
+
             source.Append("}\n");
 
             //System.IO.File.WriteAllText("dump.txt", source.ToString());
 
-            var combinedAssembly = CompileCode(source.ToString(), DirectoryPath + "/*", ReportErrors, i =>
+            var combinedAssembly = CompileCode(source.ToString(), "/*", i =>
                 {
                     var r = fileTable.Reverse<FileTableEntry>().FirstOrDefault(e => e.FirstLine < i);
                     if (r != null) return r.Path;
@@ -118,22 +133,22 @@ namespace RMUD
             if (combinedAssembly != null)
             {
                 namespaceCount = 0;
-                EnumerateDatabase(DirectoryPath, Recursive, (s) =>
+                foreach (var s in fileList)
+                {
+                    var qualifiedName = String.Format("database.__{0}.{1}", namespaceCount, System.IO.Path.GetFileNameWithoutExtension(s));
+                    namespaceCount += 1;
+                    var newObject = combinedAssembly.CreateInstance(qualifiedName) as MudObject;
+                    if (newObject == null)
                     {
-                        var qualifiedName = String.Format("database.__{0}.{1}", namespaceCount, System.IO.Path.GetFileNameWithoutExtension(s));
-                        namespaceCount += 1;
-                        var newObject = combinedAssembly.CreateInstance(qualifiedName) as MudObject;
-                        if (newObject == null)
-                        {
-                            ReportErrors(String.Format("Type {0} not found in combined assembly.", qualifiedName));
-                            return;
-                        }
+                        ReportErrors(String.Format("Type {0} not found in combined assembly.", qualifiedName));
+                        return;
+                    }
 
-                        newObject.Path = s;
-                        newObject.State = ObjectState.Unitialized;
+                    newObject.Path = s;
+                    newObject.State = ObjectState.Unitialized;
 
-                        NamedObjects.Upsert(s, newObject);
-                    });
+                    NamedObjects.Upsert(s, newObject);
+                }
             }
         }
 
@@ -194,7 +209,7 @@ namespace RMUD
             }
         }
         
-        public static String LoadSourceFile(String Path, Action<String> ReportErrors, List<String> FilesLoaded)
+        public static String LoadLocalSourceFile(String Path, Action<String> ReportErrors, List<String> FilesLoaded)
         {
             Path = Path.Replace('\\', '/');
 
@@ -226,7 +241,7 @@ namespace RMUD
                     var splitAt = line.IndexOf(' ');
                     if (splitAt < 0) continue;
                     var importedFilename = line.Substring(splitAt + 1);
-                    rawSource.Append(LoadSourceFile(GetObjectRealPath(importedFilename), ReportErrors, FilesLoaded));
+                    rawSource.Append(LoadLocalSourceFile(GetObjectRealPath(importedFilename), ReportErrors, FilesLoaded));
                     rawSource.AppendLine();
                 }
                 else
@@ -239,7 +254,7 @@ namespace RMUD
             return rawSource.ToString();
         }
 
-        public static String LoadRawSourceFile(String Path)
+        public static String LoadRawLocalSourceFile(String Path)
         {
             Path = Path.Replace('\\', '/');
             if (Path.Contains("..")) return "Backtrack path entries are not permitted.";
@@ -249,7 +264,7 @@ namespace RMUD
             return System.IO.File.ReadAllText(realPath);
         }
 
-        public static Assembly CompileCode(String Source, String ErrorPath, Action<String> ReportErrors, Func<int,String> TranslateBulkFilenames = null)
+        public static Assembly CompileCode(String Source, String ErrorPath, Func<int,String> TranslateBulkFilenames = null)
         {
             CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
 
@@ -280,7 +295,6 @@ namespace RMUD
                     if (TranslateBulkFilenames != null)
                         filename = TranslateBulkFilenames(cError.Line);
 
-                    if (ReportErrors != null) ReportErrors(filename + " : " + error.ToString());
                     errorString.Append(filename + " : " + error.ToString());
                     errorString.AppendLine();
                 }
@@ -291,21 +305,15 @@ namespace RMUD
             return compilationResults.CompiledAssembly;
         }
 
-		public static Assembly CompileScript(String Path, Action<String> ReportErrors)
+		public static Assembly LoadAndCompileLocalFile(String Path, Action<String> ReportErrors)
 		{
             var start = DateTime.Now;
-            Path = Path.Replace('\\', '/');
+            var fileSource = LoadLocalSourceFile(Path, ReportErrors, new List<String>());
+            if (String.IsNullOrEmpty(fileSource)) return null;
 
-			if (!System.IO.File.Exists(Path))
-			{
-                LogError(String.Format("Could not find {0}", Path));
-				if (ReportErrors != null) ReportErrors("Could not find " + Path);
-				return null;
-			}
+            var source = UsingDeclarations + fileSource;
 
-            var source = "using System;\r\nusing System.Collections.Generic;\r\nusing RMUD;\r\n" + LoadSourceFile(Path, ReportErrors, new List<string>());
-
-            var assembly = CompileCode(source, Path, ReportErrors, i => Path);
+            var assembly = CompileCode(source, Path, i => Path);
 
             LogError(String.Format("Compiled {0} in {1} milliseconds.", Path, (DateTime.Now - start).TotalMilliseconds));
 
@@ -317,7 +325,7 @@ namespace RMUD
             Path = Path.Replace('\\', '/');
 
             var staticObjectPath = StaticPath + Path + ".cs";
-			var assembly = CompileScript(staticObjectPath, ReportErrors);
+			var assembly = LoadAndCompileLocalFile(staticObjectPath, ReportErrors);
 			if (assembly == null) return null;
 
 			var objectLeafName = System.IO.Path.GetFileNameWithoutExtension(Path);
