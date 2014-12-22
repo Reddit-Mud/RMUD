@@ -14,6 +14,7 @@ namespace RMUD
         public static String DynamicPath { get; private set; }
         public static String AccountsPath { get; private set; }
         public static String ChatLogsPath { get; private set; }
+        public static String WorldDatabaseURL { get; private set; }
 
         internal static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
 
@@ -23,6 +24,8 @@ namespace RMUD
             DynamicPath = basePath + "dynamic/";
             AccountsPath = basePath + "accounts/";
             ChatLogsPath = basePath + "chatlogs/";
+
+            WorldDatabaseURL = "https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/";
         }
 
         internal static String GetObjectRealPath(String Path)
