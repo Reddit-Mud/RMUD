@@ -7,15 +7,16 @@ namespace RMUD
 {
 	public class Settings : MudObject
 	{
-		public String Banner;
-		public String MessageOfTheDay;
+		public String Banner = "~~== REDDIT MUD ==~~";
+		public String MessageOfTheDay = "register username - Create a new account.\r\nlogin username - Log into an existing account.";
 
         public int TelnetPort = 8669;
 
-        public String NewPlayerStartRoom;
+        public String NewPlayerStartRoom = "palantine/antechamber";
         public bool UpfrontCompilation = true;
         public bool UseConsoleCommands = false;
         public bool UseGithubDatabase = true;
+        public String GithubAuthToken = "";
 
         public int AllowedCommandRate = 100; //How many milliseconds to allow between commands - default is to not limit very much.
 
