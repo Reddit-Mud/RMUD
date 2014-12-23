@@ -32,9 +32,9 @@ namespace RMUD
             {
                 //Start a new session
                 Client.Player = Mud.GetAccountCharacter(Account);
-                MudObject.Move(Client.Player,
+                MudObject.Move(Client.Player, 
                     Mud.GetObject(
-                        (Mud.GetObject("settings") as Settings).NewPlayerStartRoom,
+                        Mud.SettingsObject.NewPlayerStartRoom,
                         s => Mud.SendMessage(Client, s)));
                 Mud.EnqueuClientCommand(Client, "look");
             }

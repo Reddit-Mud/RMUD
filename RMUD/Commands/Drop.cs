@@ -9,51 +9,41 @@ namespace RMUD.Commands
 	{
 		public override void Create(CommandParser Parser)
 		{
-			Parser.AddCommand(
-				new Sequence(
-					new KeyWord("DROP", false),
-                    new ScoreGate(
-                        new FailIfNoMatches(
-					        new ObjectMatcher("SUBJECT", new InScopeObjectSource(), ObjectMatcher.PreferHeld),
-                            "I don't know what object you're talking about."),
-                        "SUBJECT")),
-				new DropProcessor(),
-				"Drop something");
+            Parser.AddCommand(
+                Sequence(
+                    KeyWord("DROP"),
+                    BestScore("SUBJECT",
+                        MustMatch("You don't seem to have that.",
+                            Object("SUBJECT", InScope, PreferHeld)))),
+                "Drop something")
+                .Check("can drop?", "SUBJECT", "ACTOR", "SUBJECT")
+                .Perform("dropped", "SUBJECT", "ACTOR", "SUBJECT");
 		}
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-drop", "[Actor, Item] : Determine if the item can be dropped.");
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("on-dropped", "[Actor, Item] : Handle an item being dropped.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can drop?", "[Actor, Item] : Determine if the item can be dropped.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("dropped", "[Actor, Item] : Handle an item being dropped.");
 
-            GlobalRules.Check<MudObject, MudObject>("can-drop").Do((a, b) => CheckResult.Allow).Name("Default can drop anything");
+            GlobalRules.Check<MudObject, MudObject>("can drop?")
+                .First
+                .When((actor, item) => !Mud.ObjectContainsObject(actor, item))
+                .Do((actor, item) =>
+                {
+                    Mud.SendMessage(actor, "You aren't holding that.");
+                    return CheckResult.Disallow;
+                })
+                .Name("Must be holding it to drop it rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("on-dropped").Do((actor, target) =>
+            GlobalRules.Check<MudObject, MudObject>("can drop?").Do((a, b) => CheckResult.Allow).Name("Default can drop anything rule.");
+
+            GlobalRules.Perform<MudObject, MudObject>("dropped").Do((actor, target) =>
             {
                 Mud.SendMessage(actor, "You drop <a0>.", target);
                 Mud.SendExternalMessage(actor, "<a0> drops <a1>.", actor, target);
                 MudObject.Move(target, actor.Location);
                 return PerformResult.Continue;
-            }).Name("Default drop handler");
+            }).Name("Default drop handler rule.");
         }
     }
-
-	internal class DropProcessor : CommandProcessor
-	{
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            var target = Match.Arguments["SUBJECT"] as MudObject;
-
-            if (!Mud.ObjectContainsObject(Actor, target))
-            {
-                Mud.SendMessage(Actor, "You aren't holding that.");
-                return;
-            }
-
-            if (GlobalRules.ConsiderCheckRule("can-drop", target, Actor, target) == CheckResult.Allow)
-                GlobalRules.ConsiderPerformRule("on-dropped", target, Actor, target);
-
-            Mud.MarkLocaleForUpdate(target);
-        }
-	}
 }
