@@ -70,9 +70,10 @@ namespace RMUD
                 PrepareSerializers();
                 InitializeDatabase(basePath);
 
+                SettingsObject = new Settings();
                 var settings = GetObject("settings") as Settings;
-                if (settings == null) throw new InvalidProgramException("No settings object is defined in the database!");
-                SettingsObject = settings;
+                if (settings == null) LogError("No settings object found in database. Using default settings.");
+                else SettingsObject = settings;
 
                 ProscriptionList = new ProscriptionList(basePath + settings.ProscriptionList);
 

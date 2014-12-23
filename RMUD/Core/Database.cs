@@ -16,6 +16,7 @@ namespace RMUD
         public static String ChatLogsPath { get; private set; }
         public static String WorldDatabaseURL { get; private set; }
         private static String UsingDeclarations = "using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\n";
+        private static System.Net.WebClient WebClient = new System.Net.WebClient();
 
         internal static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
 
@@ -64,7 +65,7 @@ namespace RMUD
                 do
                 {
                     codeResult = githubClient.Search.SearchCode(codeSearch).Result;
-                    fileList.AddRange(codeResult.Items.Select(i => i.Path.Substring("static/".Length)));
+                    fileList.AddRange(codeResult.Items.Where(i => i.Path.StartsWith("static/")).Select(i => i.Path.Substring("static/".Length, i.Path.Length - "static/".Length - 3)));
                     codeSearch.Page += 1;
                 } while (fileList.Count < codeResult.TotalCount);
 
@@ -84,10 +85,9 @@ namespace RMUD
             public int FirstLine;
         }
 
-        private enum FileLocation
+        private static String PathToNamespace(String Path)
         {
-            Local,
-            Github
+            return "__" + Path.Replace("/", "_").Replace("-", "_");
         }
 
         internal static void InitialBulkCompile(Action<String> ReportErrors)
@@ -102,17 +102,21 @@ namespace RMUD
             var fileTable = new List<FileTableEntry>();
             var source = new StringBuilder();
             source.Append(UsingDeclarations + "namespace database {\n");
-            int namespaceCount = 0;
-            int lineCount = 4;
+            int lineCount = 5;
 
-            var fileList = EnumerateLocalDatabase("");
+            var fileList = EnumerateGithubDatabase();
+            foreach (var item in EnumerateLocalDatabase(""))
+            {
+                if (fileList.Contains(item)) LogError("Object present in github and local database: " + item);
+                else fileList.Add(item);
+            }
+
             foreach (var s in fileList)
             {
                 fileTable.Add(new FileTableEntry { Path = s, FirstLine = lineCount });
                 lineCount += 4;
-                source.AppendFormat("namespace __{0} {{\n", namespaceCount);
-                namespaceCount += 1;
-                var fileSource = LoadLocalSourceFile(StaticPath + s + ".cs", ReportErrors, null);
+                source.AppendFormat("namespace {0} {{\n", PathToNamespace(s));
+                var fileSource = PreprocessSourceFile(s, null);
                 lineCount += fileSource.Count(c => c == '\n');
                 source.Append(fileSource);
                 source.Append("\n}\n\n");
@@ -120,8 +124,6 @@ namespace RMUD
             }
 
             source.Append("}\n");
-
-            //System.IO.File.WriteAllText("dump.txt", source.ToString());
 
             var combinedAssembly = CompileCode(source.ToString(), "/*", i =>
                 {
@@ -132,11 +134,9 @@ namespace RMUD
 
             if (combinedAssembly != null)
             {
-                namespaceCount = 0;
                 foreach (var s in fileList)
                 {
-                    var qualifiedName = String.Format("database.__{0}.{1}", namespaceCount, System.IO.Path.GetFileNameWithoutExtension(s));
-                    namespaceCount += 1;
+                    var qualifiedName = String.Format("database.{0}.{1}", PathToNamespace(s), System.IO.Path.GetFileNameWithoutExtension(s));
                     var newObject = combinedAssembly.CreateInstance(qualifiedName) as MudObject;
                     if (newObject == null)
                     {
@@ -194,7 +194,7 @@ namespace RMUD
                     r = NamedObjects[BasePath];
                 else
                 {
-                    r = LoadObject(BasePath, ReportErrors);
+                    r = CompileObject(BasePath, ReportErrors);
                     if (r != null) NamedObjects.Upsert(BasePath, r);
                 }
 
@@ -208,60 +208,62 @@ namespace RMUD
                 return r;
             }
         }
-        
-        public static String LoadLocalSourceFile(String Path, Action<String> ReportErrors, List<String> FilesLoaded)
+
+        private static String PreprocessSourceFile(String Path, List<String> FilesLoaded = null)
         {
             Path = Path.Replace('\\', '/');
 
-            if (!System.IO.File.Exists(Path))
+            var source = LoadSourceFile(Path);
+            if (source.Item1 == false)
             {
-                LogError(String.Format("Could not find {0}", Path));
-                if (ReportErrors != null) ReportErrors("Could not find " + Path);
+                LogError(Path + " - " + source.Item2);
                 return "";
             }
 
-            if (FilesLoaded == null) FilesLoaded = new List<string>();
+            if (FilesLoaded == null) FilesLoaded = new List<String>();
             else if (FilesLoaded.Contains(Path))
-            {
-                //LogError(String.Format("Circular reference detected in {0}", Path));
-                //if (ReportErrors != null) ReportErrors(String.Format("Circular reference detected in {0}", Path));
                 return "";
-            }
 
             FilesLoaded.Add(Path);
 
-            var rawSource = new StringBuilder();
-
-            var file = System.IO.File.OpenText(Path);
-            while (!file.EndOfStream)
+            var output = new StringBuilder();
+            var stream = new System.IO.StringReader(source.Item2);
+            while (true)
             {
-                var line = file.ReadLine();
-                if (line.StartsWith("//import"))
+                var line = stream.ReadLine();
+                if (line == null) break;
+
+                if (line.StartsWith("//import "))
                 {
-                    var splitAt = line.IndexOf(' ');
-                    if (splitAt < 0) continue;
-                    var importedFilename = line.Substring(splitAt + 1);
-                    rawSource.Append(LoadLocalSourceFile(GetObjectRealPath(importedFilename), ReportErrors, FilesLoaded));
-                    rawSource.AppendLine();
+                    var importedFilename = line.Substring("//import ".Length).Trim();
+                    output.Append(PreprocessSourceFile(importedFilename, FilesLoaded));
+                    output.AppendLine();
                 }
                 else
-                {
-                    rawSource.Append(line);
-                    rawSource.AppendLine();
-                }
+                    output.AppendLine(line);
             }
 
-            return rawSource.ToString();
+            return output.ToString();
         }
 
-        public static String LoadRawLocalSourceFile(String Path)
+        public static Tuple<bool, String> LoadSourceFile(String Path)
         {
             Path = Path.Replace('\\', '/');
-            if (Path.Contains("..")) return "Backtrack path entries are not permitted.";
+            if (Path.Contains("..")) return Tuple.Create(false, "Backtrack path entries are not permitted.");
+
+            if (Mud.SettingsObject.UseGithubDatabase)
+            {
+                try
+                {
+                    return Tuple.Create(true, WebClient.DownloadString(WorldDatabaseURL + Path + ".cs"));
+                }
+                catch (Exception) { }
+            }
+
             var realPath = StaticPath + Path + ".cs";
 
-            if (!System.IO.File.Exists(realPath)) return "File not found.";
-            return System.IO.File.ReadAllText(realPath);
+            if (!System.IO.File.Exists(realPath)) return Tuple.Create(false, "File not found.");
+            return Tuple.Create(true, System.IO.File.ReadAllText(realPath));
         }
 
         public static Assembly CompileCode(String Source, String ErrorPath, Func<int,String> TranslateBulkFilenames = null)
@@ -305,27 +307,19 @@ namespace RMUD
             return compilationResults.CompiledAssembly;
         }
 
-		public static Assembly LoadAndCompileLocalFile(String Path, Action<String> ReportErrors)
-		{
+		private static MudObject CompileObject(String Path, Action<String> ReportErrors)
+        {
+            Path = Path.Replace('\\', '/');
+
             var start = DateTime.Now;
-            var fileSource = LoadLocalSourceFile(Path, ReportErrors, new List<String>());
-            if (String.IsNullOrEmpty(fileSource)) return null;
+            var preprocessedFile = PreprocessSourceFile(Path, null);
+            if (String.IsNullOrEmpty(preprocessedFile)) return null;
 
-            var source = UsingDeclarations + fileSource;
-
+            var source = UsingDeclarations + preprocessedFile;
             var assembly = CompileCode(source, Path, i => Path);
 
             LogError(String.Format("Compiled {0} in {1} milliseconds.", Path, (DateTime.Now - start).TotalMilliseconds));
 
-			return assembly;
-		}
-
-        private static MudObject LoadObject(String Path, Action<String> ReportErrors)
-        {
-            Path = Path.Replace('\\', '/');
-
-            var staticObjectPath = StaticPath + Path + ".cs";
-			var assembly = LoadAndCompileLocalFile(staticObjectPath, ReportErrors);
 			if (assembly == null) return null;
 
 			var objectLeafName = System.IO.Path.GetFileNameWithoutExtension(Path);
@@ -338,7 +332,7 @@ namespace RMUD
 			}
 			else
 			{
-                LogError(String.Format("Type {0} not found in {1}", objectLeafName, staticObjectPath));
+                LogError(String.Format("Type {0} not found in {1}", objectLeafName, Path));
 				return null;
 			}
 		}
@@ -350,7 +344,7 @@ namespace RMUD
 			if (NamedObjects.ContainsKey(Path))
 			{
 				var existing = NamedObjects[Path];
-				var newObject = LoadObject(Path, ReportErrors);
+				var newObject = CompileObject(Path, ReportErrors);
 				if (newObject == null)  return null;
 
                 existing.State = ObjectState.Destroyed;
