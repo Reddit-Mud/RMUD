@@ -236,9 +236,6 @@
     <Compile Include="database\static\palantine\disambig.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <None Include="database\static\settings.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Compile Include="Lib\DescriptiveText.cs" />
     <Compile Include="Lib\BasicDoor.cs" />
     <Compile Include="Lib\LockedDoor.cs" />

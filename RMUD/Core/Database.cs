@@ -18,10 +18,11 @@ namespace RMUD
         private static String UsingDeclarations = "using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\n";
         private static System.Net.WebClient WebClient = new System.Net.WebClient();
 
-        internal static Dictionary<String, MudObject> NamedObjects = new Dictionary<string, MudObject>();
+        internal static Dictionary<String, MudObject> NamedObjects = null;
 
         internal static void InitializeDatabase(String basePath)
         {
+            NamedObjects = new Dictionary<string, MudObject>();
             StaticPath = basePath + "static/";
             DynamicPath = basePath + "dynamic/";
             AccountsPath = basePath + "accounts/";
@@ -52,6 +53,8 @@ namespace RMUD
             try
             {
                 var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("Reddit-Mud"));
+                if (!String.IsNullOrEmpty(Mud.SettingsObject.GithubAuthToken))
+                    githubClient.Credentials = new Octokit.Credentials(Mud.SettingsObject.GithubAuthToken);
 
                 var codeSearch = new Octokit.SearchCodeRequest(".cs")
                 {
@@ -62,12 +65,14 @@ namespace RMUD
 
                 var fileList = new List<String>();
                 Octokit.SearchCodeResult codeResult = null;
+                var fileCount = 0;
                 do
                 {
                     codeResult = githubClient.Search.SearchCode(codeSearch).Result;
                     fileList.AddRange(codeResult.Items.Where(i => i.Path.StartsWith("static/")).Select(i => i.Path.Substring("static/".Length, i.Path.Length - "static/".Length - 3)));
                     codeSearch.Page += 1;
-                } while (fileList.Count < codeResult.TotalCount);
+                    fileCount += codeResult.Items.Count;
+                } while (fileCount < codeResult.TotalCount);
 
                 return fileList;
             }
@@ -92,12 +97,8 @@ namespace RMUD
 
         internal static void InitialBulkCompile(Action<String> ReportErrors)
         {
-            if (NamedObjects.Count != 1) //That is, if anything besides Settings has been loaded...
+            if (NamedObjects.Count != 0) //That is, if anything besides Settings has been loaded...
                 throw new InvalidOperationException("Bulk compilation must happen before any other objects are loaded or bad things happen.");
-
-
-            //var test = new System.Net.WebClient();
-            //var ts = test.DownloadString("https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/window.cs");
 
             var fileTable = new List<FileTableEntry>();
             var source = new StringBuilder();

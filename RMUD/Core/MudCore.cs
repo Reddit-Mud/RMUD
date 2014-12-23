@@ -74,13 +74,14 @@ namespace RMUD
                 var settings = GetObject("settings") as Settings;
                 if (settings == null) LogError("No settings object found in database. Using default settings.");
                 else SettingsObject = settings;
+                NamedObjects.Clear();
 
-                ProscriptionList = new ProscriptionList(basePath + settings.ProscriptionList);
+                ProscriptionList = new ProscriptionList(basePath + SettingsObject.ProscriptionList);
 
                 InitializeCommandProcessor();
                 InitializeStaticManPages();
 
-                if (settings.UpfrontCompilation)
+                if (SettingsObject.UpfrontCompilation)
                 {
                     Console.WriteLine("Bulk compilation enabled.");
 
