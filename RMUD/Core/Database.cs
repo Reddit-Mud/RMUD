@@ -74,7 +74,7 @@ namespace RMUD
                     fileCount += codeResult.Items.Count;
                 } while (fileCount < codeResult.TotalCount);
 
-                return fileList;
+                return new List<string>(fileList.Distinct());
             }
             catch (Exception e)
             {

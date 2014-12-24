@@ -11,32 +11,44 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                 new Sequence(
-                    new KeyWord("SILLY"),
-                     new FailIfNoMatches(
-                         new ObjectMatcher("OBJECT", new InScopeObjectSource(), (Actor, Object) =>
-                             {
-                                 if (Object is RMUD.Actor) return MatchPreference.Likely;
-                                 else return MatchPreference.Unlikely;
-                             }),
-                         "Silly whom?")),
-                 new SillyProcessor(),
-                 "SILLY SILLY SILLY");
+                Sequence(
+                    KeyWord("SILLY"),
+                    MustMatch("Who is being too damn serious?",
+                        Object("OBJECT", InScope, (actor, item) =>
+                            {
+                                if (item is RMUD.Actor) return MatchPreference.Likely;
+                                else return MatchPreference.Unlikely;
+                            }))),
+                 "Why so serious?")
+                 .Manual("Applies the silly status effect to the target of your choice. Being silly will make it safe for your victim to dance. Sillification is meant as a demonstration of the concepts involved with rule books and status effects, and not as an actual component of the game world.")
+                 .Check("can silly?", "OBJECT", "ACTOR", "OBJECT")
+                 .Perform("silly", "OBJECT", "ACTOR", "OBJECT");
 
             Parser.AddCommand(
-                new KeyWord("DANCE"),
-                new DanceProcessor(),
-                "Do a silly dance.");
+                KeyWord("DANCE"),
+                "Do a silly dance.")
+                .Manual(
+                @"We can dance if we want to
+We can leave your friends behind
+'Cause your friends don't dance and if they don't dance
+Well they're no friends of mine
+I say, we can go where we want to
+A place where they will never find
+And we can act like we come from out of this world
+Leave the real one far behind
+And we can dance")
+                .Check("can dance?", "ACTOR", "ACTOR")
+                .Perform("dance", "ACTOR", "ACTOR");
         }
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareValueRuleBook<MudObject, bool>("is-silly", "Determine if an object is silly.");
-            GlobalRules.Value<MudObject, bool>("is-silly").Last.Do((thing) => false).Name("Things are serious by default rule.");
+            GlobalRules.DeclareValueRuleBook<MudObject, bool>("silly?", "[Thing -> bool] : Determine if an object is silly.");
+            GlobalRules.Value<MudObject, bool>("silly?").Last.Do((thing) => false).Name("Things are serious by default rule.");
 
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-silly", "[actor, target] : Can the actor make the target silly?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can silly?", "[Actor, Target] : Can the actor make the target silly?");
 
-            GlobalRules.Check<MudObject, MudObject>("can-silly").First
+            GlobalRules.Check<MudObject, MudObject>("can silly?").First
                 .When((actor, target) => !(target is Actor))
                 .Do((actor, target) =>
                 {
@@ -45,12 +57,12 @@ namespace RMUD.Commands
                 })
                 .Name("Can only silly actors rule.");
 
-            GlobalRules.Check<MudObject, MudObject>("can-silly")
+            GlobalRules.Check<MudObject, MudObject>("can silly?")
                 .Do((actor, target) => GlobalRules.IsVisibleTo(actor, target))
                 .Name("Silly target must be visible.");
 
-            GlobalRules.Check<MudObject, MudObject>("can-silly")
-                .When((actor, target) => GlobalRules.ConsiderValueRule<bool>("is-silly", target, target))
+            GlobalRules.Check<MudObject, MudObject>("can silly?")
+                .When((actor, target) => GlobalRules.ConsiderValueRule<bool>("silly?", target, target))
                 .Do((actor, target) =>
                 {
                     Mud.SendMessage(actor, "^<the0> is already silly.", target);
@@ -58,14 +70,14 @@ namespace RMUD.Commands
                 })
                 .Name("Can't silly if already silly rule.");
 
-            GlobalRules.Check<MudObject, MudObject>("can-silly")
+            GlobalRules.Check<MudObject, MudObject>("can silly?")
                 .Last
                 .Do((actor, target) => CheckResult.Allow)
-                .Name("Go ahead and apply silly then rule.");
+                .Name("Let the silliness ensue rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("apply-silly", "[actor, target] : Apply silly status.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("silly", "[Actor, Target] : Apply silly status to the target.");
 
-            GlobalRules.Perform<MudObject, MudObject>("apply-silly")
+            GlobalRules.Perform<MudObject, MudObject>("silly")
                 .Do((actor, target) =>
                 {
                     Mud.SendExternalMessage(actor, "^<the0> applies extra silly to <the1>.", actor, target);
@@ -76,14 +88,15 @@ namespace RMUD.Commands
 
                     target.Nouns.Add("silly");
 
-                    target.Value<MudObject, bool>("is-silly").Do((thing) => true).ID(ruleID.ToString());
+                    target.Value<MudObject, bool>("silly?").Do((thing) => true).ID(ruleID.ToString())
+                        .Name("Silly things are silly rule.");
 
                     target.Value<MudObject, MudObject, String, String>("printed-name")
                         .Do((viewer, thing, article) =>
                         {
                             return "silly " + thing.Short;
                         })
-                        .Name("Silly name rule")
+                        .Name("Silly things have silly names rule.")
                         .ID(ruleID.ToString());
 
                     GlobalRules.Perform("heartbeat")
@@ -99,58 +112,39 @@ namespace RMUD.Commands
                             }
                             return PerformResult.Continue;
                         })
-                        .ID(ruleID.ToString());
+                        .ID(ruleID.ToString())
+                        .Name("Countdown to seriousness rule.");
 
                     return PerformResult.Continue;
                 })
                 .Name("Apply sillyness rule.");
 
-            GlobalRules.DeclareCheckRuleBook<MudObject>("can-dance", "[actor] : Can the actor dance?");
+            GlobalRules.DeclareCheckRuleBook<MudObject>("can dance?", "[Actor] : Can the actor dance?");
 
-            GlobalRules.Check<MudObject>("can-dance")
-                .When(actor => !GlobalRules.ConsiderValueRule<bool>("is-silly", actor, actor))
+            GlobalRules.Check<MudObject>("can dance?")
+                .When(actor => !GlobalRules.ConsiderValueRule<bool>("silly?", actor, actor))
                 .Do(actor =>
                 {
                     Mud.SendMessage(actor, "You don't feel silly enough for that.");
                     return CheckResult.Disallow;
                 })
-                .Name("Can't dance when not silly rule.");
+                .Name("Your friends don't dance rule.");
 
-            GlobalRules.Check<MudObject>("can-dance")
+            GlobalRules.Check<MudObject>("can dance?")
                 .Last
                 .Do(actor => CheckResult.Allow)
                 .Name("You can dance if you want to rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject>("perform-dance", "[actor] : Perform a silly dance.");
+            GlobalRules.DeclarePerformRuleBook<MudObject>("dance", "[Actor] : Perform a silly dance.");
 
-            GlobalRules.Perform<MudObject>("perform-dance")
+            GlobalRules.Perform<MudObject>("dance")
                 .Do(actor =>
                 {
                     Mud.SendExternalMessage(actor, "^<the0> does a very silly dance.", actor);
                     Mud.SendMessage(actor, "You do a very silly dance.");
                     return PerformResult.Continue;
                 })
-                .Name("If your friends don't dance rule.");
-        }
-    }
-
-    internal class SillyProcessor : CommandProcessor
-    {
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            var target = Match.Arguments["OBJECT"] as MudObject;
-
-            if (GlobalRules.ConsiderCheckRule("can-silly", target, Actor, target) == CheckResult.Allow)
-                GlobalRules.ConsiderPerformRule("apply-silly", target, Actor, target);
-        }
-    }
-
-    internal class DanceProcessor : CommandProcessor
-    {
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            if (GlobalRules.ConsiderCheckRule("can-dance", Actor, Actor) == CheckResult.Allow)
-                GlobalRules.ConsiderPerformRule("perform-dance", Actor, Actor);
+                .Name("They aren't no friends of mine rule.");
         }
     }
 }
