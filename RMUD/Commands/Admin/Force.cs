@@ -10,28 +10,34 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new RankGate(500),
-                    new KeyWord("FORCE"),
-                    new FailIfNoMatches(
-                        new FirstOf(
-                            new ObjectMatcher("OBJECT", new InScopeObjectSource()),
-                            new Path("PATH")),
-                        "Whom do you wish to command?"),
-                    new Rest("COMMAND")),
+                Sequence(
+                    RequiredRank(500),
+                    KeyWord("!FORCE"),
+                    MustMatch("Whom do you wish to command?",
+                        FirstOf(
+                            Object("OBJECT", InScope),
+                            Path("PATH"))),
+                    Rest("COMMAND")),
                 "Force others to do your bidding.")
+                .Manual("An administrative command that allows you to execute a command as if you were another actor or player. The other entity will see all output from the command, and rules restricting their access to the command are considered.")
+                .ProceduralRule((match, actor) =>
+                    {
+                        if (match.Arguments.ContainsKey("PATH"))
+                        {
+                            var target = Mud.GetObject(match.Arguments["PATH"].ToString());
+                            if (target == null)
+                            {
+                                Mud.SendMessage(actor, "I can't find whomever it is you want to submit to your foolish whims.");
+                                return PerformResult.Stop;
+                            }
+                            match.Arguments.Upsert("OBJECT", target);
+                        }
+                        return PerformResult.Continue;
+                    }, "Convert path to object rule.")
                 .ProceduralRule((Match, Actor) =>
                 {
-                    MudObject target = null;
-                    if (Match.Arguments.ContainsKey("OBJECT")) target = Match.Arguments["OBJECT"] as MudObject;
-                    else if (Match.Arguments.ContainsKey("PATH")) target = Mud.GetObject(Match.Arguments["PATH"].ToString());
-
-                    if (target == null)
-                    {
-                        Mud.SendMessage(Actor, "I can't find whomever it is you want to submit to your foolish whims.");
-                        return PerformResult.Stop;
-                    }
-
+                    MudObject target = Match.Arguments["OBJECT"] as MudObject;
+                    
                     var targetActor = target as Actor;
                     if (targetActor == null)
                     {

@@ -12,7 +12,7 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 Sequence(
                     RequiredRank(500),
-                    KeyWord("DUMP"),
+                    KeyWord("!DUMP"),
                     MustMatch("It helps if you supply a path.",
                         Path("TARGET"))),
                 "Dump a database source file.")

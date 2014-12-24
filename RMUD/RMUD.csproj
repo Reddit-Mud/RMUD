@@ -59,7 +59,7 @@
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
-    <Compile Include="Commands\Force.cs" />
+    <Compile Include="Commands\Admin\Force.cs" />
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Commands\Rules.cs" />
@@ -80,7 +80,7 @@
     <Compile Include="Commands\Conversation.cs" />
     <Compile Include="Commands\Shutdown.cs" />
     <Compile Include="Commands\Stats.cs" />
-    <Compile Include="Commands\Dump.cs" />
+    <Compile Include="Commands\Admin\Dump.cs" />
     <Compile Include="Commands\Instance.cs" />
     <Compile Include="Commands\Sleep.cs" />
     <Compile Include="Commands\Unlock.cs" />
@@ -162,8 +162,8 @@
     <Compile Include="Commands\Say.cs" />
     <Compile Include="Commands\ReportError.cs" />
     <Compile Include="Commands\Take.cs" />
-    <Compile Include="Commands\Move.cs" />
-    <Compile Include="Commands\Inspect.cs" />
+    <Compile Include="Commands\Admin\Move.cs" />
+    <Compile Include="Commands\Admin\Inspect.cs" />
     <Compile Include="Commands\Go.cs" />
     <Compile Include="Commands\Examine.cs" />
     <Compile Include="Commands\Look.cs" />
