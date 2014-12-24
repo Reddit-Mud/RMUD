@@ -5,82 +5,74 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Say : CommandFactory
+	internal class Say : CommandFactory, DeclaresRules
 	{
 		public override void Create(CommandParser Parser)
 		{
 			Parser.AddCommand(
-				new Sequence(
-					new Or(
-						new KeyWord("SAY", false),
-						new KeyWord("'", false)),
-                    new FailIfNoMatches(
-					    new Rest("SPEECH"),
-                        "Say what?")),
-				new SayProcessor(SayProcessor.EmoteTypes.Speech),
-				"Say something.");
-
-            Parser.AddCommand(
-                new GenericMatcher((pm, context) =>
+                Or(
+                    Sequence(
+                        Or(
+                            KeyWord("SAY"),
+                            KeyWord("'")),
+                        MustMatch("Say what?", Rest("SPEECH"))),
+                    Generic((pm, context) =>
                     {
                         var r = new List<PossibleMatch>();
                         if (pm.Next == null || pm.Next.Value.Length <= 1 || pm.Next.Value[0] != '\'')
                             return r;
 
                         pm.Next.Value = pm.Next.Value.Substring(1); //remove the leading '
-                        r.Add(pm.EndWith("SPEECH", pm.Next));
+
+                        var builder = new StringBuilder();
+                        var node = pm.Next;
+                        for (; node != null; node = node.Next)
+                        {
+                            builder.Append(node.Value);
+                            builder.Append(" ");
+                        }
+
+                        builder.Remove(builder.Length - 1, 1);
+                        r.Add(pm.EndWith("SPEECH", builder.ToString()));
                         return r;
-                    }, "' [TEXT]"),
-                new SayProcessor(SayProcessor.EmoteTypes.Speech),
+                    }, "'[TEXT => SPEECH]")),
                 "Say something.")
-                .Name("SAY");
+                .Manual("Speak within your locale.")
+                .Perform("speak", "ACTOR", "ACTOR", "SPEECH");
 
-			Parser.AddCommand(
-				new Sequence(
-					new Or(
-						new KeyWord("EMOTE", false),
-						new KeyWord("\"", false)),
-                    new FailIfNoMatches(
-					    new Rest("SPEECH"),
-                        "You exist. Actually this is an error message, but that's what you just told me to say.")),
-				new SayProcessor(SayProcessor.EmoteTypes.Emote),
-				"Emote something.");
-		}
-	}
 
-	internal class SayProcessor : CommandProcessor
-	{
-		public enum EmoteTypes
-		{
-			Speech,
-			Emote
+            Parser.AddCommand(
+                Sequence(
+                    Or(
+                        KeyWord("EMOTE"),
+                        KeyWord("\"")),
+                    MustMatch("You exist. Actually this is an error message, but that's what you just told me to say.", Rest("SPEECH"))),
+                "Emote something.")
+                .Manual("Perform an action, visible within your locale.")
+                .Perform("emote", "ACTOR", "ACTOR", "SPEECH");
 		}
 
-		public EmoteTypes EmoteType;
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclarePerformRuleBook<MudObject, String>("speak", "[Actor, Text] : Handle the actor speaking the text.");
 
-		public SayProcessor(EmoteTypes EmoteType)
-		{
-			this.EmoteType = EmoteType;
-		}
+            GlobalRules.Perform<MudObject, String>("speak")
+                .Do((actor, text) =>
+                {
+                    Mud.SendLocaleMessage(actor, "^<the0> : \"" + text + "\"", actor);
+                    return PerformResult.Continue;
+                })
+                .Name("Default motormouth rule.");
 
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-            var speechBuilder = new StringBuilder();
+            GlobalRules.DeclarePerformRuleBook<MudObject, String>("emote", "[Actor, Text] : Handle the actor emoting the text.");
 
-            speechBuilder.Append(Actor.Short);
-            if (EmoteType == EmoteTypes.Speech)
-                speechBuilder.Append(": \"");
-            else
-                speechBuilder.Append(" ");
-
-            speechBuilder.Append(Match.Arguments["SPEECH"].ToString());
-
-			if (EmoteType == EmoteTypes.Speech)
-				speechBuilder.Append("\"");
-
-			Mud.SendLocaleMessage(Actor, speechBuilder.ToString());
-		}
-
-        
-	}
+            GlobalRules.Perform<MudObject, String>("emote")
+                .Do((actor, text) =>
+                {
+                    Mud.SendLocaleMessage(actor, "^<the0> " + text, actor);
+                    return PerformResult.Continue;
+                })
+                .Name("Default exhibitionist rule.");
+        }
+    }
 }
