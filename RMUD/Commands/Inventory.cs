@@ -5,55 +5,58 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Inventory : CommandFactory
-	{
-		public override void Create(CommandParser Parser)
-		{
-			Parser.AddCommand(
-				new Or(
-					new KeyWord("i", false),
-					new KeyWord("inv", false),
-					new KeyWord("inventory", false)),
-				new InventoryProcessor(),
-				"See what you are carrying.");
-		}
-	}
+    internal class Inventory : CommandFactory, DeclaresRules
+    {
+        public override void Create(CommandParser Parser)
+        {
+            Parser.AddCommand(
+                Or(
+                    KeyWord("INVENTORY"),
+                    KeyWord("INV"),
+                    KeyWord("I")),
+                "See what you are carrying.")
+                .Manual("Displays what you are wearing and carrying.")
+                .Perform("inventory", "ACTOR", "ACTOR");
+        }
 
-	internal class InventoryProcessor : CommandProcessor
-	{
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-			if (Actor.ConnectedClient == null) return;
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclarePerformRuleBook<MudObject>("inventory", "[Actor] : Describes a player's inventory to themselves.");
 
-			var builder = new StringBuilder();
+            GlobalRules.Perform<MudObject>("inventory")
+                .When(a => !(a is Actor))
+                .Do(a => PerformResult.Stop)
+                .Name("Don't try to list inventory for something that isn't an actor rule.");
 
-            var wornObjects = Actor.GetContents(RelativeLocations.Worn);
-            if (wornObjects.Count == 0) builder.Append("You are naked.\r\n");
-            else
-            {
-                builder.Append("You are wearing..\r\n");
-                foreach (var item in wornObjects)
+            GlobalRules.Perform<MudObject>("inventory")
+                .Do(a =>
                 {
-                    builder.Append("  ");
-                    builder.Append(item.Indefinite(Actor));
-                    builder.Append("\r\n");
-                }
-            }
+                    var wornObjects = (a as Actor).GetContents(RelativeLocations.In);
+                    if (wornObjects.Count == 0) Mud.SendMessage(a, "You are naked.");
+                    else
+                    {
+                        Mud.SendMessage(a, "You are wearing..");
+                        foreach (var item in wornObjects)
+                            Mud.SendMessage(a, "  <a0>", item);
+                    }
+                    return PerformResult.Continue;
+                })
+                .Name("List worn items in inventory rule.");
 
-            var heldObjects = Actor.GetContents(RelativeLocations.Held);
-			if (heldObjects.Count == 0) builder.Append("You have nothing.");
-			else
-			{
-				builder.Append("You are carrying..\r\n");
-				foreach (var item in heldObjects)
-				{
-					builder.Append("  ");
-					builder.Append(item.Indefinite(Actor));
-					builder.Append("\r\n");
-				}
-			}
-
-			Mud.SendMessage(Actor, builder.ToString());
-		}
-	}
+            GlobalRules.Perform<MudObject>("inventory")
+                .Do(a =>
+                {
+                    var heldObjects = (a as Actor).GetContents(RelativeLocations.Held);
+                    if (heldObjects.Count == 0) Mud.SendMessage(a, "You have nothing.");
+                    else
+                    {
+                        Mud.SendMessage(a, "You are carrying..");
+                        foreach (var item in heldObjects)
+                            Mud.SendMessage(a, "  <a0>", item);
+                    }
+                    return PerformResult.Continue;
+                })
+                .Name("List held items in inventory rule.");
+        }
+    }
 }

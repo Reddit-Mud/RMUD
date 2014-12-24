@@ -68,7 +68,7 @@
     <Compile Include="Core\PersistAttribute.cs" />
     <Compile Include="Lib\Introduction.cs" />
     <Compile Include="Lib\Conversation.cs" />
-    <Compile Include="Commands\Errors.cs" />
+    <Compile Include="Commands\ReadLog.cs" />
     <Compile Include="Commands\AcceptQuest.cs" />
     <Compile Include="Commands\Wear.cs" />
     <Compile Include="Commands\Save.cs" />

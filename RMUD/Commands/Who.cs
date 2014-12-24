@@ -7,49 +7,25 @@ namespace RMUD.Commands
 {
 	internal class Who : CommandFactory
 	{
-		public override void Create(CommandParser Parser)
-		{
-			Parser.AddCommand(
-			    new KeyWord("WHO", false),
-				new WhoProcessor(),
-				"See who is logged on.");
-		}
-	}
-
-	internal class WhoProcessor : CommandProcessor
-	{
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-            if (Actor.ConnectedClient == null) return;
-
-            var clients = Mud.ConnectedClients.Where(c => c.IsLoggedOn);
-
-            var builder = new StringBuilder();
-            builder.Append("~~~ WHO IS ONLINE ~~~\r\n");
-
-            foreach (var client in clients)
-            {
-                builder.Append(String.Format("[{0}] {1} [{2}]",
-                    Mud.SettingsObject.GetNameForRank(client.Rank),
-                    client.Player.Short,
-                    client.ConnectionDescription));
-
-                if (client.IsAfk)
+        public override void Create(CommandParser Parser)
+        {
+            Parser.AddCommand(
+                KeyWord("WHO"),
+                "See who is logged on.")
+                .Manual("Displays a list of current logged in players.")
+                .ProceduralRule((match, actor) =>
                 {
-                    builder.Append(" afk: ");
-                    builder.Append(client.Account.AFKMessage);
-                }
-
-                if (client.Player.Location != null)
-                {
-                    builder.Append(" -- ");
-                    builder.Append(client.Player.Location.Path);
-                }
-
-                builder.Append("\r\n");                
-            }
-
-            Mud.SendMessage(Actor, builder.ToString());
-		}
+                    var clients = Mud.ConnectedClients.Where(c => c.IsLoggedOn);
+                    Mud.SendMessage(actor, "~~ THESE PLAYERS ARE ONLINE NOW ~~");
+                    foreach (var client in clients)
+                        Mud.SendMessage(actor,
+                            "[" + Mud.SettingsObject.GetNameForRank(client.Rank) + "] <a0> ["
+                            + client.ConnectionDescription + "]"
+                            + (client.IsAfk ? (" afk: " + client.Account.AFKMessage) : "")
+                            + (client.Player.Location != null ? (" -- " + client.Player.Location.Path) : ""),
+                            client.Player);
+                    return PerformResult.Continue;
+                });
+        }
 	}
 }

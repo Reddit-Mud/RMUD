@@ -32,7 +32,8 @@ namespace RMUD.Commands
                         return r;
                     }, "' [TEXT]"),
                 new SayProcessor(SayProcessor.EmoteTypes.Speech),
-                "Say something.");
+                "Say something.")
+                .Name("SAY");
 
 			Parser.AddCommand(
 				new Sequence(
