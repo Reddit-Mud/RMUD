@@ -68,11 +68,10 @@
     <Compile Include="Core\PersistAttribute.cs" />
     <Compile Include="Lib\Introduction.cs" />
     <Compile Include="Lib\Conversation.cs" />
-    <Compile Include="Commands\ReadLog.cs" />
+    <Compile Include="Commands\Admin\ReadLog.cs" />
     <Compile Include="Commands\AcceptQuest.cs" />
     <Compile Include="Commands\Wear.cs" />
     <Compile Include="Commands\Save.cs" />
-    <Compile Include="Commands\Purge.cs" />
     <Compile Include="Commands\Register.cs" />
     <Compile Include="Commands\Login.cs" />
     <Compile Include="Commands\Quit.cs" />
@@ -81,7 +80,7 @@
     <Compile Include="Commands\Shutdown.cs" />
     <Compile Include="Commands\Stats.cs" />
     <Compile Include="Commands\Admin\Dump.cs" />
-    <Compile Include="Commands\Instance.cs" />
+    <Compile Include="Commands\Admin\Instance.cs" />
     <Compile Include="Commands\Sleep.cs" />
     <Compile Include="Commands\Unlock.cs" />
     <Compile Include="Commands\LookUnderOrBehind.cs" />
@@ -153,14 +152,13 @@
     <Compile Include="Commands\Whisper.cs" />
     <Compile Include="Commands\Version.cs" />
     <Compile Include="Commands\Who.cs" />
-    <Compile Include="Commands\Reload.cs" />
+    <Compile Include="Commands\Admin\Reload.cs" />
     <Compile Include="Commands\Lock.cs" />
     <Compile Include="Commands\Open.cs" />
     <Compile Include="Commands\Drop.cs" />
     <Compile Include="Commands\Inventory.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Commands\Say.cs" />
-    <Compile Include="Commands\ReportError.cs" />
     <Compile Include="Commands\Take.cs" />
     <Compile Include="Commands\Admin\Move.cs" />
     <Compile Include="Commands\Admin\Inspect.cs" />

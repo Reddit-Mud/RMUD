@@ -65,7 +65,13 @@ namespace RMUD
                 }
                 catch (MatchAborted ma)
                 {
-                    return new MatchedCommand(new CommandEntry { Processor = new Commands.ReportError(ma.Message) }, new PossibleMatch[] { new PossibleMatch(new Dictionary<string, object>(), null) });
+                    return new MatchedCommand(
+                        new CommandEntry().ProceduralRule((match, actor) => 
+                        {
+                            Mud.SendMessage(actor, ma.Message);
+                            return PerformResult.Continue;
+                        }), 
+                        new PossibleMatch[] { new PossibleMatch(new Dictionary<string, object>(), null) });
                 }
 
                 //Only accept matches that consumed all of the input.

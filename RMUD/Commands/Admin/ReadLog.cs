@@ -11,7 +11,7 @@ namespace RMUD.Commands
         {
             Parser.AddCommand(
                 Sequence(
-                    KeyWord("LOG"),
+                    KeyWord("!LOG"),
                     Path("FILENAME"),
                     Optional(Number("COUNT"))),
                 "Display a log file.")
