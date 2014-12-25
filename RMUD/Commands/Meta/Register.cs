@@ -10,30 +10,26 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("REGISTER", false),
-                    new FailIfNoMatches(
-                        new SingleWord("USERNAME"),
-                        "You must supply a username.")),
-                    new RegistrationProcessor(),
-                    "Create a new account.");
-        }
-	}
+                Sequence(
+                    KeyWord("REGISTER"),
+                    MustMatch("You must supply a username.",
+                        SingleWord("USERNAME"))),
+                "Create a new account.")
+                .Manual("If you got this far, you know how to register.")
+                .ProceduralRule((match, actor) =>
+                {
+                    if (actor != null)
+                    {
+                        Mud.SendMessage(actor, "You are already logged in.");
+                        return PerformResult.Stop;
+                    }
 
-    internal class RegistrationProcessor : AuthenticationCommandProcessor
-    {
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            if (Actor != null)
-            {
-                Mud.SendMessage(Actor.ConnectedClient, "You are already logged in.");
-                return;
-            }
+                    var client = match.Arguments["CLIENT"] as Client;
+                    var userName = match.Arguments["USERNAME"].ToString();
 
-            var client = Match.Arguments["CLIENT"] as Client;
-            var userName = Match.Arguments["USERNAME"].ToString();
-
-            client.CommandHandler = new PasswordCommandHandler(client, this, userName);
+                    client.CommandHandler = new PasswordCommandHandler(client, Authenticate, userName);
+                    return PerformResult.Continue;
+                });
         }
 
         public void Authenticate(Client Client, String UserName, String Password)

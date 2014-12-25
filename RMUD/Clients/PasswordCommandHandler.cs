@@ -10,9 +10,9 @@ namespace RMUD
 	{
 		public ClientCommandHandler ParentHandler;
         public String UserName;
-        public AuthenticationCommandProcessor AuthenticatingCommand;
+        public Action<Client, String, String> AuthenticatingCommand;
 
-        public PasswordCommandHandler(Client Client, AuthenticationCommandProcessor AuthenticatingCommand, String UserName)
+        public PasswordCommandHandler(Client Client, Action<Client, String, String> AuthenticatingCommand, String UserName)
 		{
             this.ParentHandler = Client.CommandHandler;
             this.AuthenticatingCommand = AuthenticatingCommand;
@@ -26,7 +26,7 @@ namespace RMUD
         {
             Client.Echo = Echo.All;
             Client.CommandHandler = ParentHandler;
-            AuthenticatingCommand.Authenticate(Client, UserName, Password);
+            AuthenticatingCommand(Client, UserName, Password);
         }
     }
 }

@@ -62,7 +62,7 @@ namespace RMUD
                 if (matchedCommand != null)
                 {
                     matchedCommand.Matches[0].Arguments.Upsert("CLIENT", Client);
-                    matchedCommand.Command.Processor.Perform(matchedCommand.Matches[0], null);
+                    Mud.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], null);
                 }
                 else
                     Mud.SendMessage(Client, "I do not understand.");

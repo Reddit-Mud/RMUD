@@ -62,7 +62,7 @@
     <Compile Include="Commands\Admin\Force.cs" />
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
-    <Compile Include="Commands\Rules.cs" />
+    <Compile Include="Commands\Admin\Rules.cs" />
     <Compile Include="Core\ManPages.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
     <Compile Include="Core\PersistAttribute.cs" />
@@ -72,16 +72,15 @@
     <Compile Include="Commands\AcceptQuest.cs" />
     <Compile Include="Commands\Wear.cs" />
     <Compile Include="Commands\Save.cs" />
-    <Compile Include="Commands\Register.cs" />
-    <Compile Include="Commands\Login.cs" />
+    <Compile Include="Commands\Meta\Register.cs" />
+    <Compile Include="Commands\Meta\Login.cs" />
     <Compile Include="Commands\Quit.cs" />
-    <Compile Include="Commands\Afk.cs" />
+    <Compile Include="Commands\Meta\Afk.cs" />
     <Compile Include="Commands\Conversation.cs" />
     <Compile Include="Commands\Shutdown.cs" />
     <Compile Include="Commands\Stats.cs" />
     <Compile Include="Commands\Admin\Dump.cs" />
     <Compile Include="Commands\Admin\Instance.cs" />
-    <Compile Include="Commands\Sleep.cs" />
     <Compile Include="Commands\Unlock.cs" />
     <Compile Include="Commands\LookUnderOrBehind.cs" />
     <Compile Include="Commands\Close.cs" />
@@ -157,7 +156,7 @@
     <Compile Include="Commands\Open.cs" />
     <Compile Include="Commands\Drop.cs" />
     <Compile Include="Commands\Inventory.cs" />
-    <Compile Include="Commands\Help.cs" />
+    <Compile Include="Commands\Man.cs" />
     <Compile Include="Commands\Say.cs" />
     <Compile Include="Commands\Take.cs" />
     <Compile Include="Commands\Admin\Move.cs" />
@@ -294,6 +293,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

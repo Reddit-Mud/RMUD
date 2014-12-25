@@ -15,6 +15,7 @@ namespace RMUD.Commands
                     MustMatch("You have to supply an afk message.",
                         Rest("MESSAGE"))),
                 "Set your afk message.")
+                .Manual("Sets your afk message. This message is displayed after 5 minutes of inactivity on the WHO list, and to any player who attempts to whisper to you.")
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor.ConnectedClient != null)

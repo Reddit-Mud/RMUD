@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Help : CommandFactory
+	internal class Man : CommandFactory
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -16,6 +16,7 @@ namespace RMUD.Commands
                         KeyWord("?")),
                     Optional(Rest("COMMAND"))),
                 "Display a list of all defined commands.")
+                .Manual("This is the command you typed to get this message.")
                 .ProceduralRule((match, actor) =>
                 {
                     if (!match.Arguments.ContainsKey("COMMAND"))

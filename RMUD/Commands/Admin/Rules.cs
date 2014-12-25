@@ -10,18 +10,30 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new RankGate(500),
-                    new KeyWord("RULES", false),
-                    new Optional(new ObjectMatcher("OBJECT", new InScopeObjectSource())),
-                    new Optional(new Rest("BOOK-NAME"))),
-                new RulesProcessor(),
-                "View defined rules.");
+                Sequence(
+                    RequiredRank(500),
+                    KeyWord("!RULES"),
+                    Optional(Object("OBJECT", InScope)),
+                    Optional(Rest("BOOK-NAME"))),
+                "View defined rules.")
+                .Manual("Lists rules and rulebooks. Both arguments are optional. If no object is supplied, it will list global rules. If no book name is supplied, it will list books rather than listing rules.")
+                .ProceduralRule((match, actor) =>
+                {
+                    if (match.Arguments.ContainsKey("OBJECT"))
+                    {
+                        if (match.Arguments.ContainsKey("BOOK-NAME"))
+                            DisplaySingleBook(actor, (match.Arguments["OBJECT"] as MudObject).Rules, match.Arguments["BOOK-NAME"].ToString());
+                        else
+                            DisplayBookList(actor, (match.Arguments["OBJECT"] as MudObject).Rules);
+                    }
+                    else if (match.Arguments.ContainsKey("BOOK-NAME"))
+                        DisplaySingleBook(actor, GlobalRules.Rules, match.Arguments["BOOK-NAME"].ToString());
+                    else
+                        DisplayBookList(actor, GlobalRules.Rules);
+                    return PerformResult.Continue;
+                });
         }
-    }
 
-    internal class RulesProcessor : CommandProcessor
-    {
         private static void DisplaySingleBook(Actor Actor, RuleSet From, String BookName)
         {
             if (From == null || From.FindRuleBook(BookName) == null)
@@ -49,25 +61,6 @@ namespace RMUD.Commands
                     DisplayBookHeader(Actor, book);
         }
 
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            if (Actor.ConnectedClient == null) return;
-
-            String bookName = "";
-            if (Match.Arguments.ContainsKey("BOOK-NAME"))
-                bookName = Match.Arguments["BOOK-NAME"].ToString();
-
-            if (Match.Arguments.ContainsKey("OBJECT"))
-            {
-                if (Match.Arguments.ContainsKey("BOOK-NAME"))
-                    DisplaySingleBook(Actor, (Match.Arguments["OBJECT"] as MudObject).Rules, bookName);
-                else
-                    DisplayBookList(Actor, (Match.Arguments["OBJECT"] as MudObject).Rules);
-            }
-            else if (Match.Arguments.ContainsKey("BOOK-NAME"))
-                DisplaySingleBook(Actor, GlobalRules.Rules, bookName);
-            else
-                DisplayBookList(Actor, GlobalRules.Rules);
-        }
+        
     }
 }

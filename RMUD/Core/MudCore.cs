@@ -120,7 +120,8 @@ namespace RMUD
             else
                 Command.Processor.Perform(Match, Actor);
             
-            CheckQuestStatus(Actor);
+            if (Actor != null)
+                CheckQuestStatus(Actor);
         }
     }
 }

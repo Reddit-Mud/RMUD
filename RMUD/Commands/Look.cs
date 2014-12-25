@@ -5,25 +5,26 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Look : CommandFactory, DeclaresRules
-	{
-		public override void Create(CommandParser Parser)
-		{
-			Parser.AddCommand(
-                new Or(
-				    new KeyWord("LOOK", false),
-                    new KeyWord("L", false)),
-				new LookProcessor(),
-				"Look around at your suroundings.");
-		}
+    internal class Look : CommandFactory, DeclaresRules
+    {
+        public override void Create(CommandParser Parser)
+        {
+            Parser.AddCommand(
+                Or(
+                    KeyWord("LOOK"),
+                    KeyWord("L")),
+                "Look around at your suroundings.")
+                .Manual("Displays a description of your location, and lists what else is present there.")
+                .ProceduralRule((match, actor) => GlobalRules.ConsiderPerformRule("describe locale", actor.Location, actor, actor.Location));
+        }
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("locale-description", "[Actor, Item] : Generate a locale description for the item.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe in locale", "[Actor, Item] : Generate a locale description for the item.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe-locale", "[Actor, Room] : Generates a description of the locale.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe locale", "[Actor, Room] : Generates a description of the locale.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe-locale")
+            GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .First
                 .When((viewer, room) => room == null || !(room is Room))
                 .Do((viewer, room) =>
@@ -33,7 +34,7 @@ namespace RMUD.Commands
                 })
                 .Name("Can't describe the locale if there isn't one rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe-locale")
+            GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .First
                 .Do((viewer, room) =>
                 {
@@ -42,7 +43,7 @@ namespace RMUD.Commands
                 })
                 .Name("Update room lighting before generating description rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe-locale")
+            GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .First
                 .Do((viewer, room) =>
                 {
@@ -51,7 +52,7 @@ namespace RMUD.Commands
                 })
                 .Name("Display room name rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe-locale")
+            GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .First
                 .When((viewer, room) => (room as Room).AmbientLighting == LightingLevel.Dark)
                 .Do((viewer, room) =>
@@ -61,7 +62,7 @@ namespace RMUD.Commands
                 })
                 .Name("Can't see in darkness rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe-locale")
+            GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .Do((viewer, room) =>
                 {
                     GlobalRules.ConsiderPerformRule("describe", room, viewer, room);
@@ -69,7 +70,7 @@ namespace RMUD.Commands
                 })
                 .Name("Include describe rules in locale description rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe-locale")
+            GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .Do((viewer, room) =>
                 {
                     var visibleThings = (room as Room).EnumerateObjects(RelativeLocations.Contents).Where(t => !System.Object.ReferenceEquals(t, viewer));
@@ -78,7 +79,7 @@ namespace RMUD.Commands
                     foreach (var thing in visibleThings)
                     {
                         Mud.BeginOutputQuery();
-                        GlobalRules.ConsiderPerformRule("locale-description", thing, viewer, thing);
+                        GlobalRules.ConsiderPerformRule("describe in locale", thing, viewer, thing);
                         if (!Mud.CheckOutputQuery()) normalContents.Add(thing);
                     }
 
@@ -102,7 +103,7 @@ namespace RMUD.Commands
                                         subObjects.Add(o);
                                         return EnumerateObjectsControl.Continue;
                                     });
-                            
+
                                     if (subObjects.Count > 0)
                                     {
                                         subBuilder.Append(" (on which is ");
@@ -114,7 +115,7 @@ namespace RMUD.Commands
 
                             return subBuilder.ToString();
                         })));
-                        
+
                         Mud.SendMessage(viewer, builder.ToString());
                     }
 
@@ -122,7 +123,7 @@ namespace RMUD.Commands
                 })
                 .Name("List contents of room rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe-locale")
+            GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .Do((viewer, room) =>
                 {
                     if ((room as Room).EnumerateObjects(RelativeLocations.Links).Count() > 0)
@@ -157,12 +158,4 @@ namespace RMUD.Commands
                 .Name("List exists in locale description rule.");
         }
     }
-
-	public class LookProcessor : CommandProcessor
-	{
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-            GlobalRules.ConsiderPerformRule("describe-locale", Actor.Location, Actor, Actor.Location);
-		}
-	}
 }
