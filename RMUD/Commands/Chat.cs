@@ -10,34 +10,88 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("SUBSCRIBE", false),
-                    new FailIfNoMatches(
-                        new ChatChannelNameMatcher("CHANNEL"),
-                        "I don't recognize that channel.")),
-                new SubscribeProcessor(),
-                "Subscribe to a chat channel.");
+                Sequence(
+                    KeyWord("SUBSCRIBE"),
+                    MustMatch("I don't recognize that channel.",
+                        new ChatChannelNameMatcher("CHANNEL"))),
+                "Subscribe to a chat channel.")
+                .Manual("Subscribes you to the specified chat channel, if you are able to access it.")
+                .ProceduralRule((match, actor) =>
+                {
+                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    if (actor.ConnectedClient == null || (channel.AccessFilter != null && !channel.AccessFilter(actor.ConnectedClient)))
+                        Mud.SendMessage(actor, "You do not have access to that channel.");
+                    else
+                    {
+                        if (!channel.Subscribers.Contains(actor.ConnectedClient))
+                            channel.Subscribers.Add(actor.ConnectedClient);
+                        Mud.SendMessage(actor, "You are now subscribed to " + channel.Name + ".");
+                    }
+                    return PerformResult.Continue;
+                });
 
             Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("UNSUBSCRIBE", false),
-                    new FailIfNoMatches(
-                        new ChatChannelNameMatcher("CHANNEL"),
-                        "I don't recognize that channel.")),
-                new UnsubscribeProcessor(),
-                "Unubscribe from a chat channel.");
+                Sequence(
+                    KeyWord("UNSUBSCRIBE"),
+                    MustMatch("I don't recognize that channel.",
+                        new ChatChannelNameMatcher("CHANNEL"))),
+                "Unubscribe from a chat channel.")
+                .Manual("Unsubscribe from the specified chat channel.")
+                .ProceduralRule((match, actor) =>
+                {
+                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    channel.Subscribers.RemoveAll(c => System.Object.ReferenceEquals(c, actor.ConnectedClient));
+                    Mud.SendMessage(actor, "You are now unsubscribed from " + channel.Name + ".");
+                    return PerformResult.Continue;
+                });
 
             Parser.AddCommand(
-                new KeyWord("CHANNELS", false),
-                new ListChannelsProcessor(),
-                "List all available chat channels.");
+                KeyWord("CHANNELS"),
+                "List all available chat channels.")
+                .Manual("Lists all existing chat channels.")
+                .ProceduralRule((match, actor) =>
+                {
+                    Mud.SendMessage(actor, "~~ CHANNELS ~~");
+                    foreach (var channel in Mud.ChatChannels)
+                        Mud.SendMessage(actor, (channel.Subscribers.Contains(actor.ConnectedClient) ? "*" : "") + channel.Name);
+                    return PerformResult.Continue;
+                });
 
             Parser.AddCommand(
-                new Sequence(
+                Sequence(
                     new ChatChannelNameMatcher("CHANNEL"),
-                        new Rest("TEXT")),
-                new ChatProcessor(),
-                "Chat on a channel.");
+                    Rest("TEXT")),
+                    "Chat on a channel")
+                .Name("CHAT")
+                .Manual("Chat on a chat channel.")
+                .ProceduralRule((match, actor) =>
+                {
+                    if (actor.ConnectedClient == null) return PerformResult.Stop;
+                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    if (!channel.Subscribers.Contains(actor.ConnectedClient))
+                    {
+                        if (channel.AccessFilter != null && !channel.AccessFilter(actor.ConnectedClient))
+                        {
+                            Mud.SendMessage(actor, "You do not have access to that channel.");
+                            return PerformResult.Stop;
+                        }
+
+                        channel.Subscribers.Add(actor.ConnectedClient);
+                        Mud.SendMessage(actor, "You are now subscribed to " + channel.Name + ".");
+                    }
+                    return PerformResult.Continue;
+                }, "Subscribe to channels before chatting rule.")
+                .ProceduralRule((match, actor) =>
+                {
+                    var message = match.Arguments["TEXT"].ToString();
+                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    Mud.SendChatMessage(channel, "[" + channel.Name + "] " + actor.Short +
+                        (message.StartsWith("\"") ?
+                            (" " + message.Substring(1).Trim())
+                            : (": \"" + message + "\"")));
+                    return PerformResult.Continue;
+                });
+
 
             Parser.AddCommand(
                new Sequence(
@@ -49,102 +103,6 @@ namespace RMUD.Commands
                        new Number("COUNT"))),
                 new RecallProcessor(),
                 "Recall past conversation on a channel.");
-        }
-    }
-
-    internal class SubscribeProcessor : CommandProcessor
-    {
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            if (Actor.ConnectedClient == null) return;
-
-            var channel = Match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
-            if (channel.AccessFilter != null && !channel.AccessFilter(Actor.ConnectedClient))
-            {
-                Mud.SendMessage(Actor, "You do not have access to that channel.");
-                return;
-            }
-
-            if (!channel.Subscribers.Contains(Actor.ConnectedClient))
-                channel.Subscribers.Add(Actor.ConnectedClient);
-            Mud.SendMessage(Actor, "You are now subscribed to " + channel.Name + ".");
-        }
-    }
-
-    internal class UnsubscribeProcessor : CommandProcessor
-    {
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            if (Actor.ConnectedClient == null) return;
-
-            var channel = Match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
-            channel.Subscribers.RemoveAll(c => Object.ReferenceEquals(c, Actor.ConnectedClient));
-            Mud.SendMessage(Actor, "You are now unsubscribed from " + channel.Name + ".");
-        }
-    }
-
-    internal class ListChannelsProcessor : CommandProcessor
-    {
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            if (Actor.ConnectedClient == null) return;
-
-            var builder = new StringBuilder();
-            builder.Append("~~~ CHAT CHANNELS ~~~\r\n");
-            foreach (var channel in Mud.ChatChannels)
-            {
-                if (channel.Subscribers.Contains(Actor.ConnectedClient))
-                    builder.Append("*");
-                builder.Append(String.Format("{0}\r\n", channel.Name));
-            }
-
-            Mud.SendMessage(Actor, builder.ToString());
-        }
-    }
-
-    internal class ChatProcessor : CommandProcessor
-    {
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            if (Actor.ConnectedClient == null) return;
-
-            var channel = Match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
-
-            if (!channel.Subscribers.Contains(Actor.ConnectedClient))
-            {
-                if (channel.AccessFilter != null && !channel.AccessFilter(Actor.ConnectedClient))
-                {
-                    Mud.SendMessage(Actor, "You do not have access to that channel.");
-                    return;
-                }
-
-                channel.Subscribers.Add(Actor.ConnectedClient);
-                Mud.SendMessage(Actor, "You are now subscribed to " + channel.Name + ".");
-            }
-
-            var isEmote = false;
-            var rawMessage = Match.Arguments["TEXT"].ToString();
-            if (rawMessage.StartsWith("\""))
-            {
-                isEmote = true;
-                rawMessage = rawMessage.Substring(1).Trim();
-            }
-
-            var messageBuilder = new StringBuilder();
-            messageBuilder.Append(String.Format("[{0}] {1}", channel.Name, Actor.Short));
-            if (isEmote)
-            {
-                messageBuilder.Append(" ");
-                messageBuilder.Append(rawMessage);
-            }
-            else
-            {
-                messageBuilder.Append(": \"");
-                messageBuilder.Append(rawMessage);
-                messageBuilder.Append("\"");
-            }
-
-            Mud.SendChatMessage(channel, messageBuilder.ToString());
         }
     }
 
