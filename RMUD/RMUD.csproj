@@ -60,6 +60,7 @@
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
     <Compile Include="Commands\Admin\Force.cs" />
+    <Compile Include="Commands\NpcConversation\TopicMatcher.cs" />
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Commands\Admin\Rules.cs" />
@@ -71,12 +72,12 @@
     <Compile Include="Commands\Admin\ReadLog.cs" />
     <Compile Include="Commands\AcceptQuest.cs" />
     <Compile Include="Commands\Wear.cs" />
-    <Compile Include="Commands\Save.cs" />
+    <Compile Include="Commands\Admin\Save.cs" />
     <Compile Include="Commands\Meta\Register.cs" />
     <Compile Include="Commands\Meta\Login.cs" />
     <Compile Include="Commands\Meta\Quit.cs" />
     <Compile Include="Commands\Meta\Afk.cs" />
-    <Compile Include="Commands\Conversation.cs" />
+    <Compile Include="Commands\NpcConversation\Conversation.cs" />
     <Compile Include="Commands\Admin\Stats.cs" />
     <Compile Include="Commands\Admin\Dump.cs" />
     <Compile Include="Commands\Admin\Instance.cs" />
@@ -143,11 +144,11 @@
     <Compile Include="Core\ChatChannels.cs" />
     <Compile Include="Clients\Client.cs" />
     <Compile Include="CommandLine.cs" />
-    <Compile Include="Commands\Chat.cs" />
+    <Compile Include="Commands\Meta\Chat.cs" />
     <Compile Include="Commands\Put.cs" />
-    <Compile Include="Commands\Kick.cs" />
-    <Compile Include="Commands\Ban.cs" />
-    <Compile Include="Commands\Whisper.cs" />
+    <Compile Include="Commands\Admin\Kick.cs" />
+    <Compile Include="Commands\Admin\Ban.cs" />
+    <Compile Include="Commands\Meta\Whisper.cs" />
     <Compile Include="Commands\Meta\Version.cs" />
     <Compile Include="Commands\Meta\Who.cs" />
     <Compile Include="Commands\Admin\Reload.cs" />
@@ -292,7 +293,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -94,40 +94,32 @@ namespace RMUD.Commands
 
 
             Parser.AddCommand(
-               new Sequence(
-                   new KeyWord("RECALL", false),
-                   new FailIfNoMatches(
-                       new ChatChannelNameMatcher("CHANNEL"),
-                       "I don't recognize that channel."),
-                   new Optional(
-                       new Number("COUNT"))),
-                new RecallProcessor(),
-                "Recall past conversation on a channel.");
-        }
-    }
+                Sequence(
+                    KeyWord("RECALL"),
+                    MustMatch("I don't recognize that channel.",
+                        new ChatChannelNameMatcher("CHANNEL")),
+                    Optional(Number("COUNT"))),
+                "Recall past conversation on a channel.")
+                .Manual("Recalls past conversation on a chat channel. An optional line count parameter allows you to peek further into the past.")
+                .ProceduralRule((match, actor) =>
+                {
+                    if (actor.ConnectedClient == null) return PerformResult.Stop;
+                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    if (channel.AccessFilter != null && !channel.AccessFilter(actor.ConnectedClient))
+                    {
+                        Mud.SendMessage(actor, "You do not have access to that channel.");
+                        return PerformResult.Stop;
+                    }
 
-    internal class RecallProcessor : CommandProcessor
-    {
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            if (Actor.ConnectedClient == null) return;
+                    int count = 20;
+                    if (match.Arguments.ContainsKey("COUNT")) count = (match.Arguments["COUNT"] as int?).Value;
 
-            var channel = Match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
-            if (channel.AccessFilter != null && !channel.AccessFilter(Actor.ConnectedClient))
-            {
-                Mud.SendMessage(Actor, "You do not have access to that channel.");
-                return;
-            }
-
-            int count = 20;
-            if (Match.Arguments.ContainsKey("COUNT")) count = (Match.Arguments["COUNT"] as int?).Value;
-
-            var logFilename = Mud.ChatLogsPath + channel.Name + ".txt";
-            if (System.IO.File.Exists(logFilename))
-            {
-                foreach (var line in (new ReverseLineReader(logFilename)).Take(count).Reverse())
-                    Mud.SendMessage(Actor, line);
-            }
+                    var logFilename = Mud.ChatLogsPath + channel.Name + ".txt";
+                    if (System.IO.File.Exists(logFilename))
+                        foreach (var line in (new ReverseLineReader(logFilename)).Take(count).Reverse())
+                            Mud.SendMessage(actor, line);
+                    return PerformResult.Continue;
+                });
         }
     }
 }

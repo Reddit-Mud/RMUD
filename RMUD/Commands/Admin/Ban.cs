@@ -12,6 +12,7 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 KeyWord("BANS"),
                 "Display the ban list.")
+                .Manual("Lists all active bans.")
                 .ProceduralRule((match, actor) =>
                 {
                     Mud.SendMessage(actor, "~~~ ALL SET BANS ~~~");
@@ -27,6 +28,7 @@ namespace RMUD.Commands
                     MustMatch("You must supply an ip mask.", SingleWord("GLOB")),
                     MustMatch("You must supply a reason.", Rest("REASON"))),
                 "Ban an ip address.")
+                .Manual("Ban every player who's ip matches the mask.")
                 .ProceduralRule((match, actor) =>
                 {
                     Mud.ProscriptionList.Ban(match.Arguments["GLOB"].ToString(), match.Arguments["REASON"].ToString());
@@ -40,6 +42,7 @@ namespace RMUD.Commands
                     KeyWord("UNBAN"),
                     MustMatch("You must supply an ip mask.", SingleWord("GLOB"))),
                 "Remove a ban on an ip address.")
+                .Manual("Remove an existing ban.")
                 .ProceduralRule((match, actor) =>
                 {
                     Mud.ProscriptionList.RemoveBan(match.Arguments["GLOB"].ToString());

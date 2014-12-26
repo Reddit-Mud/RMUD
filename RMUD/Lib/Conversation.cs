@@ -7,48 +7,6 @@ namespace RMUD
 {
     public static class Conversation
     {
-        public static void ListSuggestedTopics(Player For, NPC Of)
-        {
-            //Get the first 4 available topics that the player hasn't already seen.
-            var suggestedTopics = Of.ConversationTopics.Where(topic => topic.IsAvailable(For, Of) && !HasKnowledgeOfTopic(For, Of, topic.ID)).Take(4);
-            if (suggestedTopics.Count() != 0)
-                Mud.SendMessage(For, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Topic)) + ".");
-        }
-
-        public static void GreetLocutor(Player Actor, NPC Whom)
-        {
-            //Todo: Greeting rules?
-            //Todo: NPC Greeting response
-
-            Actor.CurrentInterlocutor = Whom;
-        }
-
-        public static void DiscussTopic(Player Actor, NPC With, ConversationTopic Topic)
-        {
-            Mud.SendMessage(Actor, String.Format("You discuss '{0}' with {1}.", Topic.Topic, Actor.CurrentInterlocutor.Definite(Actor)));
-
-            Mud.SendExternalMessage(Actor, String.Format("<0> discusses '{0}' with <1>.", Topic.Topic), Actor, Actor.CurrentInterlocutor);
-
-            if (Topic.ResponseType == ConversationTopic.ResponseTypes.Normal)
-            {
-                var response = Topic.NormalResponse.Expand(Actor, Actor.CurrentInterlocutor);
-                Mud.SendLocaleMessage(Actor, response, Actor.CurrentInterlocutor);
-            }
-            else if (Topic.ResponseType == ConversationTopic.ResponseTypes.Silent)
-            {
-                Topic.SilentResponse(Actor, Actor.CurrentInterlocutor, Topic);
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
-
-            foreach (var player in Mud.EnumerateObjectTree(Mud.FindLocale(Actor)).Where(o => o is Player).Select(o => o as Player))
-                GrantKnowledgeOfTopic(player, Actor.CurrentInterlocutor, Topic.ID);
-
-            Conversation.ListSuggestedTopics(Actor, Actor.CurrentInterlocutor);
-        }
-
         public static bool HasKnowledgeOfTopic(Player Who, NPC Locutor, int TopicID)
         {
             if (TopicID < 0) throw new InvalidOperationException();

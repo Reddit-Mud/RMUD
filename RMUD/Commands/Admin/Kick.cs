@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace RMUD.Commands
+{
+    internal class Kick : CommandFactory
+    {
+        public override void Create(CommandParser Parser)
+        {
+            Parser.AddCommand(
+                Sequence(
+                    RequiredRank(500),
+                    KeyWord("KICK"),
+                    Or(
+                        Object("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),
+                        SingleWord("MASK"))),
+                "FAAAAAALCON PUNCH!")
+                .Manual("Makes bad people go away.")
+                .ProceduralRule((match, actor) =>
+                {
+                    if (match.Arguments.ContainsKey("PLAYER"))
+                        KickPlayer(match.Arguments["PLAYER"] as Actor, actor);
+                    else
+                    {
+                        var mask = match.Arguments["MASK"].ToString();
+                        var maskRegex = new System.Text.RegularExpressions.Regex(ProscriptionList.ConvertGlobToRegex(mask), System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+                        //Iterate over local copy because kicking modifies ConnectedClients.
+                        foreach (var client in new List<Client>(Mud.ConnectedClients))
+                        {
+                            if (client.IsLoggedOn && maskRegex.Matches(client.IPString).Count > 0)
+                            {
+                                Mud.MarkLocaleForUpdate(client.Player);
+                                KickPlayer(client.Player, actor);
+                            }
+                        }
+                    }
+
+                    return PerformResult.Continue;
+                });
+        }
+
+                public static void KickPlayer(Actor Player, Actor Actor)
+        {
+            if (Player.ConnectedClient != null)
+            {
+                Mud.MarkLocaleForUpdate(Player);
+
+                Mud.SendMessage(Player, Actor.Short + " has removed you from the server.");
+                Player.ConnectedClient.Disconnect();
+                Mud.SendGlobalMessage(Actor.Short + " has removed " + Player.Short + " from the server.");
+            }
+        }
+    }
+}
