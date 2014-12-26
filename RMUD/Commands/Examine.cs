@@ -10,42 +10,30 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new Or(
-                        new KeyWord("EXAMINE", false),
-                        new KeyWord("X", false)),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("OBJECT", new InScopeObjectSource()),
-                        "I don't see that here.")),
-                new ExamineProcessor(),
-                "Look closely at an object.");
-
-            Parser.AddCommand(
-                new Sequence(
-                    new Or(
-                        new KeyWord("LOOK", false),
-                        new KeyWord("L", false)),
-                    new KeyWord("AT", false),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("OBJECT", new InScopeObjectSource()),
-                        "I don't see that here.")),
-                new ExamineProcessor(),
-                "Look closely at an object.");
-
-
+                Sequence(
+                    Or(
+                        Or(KeyWord("EXAMINE"), KeyWord("X")),
+                        Sequence(
+                            Or(KeyWord("LOOK"), KeyWord("L")),
+                            KeyWord("AT"))),
+                    Object("OBJECT", InScope)),
+                "Look closely at an object.")
+                .Manual("Take a close look at an object.")
+                .Check("can examine?", "OBJECT", "ACTOR", "OBJECT")
+                .Perform("describe", "OBJECT", "ACTOR", "OBJECT");
         }
 
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can-examine", "[viewer, item] : Can the viewer examine the item?");
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe", "[viewer, item] : Generates descriptions of the item.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can examine?", "[Actor, Item] : Can the viewer examine the item?");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe", "[Actor, Item] : Generates descriptions of the item.");
 
-            GlobalRules.Check<MudObject, MudObject>("can-examine")
+            GlobalRules.Check<MudObject, MudObject>("can examine?")
                 .First
                 .Do((viewer, item) => GlobalRules.IsVisibleTo(viewer, item))
                 .Name("Can't examine what isn't here rule.");
 
-            GlobalRules.Check<MudObject, MudObject>("can-examine")
+            GlobalRules.Check<MudObject, MudObject>("can examine?")
                 .Last
                 .Do((viewer, item) => CheckResult.Allow)
                 .Name("Default can examine everything rule.");
@@ -106,15 +94,4 @@ namespace RMUD.Commands
                 .Name("List things in open container in description rule.");
         }
     }
-
-	internal class ExamineProcessor : CommandProcessor
-	{
-        public void Perform(PossibleMatch Match, Actor Actor)
-        {
-            var target = Match.Arguments["OBJECT"] as MudObject;
-
-            if (GlobalRules.ConsiderCheckRule("can-examine", target, Actor, target) == CheckResult.Allow)
-                GlobalRules.ConsiderPerformRule("describe", target, Actor, target);
-        }
-	}
 }

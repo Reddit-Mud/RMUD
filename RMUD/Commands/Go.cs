@@ -5,65 +5,104 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Go : CommandFactory
+	internal class Go : CommandFactory, DeclaresRules
 	{
 		public override void Create(CommandParser Parser)
 		{
-			Parser.AddCommand(
-                new FirstOf(
-                    new Sequence(
-                        new KeyWord("GO", false),
-                        new FailIfNoMatches(
-                            new Cardinal("DIRECTION"),
-                            "What way was that?")),
-                    new Cardinal("DIRECTION")),
-				new GoProcessor(),
-				"Move between rooms.");
-		}
-	}
-
-	internal class GoProcessor : CommandProcessor
-	{
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-			var direction = Match.Arguments["DIRECTION"] as Direction?;
-			var location = Actor.Location as Room;
-            var link = location.EnumerateObjects().FirstOrDefault(thing => thing is Link && (thing as Link).Direction == direction.Value) as Link;
-
-			if (link == null)
-				Mud.SendMessage(Actor, "You can't go that way.");
-			else
-			{
-                if (link.Portal != null)
+            Parser.AddCommand(
+                FirstOf(
+                    Sequence(
+                        KeyWord("GO"),
+                        MustMatch("What way was that?", Cardinal("DIRECTION"))),
+                    Cardinal("DIRECTION")),
+                "Move between rooms.")
+                .Manual("Move between rooms. 'Go' is optional, a raw cardinal works just as well.")
+                .ProceduralRule((match, actor) =>
                 {
-                    if (GlobalRules.ConsiderValueRule<bool>("openable?", link.Portal, link.Portal))
-                    {
-                        if (!GlobalRules.ConsiderValueRule<bool>("open?", link.Portal, link.Portal))
-                        {
-                            Mud.SendMessage(Actor, "The door is closed.");
-                            return;
-                        }
-                    }
-                }
-
-				Mud.SendMessage(Actor, "You went " + direction.Value.ToString().ToLower() + ".");
-				Mud.SendExternalMessage(Actor, Actor.Short + " went " + direction.Value.ToString().ToLower() + ".");
-				var destination = Mud.GetObject(link.Destination, s =>
-				{
-					if (Actor.ConnectedClient != null)
-						Mud.SendMessage(Actor, s);
-				}) as Room;
-				if (destination == null) throw new InvalidOperationException("[ERROR] Link does not lead to room.");
-				MudObject.Move(Actor, destination);
-				Mud.EnqueuClientCommand(Actor.ConnectedClient, "look");
-
-                var arriveMessage = Link.FromMessage(Link.Opposite(direction.Value));
-
-				Mud.SendExternalMessage(Actor, Actor.Short + " arrives " + arriveMessage + ".");
-
-                Mud.MarkLocaleForUpdate(location);
-                Mud.MarkLocaleForUpdate(destination);
-			}
+                    var direction = match.Arguments["DIRECTION"] as Direction?;
+                    var location = actor.Location as Room;
+                    var link = location.EnumerateObjects().FirstOrDefault(thing => thing is Link && (thing as Link).Direction == direction.Value) as Link;
+                    match.Arguments.Upsert("LINK", link);
+                    return PerformResult.Continue;
+                }, "lookup link rule")
+                .Check("can go?", "LINK", "ACTOR", "LINK")
+                .Perform("go", "LINK", "ACTOR", "LINK")
+                .ProceduralRule((match, actor) =>
+                {
+                    Mud.MarkLocaleForUpdate(actor);
+                    Mud.MarkLocaleForUpdate(match.Arguments["LINK"] as MudObject);
+                    return PerformResult.Continue;
+                }, "Mark both sides of link for update rule");
 		}
-	}
+
+        public void InitializeGlobalRules()
+        {
+            GlobalRules.DeclareCheckRuleBook<MudObject, Link>("can go?", "[Actor, Link] : Can the actor go through that link?");
+
+            GlobalRules.Check<MudObject, Link>("can go?")
+                .When((actor, link) => link == null)
+                .Do((actor, link) =>
+                {
+                    Mud.SendMessage(actor, "You can't go that way.");
+                    return CheckResult.Disallow;
+                })
+                .Name("No link found rule.");
+
+            GlobalRules.Check<MudObject, Link>("can go?")
+                .When((actor, link) => (link.Portal != null) && !GlobalRules.ConsiderValueRule<bool>("open?", link.Portal, link.Portal))
+                .Do((actor, link) =>
+                {
+                    Mud.SendMessage(actor, "The door is closed.");
+                    return CheckResult.Disallow;
+                })
+                .Name("Can't go through closed door rule.");
+
+            GlobalRules.Check<MudObject, Link>("can go?")
+                .Do((actor, link) => CheckResult.Allow)
+                .Name("Default can go rule.");
+
+            GlobalRules.DeclarePerformRuleBook<MudObject, Link>("go", "[Actor, Link] : Handle the actor going through the link.");
+
+            GlobalRules.Perform<MudObject, Link>("go")
+                .Do((actor, link) =>
+                {
+                    Mud.SendMessage(actor, "You went " + link.Direction.ToString().ToLower() + ".");
+                    Mud.SendExternalMessage(actor, "^<the0> went " + link.Direction.ToString().ToLower() + ".", actor);
+                    return PerformResult.Continue;
+                })
+                .Name("Report leaving rule.");
+
+            GlobalRules.Perform<MudObject, Link>("go")
+                .Do((actor, link) =>
+                {
+                    var destination = Mud.GetObject(link.Destination, s => Mud.SendMessage(actor, s)) as Room;
+                    if (destination == null)
+                    {
+                        Mud.SendMessage(actor, "Error - Link does not lead to a room.");
+                        return PerformResult.Stop;
+                    }
+                    MudObject.Move(actor, destination);
+                    return PerformResult.Continue;
+                })
+                .Name("Move through the link rule.");
+
+            GlobalRules.Perform<MudObject, Link>("go")
+                .Do((actor, link) =>
+                {
+                    var arriveMessage = Link.FromMessage(Link.Opposite(link.Direction));
+                    Mud.SendExternalMessage(actor, "^<the0> arrives " + arriveMessage + ".", actor);
+                    return PerformResult.Continue;
+                })
+                .Name("Report arrival rule.");
+
+            GlobalRules.Perform<MudObject, Link>("go")
+                .When((actor, link) => actor is Player && (actor as Player).ConnectedClient != null)
+                .Do((actor, link) =>
+                {
+                    Mud.EnqueuClientCommand((actor as Player).ConnectedClient, "look");
+                    return PerformResult.Continue;
+                })
+                .Name("Players look after going rule.");
+        }
+    }
 }
