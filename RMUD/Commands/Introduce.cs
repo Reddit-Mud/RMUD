@@ -15,8 +15,7 @@ namespace RMUD.Commands
                     Or(
                         KeyWord("MYSELF"),
                         KeyWord("ME"),
-                        KeyWord("SELF"))),
-                "Introduce yourself.")
+                        KeyWord("SELF"))))
                 .Manual("This is a specialized version of the commad to handle 'introduce me'.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -35,8 +34,7 @@ namespace RMUD.Commands
                         {
                             if (item is Actor) return MatchPreference.Likely;
                             return MatchPreference.Unlikely;
-                        }))),
-                "Introduce someone.")
+                        }))))
                 .Manual("Introduces someone you know to everyone present. Now they will know them, too.")
                 .Check("can introduce?", "OBJECT", "ACTOR", "OBJECT")
                 .Perform("introduce", "OBJECT", "ACTOR", "OBJECT");

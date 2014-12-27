@@ -13,8 +13,7 @@ namespace RMUD.Commands
                 Or(
                     KeyWord("INVENTORY"),
                     KeyWord("INV"),
-                    KeyWord("I")),
-                "See what you are carrying.")
+                    KeyWord("I")))
                 .Manual("Displays what you are wearing and carrying.")
                 .Perform("inventory", "ACTOR", "ACTOR");
         }

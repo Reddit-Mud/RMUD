@@ -33,9 +33,9 @@ namespace RMUD
         {
             var R = new List<PossibleMatch>();
 			if (State.Next != null && State.Next.Value.ToUpper() == Word)
-				R.Add(new PossibleMatch(State.Arguments, State.Next.Next));
+                R.Add(State.Advance());
             else if (Optional) //Greedy match
-                R.Add(new PossibleMatch(State.Arguments, State.Next));
+                R.Add(State);
             return R;
         }
 

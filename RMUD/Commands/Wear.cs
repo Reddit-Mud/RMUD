@@ -14,8 +14,7 @@ namespace RMUD.Commands
                     KeyWord("WEAR"),
                     BestScore("OBJECT",
                         MustMatch("I couldn't figure out what you're trying to wear.",
-                            Object("OBJECT", InScope, PreferHeld)))),
-                "Wear something.")
+                            Object("OBJECT", InScope, PreferHeld)))))
                 .Manual("Cover your disgusting flesh.")
                 .Check("can wear?", "OBJECT", "ACTOR", "OBJECT")
                 .Perform("worn", "OBJECT", "ACTOR", "OBJECT");

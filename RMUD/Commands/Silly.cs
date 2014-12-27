@@ -18,15 +18,13 @@ namespace RMUD.Commands
                             {
                                 if (item is RMUD.Actor) return MatchPreference.Likely;
                                 else return MatchPreference.Unlikely;
-                            }))),
-                 "Why so serious?")
+                            }))))
                  .Manual("Applies the silly status effect to the target of your choice. Being silly will make it safe for your victim to dance. Sillification is meant as a demonstration of the concepts involved with rule books and status effects, and not as an actual component of the game world.")
                  .Check("can silly?", "OBJECT", "ACTOR", "OBJECT")
                  .Perform("silly", "OBJECT", "ACTOR", "OBJECT");
 
             Parser.AddCommand(
-                KeyWord("DANCE"),
-                "Do a silly dance.")
+                KeyWord("DANCE"))
                 .Manual(
                 @"We can dance if we want to
 We can leave your friends behind

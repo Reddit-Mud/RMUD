@@ -14,8 +14,7 @@ namespace RMUD.Commands
                     RequiredRank(500),
                     KeyWord("!RELOAD"),
                     MustMatch("It helps if you give me a path.",
-                        Path("TARGET"))),
-                "Reload an object from disc.")
+                        Path("TARGET"))))
                 .Manual("Given a path, it attempts to recompile that object. The object will be replaced in-place if possible.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -31,8 +30,7 @@ namespace RMUD.Commands
                      RequiredRank(500),
                      KeyWord("!RESET"),
                      MustMatch("It helps if you give me a path.",
-                         Path("TARGET"))),
-                 "Reset an object.")
+                         Path("TARGET"))))
                  .Manual("Given a path, it attempts to reset that object without reloading or recompiling. The object will be replaced in-place if possible.")
                  .ProceduralRule((match, actor) =>
                  {

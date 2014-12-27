@@ -10,9 +10,9 @@ namespace RMUD
 
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
 
-        public CommandEntry AddCommand(CommandTokenMatcher Matcher, String HelpText)
+        public CommandEntry AddCommand(CommandTokenMatcher Matcher)
         {
-            var Entry = new CommandEntry { Matcher = Matcher, BriefDescription = HelpText };
+            var Entry = new CommandEntry { Matcher = Matcher };
             Entry.ManualName = Matcher.FindFirstKeyWord();
             Commands.Add(Entry);
             return Entry;
@@ -63,7 +63,7 @@ namespace RMUD
                             Mud.SendMessage(actor, ma.Message);
                             return PerformResult.Continue;
                         }), 
-                        new PossibleMatch[] { new PossibleMatch(new Dictionary<string, object>(), null) });
+                        new PossibleMatch[] { new PossibleMatch(null) });
                 }
 
                 //Only accept matches that consumed all of the input.

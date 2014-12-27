@@ -9,7 +9,6 @@ namespace RMUD
     {
         internal CommandTokenMatcher Matcher;
         internal String ManualName = "";
-        internal String BriefDescription = "";
         internal String ManualPage = "";
         internal StringBuilder GeneratedManual = null;
         internal ActionRuleBook ProceduralRules;
@@ -41,12 +40,6 @@ namespace RMUD
         public CommandEntry Manual(String Manual)
         {
             this.ManualPage = Manual;
-            return this;
-        }
-
-        public CommandEntry Brief(String Brief)
-        {
-            this.BriefDescription = Brief;
             return this;
         }
 

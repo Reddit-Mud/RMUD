@@ -17,8 +17,7 @@ namespace RMUD.Commands
                     OptionalKeyWord("TO"),
                     MustMatch("Whom?",
                         Object("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None)),
-                    MustMatch("Tell them what?", Rest("SPEECH"))),
-                "Tell a player something privately.")
+                    MustMatch("Tell them what?", Rest("SPEECH"))))
                 .Manual("Sends a private message to the player of your choice.")
                 .ProceduralRule((match, actor) =>
                 {

@@ -10,8 +10,7 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                KeyWord("WHO"),
-                "See who is logged on.")
+                KeyWord("WHO"))
                 .Manual("Displays a list of current logged in players.")
                 .ProceduralRule((match, actor) =>
                 {

@@ -14,8 +14,7 @@ namespace RMUD.Commands
                     Or(
                         KeyWord("MAN"),
                         KeyWord("?")),
-                    Optional(Rest("COMMAND"))),
-                "Display a list of all defined commands.")
+                    Optional(Rest("COMMAND"))))
                 .Manual("This is the command you typed to get this message.")
                 .ProceduralRule((match, actor) =>
                 {

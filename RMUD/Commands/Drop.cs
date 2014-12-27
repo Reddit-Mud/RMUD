@@ -14,8 +14,7 @@ namespace RMUD.Commands
                     KeyWord("DROP"),
                     BestScore("SUBJECT",
                         MustMatch("You don't seem to have that.",
-                            Object("SUBJECT", InScope, PreferHeld)))),
-                "Drop something")
+                            Object("SUBJECT", InScope, PreferHeld)))))
                 .Manual("Drop a held item. This can also be used to remove and drop a worn item.")
                 .Check("can drop?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("dropped", "SUBJECT", "ACTOR", "SUBJECT");

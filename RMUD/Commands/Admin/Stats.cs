@@ -13,8 +13,7 @@ namespace RMUD.Commands
                 Sequence(
                     RequiredRank(500),
                     KeyWord("!STATS"),
-                    Optional(SingleWord("TYPE"))),
-                "View server stats.")
+                    Optional(SingleWord("TYPE"))))
                 .Manual("Displays various stats about the server. Type the command with no argument to get a list of available options.")
                 .ProceduralRule((match, actor) =>
                 {

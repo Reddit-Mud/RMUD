@@ -13,8 +13,7 @@ namespace RMUD.Commands
                 Sequence(
                     KeyWord("!LOG"),
                     Path("FILENAME"),
-                    Optional(Number("COUNT"))),
-                "Display a log file.")
+                    Optional(Number("COUNT"))))
                 .Manual("Displays the last COUNT lines of a log file. If no count is provided, 20 lines are displayed.")
                 .ProceduralRule((match, actor) =>
                 {

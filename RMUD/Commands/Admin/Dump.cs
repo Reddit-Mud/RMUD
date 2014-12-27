@@ -14,8 +14,7 @@ namespace RMUD.Commands
                     RequiredRank(500),
                     KeyWord("!DUMP"),
                     MustMatch("It helps if you supply a path.",
-                        Path("TARGET"))),
-                "Dump a database source file.")
+                        Path("TARGET"))))
                 .Manual("Display the source of a database object.")
                 .ProceduralRule((match, actor) =>
                 {

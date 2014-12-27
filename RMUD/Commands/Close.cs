@@ -18,8 +18,7 @@ namespace RMUD.Commands
                                 {
                                     if (GlobalRules.ConsiderCheckRuleSilently("can close?", thing, actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
                                     return MatchPreference.Unlikely;
-                                })))),
-                "Close something.")
+                                })))))
                 .Manual("Closes a thing.")
                 .Check("can close?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("closed", "SUBJECT", "ACTOR", "SUBJECT");

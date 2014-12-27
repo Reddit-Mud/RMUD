@@ -16,8 +16,7 @@ namespace RMUD.Commands
                     MustMatch("I don't see that here.",
                         Or(
                             Object("OBJECT", InScope),
-                            KeyWord("HERE")))),
-                "Inspect internal properties of an object.")
+                            KeyWord("HERE")))))
                 .Manual("Take a peek at the internal workings of any mud object.")
                 .ProceduralRule((match, actor) =>
                     {

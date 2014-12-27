@@ -37,7 +37,7 @@ namespace RMUD
             {
                 if (!topic.IsAvailable(Context.ExecutingActor as Player, locutor)) continue;
 
-                var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
+                var possibleMatch = State.Clone();
                 bool matched = false;
                 while (possibleMatch.Next != null && topic.KeyWords.Match(possibleMatch.Next.Value.ToUpper(), Context.ExecutingActor))
                 {

@@ -12,8 +12,7 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 Or(
                     KeyWord("VERSION"),
-                    KeyWord("VER")),
-                "See what version the server is running.")
+                    KeyWord("VER")))
                 .Manual("Displays the server version currently running.")
                 .ProceduralRule((match, actor) =>
                 {

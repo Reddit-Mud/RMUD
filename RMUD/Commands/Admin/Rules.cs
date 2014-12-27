@@ -14,8 +14,7 @@ namespace RMUD.Commands
                     RequiredRank(500),
                     KeyWord("!RULES"),
                     Optional(Object("OBJECT", InScope)),
-                    Optional(Rest("BOOK-NAME"))),
-                "View defined rules.")
+                    Optional(Rest("BOOK-NAME"))))
                 .Manual("Lists rules and rulebooks. Both arguments are optional. If no object is supplied, it will list global rules. If no book name is supplied, it will list books rather than listing rules.")
                 .ProceduralRule((match, actor) =>
                 {

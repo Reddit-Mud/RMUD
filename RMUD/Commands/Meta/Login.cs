@@ -13,8 +13,7 @@ namespace RMUD.Commands
                 Sequence(
                     KeyWord("LOGIN"),
                     MustMatch("You must supply a username.",
-                        SingleWord("USERNAME"))),
-                "Login to an existing account.")
+                        SingleWord("USERNAME"))))
                 .Manual("If you got this far, you know how to login.")
                 .ProceduralRule((match, actor) =>
                 {

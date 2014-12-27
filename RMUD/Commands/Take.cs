@@ -21,8 +21,7 @@ namespace RMUD.Commands
                                 if (GlobalRules.ConsiderCheckRuleSilently("can take?", item, actor, item) != CheckResult.Allow)
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
-                            })))),
-                "Take something")
+                            })))))
                 .Manual("Takes an item and adds it to your inventory.")
                 .Check("can take?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("taken", "SUBJECT", "ACTOR", "SUBJECT")

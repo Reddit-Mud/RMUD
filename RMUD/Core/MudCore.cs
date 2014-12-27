@@ -80,10 +80,6 @@ namespace RMUD
                 InitializeCommandProcessor();
                 InitializeStaticManPages();
 
-                if (SettingsObject.UpfrontCompilation)
-                {
-                    Console.WriteLine("Bulk compilation enabled.");
-
                     var start = DateTime.Now;
                     var errorReported = false;
                     InitialBulkCompile((s) => {
@@ -94,7 +90,6 @@ namespace RMUD
                     if (errorReported) Console.WriteLine("Bulk compilation failed. Using ad-hoc compilation as fallback.");
                     else 
                         Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
-                }
 
                 Console.WriteLine("Engine ready with path " + basePath + ".");
             }

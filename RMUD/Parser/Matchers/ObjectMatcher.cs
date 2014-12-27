@@ -95,7 +95,7 @@ namespace RMUD
 			{
 				if (State.Next.Value.ToUpper() == "ME")
 				{
-					var possibleMatch = new PossibleMatch(State.Arguments, State.Next.Next);
+                    var possibleMatch = State.Advance();
 					possibleMatch.Arguments.Upsert(CaptureName, Context.ExecutingActor);
                     possibleMatch.Arguments.Upsert(CaptureName + "-SOURCE", "ME");
 					R.Add(possibleMatch);
@@ -104,10 +104,11 @@ namespace RMUD
 
 			foreach (var matchableMudObject in ObjectSource.GetObjects(State, Context))
 			{
-				var possibleMatch = new PossibleMatch(State.Arguments, State.Next);
+                PossibleMatch possibleMatch = State;
 				bool matched = false;
 				while (possibleMatch.Next != null && matchableMudObject.Nouns.Match(possibleMatch.Next.Value.ToUpper(), Context.ExecutingActor))
 				{
+                    if (matched == false) possibleMatch = State.Clone();
 					matched = true;
 					possibleMatch.Next = possibleMatch.Next.Next;
 				}

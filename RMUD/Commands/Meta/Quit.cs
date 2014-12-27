@@ -10,8 +10,7 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                KeyWord("QUIT"),
-                "Disconnect immediately")
+                KeyWord("QUIT"))
                 .Manual("Disconnect from the game immediately.")
                 .ProceduralRule((match, actor) =>
                 {

@@ -15,8 +15,7 @@ namespace RMUD.Commands
                         KeyWord("LOOK"),
                         KeyWord("L")),
                     RelativeLocation("RELLOC"),
-                    Object("OBJECT", InScope)),
-                "Look on, in, under or behind an object.")
+                    Object("OBJECT", InScope)))
                 .Manual("Lists object that are in, on, under, or behind the object specified.")
                 .Check("can look relloc?", "OBJECT", "ACTOR", "OBJECT", "RELLOC")
                 .Perform("look relloc", "OBJECT", "ACTOR", "OBJECT", "RELLOC");

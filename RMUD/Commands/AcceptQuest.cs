@@ -12,11 +12,9 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 Sequence(
                     KeyWord("ACCEPT"),
-                    KeyWord("QUEST")),
-                "Accept an offered quest.")
+                    KeyWord("QUEST")))
                 .Name("ACCEPT QUEST")
-                .Brief("Accept an offered quest.")
-                .Manual(@"When an NPC offers you a quest, you will be prompted to accept the quest. Accepting a quest abandons any quest you already have active.")
+                .Manual("When an NPC offers you a quest, you will be prompted to accept the quest. Accepting a quest abandons any quest you already have active.")
                 .ProceduralRule((match, actor) =>
                 {
                     if (!(actor is Player) || (actor as Player).OfferedQuest == null)

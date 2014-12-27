@@ -35,8 +35,7 @@ namespace RMUD.Commands
                         builder.Remove(builder.Length - 1, 1);
                         r.Add(pm.EndWith("SPEECH", builder.ToString()));
                         return r;
-                    }, "'[TEXT => SPEECH]")),
-                "Say something.")
+                    }, "'[TEXT => SPEECH]")))
                 .Manual("Speak within your locale.")
                 .Perform("speak", "ACTOR", "ACTOR", "SPEECH");
 
@@ -46,8 +45,7 @@ namespace RMUD.Commands
                     Or(
                         KeyWord("EMOTE"),
                         KeyWord("\"")),
-                    MustMatch("You exist. Actually this is an error message, but that's what you just told me to say.", Rest("SPEECH"))),
-                "Emote something.")
+                    MustMatch("You exist. Actually this is an error message, but that's what you just told me to say.", Rest("SPEECH"))))
                 .Manual("Perform an action, visible within your locale.")
                 .Perform("emote", "ACTOR", "ACTOR", "SPEECH");
 		}

@@ -16,8 +16,7 @@ namespace RMUD.Commands
                         Sequence(
                             Or(KeyWord("LOOK"), KeyWord("L")),
                             KeyWord("AT"))),
-                    Object("OBJECT", InScope)),
-                "Look closely at an object.")
+                    Object("OBJECT", InScope)))
                 .Manual("Take a close look at an object.")
                 .Check("can examine?", "OBJECT", "ACTOR", "OBJECT")
                 .Perform("describe", "OBJECT", "ACTOR", "OBJECT");

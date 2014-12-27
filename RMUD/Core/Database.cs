@@ -14,7 +14,6 @@ namespace RMUD
         public static String DynamicPath { get; private set; }
         public static String AccountsPath { get; private set; }
         public static String ChatLogsPath { get; private set; }
-        public static String WorldDatabaseURL { get; private set; }
         private static String UsingDeclarations = "using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\n";
         private static System.Net.WebClient WebClient = new System.Net.WebClient();
 
@@ -27,8 +26,6 @@ namespace RMUD
             DynamicPath = basePath + "dynamic/";
             AccountsPath = basePath + "accounts/";
             ChatLogsPath = basePath + "chatlogs/";
-
-            WorldDatabaseURL = "https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/";
         }
 
         internal static String GetObjectRealPath(String Path)
@@ -58,7 +55,7 @@ namespace RMUD
 
                 var codeSearch = new Octokit.SearchCodeRequest(".cs")
                 {
-                    Repo = "Reddit-Mud/RMUD-DB",
+                    Repo = Mud.SettingsObject.GithubRepo,
                     In = new[] { Octokit.CodeInQualifier.Path },
                     Page = 1
                 };
@@ -256,7 +253,7 @@ namespace RMUD
             {
                 try
                 {
-                    return Tuple.Create(true, WebClient.DownloadString(WorldDatabaseURL + Path + ".cs"));
+                    return Tuple.Create(true, WebClient.DownloadString(Mud.SettingsObject.GithubRawURL + Path + ".cs"));
                 }
                 catch (Exception) { }
             }

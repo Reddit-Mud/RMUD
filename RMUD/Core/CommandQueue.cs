@@ -65,7 +65,7 @@ namespace RMUD
                     NextCommand.Client.TimeOfLastCommand = DateTime.Now;
                     NextCommand.Client.CommandHandler.HandleCommand(NextCommand.Client, NextCommand.RawCommand);
                 }
-                catch (System.Threading.ThreadAbortException e)
+                catch (System.Threading.ThreadAbortException)
                 {
                     LogError("Command worker thread was aborted. Timeout hit?");
                     ClearPendingMessages();

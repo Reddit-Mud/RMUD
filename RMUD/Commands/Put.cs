@@ -24,8 +24,7 @@ namespace RMUD.Commands
                                     //objects that actually support the relloc we matched previously.
                                     if (thing is Container) return MatchPreference.Likely;
                                     return MatchPreference.Plausible;
-                                })))),
-                "Put something on, in, under or behind something")
+                                })))))
                 .Manual("This commands allows you to put things on other things. While dropping just deposits the object into your current location, putting is much more specific.")
                 .ProceduralRule((match, actor) =>
                 {

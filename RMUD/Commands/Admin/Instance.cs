@@ -14,8 +14,7 @@ namespace RMUD.Commands
                     RequiredRank(500),
                     KeyWord("!INSTANCE"),
                     MustMatch("It helps if you give me a path.",
-                        Path("PATH"))),
-                "Create a new instance of an object.")
+                        Path("PATH"))))
                 .Manual("Given a path, create a new instance of an object.")
                 .ProceduralRule((match, actor) =>
                 {

@@ -18,8 +18,7 @@ namespace RMUD.Commands
                                 Object("SUBJECT", InScope)),
                             OptionalKeyWord("WITH"),
                             MustMatch("I couldn't figure out what you're trying to lock that with.",
-                                Object("KEY", InScope, PreferHeld))))),
-                "Lock something with something.")
+                                Object("KEY", InScope, PreferHeld))))))
                 .Manual("Lock the subject with a key.")
                 .Check("can lock?", "SUBJECT", "ACTOR", "SUBJECT", "KEY")
                 .Perform("locked", "SUBJECT", "ACTOR", "SUBJECT", "KEY");

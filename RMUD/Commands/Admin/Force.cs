@@ -17,8 +17,7 @@ namespace RMUD.Commands
                         FirstOf(
                             Object("OBJECT", InScope),
                             Path("PATH"))),
-                    Rest("COMMAND")),
-                "Force others to do your bidding.")
+                    Rest("COMMAND")))
                 .Manual("An administrative command that allows you to execute a command as if you were another actor or player. The other entity will see all output from the command, and rules restricting their access to the command are considered.")
                 .ProceduralRule((match, actor) =>
                     {

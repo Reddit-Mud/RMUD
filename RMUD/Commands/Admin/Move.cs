@@ -17,8 +17,7 @@ namespace RMUD.Commands
                         Object("OBJECT", InScope)),
                     OptionalKeyWord("TO"),
                     MustMatch("You have to specify the path of the destination.",
-                        Path("DESTINATION"))),
-                "Teleport an object to a new location. Bypasses take rules.")
+                        Path("DESTINATION"))))
                 .Manual("An administrative command to move objects from one place to another. This command entirely ignores all rules that might prevent moving an object.")
                 .ProceduralRule((match, actor) =>
                 {

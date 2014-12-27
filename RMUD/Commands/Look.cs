@@ -12,8 +12,7 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 Or(
                     KeyWord("LOOK"),
-                    KeyWord("L")),
-                "Look around at your suroundings.")
+                    KeyWord("L")))
                 .Manual("Displays a description of your location, and lists what else is present there.")
                 .ProceduralRule((match, actor) => GlobalRules.ConsiderPerformRule("describe locale", actor.Location, actor, actor.Location));
         }

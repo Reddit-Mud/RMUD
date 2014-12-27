@@ -10,8 +10,7 @@ namespace RMUD.Commands
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                KeyWord("BANS"),
-                "Display the ban list.")
+                KeyWord("BANS"))
                 .Manual("Lists all active bans.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -26,8 +25,7 @@ namespace RMUD.Commands
                     RequiredRank(500),
                     KeyWord("BAN"),
                     MustMatch("You must supply an ip mask.", SingleWord("GLOB")),
-                    MustMatch("You must supply a reason.", Rest("REASON"))),
-                "Ban an ip address.")
+                    MustMatch("You must supply a reason.", Rest("REASON"))))
                 .Manual("Ban every player who's ip matches the mask.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -40,8 +38,7 @@ namespace RMUD.Commands
                 Sequence(
                     RequiredRank(500),
                     KeyWord("UNBAN"),
-                    MustMatch("You must supply an ip mask.", SingleWord("GLOB"))),
-                "Remove a ban on an ip address.")
+                    MustMatch("You must supply an ip mask.", SingleWord("GLOB"))))
                 .Manual("Remove an existing ban.")
                 .ProceduralRule((match, actor) =>
                 {

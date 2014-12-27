@@ -61,11 +61,7 @@ namespace RMUD
             if (State.Next == null) return r;
             var channel = Mud.FindChatChannel(State.Next.Value.ToUpper());
             if (channel != null)
-            {
-                var possibleMatch = new PossibleMatch(State.Arguments, State.Next.Next);
-                possibleMatch.Arguments.Upsert(ArgumentName, channel);
-                r.Add(possibleMatch);
-            }
+                r.Add(State.AdvanceWith(ArgumentName, channel));
             return r;
         }
 

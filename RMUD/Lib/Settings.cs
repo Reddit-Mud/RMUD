@@ -13,10 +13,11 @@ namespace RMUD
         public int TelnetPort = 8669;
 
         public String NewPlayerStartRoom = "palantine/antechamber";
-        public bool UpfrontCompilation = true;
         public bool UseConsoleCommands = false;
         public bool UseGithubDatabase = true;
         public String GithubAuthToken = "";
+        public String GithubRawURL = "https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/";
+        public String GithubRepo = "Reddit-Mud/RMUD-DB";
 
         public int AllowedCommandRate = 100; //How many milliseconds to allow between commands - default is to not limit very much.
 

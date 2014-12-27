@@ -19,8 +19,7 @@ namespace RMUD.Commands
                         {
                             if (thing is NPC) return MatchPreference.VeryLikely;
                             else return MatchPreference.VeryUnlikely;
-                        }))),
-                "Enter into conversation with an NPC.")
+                        }))))
                 .Manual("Initiates a conversation with the npc.")
                 .Check("can converse?", "LOCUTOR", "ACTOR", "LOCUTOR")
                 .Perform("greet", "LOCUTOR", "ACTOR", "LOCUTOR")
@@ -47,8 +46,7 @@ namespace RMUD.Commands
                     OptionalKeyWord("ABOUT"),
                     FirstOf(
                         Topic("TOPIC"),
-                        Rest("STRING-TOPIC"))),
-                "Discuss something with someone.")
+                        Rest("STRING-TOPIC"))))
                 .Manual("Discusses the topic with whomever you are talking too.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -94,8 +92,7 @@ namespace RMUD.Commands
                 .Perform("list topics", "ACTOR", "ACTOR");
 
             Parser.AddCommand(
-                KeyWord("TOPICS"),
-                "List the currently available conversation topics.")
+                KeyWord("TOPICS"))
                 .Manual("Lists topics currently available.")
                 .Perform("list topics", "ACTOR", "ACTOR");
         }

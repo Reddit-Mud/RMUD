@@ -13,8 +13,7 @@ namespace RMUD.Commands
                 Sequence(
                     KeyWord("SUBSCRIBE"),
                     MustMatch("I don't recognize that channel.",
-                        new ChatChannelNameMatcher("CHANNEL"))),
-                "Subscribe to a chat channel.")
+                        new ChatChannelNameMatcher("CHANNEL"))))
                 .Manual("Subscribes you to the specified chat channel, if you are able to access it.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -34,8 +33,7 @@ namespace RMUD.Commands
                 Sequence(
                     KeyWord("UNSUBSCRIBE"),
                     MustMatch("I don't recognize that channel.",
-                        new ChatChannelNameMatcher("CHANNEL"))),
-                "Unubscribe from a chat channel.")
+                        new ChatChannelNameMatcher("CHANNEL"))))
                 .Manual("Unsubscribe from the specified chat channel.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -46,8 +44,7 @@ namespace RMUD.Commands
                 });
 
             Parser.AddCommand(
-                KeyWord("CHANNELS"),
-                "List all available chat channels.")
+                KeyWord("CHANNELS"))
                 .Manual("Lists all existing chat channels.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -60,8 +57,7 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 Sequence(
                     new ChatChannelNameMatcher("CHANNEL"),
-                    Rest("TEXT")),
-                    "Chat on a channel")
+                    Rest("TEXT")))
                 .Name("CHAT")
                 .Manual("Chat on a chat channel.")
                 .ProceduralRule((match, actor) =>
@@ -98,8 +94,7 @@ namespace RMUD.Commands
                     KeyWord("RECALL"),
                     MustMatch("I don't recognize that channel.",
                         new ChatChannelNameMatcher("CHANNEL")),
-                    Optional(Number("COUNT"))),
-                "Recall past conversation on a channel.")
+                    Optional(Number("COUNT"))))
                 .Manual("Recalls past conversation on a chat channel. An optional line count parameter allows you to peek further into the past.")
                 .ProceduralRule((match, actor) =>
                 {

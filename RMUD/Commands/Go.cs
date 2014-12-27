@@ -14,8 +14,7 @@ namespace RMUD.Commands
                     Sequence(
                         KeyWord("GO"),
                         MustMatch("What way was that?", Cardinal("DIRECTION"))),
-                    Cardinal("DIRECTION")),
-                "Move between rooms.")
+                    Cardinal("DIRECTION")))
                 .Manual("Move between rooms. 'Go' is optional, a raw cardinal works just as well.")
                 .ProceduralRule((match, actor) =>
                 {

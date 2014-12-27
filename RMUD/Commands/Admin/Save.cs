@@ -12,8 +12,7 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 Sequence(
                     RequiredRank(500),
-                    KeyWord("!SAVE")),
-                "Save game state to disc.")
+                    KeyWord("!SAVE")))
                 .Manual("Saves all persistent objects to disc.")
                 .ProceduralRule((match, actor) =>
                 {

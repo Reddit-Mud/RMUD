@@ -18,8 +18,7 @@ namespace RMUD.Commands
                             {
                                 if (GlobalRules.ConsiderCheckRuleSilently("can open?", thing, actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
                                 return MatchPreference.Unlikely;
-                            })))),
-                "Open something")
+                            })))))
                 .Manual("Opens an openable thing.")
                 .Check("can open?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("opened", "SUBJECT", "ACTOR", "SUBJECT");

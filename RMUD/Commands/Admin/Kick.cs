@@ -15,8 +15,7 @@ namespace RMUD.Commands
                     KeyWord("KICK"),
                     Or(
                         Object("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),
-                        SingleWord("MASK"))),
-                "FAAAAAALCON PUNCH!")
+                        SingleWord("MASK"))))
                 .Manual("Makes bad people go away.")
                 .ProceduralRule((match, actor) =>
                 {
