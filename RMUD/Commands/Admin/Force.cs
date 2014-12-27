@@ -21,44 +21,44 @@ namespace RMUD.Commands
                 .Manual("An administrative command that allows you to execute a command as if you were another actor or player. The other entity will see all output from the command, and rules restricting their access to the command are considered.")
                 .ProceduralRule((match, actor) =>
                     {
-                        if (match.Arguments.ContainsKey("PATH"))
+                        if (match.ContainsKey("PATH"))
                         {
-                            var target = Mud.GetObject(match.Arguments["PATH"].ToString());
+                            var target = Mud.GetObject(match["PATH"].ToString());
                             if (target == null)
                             {
                                 Mud.SendMessage(actor, "I can't find whomever it is you want to submit to your foolish whims.");
                                 return PerformResult.Stop;
                             }
-                            match.Arguments.Upsert("OBJECT", target);
+                            match.Upsert("OBJECT", target);
                         }
                         return PerformResult.Continue;
                     }, "Convert path to object rule.")
-                .ProceduralRule((Match, Actor) =>
+                .ProceduralRule((match, actor) =>
                 {
-                    MudObject target = Match.Arguments["OBJECT"] as MudObject;
+                    MudObject target = match["OBJECT"] as MudObject;
                     
                     var targetActor = target as Actor;
                     if (targetActor == null)
                     {
-                        Mud.SendMessage(Actor, "You can order inanimate objects about as much as you like, they aren't going to listen.");
+                        Mud.SendMessage(actor, "You can order inanimate objects about as much as you like, they aren't going to listen.");
                         return PerformResult.Stop;
                     }
 
-                    var command = Match.Arguments["COMMAND"].ToString();
+                    var command = match["COMMAND"].ToString();
                     var matchedCommand = Mud.ParserCommandHandler.Parser.ParseCommand(command, targetActor);
 
                     if (matchedCommand != null)
                     {
                         if (matchedCommand.Matches.Count > 1)
-                            Mud.SendMessage(Actor, "The command was ambigious.");
+                            Mud.SendMessage(actor, "The command was ambigious.");
                         else
                         {
-                            Mud.SendMessage(Actor, "Enacting your will.");
+                            Mud.SendMessage(actor, "Enacting your will.");
                             Mud.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], targetActor);
                         }
                     }
                     else
-                        Mud.SendMessage(Actor, "The command did not match.");
+                        Mud.SendMessage(actor, "The command did not match.");
 
                     return PerformResult.Continue;
                 });

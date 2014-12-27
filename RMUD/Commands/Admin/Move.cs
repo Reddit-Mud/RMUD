@@ -21,10 +21,10 @@ namespace RMUD.Commands
                 .Manual("An administrative command to move objects from one place to another. This command entirely ignores all rules that might prevent moving an object.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var destination = Mud.GetObject(match.Arguments["DESTINATION"].ToString());
+                    var destination = Mud.GetObject(match["DESTINATION"].ToString());
                     if (destination != null)
                     {
-                        var target = match.Arguments["OBJECT"] as MudObject;
+                        var target = match["OBJECT"] as MudObject;
                         Mud.MarkLocaleForUpdate(target);
                         MudObject.Move(target, destination);
                         Mud.MarkLocaleForUpdate(destination);

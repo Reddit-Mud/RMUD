@@ -21,7 +21,7 @@ namespace RMUD.Commands
                 .Manual("Sends a private message to the player of your choice.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (System.Object.ReferenceEquals(actor, match.Arguments["PLAYER"]))
+                    if (System.Object.ReferenceEquals(actor, match["PLAYER"]))
                     {
                         Mud.SendMessage(actor, "Talking to yourself?");
                         return PerformResult.Stop;
@@ -30,9 +30,9 @@ namespace RMUD.Commands
                 })
                 .ProceduralRule((match, actor) =>
                 {
-                    var player = match.Arguments["PLAYER"] as Actor;
-                    Mud.SendMessage(player, "[privately " + DateTime.Now + "] ^<the0> : \"" + match.Arguments["SPEECH"].ToString() + "\"", actor);
-                    Mud.SendMessage(actor, "[privately to <the0>] ^<the1> : \"" + match.Arguments["SPEECH"].ToString() + "\"", player, actor);
+                    var player = match["PLAYER"] as Actor;
+                    Mud.SendMessage(player, "[privately " + DateTime.Now + "] ^<the0> : \"" + match["SPEECH"].ToString() + "\"", actor);
+                    Mud.SendMessage(actor, "[privately to <the0>] ^<the1> : \"" + match["SPEECH"].ToString() + "\"", player, actor);
                     if (player.ConnectedClient != null && player.ConnectedClient.IsAfk)
                         Mud.SendMessage(actor, "^<the0> is afk : " + player.ConnectedClient.Account.AFKMessage, player);
                     return PerformResult.Continue;

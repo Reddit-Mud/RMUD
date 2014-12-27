@@ -24,7 +24,7 @@ namespace RMUD.Commands
                     }
                     else
                     {
-                        match.Arguments.Upsert("QUEST", (actor as Player).OfferedQuest);
+                        match.Upsert("QUEST", (actor as Player).OfferedQuest);
                         return PerformResult.Continue;
                     }
                 }, "the must have been offered a quest, and bookeeping rule.")

@@ -72,7 +72,7 @@ namespace RMUD
             }
             else
             {
-                foreach (var item in EnumerateObjects())
+                foreach (var item in Mud.EnumerateVisibleTree(this))
                 {
                     var lightingLevel = GlobalRules.ConsiderValueRule<LightingLevel>("emits-light", item, item);
                     if (lightingLevel > AmbientLighting) AmbientLighting = lightingLevel;

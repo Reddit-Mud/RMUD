@@ -17,7 +17,7 @@ namespace RMUD.Commands
                 .Manual("Subscribes you to the specified chat channel, if you are able to access it.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
                     if (actor.ConnectedClient == null || (channel.AccessFilter != null && !channel.AccessFilter(actor.ConnectedClient)))
                         Mud.SendMessage(actor, "You do not have access to that channel.");
                     else
@@ -37,7 +37,7 @@ namespace RMUD.Commands
                 .Manual("Unsubscribe from the specified chat channel.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
                     channel.Subscribers.RemoveAll(c => System.Object.ReferenceEquals(c, actor.ConnectedClient));
                     Mud.SendMessage(actor, "You are now unsubscribed from " + channel.Name + ".");
                     return PerformResult.Continue;
@@ -63,7 +63,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor.ConnectedClient == null) return PerformResult.Stop;
-                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
                     if (!channel.Subscribers.Contains(actor.ConnectedClient))
                     {
                         if (channel.AccessFilter != null && !channel.AccessFilter(actor.ConnectedClient))
@@ -79,8 +79,8 @@ namespace RMUD.Commands
                 }, "Subscribe to channels before chatting rule.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var message = match.Arguments["TEXT"].ToString();
-                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    var message = match["TEXT"].ToString();
+                    var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
                     Mud.SendChatMessage(channel, "[" + channel.Name + "] " + actor.Short +
                         (message.StartsWith("\"") ?
                             (" " + message.Substring(1).Trim())
@@ -99,7 +99,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor.ConnectedClient == null) return PerformResult.Stop;
-                    var channel = match.Arguments.ValueOrDefault("CHANNEL") as ChatChannel;
+                    var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
                     if (channel.AccessFilter != null && !channel.AccessFilter(actor.ConnectedClient))
                     {
                         Mud.SendMessage(actor, "You do not have access to that channel.");
@@ -107,7 +107,7 @@ namespace RMUD.Commands
                     }
 
                     int count = 20;
-                    if (match.Arguments.ContainsKey("COUNT")) count = (match.Arguments["COUNT"] as int?).Value;
+                    if (match.ContainsKey("COUNT")) count = (match["COUNT"] as int?).Value;
 
                     var logFilename = Mud.ChatLogsPath + channel.Name + ".txt";
                     if (System.IO.File.Exists(logFilename))

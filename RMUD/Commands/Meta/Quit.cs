@@ -15,11 +15,11 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor != null && actor.ConnectedClient != null)
-                        match.Arguments.Upsert("CLIENT", actor.ConnectedClient);
-                    if (match.Arguments.ContainsKey("CLIENT"))
+                        match.Upsert("CLIENT", actor.ConnectedClient);
+                    if (match.ContainsKey("CLIENT"))
                     {
-                        (match.Arguments["CLIENT"] as Client).Send("Goodbye...\r\n");
-                        (match.Arguments["CLIENT"] as Client).Disconnect();
+                        (match["CLIENT"] as Client).Send("Goodbye...\r\n");
+                        (match["CLIENT"] as Client).Disconnect();
                     }
                     return PerformResult.Continue;
                 });

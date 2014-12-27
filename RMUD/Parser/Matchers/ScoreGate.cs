@@ -41,9 +41,9 @@ namespace RMUD
 
         private static MatchPreference GetScore(PossibleMatch Match, String ScoreArgumentName)
         {
-            if (Match.Arguments.ContainsKey(ScoreArgumentName + "-SCORE"))
+            if (Match.ContainsKey(ScoreArgumentName + "-SCORE"))
             {
-                var argScore = Match.Arguments[ScoreArgumentName + "-SCORE"] as MatchPreference?;
+                var argScore = Match[ScoreArgumentName + "-SCORE"] as MatchPreference?;
                 if (argScore.HasValue) return argScore.Value;
             }
 

@@ -18,15 +18,15 @@ namespace RMUD.Commands
                 .Manual("Lists rules and rulebooks. Both arguments are optional. If no object is supplied, it will list global rules. If no book name is supplied, it will list books rather than listing rules.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (match.Arguments.ContainsKey("OBJECT"))
+                    if (match.ContainsKey("OBJECT"))
                     {
-                        if (match.Arguments.ContainsKey("BOOK-NAME"))
-                            DisplaySingleBook(actor, (match.Arguments["OBJECT"] as MudObject).Rules, match.Arguments["BOOK-NAME"].ToString());
+                        if (match.ContainsKey("BOOK-NAME"))
+                            DisplaySingleBook(actor, (match["OBJECT"] as MudObject).Rules, match["BOOK-NAME"].ToString());
                         else
-                            DisplayBookList(actor, (match.Arguments["OBJECT"] as MudObject).Rules);
+                            DisplayBookList(actor, (match["OBJECT"] as MudObject).Rules);
                     }
-                    else if (match.Arguments.ContainsKey("BOOK-NAME"))
-                        DisplaySingleBook(actor, GlobalRules.Rules, match.Arguments["BOOK-NAME"].ToString());
+                    else if (match.ContainsKey("BOOK-NAME"))
+                        DisplaySingleBook(actor, GlobalRules.Rules, match["BOOK-NAME"].ToString());
                     else
                         DisplayBookList(actor, GlobalRules.Rules);
                     return PerformResult.Continue;

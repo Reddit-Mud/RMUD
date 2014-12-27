@@ -42,7 +42,7 @@ namespace RMUD
         {
 			var tokens = new LinkedList<String>(Command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
 			var rootMatch = new PossibleMatch(tokens.First);
-            rootMatch.Arguments.Upsert("ACTOR", Actor);
+            rootMatch.Upsert("ACTOR", Actor);
 
 			//Find all objects in scope
 			var matchContext = new MatchContext { ExecutingActor = Actor };
@@ -74,17 +74,6 @@ namespace RMUD
                     return new MatchedCommand(command, matches);
             }
             return null;
-        }
-
-        private static MatchPreference GetScore(PossibleMatch Match, String ScoreArgumentName)
-        {
-            if (Match.Arguments.ContainsKey(ScoreArgumentName))
-            {
-                var argScore = Match.Arguments[ScoreArgumentName] as MatchPreference?;
-                if (argScore.HasValue) return argScore.Value;
-            }
-
-            return MatchPreference.Plausible; //If there is no score, the match is neutral.
         }
     }
 }

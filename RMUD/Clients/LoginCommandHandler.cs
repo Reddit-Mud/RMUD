@@ -61,7 +61,7 @@ namespace RMUD
 				var matchedCommand = Parser.ParseCommand(Command, null);
                 if (matchedCommand != null)
                 {
-                    matchedCommand.Matches[0].Arguments.Upsert("CLIENT", Client);
+                    matchedCommand.Matches[0].Upsert("CLIENT", Client);
                     Mud.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], null);
                 }
                 else

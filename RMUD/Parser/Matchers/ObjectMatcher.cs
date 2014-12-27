@@ -96,8 +96,8 @@ namespace RMUD
 				if (State.Next.Value.ToUpper() == "ME")
 				{
                     var possibleMatch = State.Advance();
-					possibleMatch.Arguments.Upsert(CaptureName, Context.ExecutingActor);
-                    possibleMatch.Arguments.Upsert(CaptureName + "-SOURCE", "ME");
+					possibleMatch.Upsert(CaptureName, Context.ExecutingActor);
+                    possibleMatch.Upsert(CaptureName + "-SOURCE", "ME");
 					R.Add(possibleMatch);
 				}
 			}
@@ -115,17 +115,17 @@ namespace RMUD
 
 				if (matched)
 				{
-					possibleMatch.Arguments.Upsert(CaptureName, matchableMudObject);
+					possibleMatch.Upsert(CaptureName, matchableMudObject);
 
 					if (useObjectScoring)
 					{
 						var score = ScoreResults(Context.ExecutingActor, matchableMudObject);
-						possibleMatch.Arguments.Upsert(CaptureName + "-SCORE", score);
+						possibleMatch.Upsert(CaptureName + "-SCORE", score);
 
 						var insertIndex = 0;
 						for (insertIndex = 0; insertIndex < R.Count; ++insertIndex)
 						{
-							if (score > (R[insertIndex].Arguments[CaptureName + "-SCORE"] as MatchPreference?).Value) break;
+							if (score > (R[insertIndex][CaptureName + "-SCORE"] as MatchPreference?).Value) break;
 						}
 
 						R.Insert(insertIndex, possibleMatch);

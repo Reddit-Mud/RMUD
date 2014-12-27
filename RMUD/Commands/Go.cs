@@ -18,10 +18,10 @@ namespace RMUD.Commands
                 .Manual("Move between rooms. 'Go' is optional, a raw cardinal works just as well.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var direction = match.Arguments["DIRECTION"] as Direction?;
+                    var direction = match["DIRECTION"] as Direction?;
                     var location = actor.Location as Room;
                     var link = location.EnumerateObjects().FirstOrDefault(thing => thing is Link && (thing as Link).Direction == direction.Value) as Link;
-                    match.Arguments.Upsert("LINK", link);
+                    match.Upsert("LINK", link);
                     return PerformResult.Continue;
                 }, "lookup link rule")
                 .Check("can go?", "LINK", "ACTOR", "LINK")
@@ -29,7 +29,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     Mud.MarkLocaleForUpdate(actor);
-                    Mud.MarkLocaleForUpdate(match.Arguments["LINK"] as MudObject);
+                    Mud.MarkLocaleForUpdate(match["LINK"] as MudObject);
                     return PerformResult.Continue;
                 }, "Mark both sides of link for update rule");
 		}

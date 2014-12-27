@@ -26,7 +26,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor is Player)
-                        (actor as Player).CurrentInterlocutor = match.Arguments["LOCUTOR"] as NPC;
+                        (actor as Player).CurrentInterlocutor = match["LOCUTOR"] as NPC;
                     return PerformResult.Continue;
                 }, "Set current interlocutor rule.")
                 .Perform("list topics", "ACTOR", "ACTOR");
@@ -51,9 +51,9 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     if (!(actor is Player)) return PerformResult.Stop;
-                    if (match.Arguments.ContainsKey("NEW-LOCUTOR"))
+                    if (match.ContainsKey("NEW-LOCUTOR"))
                     {
-                        var newLocutor = match.Arguments["NEW-LOCUTOR"] as MudObject;
+                        var newLocutor = match["NEW-LOCUTOR"] as MudObject;
                         if (GlobalRules.ConsiderCheckRule("can converse?", newLocutor, actor, newLocutor) == CheckResult.Disallow) return PerformResult.Stop;
                         if (!System.Object.ReferenceEquals(newLocutor, (actor as Player).CurrentInterlocutor))
                         {
@@ -61,7 +61,7 @@ namespace RMUD.Commands
                             (actor as Player).CurrentInterlocutor = newLocutor as NPC;
                         }
                     }
-                    match.Arguments.Upsert("LOCUTOR", (actor as Player).CurrentInterlocutor);
+                    match.Upsert("LOCUTOR", (actor as Player).CurrentInterlocutor);
                     return PerformResult.Continue;
                 }, "Implicitly greet new locutors rule.")
                 .ProceduralRule((match, actor) =>
@@ -76,10 +76,10 @@ namespace RMUD.Commands
                 .Check("can converse?", "LOCUTOR", "ACTOR", "LOCUTOR")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (!match.Arguments.ContainsKey("TOPIC"))
+                    if (!match.ContainsKey("TOPIC"))
                     {
                         if ((actor as Player).CurrentInterlocutor.DefaultResponse != null)
-                            match.Arguments.Upsert("TOPIC", (actor as Player).CurrentInterlocutor.DefaultResponse);
+                            match.Upsert("TOPIC", (actor as Player).CurrentInterlocutor.DefaultResponse);
                         else
                         {
                             Mud.SendMessage(actor, "That doesn't seem to be a topic I understand.");

@@ -27,7 +27,7 @@ namespace RMUD
 
             var foundAmbiguousArgument = false;
 
-            foreach (var argument in MatchedCommand.Matches[0].Arguments)
+            foreach (var argument in MatchedCommand.Matches[0])
             {
                 if (argument.Value is MudObject)
                 {
@@ -36,10 +36,10 @@ namespace RMUD
 
                     foreach (var match in MatchedCommand.Matches)
                     {
-                        if (match.Arguments.ContainsKey(argument.Key) &&
-                            match.Arguments[argument.Key] is MudObject)
+                        if (match.ContainsKey(argument.Key) &&
+                            match[argument.Key] is MudObject)
                         {
-                            var matchableObject = match.Arguments[argument.Key] as MudObject;
+                            var matchableObject = match[argument.Key] as MudObject;
                             if (!uniqueMatchables.Contains(matchableObject))
                                 uniqueMatchables.Add(matchableObject);
                         }
@@ -94,7 +94,7 @@ namespace RMUD
                     Mud.SendMessage(Client, "That wasn't a valid option. I'm aborting disambiguation.");
                 else
                 {
-                    var choosenMatches = MatchedCommand.Matches.Where(m => Object.ReferenceEquals(m.Arguments[DisambigArgument], DisambigObjects[ordinal]));
+                    var choosenMatches = MatchedCommand.Matches.Where(m => Object.ReferenceEquals(m[DisambigArgument], DisambigObjects[ordinal]));
                     MatchedCommand.Matches = new List<PossibleMatch>(choosenMatches);
 
                     if (MatchedCommand.Matches.Count == 1)

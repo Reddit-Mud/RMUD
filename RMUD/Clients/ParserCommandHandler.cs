@@ -80,7 +80,7 @@ namespace RMUD
                     {
                         var builder = new StringBuilder();
 
-                        foreach (var arg in match.Arguments)
+                        foreach (var arg in match)
                         {
                             builder.Append("[");
                             builder.Append(arg.Key);

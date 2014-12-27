@@ -23,8 +23,8 @@ namespace RMUD.Commands
                         return PerformResult.Stop;
                     }
 
-                    var client = match.Arguments["CLIENT"] as Client;
-                    var userName = match.Arguments["USERNAME"].ToString();
+                    var client = match["CLIENT"] as Client;
+                    var userName = match["USERNAME"].ToString();
 
                     client.CommandHandler = new PasswordCommandHandler(client, Authenticate, userName);
                     return PerformResult.Continue;

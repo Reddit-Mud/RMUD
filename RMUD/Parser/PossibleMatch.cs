@@ -8,7 +8,6 @@ namespace RMUD
     public class PossibleMatch : Dictionary<String, Object>
     {
         public LinkedListNode<String> Next = null;
-        public Dictionary<String, Object> Arguments { get { return this; } }
 
         public PossibleMatch(LinkedListNode<String> Next)
         {
@@ -30,7 +29,7 @@ namespace RMUD
         public PossibleMatch With(String ArgumentName, Object Value)
         {
             var r = new PossibleMatch(this, Next);
-            r.Arguments.Upsert(ArgumentName, Value);
+            r.Upsert(ArgumentName, Value);
             return r;
         }
 
@@ -42,14 +41,14 @@ namespace RMUD
         public PossibleMatch AdvanceWith(String ArgumentName, Object Value)
         {
             var r = new PossibleMatch(this, Next.Next);
-            r.Arguments.Upsert(ArgumentName, Value);
+            r.Upsert(ArgumentName, Value);
             return r;
         }
 
         public PossibleMatch EndWith(String ArgumentName, Object Value)
         {
             var r = new PossibleMatch(this, null);
-            r.Arguments.Upsert(ArgumentName, Value);
+            r.Upsert(ArgumentName, Value);
             return r;
         }
     }

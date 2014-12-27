@@ -29,7 +29,7 @@ namespace RMUD
             if (!(Context.ExecutingActor is Player)) return r;
 
             NPC locutor = null;
-            if (State.Arguments.ContainsKey("NEW-LOCUTOR")) locutor = State.Arguments["NEW-LOCUTOR"] as NPC;
+            if (State.ContainsKey("NEW-LOCUTOR")) locutor = State["NEW-LOCUTOR"] as NPC;
             else locutor = (Context.ExecutingActor as Player).CurrentInterlocutor;
             if (locutor == null) return r;
 
@@ -47,7 +47,7 @@ namespace RMUD
 
                 if (matched)
                 {
-                    possibleMatch.Arguments.Upsert(CaptureName, topic);
+                    possibleMatch.Upsert(CaptureName, topic);
                     r.Add(possibleMatch);
                 }
             }

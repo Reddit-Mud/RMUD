@@ -65,8 +65,8 @@ namespace RMUD
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    var ruleTarget = match.Arguments[Target];
-                    if (GlobalRules.ConsiderCheckRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.Arguments[a]).ToArray()) == CheckResult.Allow)
+                    var ruleTarget = match[Target];
+                    if (GlobalRules.ConsiderCheckRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match[a]).ToArray()) == CheckResult.Allow)
                         return PerformResult.Continue;
                     return PerformResult.Stop;
                 }),
@@ -85,8 +85,8 @@ namespace RMUD
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    var ruleTarget = match.Arguments[Target];
-                    var ruleResult = GlobalRules.ConsiderValueRule<T>(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.Arguments[a]).ToArray());
+                    var ruleTarget = match[Target];
+                    var ruleResult = GlobalRules.ConsiderValueRule<T>(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match[a]).ToArray());
                     if (EqualityComparer<T>.Default.Equals(ruleResult, ExpectedValue))
                         return PerformResult.Continue;
                     return PerformResult.Stop;
@@ -106,8 +106,8 @@ namespace RMUD
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    var ruleTarget = match.Arguments[Target];
-                    GlobalRules.ConsiderPerformRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.Arguments[a]).ToArray());
+                    var ruleTarget = match[Target];
+                    GlobalRules.ConsiderPerformRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match[a]).ToArray());
                     return PerformResult.Continue;
                 }),
                 DescriptiveName = "Procedural rule to perform " + RuleName
@@ -125,7 +125,7 @@ namespace RMUD
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    Mud.MarkLocaleForUpdate(match.Arguments["ACTOR"] as MudObject);
+                    Mud.MarkLocaleForUpdate(match["ACTOR"] as MudObject);
                     return PerformResult.Continue;
                 }),
                 DescriptiveName = "Procedural rule to mark locale for update."

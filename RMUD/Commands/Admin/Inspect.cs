@@ -20,13 +20,13 @@ namespace RMUD.Commands
                 .Manual("Take a peek at the internal workings of any mud object.")
                 .ProceduralRule((match, actor) =>
                     {
-                        if (!match.Arguments.ContainsKey("OBJECT"))
-                            match.Arguments.Upsert("OBJECT", actor.Location);
+                        if (!match.ContainsKey("OBJECT"))
+                            match.Upsert("OBJECT", actor.Location);
                         return PerformResult.Continue;
                     }, "Convert locale option to standard form rule.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var target = match.Arguments["OBJECT"] as MudObject;
+                    var target = match["OBJECT"] as MudObject;
                     Mud.SendMessage(actor, target.GetType().Name);
 
                     foreach (var @interface in target.GetType().GetInterfaces())

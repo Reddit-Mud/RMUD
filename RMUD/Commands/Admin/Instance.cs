@@ -18,7 +18,7 @@ namespace RMUD.Commands
                 .Manual("Given a path, create a new instance of an object.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var path = match.Arguments["PATH"].ToString();
+                    var path = match["PATH"].ToString();
                     var newObject = Mud.CreateInstance(path + "@" + Guid.NewGuid().ToString(), s => Mud.SendMessage(actor, s));
                     if (newObject == null) Mud.SendMessage(actor, "Failed to instance " + path + ".");
                     else

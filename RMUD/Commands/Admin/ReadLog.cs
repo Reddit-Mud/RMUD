@@ -18,8 +18,8 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     int count = 20;
-                    if (match.Arguments.ContainsKey("COUNT")) count = (match.Arguments["COUNT"] as int?).Value;
-                    var filename = match.Arguments["FILENAME"].ToString() + ".log";
+                    if (match.ContainsKey("COUNT")) count = (match["COUNT"] as int?).Value;
+                    var filename = match["FILENAME"].ToString() + ".log";
                     if (System.IO.File.Exists(filename))
                     {
                         foreach (var line in new ReverseLineReader(filename).Take(count).Reverse())

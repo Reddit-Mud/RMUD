@@ -17,11 +17,11 @@ namespace RMUD.Commands
                 .Manual("Displays various stats about the server. Type the command with no argument to get a list of available options.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (!match.Arguments.ContainsKey("TYPE"))
+                    if (!match.ContainsKey("TYPE"))
                         Mud.SendMessage(actor, "Try one of these options: CLIENTS MEMORY HEARTBEAT TIME");
                     else
                     {
-                        var type = match.Arguments["TYPE"].ToString().ToUpper();
+                        var type = match["TYPE"].ToString().ToUpper();
 
                         if (type == "CLIENTS")
                         {

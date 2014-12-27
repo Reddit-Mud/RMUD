@@ -18,7 +18,7 @@ namespace RMUD.Commands
                 .Manual("Display the source of a database object.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var target = match.Arguments["TARGET"].ToString();
+                    var target = match["TARGET"].ToString();
                     var source = Mud.LoadSourceFile(target);
                     if (!source.Item1)
                         Mud.SendMessage(actor, "Could not display source: " + source.Item2);

@@ -19,11 +19,11 @@ namespace RMUD.Commands
                 .Manual("Makes bad people go away.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (match.Arguments.ContainsKey("PLAYER"))
-                        KickPlayer(match.Arguments["PLAYER"] as Actor, actor);
+                    if (match.ContainsKey("PLAYER"))
+                        KickPlayer(match["PLAYER"] as Actor, actor);
                     else
                     {
-                        var mask = match.Arguments["MASK"].ToString();
+                        var mask = match["MASK"].ToString();
                         var maskRegex = new System.Text.RegularExpressions.Regex(ProscriptionList.ConvertGlobToRegex(mask), System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
                         //Iterate over local copy because kicking modifies ConnectedClients.

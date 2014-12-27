@@ -18,7 +18,7 @@ namespace RMUD.Commands
                 .Manual("This is the command you typed to get this message.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (!match.Arguments.ContainsKey("COMMAND"))
+                    if (!match.ContainsKey("COMMAND"))
                     {
                         Mud.SendMessage(actor, "Available help topics");
                         var line = "";
@@ -36,7 +36,7 @@ namespace RMUD.Commands
                     }
                     else
                     {
-                        var manPageName = match.Arguments["COMMAND"].ToString().ToUpper();
+                        var manPageName = match["COMMAND"].ToString().ToUpper();
                         var pages = new List<ManPage>(Mud.ManPages.Where(p => p.Name == manPageName));
                         if (pages.Count > 0)
                             foreach (var manPage in pages)

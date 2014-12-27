@@ -28,12 +28,12 @@ namespace RMUD.Commands
                 .Manual("This commands allows you to put things on other things. While dropping just deposits the object into your current location, putting is much more specific.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (!match.Arguments.ContainsKey("RELLOC"))
+                    if (!match.ContainsKey("RELLOC"))
                     {
-                        if (match.Arguments["OBJECT"] is Container)
-                            match.Arguments.Upsert("RELLOC", (match.Arguments["OBJECT"] as Container).DefaultLocation);
+                        if (match["OBJECT"] is Container)
+                            match.Upsert("RELLOC", (match["OBJECT"] as Container).DefaultLocation);
                         else
-                            match.Arguments.Upsert("RELLOC", RelativeLocations.On);
+                            match.Upsert("RELLOC", RelativeLocations.On);
                     }
                     return PerformResult.Continue;
                 }, "Supply default for optional relloc procedural rule.")
