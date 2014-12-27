@@ -8,7 +8,6 @@ namespace RMUD
     public class CommandEntry : ManPage
     {
         internal CommandTokenMatcher Matcher;
-        internal CommandProcessor Processor;
         internal String ManualName = "";
         internal String BriefDescription = "";
         internal String ManualPage = "";
@@ -21,13 +20,16 @@ namespace RMUD
                 Mud.LogWarning("Command does not have name set - " + Matcher.Emit());
             if (String.IsNullOrEmpty(ManualPage))
                 Mud.LogWarning("No manual for command " + ManualName);
-            if (Processor != null)
-                Mud.LogWarning("Command uses old style processor - " + ManualName);
         }
 
         public CommandEntry()
         {
             Mud.ManPages.Add(this);
+            GeneratedManual = new StringBuilder();
+            ProceduralRules = new ActionRuleBook
+            {
+                ArgumentTypes = new List<Type>(new Type[] { typeof(PossibleMatch), typeof(Actor) }),
+            };
         }
 
         public CommandEntry Name(String Name)
@@ -48,21 +50,8 @@ namespace RMUD
             return this;
         }
 
-        private void PrepareProceduralRuleBook()
-        {
-            if (ProceduralRules == null)
-            {
-                GeneratedManual = new StringBuilder();
-                ProceduralRules = new ActionRuleBook
-                {
-                    ArgumentTypes = new List<Type>(new Type[] { typeof(PossibleMatch), typeof(Actor) }),
-                };
-            }
-        }
-
         public CommandEntry ProceduralRule(Func<PossibleMatch, Actor, PerformResult> Rule, String Name = "an unamed proceddural rule")
         {
-            PrepareProceduralRuleBook();
             GeneratedManual.AppendLine("Consider " + Name);
 
             var rule = new Rule<PerformResult>
@@ -76,7 +65,6 @@ namespace RMUD
 
         public CommandEntry Check(String RuleName, String Target, params String[] RuleArguments)
         {
-            PrepareProceduralRuleBook();
             GeneratedManual.AppendLine("Consider the check rulebook '" + RuleName + "' on " + Target + " with arguments " + String.Join(", ", RuleArguments));
 
             var rule = new Rule<PerformResult>
@@ -97,7 +85,6 @@ namespace RMUD
 
         public CommandEntry Value<T>(String RuleName, T ExpectedValue, String Target, params String[] RuleArguments)
         {
-            PrepareProceduralRuleBook();
             GeneratedManual.AppendLine("Assert that the value rulebook '" + RuleName + "' on " + Target + " with arguments " + String.Join(", ", RuleArguments) + " results in " + ExpectedValue.ToString());
 
             var rule = new Rule<PerformResult>
@@ -119,7 +106,6 @@ namespace RMUD
 
         public CommandEntry Perform(String RuleName, String Target, params String[] RuleArguments)
         {
-            PrepareProceduralRuleBook();
             GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + "' on " + Target + " with arguments " + String.Join(", ", RuleArguments));
 
             var rule = new Rule<PerformResult>
@@ -139,7 +125,6 @@ namespace RMUD
 
         public CommandEntry MarkLocaleForUpdate()
         {
-            PrepareProceduralRuleBook();
             GeneratedManual.AppendLine("Consider the mark locale for update rule");
 
             var rule = new Rule<PerformResult>

@@ -5,73 +5,80 @@ using System.Text;
 
 namespace RMUD.Commands
 {
-	internal class Introduce : CommandFactory
-	{
+    internal class Introduce : CommandFactory, DeclaresRules
+    {
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
-                new Sequence(
-                    new KeyWord("INTRODUCE"),
-                    new Or(
-                        new KeyWord("MYSELF"),
-                        new KeyWord("ME"),
-                        new KeyWord("SELF"))),
-                new IntroduceSelfProcessor(),
-                "Introduce yourself.");
+                Sequence(
+                    KeyWord("INTRODUCE"),
+                    Or(
+                        KeyWord("MYSELF"),
+                        KeyWord("ME"),
+                        KeyWord("SELF"))),
+                "Introduce yourself.")
+                .Manual("This is a specialized version of the commad to handle 'introduce me'.")
+                .ProceduralRule((match, actor) =>
+                {
+                    Introduction.Introduce(actor);
+                    Mud.SendExternalMessage(actor, "The " + actor.DescriptiveName + " introduces themselves as <the0>.", actor);
+                    Mud.SendMessage(actor, "You introduce yourself.");
+                    return PerformResult.Continue;
+                }, "Introduce yourself rule.");
+
 
             Parser.AddCommand(
-                new Sequence(
-                   new KeyWord("INTRODUCE"),
-                    new FailIfNoMatches(
-                        new ObjectMatcher("OBJECT", new InScopeObjectSource(), (Actor, Object) =>
-                            {
-                                if (Object is RMUD.Actor) return MatchPreference.Likely;
-                                else return MatchPreference.Unlikely;
-                            }),
-                        "Introduce whom?")),
-                new IntroduceProcessor(),
-                "Introduce someone.");
+                Sequence(
+                    KeyWord("INTRODUCE"),
+                    MustMatch("Introduce whom?",
+                        Object("OBJECT", InScope, (actor, item) =>
+                        {
+                            if (item is Actor) return MatchPreference.Likely;
+                            return MatchPreference.Unlikely;
+                        }))),
+                "Introduce someone.")
+                .Manual("Introduces someone you know to everyone present. Now they will know them, too.")
+                .Check("can introduce?", "OBJECT", "ACTOR", "OBJECT")
+                .Perform("introduce", "OBJECT", "ACTOR", "OBJECT");
         }
-	}
 
-	internal class IntroduceProcessor : CommandProcessor
-	{
-		public void Perform(PossibleMatch Match, Actor Actor)
-		{
-            var target = Match.Arguments["OBJECT"] as MudObject;
-            var introductee = target as Actor;
-            
-            if (introductee == null)
-            {
-                Mud.SendMessage(Actor, "That just sounds silly.");
-                return;
-            }
-
-            if (!Mud.IsVisibleTo(Actor, introductee))
-            {
-                Mud.SendMessage(Actor, "^<the0> does not seem to be here anymore.", introductee);
-                return;
-            }
-
-            if (!Introduction.ActorKnowsActor(Actor, introductee))
-            {
-                Mud.SendMessage(Actor, "How can you introduce <the0> when you don't know them yourself?", introductee);
-                return;
-            }
-
-            Introduction.Introduce(introductee);
-            Mud.SendExternalMessage(Actor, "^<the0> introduces the " + introductee.DescriptiveName + " as <the1>.", Actor, introductee);
-            Mud.SendMessage(Actor, "You introduce <the0>.", introductee);
-		}
-	}
-
-    internal class IntroduceSelfProcessor : CommandProcessor
-    {
-        public void Perform(PossibleMatch Match, Actor Actor)
+        public void InitializeGlobalRules()
         {
-            Introduction.Introduce(Actor);
-            Mud.SendExternalMessage(Actor, "The " + Actor.DescriptiveName + " introduces themselves as <the0>.", Actor);
-            Mud.SendMessage(Actor, "You introduce yourself.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can introduce?", "[Actor A, Actor B] : Can A introduce B?");
+
+            GlobalRules.Check<MudObject, MudObject>("can introduce?")
+                .When((a, b) => !(b is Actor))
+                .Do((a, b) =>
+                {
+                    Mud.SendMessage(a, "That just sounds silly.");
+                    return CheckResult.Disallow;
+                })
+                .Name("Can only introduce actors rule.");
+
+            GlobalRules.Check<MudObject, MudObject>("can introduce?")
+                .Do((a, b) => GlobalRules.IsVisibleTo(a, b))
+                .Name("Introducee must be visible rule.");
+
+            GlobalRules.Check<MudObject, MudObject>("can introduce?")
+                .When((a, b) => !Introduction.ActorKnowsActor(a as Actor, b as Actor))
+                .Do((a, b) =>
+                {
+                    Mud.SendMessage(a, "How can you introduce <the0> when you don't know them yourself?", b);
+                    return CheckResult.Disallow;
+                })
+                .Name("Can't introduce who you don't know rule.");
+
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("introduce", "[Actor A, Actor B] : Handle A introducing B.");
+
+            GlobalRules.Perform<MudObject, MudObject>("introduce")
+                .Do((a, b) =>
+                {
+                    Introduction.Introduce(b as Actor);
+                    Mud.SendExternalMessage(a, "^<the0> introduces the " + (b as Actor).DescriptiveName + " as <the1>.", a, b);
+                    Mud.SendMessage(a, "You introduce <the0>.", b);
+                    return PerformResult.Continue;
+                })
+                .Name("Report introduction rule.");
         }
     }
 }

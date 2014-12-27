@@ -43,12 +43,12 @@ public class Table : RMUD.Container
 
         RMUD.MudObject.Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
 
-        Check<RMUD.MudObject, RMUD.MudObject>("can-take").Do((actor, thing) =>
+        Check<RMUD.MudObject, RMUD.MudObject>("can take?").Do((actor, thing) =>
         {
             RMUD.Mud.SendMessage(actor, "It's far too heavy.");
             return RMUD.CheckResult.Disallow;
         });
 
-        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed-name").Do((viewer, thing, article) => "an ancient table");
+        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed name").Do((viewer, thing, article) => "an ancient table");
     }
 }

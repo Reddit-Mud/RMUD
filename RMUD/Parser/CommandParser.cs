@@ -10,17 +10,9 @@ namespace RMUD
 
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
 
-        public CommandEntry AddCommand(CommandTokenMatcher Matcher, CommandProcessor Processor, String HelpText)
-        {
-            var Entry = new CommandEntry { Matcher = Matcher, Processor = Processor, BriefDescription = HelpText };
-            Entry.ManualName = Matcher.FindFirstKeyWord();
-			Commands.Add(Entry);
-            return Entry;
-        }
-
         public CommandEntry AddCommand(CommandTokenMatcher Matcher, String HelpText)
         {
-            var Entry = new CommandEntry { Matcher = Matcher, Processor = null, BriefDescription = HelpText };
+            var Entry = new CommandEntry { Matcher = Matcher, BriefDescription = HelpText };
             Entry.ManualName = Matcher.FindFirstKeyWord();
             Commands.Add(Entry);
             return Entry;

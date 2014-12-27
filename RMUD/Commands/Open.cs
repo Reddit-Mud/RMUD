@@ -20,6 +20,7 @@ namespace RMUD.Commands
                                 return MatchPreference.Unlikely;
                             })))),
                 "Open something")
+                .Manual("Opens an openable thing.")
                 .Check("can open?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("opened", "SUBJECT", "ACTOR", "SUBJECT");
         }

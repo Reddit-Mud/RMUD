@@ -73,7 +73,7 @@ namespace RMUD
                 else
                 {
                     Mud.SendMessage(Client, String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.",
-                        matchedCommand.Command.Processor.GetType().Name,
+                        matchedCommand.Command.ManualName,
                         (matchEndTime - startTime).TotalMilliseconds,
                         matchedCommand.Matches.Count));
                     foreach (var match in matchedCommand.Matches)

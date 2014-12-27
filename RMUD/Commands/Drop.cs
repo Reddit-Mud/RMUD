@@ -16,6 +16,7 @@ namespace RMUD.Commands
                         MustMatch("You don't seem to have that.",
                             Object("SUBJECT", InScope, PreferHeld)))),
                 "Drop something")
+                .Manual("Drop a held item. This can also be used to remove and drop a worn item.")
                 .Check("can drop?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("dropped", "SUBJECT", "ACTOR", "SUBJECT");
 		}

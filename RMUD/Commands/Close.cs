@@ -20,6 +20,7 @@ namespace RMUD.Commands
                                     return MatchPreference.Unlikely;
                                 })))),
                 "Close something.")
+                .Manual("Closes a thing.")
                 .Check("can close?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("closed", "SUBJECT", "ACTOR", "SUBJECT");
 		}

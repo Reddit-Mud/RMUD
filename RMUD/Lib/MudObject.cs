@@ -16,9 +16,9 @@ namespace RMUD
     {
         public void InitializeGlobalRules()
         {
-            GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String, String>("printed-name", "[Viewer, Object, Article -> String] : Find the name that should be displayed for an object.");
+            GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String, String>("printed name", "[Viewer, Object, Article -> String] : Find the name that should be displayed for an object.");
 
-            GlobalRules.Value<MudObject, MudObject, String, String>("printed-name")
+            GlobalRules.Value<MudObject, MudObject, String, String>("printed name")
                .Last
                .Do((viewer, thing, article) => article + " " + thing.Short)
                .Name("Default name of a thing.");
@@ -56,12 +56,12 @@ namespace RMUD
         
         public String Indefinite(MudObject RequestedBy) 
         {
-            return GlobalRules.ConsiderValueRule<String>("printed-name", this, RequestedBy, this, Article);
+            return GlobalRules.ConsiderValueRule<String>("printed name", this, RequestedBy, this, Article);
         }
 
         public String Definite(MudObject RequestedBy)
         {
-            return GlobalRules.ConsiderValueRule<String>("printed-name", this, RequestedBy, this, "the");
+            return GlobalRules.ConsiderValueRule<String>("printed name", this, RequestedBy, this, "the");
         }
 
 		public MudObject()

@@ -91,7 +91,7 @@ And we can dance")
                     target.Value<MudObject, bool>("silly?").Do((thing) => true).ID(ruleID.ToString())
                         .Name("Silly things are silly rule.");
 
-                    target.Value<MudObject, MudObject, String, String>("printed-name")
+                    target.Value<MudObject, MudObject, String, String>("printed name")
                         .Do((viewer, thing, article) =>
                         {
                             return "silly " + thing.Short;

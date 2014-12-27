@@ -23,6 +23,7 @@ namespace RMUD.Commands
                                 return MatchPreference.Plausible;
                             })))),
                 "Take something")
+                .Manual("Takes an item and adds it to your inventory.")
                 .Check("can take?", "SUBJECT", "ACTOR", "SUBJECT")
                 .Perform("taken", "SUBJECT", "ACTOR", "SUBJECT")
                 .MarkLocaleForUpdate();

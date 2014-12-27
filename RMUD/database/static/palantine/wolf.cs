@@ -19,7 +19,7 @@
                 return RMUD.PerformResult.Stop;
             });
 
-        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed-name").First.Do((viewer, item, article) => article + " wolf");
+        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed name").First.Do((viewer, item, article) => article + " wolf");
 
         Value<RMUD.MudObject, bool>("entrail-quest-is-fed").Do(wolf => IsFed);
 

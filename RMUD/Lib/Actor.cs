@@ -25,12 +25,12 @@ namespace RMUD
                 })
                 .Name("Can't take people rule.");
 
-            GlobalRules.Value<MudObject, MudObject, String, String>("printed-name")
+            GlobalRules.Value<MudObject, MudObject, String, String>("printed name")
                 .When((viewer, thing, article) => viewer is Actor && thing is Actor && Introduction.ActorKnowsActor(viewer as Actor, thing as Actor))
                 .Do((viewer, actor, article) => actor.Short)
                 .Name("Name of introduced actor.");
 
-            GlobalRules.Value<MudObject, MudObject, String, String>("printed-name")
+            GlobalRules.Value<MudObject, MudObject, String, String>("printed name")
                 .When((viewer, thing, article) => thing is Actor)
                 .Do((viewer, actor, article) => article + " " + (actor as Actor).DescriptiveName)
                 .Name("Default name for unintroduced actor.");

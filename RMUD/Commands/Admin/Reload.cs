@@ -37,8 +37,8 @@ namespace RMUD.Commands
                  .ProceduralRule((match, actor) =>
                  {
                      var target = match.Arguments["TARGET"].ToString();
-                     var newObject = Mud.ResetObject(target, s => Mud.SendMessage(actor, s));
-                     if (newObject == null) Mud.SendMessage(actor, "Failed to reset " + target);
+                     if (!Mud.ResetObject(target, s => Mud.SendMessage(actor, s))) 
+                         Mud.SendMessage(actor, "Failed to reset " + target);
                      else Mud.SendMessage(actor, "Reset " + target);
                      return PerformResult.Continue;
                  });

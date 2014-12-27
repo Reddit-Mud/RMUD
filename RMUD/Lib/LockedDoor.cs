@@ -15,7 +15,9 @@ namespace RMUD
 		{
 			Locked = true;
 
-            Check<MudObject, MudObject, MudObject>("can-be-locked-with").Do((actor, door, key) =>
+            Value<MudObject, bool>("lockable?").Do(a => true);
+
+            Check<MudObject, MudObject, MudObject>("can lock?").Do((actor, door, key) =>
                 {
                     if (Open) {
                         Mud.SendMessage(actor, "You'll have to close it first.");
@@ -31,13 +33,13 @@ namespace RMUD
                     return CheckResult.Allow;
                 });
 
-            Perform<MudObject, MudObject, MudObject>("on-locked-with").Do((a,b,c) =>
+            Perform<MudObject, MudObject, MudObject>("locked").Do((a,b,c) =>
                 {
                     Locked = true;
                     return PerformResult.Continue;
                 });
 
-             Perform<MudObject, MudObject, MudObject>("on-unlocked-with").Do((a,b,c) =>
+             Perform<MudObject, MudObject, MudObject>("unlocked").Do((a,b,c) =>
                 {
                     Locked = false;
                     return PerformResult.Continue;
