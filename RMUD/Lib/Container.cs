@@ -142,24 +142,18 @@ namespace RMUD
             }
         }
 
-        public EnumerateObjectsControl EnumerateObjects(RelativeLocations Locations, Func<MudObject, RelativeLocations, EnumerateObjectsControl> Callback)
-        {
-            if (Locations == RelativeLocations.Default) Locations = Default;
-
-            foreach (var list in Lists)
-            {
-                if ((Locations & list.Key) == list.Key)
-                    foreach (var MudObject in list.Value)
-                        if (Callback(MudObject, list.Key) == EnumerateObjectsControl.Stop) return EnumerateObjectsControl.Stop;
-            }
-            return EnumerateObjectsControl.Continue;
-        }
-
         public IEnumerable<MudObject> EnumerateObjects()
         {
             foreach (var list in Lists)
                 foreach (var item in list.Value)
                     yield return item;
+        }
+
+        public IEnumerable<Tuple<MudObject, RelativeLocations>> EnumerateObjectsAndRelloc()
+        {
+            foreach (var list in Lists)
+                foreach (var item in list.Value)
+                    yield return Tuple.Create(item, list.Key);
         }
 
         public IEnumerable<T> EnumerateObjects<T>() where T: MudObject
@@ -203,7 +197,7 @@ namespace RMUD
 
         public RelativeLocations DefaultLocation { get { return Default; } }
 
-        public RelativeLocations LocationOf(MudObject Object)
+        public RelativeLocations RelativeLocationOf(MudObject Object)
         {
             foreach (var list in Lists)
                 if (list.Value.Contains(Object)) return list.Key;

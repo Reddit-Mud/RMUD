@@ -83,15 +83,8 @@ namespace RMUD
 
             var container = Mud.FindLocale(Object) as Container;
             if (container != null)
-            {
-                container.EnumerateObjects(RelativeLocations.EveryMudObject, (MudObject, loc) =>
-                {
-                    var actor = MudObject as Actor;
-                    if (actor != null && actor.ConnectedClient != null)
-                        PendingMessages.Add(new RawPendingMessage(actor.ConnectedClient, FormatMessage(actor, Message, MentionedObjects)));
-                    return EnumerateObjectsControl.Continue;
-                });
-            }
+                foreach (var actor in container.EnumerateObjects<Actor>().Where(a => a.ConnectedClient != null))
+                    PendingMessages.Add(new RawPendingMessage(actor.ConnectedClient, FormatMessage(actor, Message, MentionedObjects)));
         }
 
         public static void SendExternalMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
@@ -103,15 +96,9 @@ namespace RMUD
             var location = Actor.Location as Room;
             if (location == null) return;
 
-            location.EnumerateObjects(RelativeLocations.Contents, (o, l) =>
-                {
-                    var other = o as Actor;
-                    if (other == null) return EnumerateObjectsControl.Continue;
-                    if (Object.ReferenceEquals(other, Actor)) return EnumerateObjectsControl.Continue;
-                    if (other.ConnectedClient == null) return EnumerateObjectsControl.Continue;
-                    PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, FormatMessage(other, Message, MentionedObjects)));
-                    return EnumerateObjectsControl.Continue;
-                });
+            foreach (var other in location.EnumerateObjects<Actor>().Where(a => !Object.ReferenceEquals(a, Actor) && (a.ConnectedClient != null)))
+                PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, FormatMessage(other, Message, MentionedObjects)));
+                
         }
 
         public static void SendExternalMessage(MudObject Actor, String Message, params MudObject[] MentionedObjects)

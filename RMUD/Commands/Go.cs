@@ -20,7 +20,7 @@ namespace RMUD.Commands
                 {
                     var direction = match["DIRECTION"] as Direction?;
                     var location = actor.Location as Room;
-                    var link = location.EnumerateObjects().FirstOrDefault(thing => thing is Link && (thing as Link).Direction == direction.Value) as Link;
+                    var link = location.EnumerateObjects().FirstOrDefault(thing => thing is Link && (thing as Link).Direction == direction.Value);
                     match.Upsert("LINK", link);
                     return PerformResult.Continue;
                 }, "lookup link rule")

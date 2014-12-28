@@ -360,21 +360,18 @@ namespace RMUD
 
 				//Preserve contents
 				if (existing is Container && newObject is Container)
-				{
-                    (existing as Container).EnumerateObjects(RelativeLocations.EveryMudObject, (MudObject, loc) =>
-                        {
-                            (newObject as Container).Add(MudObject, loc);
-                            if (MudObject is MudObject) (MudObject as MudObject).Location = newObject;
-                            return EnumerateObjectsControl.Continue;
-                        });
-				}
-
+                    foreach (var item in (existing as Container).EnumerateObjectsAndRelloc())
+                    {
+                        (newObject as Container).Add(item.Item1, item.Item2);
+                        item.Item1.Location = newObject;
+                    }
+                 
 				//Preserve location
 				if (existing is MudObject && newObject is MudObject)
 				{
 					if ((existing as MudObject).Location != null)
 					{
-                        var loc = ((existing as MudObject).Location as Container).LocationOf(existing);
+                        var loc = ((existing as MudObject).Location as Container).RelativeLocationOf(existing);
 						MudObject.Move(newObject as MudObject, (existing as MudObject).Location, loc);
 						MudObject.Move(existing as MudObject, null, RelativeLocations.None);
 					}
@@ -405,26 +402,16 @@ namespace RMUD
 
                 //Preserve the location of actors, and actors only.
                 if (existing is Container)
-                {
-                    (existing as Container).EnumerateObjects(RelativeLocations.EveryMudObject, (MudObject, loc) =>
+                    foreach (var item in (existing as Container).EnumerateObjectsAndRelloc())
+                        if (item.Item1 is Actor)
                         {
-                            if (MudObject is Actor)
-                            {
-                                //Can't use MudObject.Move - it will change the list we are iterating.
-                                (newObject as Container).Add(MudObject, loc);
-                                (MudObject as MudObject).Location = newObject;
-                            }
-                            else
-                            {
-                                MudObject.Destroy(true);
-                            }
-                            return EnumerateObjectsControl.Continue;
-                        });
-                }
-
+                            (newObject as Container).Add(item.Item1, item.Item2);
+                            item.Item1.Location = newObject;
+                        }
+                    
                 if (existing is MudObject && (existing as MudObject).Location != null)
                 {
-                    var loc = ((existing as MudObject).Location as Container).LocationOf(existing);
+                    var loc = ((existing as MudObject).Location as Container).RelativeLocationOf(existing);
                     MudObject.Move(newObject as MudObject, (existing as MudObject).Location, loc);
                     MudObject.Move(existing as MudObject, null, RelativeLocations.None);
                 }

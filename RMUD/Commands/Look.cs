@@ -96,12 +96,7 @@ namespace RMUD.Commands
                             {
                                 if ((container.LocationsSupported & RelativeLocations.On) == RelativeLocations.On)
                                 {
-                                    var subObjects = new List<MudObject>();
-                                    container.EnumerateObjects(RelativeLocations.On, (o, l) =>
-                                    {
-                                        subObjects.Add(o);
-                                        return EnumerateObjectsControl.Continue;
-                                    });
+                                    var subObjects = new List<MudObject>(container.EnumerateObjects(RelativeLocations.On));
 
                                     if (subObjects.Count > 0)
                                     {

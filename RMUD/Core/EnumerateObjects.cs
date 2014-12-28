@@ -5,12 +5,6 @@ using System.Text;
 
 namespace RMUD
 {
-    public enum EnumerateObjectsControl
-    {
-        Stop,
-        Continue
-    }
-    
     public static partial class Mud
     {
         private static IEnumerable<MudObject> _enumerateObjectTree(MudObject C)

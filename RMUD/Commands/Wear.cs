@@ -37,7 +37,7 @@ namespace RMUD.Commands
                 });
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((a, b) => a is Actor && (a as Actor).LocationOf(b) == RelativeLocations.Worn)
+                .When((a, b) => a is Actor && (a as Actor).RelativeLocationOf(b) == RelativeLocations.Worn)
                 .Do((a, b) =>
                 {
                     Mud.SendMessage(a, "You're already wearing that.");

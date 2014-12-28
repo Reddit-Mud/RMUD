@@ -91,12 +91,9 @@ namespace RMUD
             Mud.ForgetInstance(this);
 
             if (DestroyChildren && this is Container)
-                (this as Container).EnumerateObjects(RelativeLocations.EveryMudObject, (child, loc) =>
-                    {
-                        if (child.State != ObjectState.Destroyed)
-                            child.Destroy(true);
-                        return EnumerateObjectsControl.Continue;
-                    });
+                foreach (var child in (this as Container).EnumerateObjects())
+                    if (child.State != ObjectState.Destroyed)
+                        child.Destroy(true);
         }
 
 		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)

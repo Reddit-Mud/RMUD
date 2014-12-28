@@ -16,7 +16,7 @@ namespace RMUD
             var container = Of.Location as Container;
             if (container != null)
             {
-                var relloc = container.LocationOf(Of);
+                var relloc = container.RelativeLocationOf(Of);
                 if (relloc == RelativeLocations.In) //Consider the open rules.
                 {
                     if (GlobalRules.ConsiderValueRule<bool>("open?", Of.Location, Of.Location))
