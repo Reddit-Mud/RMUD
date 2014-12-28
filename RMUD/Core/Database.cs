@@ -8,6 +8,11 @@ using System.Reflection;
 
 namespace RMUD
 {
+    public interface Startup
+    {
+        void Startup();
+    }
+
     public static partial class Mud
     {
         public static String StaticPath { get; private set; }
@@ -75,7 +80,7 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                Console.WriteLine("Github filelist discovery failed.");
+                Console.WriteLine("Github filelist discovery failed. Only startup objects present in local database will be loaded.");
                 Console.WriteLine(e.Message);
                 return new List<string>();
             }
@@ -144,6 +149,8 @@ namespace RMUD
 
                     newObject.Path = s;
                     newObject.State = ObjectState.Unitialized;
+
+                    if (newObject is Startup) (newObject as Startup).Startup();
 
                     NamedObjects.Upsert(s, newObject);
                 }

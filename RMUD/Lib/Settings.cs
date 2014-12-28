@@ -50,7 +50,6 @@ namespace RMUD
 
             Mud.ChatChannels.Add(new ChatChannel("OOC"));
             Mud.ChatChannels.Add(new ChatChannel("SENATE", c => c.Rank >= 100));
-            Mud.ChatChannels.Add(new ChatChannel("HELP"));
         }
 
         public String GetNameForRank(int Rank)

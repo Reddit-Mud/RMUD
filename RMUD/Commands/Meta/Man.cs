@@ -12,6 +12,7 @@ namespace RMUD.Commands
             Parser.AddCommand(
                 Sequence(
                     Or(
+                        KeyWord("HELP"),
                         KeyWord("MAN"),
                         KeyWord("?")),
                     Optional(Rest("COMMAND"))))

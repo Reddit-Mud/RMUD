@@ -67,6 +67,9 @@
     <Compile Include="Core\ManPages.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
     <Compile Include="Core\PersistAttribute.cs" />
+    <Compile Include="database\static\palantine\ball.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Lib\Introduction.cs" />
     <Compile Include="Lib\Conversation.cs" />
     <Compile Include="Commands\Admin\ReadLog.cs" />

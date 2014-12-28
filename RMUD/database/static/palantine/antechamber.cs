@@ -13,6 +13,7 @@
         RMUD.MudObject.Move(table, this);
 
         RMUD.MudObject.Move(new RMUD.MudObject("old vase", "An old, cracked vase."), table);
+        RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine/ball"), this);
 
 
         OpenLink(RMUD.Direction.NORTH, "palantine/disambig");
