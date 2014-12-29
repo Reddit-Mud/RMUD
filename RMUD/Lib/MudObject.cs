@@ -83,6 +83,14 @@ namespace RMUD
                 Article = "an";
 
             State = ObjectState.Alive;
+            IsPersistent = false;
+        }
+
+        protected void SimpleName(String Short, params String[] Synonyms)
+        {
+            this.Short = Short;
+            Nouns.Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            Nouns.Add(Synonyms);
         }
 
         public void Destroy(bool DestroyChildren)

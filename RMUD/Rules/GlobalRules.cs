@@ -68,7 +68,7 @@ namespace RMUD
         public static CheckResult ConsiderCheckRule(String Name, MudObject Object, params Object[] Arguments)
         {
             var r = CheckResult.Continue;
-            if (Object.Rules != null) r = Object.Rules.ConsiderCheckRule(Name, Arguments);
+            if (Object != null && Object.Rules != null) r = Object.Rules.ConsiderCheckRule(Name, Arguments);
             if (r == CheckResult.Continue)
             {
                 if (Rules == null) InitializeGlobalRuleBooks();
@@ -81,7 +81,7 @@ namespace RMUD
         {
             RT r = default(RT);
             bool valueReturned = false;
-            if (Object.Rules != null) r = Object.Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
+            if (Object != null && Object.Rules != null) r = Object.Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
             if (!valueReturned)
             {
                 if (Rules == null) InitializeGlobalRuleBooks();

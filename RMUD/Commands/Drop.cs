@@ -35,6 +35,20 @@ namespace RMUD.Commands
                 })
                 .Name("Must be holding it to drop it rule.");
 
+            GlobalRules.Check<MudObject, MudObject>("can drop?")
+                .First
+                .When((actor, item) => actor is Actor && (actor as Actor).Contains(item, RelativeLocations.Worn))
+                .Do((actor, item) =>
+                {
+                    if (GlobalRules.ConsiderCheckRule("can remove?", item, actor, item) == CheckResult.Allow)
+                    {
+                        GlobalRules.ConsiderPerformRule("remove", item, actor, item);
+                        return CheckResult.Continue;
+                    }
+                    return CheckResult.Disallow;
+                })
+                .Name("Dropping worn items follows remove rules rule.");
+
             GlobalRules.Check<MudObject, MudObject>("can drop?").Do((a, b) => CheckResult.Allow).Name("Default can drop anything rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("dropped").Do((actor, target) =>

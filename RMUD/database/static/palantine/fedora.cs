@@ -1,11 +1,11 @@
-﻿public class fedora : RMUD.MudObject
+﻿public class fedora : RMUD.Clothing
 {
     public override void Initialize()
     {
-        Short = "fedora";
-        Nouns.Add("fedora", "hat");
+        SimpleName("fedora", "hat");
         Long = "This hat is so not cool.";
 
-        Check<RMUD.MudObject, RMUD.MudObject>("can-be-worn").Do((a, b) => RMUD.CheckResult.Allow);
+        Layer = RMUD.ClothingLayer.Outer;
+        BodyPart = RMUD.ClothingBodyPart.Head;
     }
 }

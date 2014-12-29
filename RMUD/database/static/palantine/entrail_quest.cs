@@ -22,7 +22,7 @@
                 RMUD.Mud.SendMessage(questor, "You have accepted the entrail quest.");
 
                 var entrails = RMUD.Mud.GetObject("palantine/entrails");
-                if (entrails.Location == null)
+                if ((RMUD.Mud.GetObject("palantine/soranus") as RMUD.Actor).Contains(entrails, RMUD.RelativeLocations.Worn))
                 {
                     RMUD.MudObject.Move(entrails, questor);
                     RMUD.Mud.SendMessage(questor, "^<the0> gives you some entrails.", RMUD.Mud.GetObject("palantine/soranus"));
@@ -44,7 +44,7 @@
                 RMUD.Mud.SendMessage(questor, "Entrail quest failed.");
                 ResetObject(RMUD.Mud.GetObject("palantine/wolf"));
                 ResetObject(RMUD.Mud.GetObject("palantine/soranus"));
-                RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine/entrails"), null);
+                RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine/entrails"), RMUD.Mud.GetObject("palantine/soranus"), RMUD.RelativeLocations.Worn);
                 Active = false;
                 return RMUD.PerformResult.Continue;
             });

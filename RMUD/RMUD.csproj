@@ -64,12 +64,17 @@
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Commands\Admin\Rules.cs" />
+    <Compile Include="Commands\Remove.cs" />
     <Compile Include="Core\ManPages.cs" />
     <Compile Include="Core\PersistentValueSerializer.cs" />
     <Compile Include="Core\PersistAttribute.cs" />
     <Compile Include="database\static\palantine\ball.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="database\static\palantine\platos_closet.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Lib\Clothing.cs" />
     <Compile Include="Lib\Introduction.cs" />
     <Compile Include="Lib\Conversation.cs" />
     <Compile Include="Commands\Admin\ReadLog.cs" />

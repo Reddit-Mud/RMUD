@@ -15,7 +15,7 @@
             {
                 RMUD.Mud.SendLocaleMessage(this, "The wolf snatches up the entrails.");
                 IsFed = true;
-                RMUD.MudObject.Move(entrails, null);
+                RMUD.MudObject.Move(entrails, RMUD.Mud.GetObject("palantine/soranus"), RMUD.RelativeLocations.Worn);
                 return RMUD.PerformResult.Stop;
             });
 

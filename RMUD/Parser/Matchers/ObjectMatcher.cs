@@ -40,6 +40,7 @@ namespace RMUD
 
         public static IObjectSource InScope { get { return new InScopeObjectSource(); } }
         public static Func<Actor, MudObject, MatchPreference> PreferHeld { get { return ObjectMatcher.PreferHeld; } }
+        public static Func<Actor, MudObject, MatchPreference> PreferWorn { get { return ObjectMatcher.PreferWOrn; } }
     }
 
     public class ObjectMatcher : CommandTokenMatcher
@@ -61,6 +62,12 @@ namespace RMUD
 			if (Actor.Contains(Object, RelativeLocations.Held)) return MatchPreference.Likely;
 			return MatchPreference.Plausible;
 		}
+
+        public static MatchPreference PreferWOrn(Actor Actor, MudObject Object)
+        {
+            if (Actor.Contains(Object, RelativeLocations.Worn)) return MatchPreference.Likely;
+            return MatchPreference.Plausible;
+        }
 
 		public ObjectMatcher(
 			String CaptureName,

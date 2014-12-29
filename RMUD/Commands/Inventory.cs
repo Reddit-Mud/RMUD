@@ -30,7 +30,7 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject>("inventory")
                 .Do(a =>
                 {
-                    var wornObjects = (a as Actor).GetContents(RelativeLocations.In);
+                    var wornObjects = (a as Actor).GetContents(RelativeLocations.Worn);
                     if (wornObjects.Count == 0) Mud.SendMessage(a, "You are naked.");
                     else
                     {

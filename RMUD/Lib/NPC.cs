@@ -31,5 +31,15 @@ namespace RMUD
         {
             return AddConversationTopic(new ConversationTopic(Topic, SilentResponse, AvailabilityRule));
         }
+
+        public void Wear(MudObject Item)
+        {
+            Mud.Move(Item, this, RelativeLocations.Worn);
+        }
+
+        public void Wear(String Short, ClothingLayer Layer, ClothingBodyPart BodyPart)
+        {
+            Wear(Clothing.Create(Short, Layer, BodyPart));
+        }
 	}
 }

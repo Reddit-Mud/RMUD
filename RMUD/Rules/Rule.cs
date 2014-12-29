@@ -18,7 +18,7 @@ namespace RMUD
         public String DescriptiveName;
         public String ID;
         public RuleDelegateWrapper<bool> WhenClause;
-        public RulePriority Priority;
+        public RulePriority Priority = RulePriority.Neutral;
     }
 
     public class Rule<RT> : Rule
