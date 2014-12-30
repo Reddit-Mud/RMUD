@@ -56,11 +56,11 @@ namespace RMUD
         public static PerformResult ConsiderPerformRule(String Name, MudObject Object, params Object[] Arguments)
         {
             var r = PerformResult.Continue;
-            if (Object != null && Object.Rules != null) r = Object.Rules.ConsiderActionRule(Name, Arguments);
+            if (Object != null && Object.Rules != null) r = Object.Rules.ConsiderPerformRule(Name, Arguments);
             if (r == PerformResult.Continue)
             {
                 if (Rules == null) InitializeGlobalRuleBooks();
-                return Rules.ConsiderActionRule(Name, Arguments);
+                return Rules.ConsiderPerformRule(Name, Arguments);
             }
             return r;
         }

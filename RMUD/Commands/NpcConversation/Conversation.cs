@@ -36,17 +36,20 @@ namespace RMUD.Commands
                     Or(
                         KeyWord("ASK"),
                         KeyWord("TELL")),
-                    Optional(
-                        Object("NEW-LOCUTOR", InScope, (actor, thing) =>
-                        {
-                            if (actor is Player && System.Object.ReferenceEquals(thing, (actor as Player).CurrentInterlocutor)) return MatchPreference.VeryLikely;
-                            if (thing is NPC) return MatchPreference.Likely;
-                            return MatchPreference.VeryUnlikely;
-                        })),
-                    OptionalKeyWord("ABOUT"),
-                    FirstOf(
-                        Topic("TOPIC"),
-                        Rest("STRING-TOPIC"))))
+                        FirstOf(
+                            Object("TOPIC", new TopicSource()),
+                            Sequence(
+                                Object("NEW-LOCUTOR", InScope, (actor, thing) =>
+                                {
+                                    if (actor is Player && System.Object.ReferenceEquals(thing, (actor as Player).CurrentInterlocutor)) return MatchPreference.VeryLikely;
+                                    if (thing is NPC) return MatchPreference.Likely;
+                                    return MatchPreference.VeryUnlikely;
+                                }),
+                                OptionalKeyWord("ABOUT"),
+                                FirstOf(
+                                    Object("TOPIC", new TopicSource("NEW-LOCUTOR")),
+                                    Rest("STRING-TOPIC"))),
+                            Rest("STRING-TOPIC"))))
                 .Manual("Discusses the topic with whomever you are talking too.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -74,21 +77,7 @@ namespace RMUD.Commands
                     return PerformResult.Continue;
                 }, "Must be talking to someone rule.")
                 .Check("can converse?", "LOCUTOR", "ACTOR", "LOCUTOR")
-                .ProceduralRule((match, actor) =>
-                {
-                    if (!match.ContainsKey("TOPIC"))
-                    {
-                        if ((actor as Player).CurrentInterlocutor.DefaultResponse != null)
-                            match.Upsert("TOPIC", (actor as Player).CurrentInterlocutor.DefaultResponse);
-                        else
-                        {
-                            Mud.SendMessage(actor, "That doesn't seem to be a topic I understand.");
-                            return PerformResult.Stop;
-                        }
-                    }
-                    return PerformResult.Continue;
-                }, "Supply default topic if needed rule.")
-                .Perform("converse", "LOCUTOR", "ACTOR", "LOCUTOR", "TOPIC")
+                .Perform("discuss topic", "LOCUTOR", "ACTOR", "LOCUTOR", "TOPIC")
                 .Perform("list topics", "ACTOR", "ACTOR");
 
             Parser.AddCommand(
@@ -137,41 +126,31 @@ namespace RMUD.Commands
                 {
                     if (!(actor is Player)) return PerformResult.Stop;
                     var npc = (actor as Player).CurrentInterlocutor;
-                    var suggestedTopics = npc.ConversationTopics.Where(topic => topic.IsAvailable((actor as Player), npc) && !Conversation.HasKnowledgeOfTopic((actor as Player), npc, topic.ID)).Take(4);
+                    var suggestedTopics = npc.ConversationTopics.Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", topic, actor, npc, topic));
                     if (suggestedTopics.Count() != 0)
-                        Mud.SendMessage(actor, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Topic)) + ".");
+                        Mud.SendMessage(actor, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Short)) + ".");
                     return PerformResult.Continue;
                 })
                 .Name("List un-discussed available topics rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, ConversationTopic>("converse", "[Actor, NPC, Topic] : Handle the actor discussing the topic with the npc.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("discuss topic", "[Actor, NPC, Topic] : Handle the actor discussing the topic with the npc.");
 
-            GlobalRules.Perform<MudObject, MudObject, ConversationTopic>("converse")
+            GlobalRules.Perform<MudObject, MudObject, MudObject>("discuss topic")
                 .Do((actor, npc, topic) =>
                 {
-                    Mud.SendMessage(actor, String.Format("You discuss '{0}' with <the0>.", topic.Topic), npc);
-                    Mud.SendExternalMessage(actor, String.Format("^<the0> discusses '{0}' with <the1>.", topic.Topic), actor, npc);
-
-                    if (topic.ResponseType == ConversationTopic.ResponseTypes.Normal)
-                    {
-                        var response = topic.NormalResponse.Expand(actor as Actor, npc);
-                        Mud.SendLocaleMessage(actor, response, npc);
-                    }
-                    else if (topic.ResponseType == ConversationTopic.ResponseTypes.Silent)
-                    {
-                        topic.SilentResponse(actor as Player, npc as NPC, topic);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    foreach (var player in Mud.EnumerateObjectTree(Mud.FindLocale(actor)).Where(o => o is Player).Select(o => o as Player))
-                        Conversation.GrantKnowledgeOfTopic(player, npc as NPC, topic.ID);
-
+                    GlobalRules.ConsiderPerformRule("topic response", topic, actor, npc, topic);
                     return PerformResult.Continue;
                 })
-                .Name("Expand and discuss the topic rule.");
+                .Name("Show topic response when discussing topic rule.");
+
+            GlobalRules.Perform<MudObject, MudObject, MudObject>("topic response")
+                .Do((actor, npc, topic) =>
+                {
+                    Mud.SendMessage(actor, "There doesn't seem to be a response defined for that topic.");
+                    return PerformResult.Stop;
+                })
+                .Name("No response rule for the topic rule.");
+
         }
     }
 

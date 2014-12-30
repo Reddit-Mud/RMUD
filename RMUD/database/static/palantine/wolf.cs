@@ -4,7 +4,12 @@
 
     public override void Initialize()
     {
-        DefaultResponse = new RMUD.ConversationTopic("default", "The wolf snarls and howls, showing its large sharp teeth.");
+        Perform<RMUD.MudObject, RMUD.MudObject, RMUD.MudObject>("topic response")
+            .Do((actor, npc, topic) =>
+            {
+                RMUD.Mud.SendLocaleMessage(actor, "The wolf snarls and howls, showing its large sharp teeth.");
+                return RMUD.PerformResult.Stop;
+            });
 
         Short = "wolf";
         Long = "This is a snarling grey beast with a long snout and upright ears. It has a tail that does not wag even a little.";

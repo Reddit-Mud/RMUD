@@ -11,7 +11,7 @@ namespace RMUD
         internal String ManualName = "";
         internal String ManualPage = "";
         internal StringBuilder GeneratedManual = null;
-        internal ActionRuleBook ProceduralRules;
+        internal PerformRuleBook ProceduralRules;
 
         public void VerifyCompleteness()
         {
@@ -25,7 +25,7 @@ namespace RMUD
         {
             Mud.ManPages.Add(this);
             GeneratedManual = new StringBuilder();
-            ProceduralRules = new ActionRuleBook
+            ProceduralRules = new PerformRuleBook
             {
                 ArgumentTypes = new List<Type>(new Type[] { typeof(PossibleMatch), typeof(Actor) }),
             };
@@ -66,7 +66,7 @@ namespace RMUD
                 (match, actor) =>
                 {
                     var ruleTarget = match[Target];
-                    if (GlobalRules.ConsiderCheckRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match[a]).ToArray()) == CheckResult.Allow)
+                    if (GlobalRules.ConsiderCheckRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray()) == CheckResult.Allow)
                         return PerformResult.Continue;
                     return PerformResult.Stop;
                 }),
@@ -86,7 +86,7 @@ namespace RMUD
                 (match, actor) =>
                 {
                     var ruleTarget = match[Target];
-                    var ruleResult = GlobalRules.ConsiderValueRule<T>(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match[a]).ToArray());
+                    var ruleResult = GlobalRules.ConsiderValueRule<T>(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray());
                     if (EqualityComparer<T>.Default.Equals(ruleResult, ExpectedValue))
                         return PerformResult.Continue;
                     return PerformResult.Stop;
@@ -107,7 +107,7 @@ namespace RMUD
                 (match, actor) =>
                 {
                     var ruleTarget = match[Target];
-                    GlobalRules.ConsiderPerformRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match[a]).ToArray());
+                    GlobalRules.ConsiderPerformRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray());
                     return PerformResult.Continue;
                 }),
                 DescriptiveName = "Procedural rule to perform " + RuleName

@@ -5,59 +5,23 @@ using System.Text;
 
 namespace RMUD
 {
-    public class ConversationTopic
+    public class ConversationRules : DeclaresRules
     {
-        public enum ResponseTypes
+        public void InitializeGlobalRules()
         {
-            Normal,
-            Silent
+            GlobalRules.DeclareValueRuleBook<MudObject, MudObject, MudObject, bool>("topic available?", "[Actor, NPC, Topic -> bool] : Is the topic available for discussion with the NPC to the actor?");
+
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("topic response", "[Actor, NPC, Topic] : Display the response of the topic.");
+
+            GlobalRules.Value<MudObject, MudObject, MudObject, bool>("topic available?")
+                .Do((actor, npc, topic) => true)
+                .Name("Topics available by default rule.");
         }
 
-        public int ID;
-        public NounList KeyWords;
-        public String Topic;
-        public Func<Player, NPC, ConversationTopic, bool> AvailabilityRule;
-        public ResponseTypes ResponseType;
-        public DescriptiveText NormalResponse;
-        public Action<Player, NPC, ConversationTopic> SilentResponse;
+    }
 
-        public bool IsAvailable(Player Actor, NPC NPC)
-        {
-            if (AvailabilityRule == null) return true;
-            return AvailabilityRule(Actor, NPC, this);
-        }
+    public class ConversationTopic : MudObject
+    {
 
-        private void SetKeywords(String From)
-        {
-            var keywords = From.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            KeyWords = new NounList(keywords);
-        }
-
-        public ConversationTopic(String Topic, String Response, Func<Player, NPC, ConversationTopic, bool> AvailabilityRule = null)
-        {
-            this.ResponseType = ResponseTypes.Normal;
-            this.NormalResponse = Response;
-            this.Topic = Topic;
-            this.AvailabilityRule = AvailabilityRule;
-            SetKeywords(Topic);
-        }
-
-        public ConversationTopic(String Topic, Func<Actor, MudObject, String> LambdaResponse, Func<Player, NPC, ConversationTopic, bool> AvailabilityRule = null)
-        {
-            this.ResponseType = ResponseTypes.Normal;
-            this.NormalResponse = new DescriptiveText(LambdaResponse);
-            this.Topic = Topic;
-            this.AvailabilityRule = AvailabilityRule;
-            SetKeywords(Topic);
-        }
-
-        public ConversationTopic(String Topic, Action<Actor, NPC, ConversationTopic> SilentResponse, Func<Player, NPC, ConversationTopic, bool> AvailabilityRule = null)
-        {
-            this.ResponseType = ResponseTypes.Silent;
-            this.SilentResponse = SilentResponse;
-            this.Topic = Topic;
-            this.AvailabilityRule = AvailabilityRule;
-            SetKeywords(Topic);
-        }
     }
 }

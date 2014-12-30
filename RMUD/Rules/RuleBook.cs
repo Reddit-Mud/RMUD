@@ -91,9 +91,9 @@ namespace RMUD
         }
     }
 
-    public class ActionRuleBook : RuleBook
+    public class PerformRuleBook : RuleBook
     {
-        public ActionRuleBook()
+        public PerformRuleBook()
         {
             ResultType = typeof(PerformResult);
         }

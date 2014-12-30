@@ -86,7 +86,7 @@ namespace RMUD
             IsPersistent = false;
         }
 
-        protected void SimpleName(String Short, params String[] Synonyms)
+        public void SimpleName(String Short, params String[] Synonyms)
         {
             this.Short = Short;
             Nouns.Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));

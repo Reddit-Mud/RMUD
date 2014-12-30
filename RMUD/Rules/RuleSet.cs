@@ -23,7 +23,7 @@ namespace RMUD
                 if (GlobalRules.CheckGlobalRuleBookTypes(Name, typeof(RT), ArgumentTypes))
                 {
                     if (typeof(RT) == typeof(PerformResult))
-                        r = new ActionRuleBook { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
+                        r = new PerformRuleBook { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
                     else if (typeof(RT) == typeof(CheckResult))
                         r = new CheckRuleBook { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
                     else
@@ -60,8 +60,8 @@ namespace RMUD
             var book = FindRuleBook(Name);
             if (book != null)
             {
-                if (!book.CheckArgumentTypes(typeof(RT), Args.Select(o => o.GetType()).ToArray()))
-                    throw new InvalidOperationException();
+                //if (!book.CheckArgumentTypes(typeof(RT), Args.Select(o => o.GetType()).ToArray()))
+                //    throw new InvalidOperationException();
                 var valueBook = book as ValueRuleBook<RT>;
                 if (valueBook == null) throw new InvalidOperationException();
                 return valueBook.Consider(out ValueReturned, Args);
@@ -69,14 +69,14 @@ namespace RMUD
             return default(RT);
         }
 
-        public PerformResult ConsiderActionRule(String Name, params Object[] Args)
+        public PerformResult ConsiderPerformRule(String Name, params Object[] Args)
         {
             var book = FindRuleBook(Name);
             if (book != null)
             {
-                if (!book.CheckArgumentTypes(typeof(PerformResult), Args.Select(o => o.GetType()).ToArray()))
-                    throw new InvalidOperationException();
-                var actionBook = book as ActionRuleBook;
+                //if (!book.CheckArgumentTypes(typeof(PerformResult), Args.Select(o => o.GetType()).ToArray()))
+                //    throw new InvalidOperationException();
+                var actionBook = book as PerformRuleBook;
                 if (actionBook == null) throw new InvalidOperationException();
                 return actionBook.Consider(Args);
             }
@@ -88,8 +88,8 @@ namespace RMUD
             var book = FindRuleBook(Name);
             if (book != null)
             {
-                if (!book.CheckArgumentTypes(typeof(CheckResult), Args.Select(o => o.GetType()).ToArray()))
-                    throw new InvalidOperationException();
+                //if (!book.CheckArgumentTypes(typeof(CheckResult), Args.Select(o => o.GetType()).ToArray()))
+                //    throw new InvalidOperationException();
                 var actionBook = book as CheckRuleBook;
                 if (actionBook == null) throw new InvalidOperationException();
                 return actionBook.Consider(Args);

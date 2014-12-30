@@ -7,29 +7,24 @@ namespace RMUD
 {
 	public class NPC : Actor
 	{
-        public List<ConversationTopic> ConversationTopics = new List<ConversationTopic>();
-        public ConversationTopic DefaultResponse;
-
-        public int AddConversationTopic(ConversationTopic Topic)
+        public List<MudObject> ConversationTopics = new List<MudObject>();
+        
+        public MudObject Response(String Topic, String StringResponse)
         {
-            Topic.ID = ConversationTopics.Count;
-            ConversationTopics.Add(Topic);
-            return Topic.ID;
+            return Response(Topic, (actor, npc, topic) =>
+                {
+                    Mud.SendMessage(actor, StringResponse, npc);
+                    return PerformResult.Stop;
+                });
         }
 
-        public int AddConversationTopic(String Topic, String Response, Func<Player, NPC, ConversationTopic, bool> AvailabilityRule = null)
+        public MudObject Response(String Topic, Func<MudObject, MudObject, MudObject, PerformResult> FuncResponse)
         {
-            return AddConversationTopic(new ConversationTopic(Topic, Response, AvailabilityRule));
-        }
-
-        public int AddConversationTopic(String Topic, Func<Actor, MudObject, String> LambdaResponse, Func<Player, NPC, ConversationTopic, bool> AvailabilityRule = null)
-        {
-            return AddConversationTopic(new ConversationTopic(Topic, LambdaResponse, AvailabilityRule));
-        }
-
-        public int AddConversationTopic(String Topic, Action<Actor, NPC, ConversationTopic> SilentResponse, Func<Player, NPC, ConversationTopic, bool> AvailabilityRule = null)
-        {
-            return AddConversationTopic(new ConversationTopic(Topic, SilentResponse, AvailabilityRule));
+            var response = new ConversationTopic();
+            ConversationTopics.Add(response);
+            response.SimpleName(Topic);
+            response.Perform<MudObject, MudObject, MudObject>("topic response").Do(FuncResponse);
+            return response;
         }
 
         public void Wear(MudObject Item)

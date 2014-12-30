@@ -5,57 +5,27 @@ using System.Text;
 
 namespace RMUD
 {
-    public partial class CommandFactory
+    public class TopicSource : IObjectSource
     {
-        public static CommandTokenMatcher Topic(String CaptureName)
-        {
-            return new TopicMatcher(CaptureName);
-        }
-    }
+        public String LocutorArgument;
 
-    public class TopicMatcher : CommandTokenMatcher
-    {
-        public String CaptureName;
-
-        public TopicMatcher(String CaptureName)
+        public TopicSource() { }
+        public TopicSource(String LocutorArgument)
         {
-            this.CaptureName = CaptureName;
+            this.LocutorArgument = LocutorArgument;
         }
 
-        public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
+        public List<MudObject> GetObjects(PossibleMatch State, MatchContext Context)
         {
-            var r = new List<PossibleMatch>();
-            if (State.Next == null) return r;
-            if (!(Context.ExecutingActor is Player)) return r;
+            NPC source = null;
+            if (!String.IsNullOrEmpty(LocutorArgument))
+                source = State[LocutorArgument] as NPC;
+            else if (Context.ExecutingActor is Player && (Context.ExecutingActor as Player).CurrentInterlocutor != null)
+                source = (Context.ExecutingActor as Player).CurrentInterlocutor;
 
-            NPC locutor = null;
-            if (State.ContainsKey("NEW-LOCUTOR")) locutor = State["NEW-LOCUTOR"] as NPC;
-            else locutor = (Context.ExecutingActor as Player).CurrentInterlocutor;
-            if (locutor == null) return r;
-
-            foreach (var topic in locutor.ConversationTopics)
-            {
-                if (!topic.IsAvailable(Context.ExecutingActor as Player, locutor)) continue;
-
-                var possibleMatch = State.Clone();
-                bool matched = false;
-                while (possibleMatch.Next != null && topic.KeyWords.Match(possibleMatch.Next.Value.ToUpper(), Context.ExecutingActor))
-                {
-                    matched = true;
-                    possibleMatch.Next = possibleMatch.Next.Next;
-                }
-
-                if (matched)
-                {
-                    possibleMatch.Upsert(CaptureName, topic);
-                    r.Add(possibleMatch);
-                }
-            }
-
-            return r;
+            if (source != null)
+                return source.ConversationTopics;
+            return new List<MudObject>();
         }
-
-        public String FindFirstKeyWord() { return null; }
-        public String Emit() { return "[TOPIC]"; }
     }
 }
