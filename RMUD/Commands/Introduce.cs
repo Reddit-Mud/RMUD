@@ -36,8 +36,8 @@ namespace RMUD.Commands
                             return MatchPreference.Unlikely;
                         }))))
                 .Manual("Introduces someone you know to everyone present. Now they will know them, too.")
-                .Check("can introduce?", "OBJECT", "ACTOR", "OBJECT")
-                .Perform("introduce", "OBJECT", "ACTOR", "OBJECT");
+                .Check("can introduce?", "ACTOR", "OBJECT")
+                .Perform("introduce", "ACTOR", "OBJECT");
         }
 
         public void InitializeGlobalRules()

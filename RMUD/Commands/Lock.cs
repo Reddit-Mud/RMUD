@@ -20,8 +20,8 @@ namespace RMUD.Commands
                             MustMatch("I couldn't figure out what you're trying to lock that with.",
                                 Object("KEY", InScope, PreferHeld))))))
                 .Manual("Lock the subject with a key.")
-                .Check("can lock?", "SUBJECT", "ACTOR", "SUBJECT", "KEY")
-                .Perform("locked", "SUBJECT", "ACTOR", "SUBJECT", "KEY");
+                .Check("can lock?", "ACTOR", "SUBJECT", "KEY")
+                .Perform("locked", "ACTOR", "SUBJECT", "KEY");
         }
 
         public void InitializeGlobalRules()
@@ -41,7 +41,7 @@ namespace RMUD.Commands
                 .Name("Key must be held rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can lock?")
-                .When((actor, item, key) => !GlobalRules.ConsiderValueRule<bool>("lockable?", item, item))
+                .When((actor, item, key) => !GlobalRules.ConsiderValueRule<bool>("lockable?", item))
                 .Do((a, b, c) =>
                 {
                     Mud.SendMessage(a, "I don't think the concept of 'locked' applies to that.");

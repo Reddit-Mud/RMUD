@@ -37,7 +37,7 @@ namespace RMUD.Commands
                         return r;
                     }, "'[TEXT => SPEECH]")))
                 .Manual("Speak within your locale.")
-                .Perform("speak", "ACTOR", "ACTOR", "SPEECH");
+                .Perform("speak", "ACTOR", "SPEECH");
 
 
             Parser.AddCommand(
@@ -47,7 +47,7 @@ namespace RMUD.Commands
                         KeyWord("\"")),
                     MustMatch("You exist. Actually this is an error message, but that's what you just told me to say.", Rest("SPEECH"))))
                 .Manual("Perform an action, visible within your locale.")
-                .Perform("emote", "ACTOR", "ACTOR", "SPEECH");
+                .Perform("emote", "ACTOR", "SPEECH");
 		}
 
         public void InitializeGlobalRules()

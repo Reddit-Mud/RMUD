@@ -16,8 +16,8 @@ namespace RMUD.Commands
                         MustMatch("You don't seem to have that.",
                             Object("SUBJECT", InScope, PreferHeld)))))
                 .Manual("Drop a held item. This can also be used to remove and drop a worn item.")
-                .Check("can drop?", "SUBJECT", "ACTOR", "SUBJECT")
-                .Perform("dropped", "SUBJECT", "ACTOR", "SUBJECT");
+                .Check("can drop?", "ACTOR", "SUBJECT")
+                .Perform("dropped", "ACTOR", "SUBJECT");
 		}
 
         public void InitializeGlobalRules()
@@ -40,9 +40,9 @@ namespace RMUD.Commands
                 .When((actor, item) => actor is Actor && (actor as Actor).Contains(item, RelativeLocations.Worn))
                 .Do((actor, item) =>
                 {
-                    if (GlobalRules.ConsiderCheckRule("can remove?", item, actor, item) == CheckResult.Allow)
+                    if (GlobalRules.ConsiderCheckRule("can remove?", actor, item) == CheckResult.Allow)
                     {
-                        GlobalRules.ConsiderPerformRule("remove", item, actor, item);
+                        GlobalRules.ConsiderPerformRule("remove", actor, item);
                         return CheckResult.Continue;
                     }
                     return CheckResult.Disallow;

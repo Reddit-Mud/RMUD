@@ -56,12 +56,12 @@ namespace RMUD
         
         public String Indefinite(MudObject RequestedBy) 
         {
-            return GlobalRules.ConsiderValueRule<String>("printed name", this, RequestedBy, this, Article);
+            return GlobalRules.ConsiderValueRule<String>("printed name", RequestedBy, this, Article);
         }
 
         public String Definite(MudObject RequestedBy)
         {
-            return GlobalRules.ConsiderValueRule<String>("printed name", this, RequestedBy, this, "the");
+            return GlobalRules.ConsiderValueRule<String>("printed name", RequestedBy, this, "the");
         }
 
 		public MudObject()

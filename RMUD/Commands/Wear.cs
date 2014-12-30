@@ -16,8 +16,8 @@ namespace RMUD.Commands
                         MustMatch("I couldn't figure out what you're trying to wear.",
                             Object("OBJECT", InScope, PreferHeld)))))
                 .Manual("Cover your disgusting flesh.")
-                .Check("can wear?", "OBJECT", "ACTOR", "OBJECT")
-                .Perform("worn", "OBJECT", "ACTOR", "OBJECT");
+                .Check("can wear?", "ACTOR", "OBJECT")
+                .Perform("worn", "ACTOR", "OBJECT");
         }
 
         public void InitializeGlobalRules()
@@ -45,7 +45,7 @@ namespace RMUD.Commands
                 });
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((actor, item) => GlobalRules.ConsiderValueRule<bool>("wearable?", item, item) == false)
+                .When((actor, item) => GlobalRules.ConsiderValueRule<bool>("wearable?", item) == false)
                 .Do((actor, item) =>
                 {
                     Mud.SendMessage(actor, "That isn't something that can be worn.");

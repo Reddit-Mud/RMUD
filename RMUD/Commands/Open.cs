@@ -16,12 +16,12 @@ namespace RMUD.Commands
                         MustMatch("I don't see that here.",
                             Object("SUBJECT", InScope, (actor, thing) =>
                             {
-                                if (GlobalRules.ConsiderCheckRuleSilently("can open?", thing, actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
+                                if (GlobalRules.ConsiderCheckRuleSilently("can open?", actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
                                 return MatchPreference.Unlikely;
                             })))))
                 .Manual("Opens an openable thing.")
-                .Check("can open?", "SUBJECT", "ACTOR", "SUBJECT")
-                .Perform("opened", "SUBJECT", "ACTOR", "SUBJECT");
+                .Check("can open?", "ACTOR", "SUBJECT")
+                .Perform("opened", "ACTOR", "SUBJECT");
         }
 
         public void InitializeGlobalRules()
@@ -35,7 +35,7 @@ namespace RMUD.Commands
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("open?", "[Item -> bool] : Is the item open?");
 
             GlobalRules.Check<MudObject, MudObject>("can open?")
-                .When((actor, item) => !GlobalRules.ConsiderValueRule<bool>("openable?", item, item))
+                .When((actor, item) => !GlobalRules.ConsiderValueRule<bool>("openable?", item))
                 .Do((a, b) =>
                 {
                     Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");

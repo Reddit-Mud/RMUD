@@ -31,7 +31,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     var player = actor as Player;
-                    if (!GlobalRules.ConsiderValueRule<bool>("quest available?", player.OfferedQuest, player, player.OfferedQuest))
+                    if (!GlobalRules.ConsiderValueRule<bool>("quest available?", player, player.OfferedQuest))
                     {
                         Mud.SendMessage(actor, "The quest is no longer available.");
                         player.OfferedQuest = null;
@@ -43,13 +43,13 @@ namespace RMUD.Commands
                 {
                     var player = actor as Player;
                     if (player.ActiveQuest != null)
-                        GlobalRules.ConsiderPerformRule("quest abandoned", player.ActiveQuest, player, player.ActiveQuest);
+                        GlobalRules.ConsiderPerformRule("quest abandoned", player, player.ActiveQuest);
 
                     player.ActiveQuest = player.OfferedQuest;
                     player.OfferedQuest = null;
                     return PerformResult.Continue;
                 }, "the any active quest must be abandoned rule.")
-                .Perform("quest accepted", "QUEST", "ACTOR", "QUEST");
+                .Perform("quest accepted", "ACTOR", "QUEST");
         }
     }
 }

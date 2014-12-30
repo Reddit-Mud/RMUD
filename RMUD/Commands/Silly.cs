@@ -20,8 +20,8 @@ namespace RMUD.Commands
                                 else return MatchPreference.Unlikely;
                             }))))
                  .Manual("Applies the silly status effect to the target of your choice. Being silly will make it safe for your victim to dance. Sillification is meant as a demonstration of the concepts involved with rule books and status effects, and not as an actual component of the game world.")
-                 .Check("can silly?", "OBJECT", "ACTOR", "OBJECT")
-                 .Perform("silly", "OBJECT", "ACTOR", "OBJECT");
+                 .Check("can silly?", "ACTOR", "OBJECT")
+                 .Perform("silly", "ACTOR", "OBJECT");
 
             Parser.AddCommand(
                 KeyWord("DANCE"))
@@ -35,8 +35,8 @@ A place where they will never find
 And we can act like we come from out of this world
 Leave the real one far behind
 And we can dance")
-                .Check("can dance?", "ACTOR", "ACTOR")
-                .Perform("dance", "ACTOR", "ACTOR");
+                .Check("can dance?", "ACTOR")
+                .Perform("dance", "ACTOR");
         }
 
         public void InitializeGlobalRules()
@@ -60,7 +60,7 @@ And we can dance")
                 .Name("Silly target must be visible.");
 
             GlobalRules.Check<MudObject, MudObject>("can silly?")
-                .When((actor, target) => GlobalRules.ConsiderValueRule<bool>("silly?", target, target))
+                .When((actor, target) => GlobalRules.ConsiderValueRule<bool>("silly?", target))
                 .Do((actor, target) =>
                 {
                     Mud.SendMessage(actor, "^<the0> is already silly.", target);
@@ -120,7 +120,7 @@ And we can dance")
             GlobalRules.DeclareCheckRuleBook<MudObject>("can dance?", "[Actor] : Can the actor dance?");
 
             GlobalRules.Check<MudObject>("can dance?")
-                .When(actor => !GlobalRules.ConsiderValueRule<bool>("silly?", actor, actor))
+                .When(actor => !GlobalRules.ConsiderValueRule<bool>("silly?", actor))
                 .Do(actor =>
                 {
                     Mud.SendMessage(actor, "You don't feel silly enough for that.");

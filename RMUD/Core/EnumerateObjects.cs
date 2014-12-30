@@ -47,7 +47,7 @@ namespace RMUD
                 if (C is Container)
                     foreach (var list in (C as Container).Lists)
                     {
-                        if (list.Key == RelativeLocations.In && GlobalRules.ConsiderValueRule<bool>("openable?", C, C) && !GlobalRules.ConsiderValueRule<bool>("open?", C, C)) continue;
+                        if (list.Key == RelativeLocations.In && GlobalRules.ConsiderValueRule<bool>("openable?", C) && !GlobalRules.ConsiderValueRule<bool>("open?", C)) continue;
                         foreach (var item in list.Value)
                             foreach (var sub in _enumerateVisibleTree(item))
                                 yield return sub;

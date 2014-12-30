@@ -18,13 +18,13 @@ namespace RMUD.Commands
                         MustMatch("I don't see that here.",
                             Object("SUBJECT", InScope, (actor, item) =>
                             {
-                                if (GlobalRules.ConsiderCheckRuleSilently("can take?", item, actor, item) != CheckResult.Allow)
+                                if (GlobalRules.ConsiderCheckRuleSilently("can take?", actor, item) != CheckResult.Allow)
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             })))))
                 .Manual("Takes an item and adds it to your inventory.")
-                .Check("can take?", "SUBJECT", "ACTOR", "SUBJECT")
-                .Perform("taken", "SUBJECT", "ACTOR", "SUBJECT")
+                .Check("can take?", "ACTOR", "SUBJECT")
+                .Perform("taken", "ACTOR", "SUBJECT")
                 .MarkLocaleForUpdate();
 		}
 

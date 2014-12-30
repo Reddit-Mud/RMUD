@@ -53,49 +53,51 @@ namespace RMUD
             Rules.DeleteRule(RuleBookName, RuleID);
         }
 
-        public static PerformResult ConsiderPerformRule(String Name, MudObject Object, params Object[] Arguments)
+        public static PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
         {
-            var r = PerformResult.Continue;
-            if (Object != null && Object.Rules != null) r = Object.Rules.ConsiderPerformRule(Name, Arguments);
-            if (r == PerformResult.Continue)
-            {
-                if (Rules == null) InitializeGlobalRuleBooks();
-                return Rules.ConsiderPerformRule(Name, Arguments);
-            }
-            return r;
+            foreach (var arg in Arguments)
+                if (arg is MudObject && (arg as MudObject).Rules != null)
+                    if ((arg as MudObject).Rules.ConsiderPerformRule(Name, Arguments) == PerformResult.Stop)
+                        return PerformResult.Stop;
+
+            if (Rules == null) InitializeGlobalRuleBooks();
+            return Rules.ConsiderPerformRule(Name, Arguments);
         }
 
-        public static CheckResult ConsiderCheckRule(String Name, MudObject Object, params Object[] Arguments)
+        public static CheckResult ConsiderCheckRule(String Name, params Object[] Arguments)
         {
-            var r = CheckResult.Continue;
-            if (Object != null && Object.Rules != null) r = Object.Rules.ConsiderCheckRule(Name, Arguments);
-            if (r == CheckResult.Continue)
-            {
-                if (Rules == null) InitializeGlobalRuleBooks();
-                return Rules.ConsiderCheckRule(Name, Arguments);
-            }
-            return r;
+            foreach (var arg in Arguments)
+                if (arg is MudObject && (arg as MudObject).Rules != null)
+                {
+                    var r = (arg as MudObject).Rules.ConsiderCheckRule(Name, Arguments);
+                    if (r != CheckResult.Continue) return r;
+                }
+
+            if (Rules == null) InitializeGlobalRuleBooks();
+            return Rules.ConsiderCheckRule(Name, Arguments);
         }
 
-        public static RT ConsiderValueRule<RT>(String Name, MudObject Object, params Object[] Arguments)
+        public static RT ConsiderValueRule<RT>(String Name, params Object[] Arguments)
         {
-            RT r = default(RT);
             bool valueReturned = false;
-            if (Object != null && Object.Rules != null) r = Object.Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
-            if (!valueReturned)
-            {
-                if (Rules == null) InitializeGlobalRuleBooks();
-                return Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
-            }
-            return r;
+
+            foreach (var arg in Arguments)
+                if (arg is MudObject && (arg as MudObject).Rules != null)
+                {
+                    var r = (arg as MudObject).Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
+                    if (valueReturned) return r;
+                }
+
+            if (Rules == null) InitializeGlobalRuleBooks();
+            return Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
         }
 
-        public static CheckResult ConsiderCheckRuleSilently(String Name, MudObject Object, params Object[] Arguments)
+        public static CheckResult ConsiderCheckRuleSilently(String Name, params Object[] Arguments)
         {
             try
             {
                 Mud.SilentFlag = true;
-                var r = ConsiderCheckRule(Name, Object, Arguments);
+                var r = ConsiderCheckRule(Name, Arguments);
                 Mud.SilentFlag = false;
                 return r;
             }

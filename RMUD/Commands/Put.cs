@@ -37,8 +37,8 @@ namespace RMUD.Commands
                     }
                     return PerformResult.Continue;
                 }, "Supply default for optional relloc procedural rule.")
-                .Check("can-put", "OBJECT", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
-                .Perform("on-put", "OBJECT", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
+                .Check("can-put", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
+                .Perform("on-put", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
                 .MarkLocaleForUpdate();
 
         }
@@ -68,7 +68,7 @@ namespace RMUD.Commands
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
                 .Do((actor, item, container, relloc) =>
                 {
-                    if (GlobalRules.ConsiderCheckRule("can-drop", item, actor, item) != CheckResult.Allow)
+                    if (GlobalRules.ConsiderCheckRule("can-drop", actor, item) != CheckResult.Allow)
                         return CheckResult.Disallow;
                     return CheckResult.Continue;
                 })
@@ -100,7 +100,7 @@ namespace RMUD.Commands
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
                 .Do((actor, item, container, relloc) =>
                 {
-                    if (relloc == RelativeLocations.In && !GlobalRules.ConsiderValueRule<bool>("open?", container, container))
+                    if (relloc == RelativeLocations.In && !GlobalRules.ConsiderValueRule<bool>("open?", container))
                     {
                         Mud.SendMessage(actor, "It seems to be closed.");
                         return CheckResult.Disallow;

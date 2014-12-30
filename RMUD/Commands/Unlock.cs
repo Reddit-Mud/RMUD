@@ -20,8 +20,8 @@ namespace RMUD.Commands
                         MustMatch("I couldn't figure out what you're trying to unlock that with.",
                             Object("KEY", InScope, PreferHeld)))))
                 .Manual("Use the KEY to unlock the ITEM.")
-                .Check("can lock?", "ITEM", "ACTOR", "ITEM", "KEY")
-                .Perform("unlocked", "ITEM", "ACTOR", "ITEM", "KEY");
+                .Check("can lock?", "ACTOR", "ITEM", "KEY")
+                .Perform("unlocked", "ACTOR", "ITEM", "KEY");
         }
 
         public void InitializeGlobalRules()

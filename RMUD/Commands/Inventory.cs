@@ -15,7 +15,7 @@ namespace RMUD.Commands
                     KeyWord("INV"),
                     KeyWord("I")))
                 .Manual("Displays what you are wearing and carrying.")
-                .Perform("inventory", "ACTOR", "ACTOR");
+                .Perform("inventory", "ACTOR");
         }
 
         public void InitializeGlobalRules()

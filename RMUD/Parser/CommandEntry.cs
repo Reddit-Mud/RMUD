@@ -56,17 +56,16 @@ namespace RMUD
             return this;
         }
 
-        public CommandEntry Check(String RuleName, String Target, params String[] RuleArguments)
+        public CommandEntry Check(String RuleName, params String[] RuleArguments)
         {
-            GeneratedManual.AppendLine("Consider the check rulebook '" + RuleName + "' on " + Target + " with arguments " + String.Join(", ", RuleArguments));
+            GeneratedManual.AppendLine("Consider the check rulebook '" + RuleName + " with arguments " + String.Join(", ", RuleArguments));
 
             var rule = new Rule<PerformResult>
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    var ruleTarget = match[Target];
-                    if (GlobalRules.ConsiderCheckRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray()) == CheckResult.Allow)
+                    if (GlobalRules.ConsiderCheckRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray()) == CheckResult.Allow)
                         return PerformResult.Continue;
                     return PerformResult.Stop;
                 }),
@@ -76,38 +75,16 @@ namespace RMUD
             return this;
         }
 
-        public CommandEntry Value<T>(String RuleName, T ExpectedValue, String Target, params String[] RuleArguments)
+        public CommandEntry Perform(String RuleName, params String[] RuleArguments)
         {
-            GeneratedManual.AppendLine("Assert that the value rulebook '" + RuleName + "' on " + Target + " with arguments " + String.Join(", ", RuleArguments) + " results in " + ExpectedValue.ToString());
+            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + " with arguments " + String.Join(", ", RuleArguments));
 
             var rule = new Rule<PerformResult>
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    var ruleTarget = match[Target];
-                    var ruleResult = GlobalRules.ConsiderValueRule<T>(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray());
-                    if (EqualityComparer<T>.Default.Equals(ruleResult, ExpectedValue))
-                        return PerformResult.Continue;
-                    return PerformResult.Stop;
-                }),
-                DescriptiveName = "Procedural rule to assert on " + RuleName
-            };
-            ProceduralRules.AddRule(rule);
-            return this;
-        }
-
-        public CommandEntry Perform(String RuleName, String Target, params String[] RuleArguments)
-        {
-            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + "' on " + Target + " with arguments " + String.Join(", ", RuleArguments));
-
-            var rule = new Rule<PerformResult>
-            {
-                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
-                (match, actor) =>
-                {
-                    var ruleTarget = match[Target];
-                    GlobalRules.ConsiderPerformRule(RuleName, ruleTarget as MudObject, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray());
+                    GlobalRules.ConsiderPerformRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray());
                     return PerformResult.Continue;
                 }),
                 DescriptiveName = "Procedural rule to perform " + RuleName

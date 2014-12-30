@@ -21,15 +21,15 @@ namespace RMUD.Commands
                             else return MatchPreference.VeryUnlikely;
                         }))))
                 .Manual("Initiates a conversation with the npc.")
-                .Check("can converse?", "LOCUTOR", "ACTOR", "LOCUTOR")
-                .Perform("greet", "LOCUTOR", "ACTOR", "LOCUTOR")
+                .Check("can converse?", "ACTOR", "LOCUTOR")
+                .Perform("greet", "ACTOR", "LOCUTOR")
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor is Player)
                         (actor as Player).CurrentInterlocutor = match["LOCUTOR"] as NPC;
                     return PerformResult.Continue;
                 }, "Set current interlocutor rule.")
-                .Perform("list topics", "ACTOR", "ACTOR");
+                .Perform("list topics", "ACTOR");
 
             Parser.AddCommand(
                 Sequence(
@@ -57,10 +57,10 @@ namespace RMUD.Commands
                     if (match.ContainsKey("NEW-LOCUTOR"))
                     {
                         var newLocutor = match["NEW-LOCUTOR"] as MudObject;
-                        if (GlobalRules.ConsiderCheckRule("can converse?", newLocutor, actor, newLocutor) == CheckResult.Disallow) return PerformResult.Stop;
+                        if (GlobalRules.ConsiderCheckRule("can converse?", actor, newLocutor) == CheckResult.Disallow) return PerformResult.Stop;
                         if (!System.Object.ReferenceEquals(newLocutor, (actor as Player).CurrentInterlocutor))
                         {
-                            GlobalRules.ConsiderPerformRule("greet", newLocutor, actor, newLocutor);
+                            GlobalRules.ConsiderPerformRule("greet", actor, newLocutor);
                             (actor as Player).CurrentInterlocutor = newLocutor as NPC;
                         }
                     }
@@ -76,14 +76,14 @@ namespace RMUD.Commands
                     }
                     return PerformResult.Continue;
                 }, "Must be talking to someone rule.")
-                .Check("can converse?", "LOCUTOR", "ACTOR", "LOCUTOR")
-                .Perform("discuss topic", "LOCUTOR", "ACTOR", "LOCUTOR", "TOPIC")
-                .Perform("list topics", "ACTOR", "ACTOR");
+                .Check("can converse?", "ACTOR", "LOCUTOR")
+                .Perform("discuss topic", "ACTOR", "LOCUTOR", "TOPIC")
+                .Perform("list topics", "ACTOR");
 
             Parser.AddCommand(
                 KeyWord("TOPICS"))
                 .Manual("Lists topics currently available.")
-                .Perform("list topics", "ACTOR", "ACTOR");
+                .Perform("list topics", "ACTOR");
         }
 
         public void InitializeGlobalRules()
@@ -126,7 +126,7 @@ namespace RMUD.Commands
                 {
                     if (!(actor is Player)) return PerformResult.Stop;
                     var npc = (actor as Player).CurrentInterlocutor;
-                    var suggestedTopics = npc.ConversationTopics.Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", topic, actor, npc, topic));
+                    var suggestedTopics = npc.ConversationTopics.Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", actor, npc, topic));
                     if (suggestedTopics.Count() != 0)
                         Mud.SendMessage(actor, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Short)) + ".");
                     return PerformResult.Continue;
@@ -138,7 +138,7 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject, MudObject>("discuss topic")
                 .Do((actor, npc, topic) =>
                 {
-                    GlobalRules.ConsiderPerformRule("topic response", topic, actor, npc, topic);
+                    GlobalRules.ConsiderPerformRule("topic response", actor, npc, topic);
                     return PerformResult.Continue;
                 })
                 .Name("Show topic response when discussing topic rule.");

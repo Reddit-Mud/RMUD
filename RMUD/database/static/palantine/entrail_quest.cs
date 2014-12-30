@@ -11,7 +11,7 @@
         Value<RMUD.MudObject, RMUD.MudObject, bool>("quest complete?").Do((actor, quest) =>
         {
             var wolf = RMUD.Mud.GetObject("palantine/wolf");
-            return RMUD.GlobalRules.ConsiderValueRule<bool>("entrail-quest-is-fed", wolf, wolf);
+            return RMUD.GlobalRules.ConsiderValueRule<bool>("entrail-quest-is-fed", wolf);
         });
 
         Value<RMUD.MudObject, RMUD.MudObject, bool>("quest failed?").Do((actor, quest) => !RMUD.Mud.ObjectContainsObject(actor, RMUD.Mud.GetObject("palantine/entrails")));

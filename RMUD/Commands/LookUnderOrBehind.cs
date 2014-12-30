@@ -17,8 +17,8 @@ namespace RMUD.Commands
                     RelativeLocation("RELLOC"),
                     Object("OBJECT", InScope)))
                 .Manual("Lists object that are in, on, under, or behind the object specified.")
-                .Check("can look relloc?", "OBJECT", "ACTOR", "OBJECT", "RELLOC")
-                .Perform("look relloc", "OBJECT", "ACTOR", "OBJECT", "RELLOC");
+                .Check("can look relloc?", "ACTOR", "OBJECT", "RELLOC")
+                .Perform("look relloc", "ACTOR", "OBJECT", "RELLOC");
         }
 
         public void InitializeGlobalRules()
@@ -39,7 +39,7 @@ namespace RMUD.Commands
                 .Name("Container must support relloc rule.");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
-                .When((actor, item, relloc) => (relloc == RelativeLocations.In) && !GlobalRules.ConsiderValueRule<bool>("open?", item, item))
+                .When((actor, item, relloc) => (relloc == RelativeLocations.In) && !GlobalRules.ConsiderValueRule<bool>("open?", item))
                 .Do((actor, item, relloc) =>
                 {
                         Mud.SendMessage(actor, "^<the0> is closed.", item);

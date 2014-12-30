@@ -24,8 +24,8 @@ namespace RMUD.Commands
                     match.Upsert("LINK", link);
                     return PerformResult.Continue;
                 }, "lookup link rule")
-                .Check("can go?", "LINK", "ACTOR", "LINK")
-                .Perform("go", "LINK", "ACTOR", "LINK")
+                .Check("can go?", "ACTOR", "LINK")
+                .Perform("go", "ACTOR", "LINK")
                 .ProceduralRule((match, actor) =>
                 {
                     Mud.MarkLocaleForUpdate(actor);
@@ -48,7 +48,7 @@ namespace RMUD.Commands
                 .Name("No link found rule.");
 
             GlobalRules.Check<MudObject, Link>("can go?")
-                .When((actor, link) => (link.Portal != null) && !GlobalRules.ConsiderValueRule<bool>("open?", link.Portal, link.Portal))
+                .When((actor, link) => (link.Portal != null) && !GlobalRules.ConsiderValueRule<bool>("open?", link.Portal))
                 .Do((actor, link) =>
                 {
                     Mud.SendMessage(actor, "The door is closed.");

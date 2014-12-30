@@ -16,8 +16,8 @@ namespace RMUD.Commands
                         MustMatch("I couldn't figure out what you're trying to remove.",
                             Object("OBJECT", InScope, PreferWorn)))))
                 .Manual("Expose your amazingly supple flesh.")
-                .Check("can remove?", "OBJECT", "ACTOR", "OBJECT")
-                .Perform("removed", "OBJECT", "ACTOR", "OBJECT");
+                .Check("can remove?", "ACTOR", "OBJECT")
+                .Perform("removed", "ACTOR", "OBJECT");
         }
 
         public void InitializeGlobalRules()

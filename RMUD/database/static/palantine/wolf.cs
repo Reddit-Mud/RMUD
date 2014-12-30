@@ -16,7 +16,7 @@
 
         Nouns.Add("wolf");
 
-        Perform<RMUD.MudObject>("handle-entrail-drop").Do(entrails =>
+        Perform<RMUD.MudObject, RMUD.MudObject>("handle-entrail-drop").Do((wolf, entrails) =>
             {
                 RMUD.Mud.SendLocaleMessage(this, "The wolf snatches up the entrails.");
                 IsFed = true;

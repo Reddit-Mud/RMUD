@@ -18,8 +18,8 @@ namespace RMUD.Commands
                             KeyWord("AT"))),
                     Object("OBJECT", InScope)))
                 .Manual("Take a close look at an object.")
-                .Check("can examine?", "OBJECT", "ACTOR", "OBJECT")
-                .Perform("describe", "OBJECT", "ACTOR", "OBJECT");
+                .Check("can examine?", "ACTOR", "OBJECT")
+                .Perform("describe", "ACTOR", "OBJECT");
         }
 
         public void InitializeGlobalRules()
@@ -47,10 +47,10 @@ namespace RMUD.Commands
                 .Name("Basic description rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => GlobalRules.ConsiderValueRule<bool>("openable", item, item))
+                .When((viewer, item) => GlobalRules.ConsiderValueRule<bool>("openable", item))
                 .Do((viewer, item) =>
                 {
-                    if (GlobalRules.ConsiderValueRule<bool>("is-open", item, item))
+                    if (GlobalRules.ConsiderValueRule<bool>("is-open", item))
                         Mud.SendMessage(viewer, "^<the0> is open.", item);
                     else
                         Mud.SendMessage(viewer, "^<the0> is closed.", item);
@@ -76,7 +76,7 @@ namespace RMUD.Commands
                 .When((viewer, item) => 
                     {
                         if (!(item is Container)) return false;
-                        if (!GlobalRules.ConsiderValueRule<bool>("open?", item, item)) return false;
+                        if (!GlobalRules.ConsiderValueRule<bool>("open?", item)) return false;
                         if ((item as Container).EnumerateObjects(RelativeLocations.In).Count() == 0) return false;
                         return true;
                     })

@@ -38,7 +38,7 @@ namespace RMUD
                 .Last
                 .Do((actor, quest) =>
                 {
-                    return GlobalRules.ConsiderPerformRule("quest failed", quest, actor, quest);
+                    return GlobalRules.ConsiderPerformRule("quest failed", actor, quest);
                 })
                 .Name("Abandoning a quest is failure rule.");
 
@@ -67,7 +67,7 @@ namespace RMUD
     {
         public void ResetObject(MudObject Thing)
         {
-            GlobalRules.ConsiderPerformRule("quest reset", Thing, this, Thing);
+            GlobalRules.ConsiderPerformRule("quest reset", this, Thing);
         }
     }
 }

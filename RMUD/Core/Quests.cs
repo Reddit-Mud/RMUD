@@ -16,15 +16,15 @@ namespace RMUD
             {
                 var quest = player.ActiveQuest;
 
-                if (GlobalRules.ConsiderValueRule<bool>("quest complete?", quest, player, quest))
+                if (GlobalRules.ConsiderValueRule<bool>("quest complete?", player, quest))
                 {
                     player.ActiveQuest = null;
-                    GlobalRules.ConsiderPerformRule("quest completed", quest, player, quest);
+                    GlobalRules.ConsiderPerformRule("quest completed", player, quest);
                 }
-                else if (GlobalRules.ConsiderValueRule<bool>("quest failed?", quest, player, quest))
+                else if (GlobalRules.ConsiderValueRule<bool>("quest failed?", player, quest))
                 {
                     player.ActiveQuest = null;
-                    GlobalRules.ConsiderPerformRule("quest failed", quest, player, quest);
+                    GlobalRules.ConsiderPerformRule("quest failed", player, quest);
                 }
             }
         }

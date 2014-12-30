@@ -29,7 +29,7 @@ namespace RMUD
                 TimeOfDay += Mud.SettingsObject.ClockAdvanceRate;
 
                 TimeOfLastHeartbeat = now;
-                GlobalRules.ConsiderPerformRule("heartbeat", null);
+                GlobalRules.ConsiderPerformRule("heartbeat");
 
                 Mud.SendPendingMessages();
             }

@@ -19,7 +19,7 @@ namespace RMUD
                 var relloc = container.RelativeLocationOf(Of);
                 if (relloc == RelativeLocations.In) //Consider the open rules.
                 {
-                    if (GlobalRules.ConsiderValueRule<bool>("open?", Of.Location, Of.Location))
+                    if (GlobalRules.ConsiderValueRule<bool>("open?", Of.Location))
                         return FindLocale(Of.Location);
                     else 
                         return Of.Location;
