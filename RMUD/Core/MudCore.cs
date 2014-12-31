@@ -16,7 +16,7 @@ namespace RMUD
         internal static Settings SettingsObject;
         internal static ProscriptionList ProscriptionList;
 
-        public static void ClientDisconnected(Client client)
+        internal static void ClientDisconnected(Client client)
         {
             DatabaseLock.WaitOne();
             Core.RemoveClientFromAllChannels(client);
@@ -31,13 +31,13 @@ namespace RMUD
             DatabaseLock.ReleaseMutex();
         }
 
-        public enum ClientAcceptanceStatus
+        internal enum ClientAcceptanceStatus
         {
             Accepted,
             Rejected,
         }
 
-        public static ClientAcceptanceStatus ClientConnected(Client Client)
+        internal static ClientAcceptanceStatus ClientConnected(Client Client)
         {
             var ban = ProscriptionList.IsBanned(Client.IPString);
             if (ban.Banned)
@@ -79,18 +79,19 @@ namespace RMUD
 
                 InitializeCommandProcessor();
                 GlobalRules.DiscoverRuleBooks(System.Reflection.Assembly.GetExecutingAssembly());
-                MudObject.InitializeStaticManPages();
+                InitializeStaticManPages();
 
-                    var start = DateTime.Now;
-                    var errorReported = false;
-                    InitialBulkCompile((s) => {
-                        LogError(s);
-                        errorReported = true;
-                    });
+                var start = DateTime.Now;
+                var errorReported = false;
+                InitialBulkCompile((s) =>
+                {
+                    LogError(s);
+                    errorReported = true;
+                });
 
-                    if (errorReported) Console.WriteLine("Bulk compilation failed. Using ad-hoc compilation as fallback.");
-                    else 
-                        Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
+                if (errorReported) Console.WriteLine("Bulk compilation failed. Using ad-hoc compilation as fallback.");
+                else
+                    Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
 
                 Console.WriteLine("Engine ready with path " + basePath + ".");
             }
@@ -113,7 +114,7 @@ namespace RMUD
         {
             Command.ProceduralRules.Consider(Match, Actor);
             if (Actor != null)
-                MudObject.CheckQuestStatus(Actor);
+                CheckQuestStatus(Actor);
         }
     }
 }

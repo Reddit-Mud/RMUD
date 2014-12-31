@@ -15,7 +15,7 @@ namespace RMUD
 
         public CommandEntry()
         {
-            MudObject.ManPages.Add(this);
+            Core.ManPages.Add(this);
             GeneratedManual = new StringBuilder();
             ProceduralRules = new PerformRuleBook
             {

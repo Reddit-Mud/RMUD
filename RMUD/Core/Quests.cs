@@ -7,9 +7,9 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public partial class MudObject
+    public static partial class Core
     {
-        public static void CheckQuestStatus(Actor Actor)
+        private static void CheckQuestStatus(Actor Actor)
         {
             var player = Actor as Player;
             if (player != null && player.ActiveQuest != null)
@@ -28,7 +28,10 @@ namespace RMUD
                 }
             }
         }
+    }
 
+    public partial class MudObject
+    {
         public static void OfferQuest(Actor Actor, Quest Quest)
         {
             var player = Actor as Player;

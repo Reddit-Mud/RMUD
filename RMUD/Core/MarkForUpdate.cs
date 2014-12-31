@@ -7,13 +7,13 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public partial class MudObject
+    public static partial class Core
     {
        internal static List<MudObject> MarkedObjects = new List<MudObject>();
 		
-        public static void MarkLocaleForUpdate(MudObject Object)
+        internal static void MarkLocaleForUpdate(MudObject Object)
         {
-            MudObject locale = FindLocale(Object);
+            MudObject locale = MudObject.FindLocale(Object);
             if (locale != null && !MarkedObjects.Contains(locale))
                 MarkedObjects.Add(locale);
         }
@@ -24,6 +24,14 @@ namespace RMUD
             for (int i = 0; i < startCount; ++i)
                 MarkedObjects[i].HandleMarkedUpdate();
             MarkedObjects.RemoveRange(0, startCount);
+        }
+    }
+
+    public partial class MudObject
+    {
+        public static void MarkLocaleForUpdate(MudObject Object)
+        {
+            Core.MarkLocaleForUpdate(Object);
         }
     }
 }

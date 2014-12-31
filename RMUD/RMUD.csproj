@@ -66,8 +66,8 @@
     <Compile Include="Commands\Admin\Rules.cs" />
     <Compile Include="Commands\Remove.cs" />
     <Compile Include="Core\ManPages.cs" />
-    <Compile Include="Core\PersistentValueSerializer.cs" />
-    <Compile Include="Core\PersistAttribute.cs" />
+    <Compile Include="Core\Serialization\PersistentValueSerializer.cs" />
+    <Compile Include="Core\Serialization\PersistAttribute.cs" />
     <Compile Include="database\static\palantine\ball.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

@@ -125,14 +125,14 @@ namespace RMUD
 
                         //Reset flags that the last command may have changed
                         CommandTimeoutEnabled = true;
-                        Core.SilentFlag = false;
+                        SilentFlag = false;
                         GlobalRules.LogRules(null);
                         
                         CommandReadyHandle.Set(); //Signal worker thread to proceed.
                         if (CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
                         {
-                            MudObject.UpdateMarkedObjects();
-                            Core.SendPendingMessages();
+                            UpdateMarkedObjects();
+                            SendPendingMessages();
                         }
                         else
                         {
@@ -140,15 +140,15 @@ namespace RMUD
                             {
                                 //Timeout is disabled, go ahead and wait for infinity.
                                 CommandFinishedHandle.WaitOne();
-                                MudObject.UpdateMarkedObjects();
-                                Core.SendPendingMessages();
+                                UpdateMarkedObjects();
+                                SendPendingMessages();
                             }
                             else
                             {
                                 //Kill the command processor thread.
                                 IndividualCommandThread.Abort();
                                 PendingCommand.Client.Send("Command timeout.\r\n");
-                                Core.LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
+                                LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
                                 IndividualCommandThread = new Thread(ProcessIndividualCommand);
                                 IndividualCommandThread.Start();
                             }

@@ -31,11 +31,11 @@ namespace RMUD
         }
     }
     
-    public partial class MudObject
+    public static partial class Core
     {
-        public static List<ManPage> ManPages = new List<ManPage>();
+        internal static List<ManPage> ManPages = new List<ManPage>();
 
-        public static void InitializeStaticManPages()
+        internal static void InitializeStaticManPages()
         {
             foreach (var type in System.Reflection.Assembly.GetExecutingAssembly().GetTypes())
             {
