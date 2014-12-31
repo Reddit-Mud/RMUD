@@ -26,7 +26,7 @@ namespace RMUD
                 .Name("Can't take people rule.");
 
             GlobalRules.Value<MudObject, MudObject, String, String>("printed name")
-                .When((viewer, thing, article) => viewer is Actor && thing is Actor && Introduction.ActorKnowsActor(viewer as Actor, thing as Actor))
+                .When((viewer, thing, article) => viewer is Actor && thing is Actor && MudObject.ActorKnowsActor(viewer as Actor, thing as Actor))
                 .Do((viewer, actor, article) => actor.Short)
                 .Name("Name of introduced actor.");
 
@@ -46,7 +46,7 @@ namespace RMUD
                 .Do((viewer, item) =>
                 {
                     var actor = item as Actor;
-                    if (viewer is Actor && Introduction.ActorKnowsActor(viewer as Actor, actor))
+                    if (viewer is Actor && MudObject.ActorKnowsActor(viewer as Actor, actor))
                         MudObject.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
 
                     var wornItems = new List<Clothing>(actor.EnumerateObjects<Clothing>(RelativeLocations.Worn));

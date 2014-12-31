@@ -75,7 +75,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Lib\Clothing.cs" />
-    <Compile Include="Lib\Introduction.cs" />
+    <Compile Include="Core\Introduction.cs" />
     <Compile Include="Lib\Conversation.cs" />
     <Compile Include="Commands\Admin\ReadLog.cs" />
     <Compile Include="Commands\AcceptQuest.cs" />

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public static class Introduction
+    public partial class MudObject
     {
         public static bool ActorKnowsActor(Actor Player, Actor Whom)
         {

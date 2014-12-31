@@ -10,10 +10,10 @@
 
         Perform<RMUD.MudObject, RMUD.MudObject>("dropped").Do((actor, item) =>
             {
-                var wolf = RMUD.MudObject.GetObject("palantine/wolf");
+                var wolf = GetObject("palantine/wolf");
                 if (wolf.Location == actor.Location)
                 {
-                    RMUD.GlobalRules.ConsiderPerformRule("handle-entrail-drop", wolf, this);
+                    ConsiderPerformRule("handle-entrail-drop", wolf, this);
                     return RMUD.PerformResult.Stop;
                 }
                 return RMUD.PerformResult.Continue;

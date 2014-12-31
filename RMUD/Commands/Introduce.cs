@@ -19,7 +19,7 @@ namespace RMUD.Commands
                 .Manual("This is a specialized version of the commad to handle 'introduce me'.")
                 .ProceduralRule((match, actor) =>
                 {
-                    Introduction.Introduce(actor);
+                    MudObject.Introduce(actor);
                     MudObject.SendExternalMessage(actor, "^<the0> introduces themselves.", actor);
                     MudObject.SendMessage(actor, "You introduce yourself.");
                     return PerformResult.Continue;
@@ -58,7 +58,7 @@ namespace RMUD.Commands
                 .Name("Introducee must be visible rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can introduce?")
-                .When((a, b) => !Introduction.ActorKnowsActor(a as Actor, b as Actor))
+                .When((a, b) => !MudObject.ActorKnowsActor(a as Actor, b as Actor))
                 .Do((a, b) =>
                 {
                     MudObject.SendMessage(a, "How can you introduce <the0> when you don't know them yourself?", b);
@@ -71,7 +71,7 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject>("introduce")
                 .Do((a, b) =>
                 {
-                    Introduction.Introduce(b as Actor);
+                    MudObject.Introduce(b as Actor);
                     MudObject.SendExternalMessage(a, "^<the0> introduces <the1>.", a, b);
                     MudObject.SendMessage(a, "You introduce <the0>.", b);
                     return PerformResult.Continue;

@@ -5,7 +5,7 @@
 
     public override void Initialize()
     {
-        RMUD.MudObject.PersistInstance(this);
+        PersistInstance(this);
 
         Short = "human skull";
         Nouns.Add("human", "skull");
@@ -14,7 +14,7 @@
             .Do((viewer, thing) =>
             {
                 ExamineCount += 1;
-                RMUD.MudObject.SendMessage(viewer, string.Format("How many times? {0} times.", ExamineCount));
+                SendMessage(viewer, string.Format("How many times? {0} times.", ExamineCount));
                 return RMUD.PerformResult.Continue;
             });
     }

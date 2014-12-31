@@ -3,9 +3,9 @@
 	public override void Initialize()
 	{
 		Short = "Palantine Villa - The Ancient Library of Kuz";
-        RMUD.MudObject.Move(new kuz_shelf(), this);
+        Move(new kuz_shelf(), this);
 
-        OpenLink(RMUD.Direction.EAST, "palantine/disambig", RMUD.MudObject.GetObject("palantine/disambig_blue_door"));
+        OpenLink(RMUD.Direction.EAST, "palantine/disambig", GetObject("palantine/disambig_blue_door"));
 	}
 }
 
@@ -19,7 +19,7 @@ public class kuz_shelf : RMUD.MudObject
 
         Perform<RMUD.MudObject, RMUD.MudObject>("describe in locale").Do((actor, item) =>
             {
-                RMUD.MudObject.SendMessage(actor, "A massive book shelf looms in the center of the room.");
+                SendMessage(actor, "A massive book shelf looms in the center of the room.");
                 return RMUD.PerformResult.Continue;
             });
 
@@ -28,10 +28,10 @@ public class kuz_shelf : RMUD.MudObject
         Perform<RMUD.MudObject, RMUD.MudObject>("taken").Do((actor, target) =>
             {
                 var newBook = new kuz_book();
-                RMUD.MudObject.Move(newBook, actor);
+                Move(newBook, actor);
 
-                RMUD.MudObject.SendMessage(actor, "You take <a0>.", newBook);
-                RMUD.MudObject.SendExternalMessage(actor, "<a0> takes <a1>.", actor, newBook);
+                SendMessage(actor, "You take <a0>.", newBook);
+                SendExternalMessage(actor, "<a0> takes <a1>.", actor, newBook);
                 return RMUD.PerformResult.Stop;
             });
     }
