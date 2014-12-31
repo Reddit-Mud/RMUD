@@ -25,7 +25,7 @@ namespace RMUD
         public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
         {
             var R = new List<PossibleMatch>();
-            if (Context.ExecutingActor.ConnectedClient != null && Context.ExecutingActor.ConnectedClient.Rank >= RequiredRank)
+            if (Context.ExecutingActor.Rank >= RequiredRank)
                 R.Add(State);
             //else
             //    throw new CommandParser.MatchAborted("You do not have sufficient rank to use that command.");

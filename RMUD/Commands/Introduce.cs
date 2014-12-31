@@ -20,7 +20,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     Introduction.Introduce(actor);
-                    MudObject.SendExternalMessage(actor, "The " + actor.DescriptiveName + " introduces themselves as <the0>.", actor);
+                    MudObject.SendExternalMessage(actor, "^<the0> introduces themselves.", actor);
                     MudObject.SendMessage(actor, "You introduce yourself.");
                     return PerformResult.Continue;
                 }, "Introduce yourself rule.");
@@ -72,7 +72,7 @@ namespace RMUD.Commands
                 .Do((a, b) =>
                 {
                     Introduction.Introduce(b as Actor);
-                    MudObject.SendExternalMessage(a, "^<the0> introduces the " + (b as Actor).DescriptiveName + " as <the1>.", a, b);
+                    MudObject.SendExternalMessage(a, "^<the0> introduces <the1>.", a, b);
                     MudObject.SendMessage(a, "You introduce <the0>.", b);
                     return PerformResult.Continue;
                 })

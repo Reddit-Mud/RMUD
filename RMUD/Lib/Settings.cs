@@ -52,7 +52,7 @@ namespace RMUD
 
             var senate = new ChatChannel("SENATE");
             senate.Check<MudObject, MudObject>("can access channel?")
-                .When((actor, channel) => !(actor is Actor) || (actor as Actor).ConnectedClient == null || (actor as Actor).ConnectedClient.Rank < 100)
+                .When((actor, channel) => !(actor is Actor) || (actor as Actor).Rank < 100)
                 .Do((actor, channel) =>
                 {
                     SendMessage(actor, "You must have a rank of 100 or greater to access this channel.");

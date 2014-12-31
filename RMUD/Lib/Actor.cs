@@ -70,20 +70,10 @@ namespace RMUD
     public class Actor : Container
     {
         public Client ConnectedClient;
+        public int Rank;
 
         [Persist(typeof(EnumSerializer<Gender>))]
         public Gender Gender { get; set; }
-
-        public String DescriptiveName
-        {
-            get
-            {
-                if (Gender == Gender.Male)
-                    return "man";
-                else
-                    return "woman";
-            }
-        }
 
         public Actor()
             : base(RelativeLocations.Held | RelativeLocations.Worn, RelativeLocations.Held)
