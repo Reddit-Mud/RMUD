@@ -7,23 +7,23 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public partial class MudObject
+    public static partial class Core
     {
-        public static bool SilentFlag = false;
+        internal static bool SilentFlag = false;
 
-        private static bool OutputQueryTriggered = false;
+        internal static bool OutputQueryTriggered = false;
 
-        public static void BeginOutputQuery()
+        internal static void BeginOutputQuery()
         {
             OutputQueryTriggered = false;
         }
 
-        public static bool CheckOutputQuery()
+        internal static bool CheckOutputQuery()
         {
             return OutputQueryTriggered;
         }
 
-        public static String UnformattedItemList(int StartIndex, int Count)
+        internal static String UnformattedItemList(int StartIndex, int Count)
         {
             var builder = new StringBuilder();
             for (int i = StartIndex; i < StartIndex + Count; ++i)
@@ -34,7 +34,7 @@ namespace RMUD
             return builder.ToString();
         }
 
-        public static String FormatMessage(Actor Recipient, String Message, params MudObject[] Objects)
+        internal static String FormatMessage(Actor Recipient, String Message, params MudObject[] Objects)
         {
             for (int i = 0; i < Objects.Length; ++i)
             {
@@ -57,20 +57,23 @@ namespace RMUD
 
             return builder.ToString();
         }
+    }
 
+    public partial class MudObject
+    {
         public static void SendMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
         {
-            if (SilentFlag) return;
-            OutputQueryTriggered = true;
+            if (Core.SilentFlag) return;
+            Core.OutputQueryTriggered = true;
 
             if (Actor != null && Actor.ConnectedClient != null)
-                PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, FormatMessage(Actor, Message, MentionedObjects)));
+                Core.PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, Core.FormatMessage(Actor, Message, MentionedObjects)));
         }
 
         public static void SendMessage(MudObject MudObject, String Message, params MudObject[] MentionedObjects)
         {
-            if (SilentFlag) return;
-            OutputQueryTriggered = true;
+            if (Core.SilentFlag) return;
+            Core.OutputQueryTriggered = true;
 
             if (MudObject is Actor)
                 SendMessage(MudObject as Actor, Message, MentionedObjects);
@@ -78,33 +81,33 @@ namespace RMUD
 
         public static void SendLocaleMessage(MudObject Object, String Message, params MudObject[] MentionedObjects)
         {
-            if (SilentFlag) return;
-            OutputQueryTriggered = true;
+            if (Core.SilentFlag) return;
+            Core.OutputQueryTriggered = true;
 
             var container = MudObject.FindLocale(Object) as Container;
             if (container != null)
                 foreach (var actor in container.EnumerateObjects<Actor>().Where(a => a.ConnectedClient != null))
-                    PendingMessages.Add(new RawPendingMessage(actor.ConnectedClient, FormatMessage(actor, Message, MentionedObjects)));
+                    Core.PendingMessages.Add(new RawPendingMessage(actor.ConnectedClient, Core.FormatMessage(actor, Message, MentionedObjects)));
         }
 
         public static void SendExternalMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
         {
-            if (SilentFlag) return;
-            OutputQueryTriggered = true;
+            if (Core.SilentFlag) return;
+            Core.OutputQueryTriggered = true;
 
             if (Actor == null) return;
             var location = Actor.Location as Room;
             if (location == null) return;
 
             foreach (var other in location.EnumerateObjects<Actor>().Where(a => !Object.ReferenceEquals(a, Actor) && (a.ConnectedClient != null)))
-                PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, FormatMessage(other, Message, MentionedObjects)));
+                Core.PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Core.FormatMessage(other, Message, MentionedObjects)));
                 
         }
 
         public static void SendExternalMessage(MudObject Actor, String Message, params MudObject[] MentionedObjects)
         {
-            if (SilentFlag) return;
-            OutputQueryTriggered = true;
+            if (Core.SilentFlag) return;
+            Core.OutputQueryTriggered = true;
 
             SendExternalMessage(Actor as Actor, Message, MentionedObjects);
         }
@@ -112,19 +115,19 @@ namespace RMUD
 
         public static void SendMessage(Client Client, String Message, params MudObject[] MentionedObjects)
         {
-            if (SilentFlag) return;
-            OutputQueryTriggered = true;
+            if (Core.SilentFlag) return;
+            Core.OutputQueryTriggered = true;
 
-            PendingMessages.Add(new RawPendingMessage(Client,
+            Core.PendingMessages.Add(new RawPendingMessage(Client,
                 Client.IsLoggedOn ?
-                    FormatMessage(Client.Account.LoggedInCharacter, Message, MentionedObjects) :
+                    Core.FormatMessage(Client.Account.LoggedInCharacter, Message, MentionedObjects) :
                     Message));
         }
 
         public static void SendGlobalMessage(String Message, params MudObject[] MentionedObjects)
         {
-            if (SilentFlag) return;
-            OutputQueryTriggered = true;
+            if (Core.SilentFlag) return;
+            Core.OutputQueryTriggered = true;
 
             foreach (var client in Core.ConnectedClients)
             {

@@ -77,9 +77,9 @@ namespace RMUD.Commands
 
                     foreach (var thing in visibleThings)
                     {
-                        MudObject.BeginOutputQuery();
+                        Core.BeginOutputQuery();
                         GlobalRules.ConsiderPerformRule("describe in locale", viewer, thing);
-                        if (!MudObject.CheckOutputQuery()) normalContents.Add(thing);
+                        if (!Core.CheckOutputQuery()) normalContents.Add(thing);
                     }
 
                     if (normalContents.Count > 0)

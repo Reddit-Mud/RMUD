@@ -69,7 +69,7 @@ namespace RMUD
 			}
 			catch (Exception e)
 			{
-				MudObject.ClearPendingMessages();
+				Core.ClearPendingMessages();
                 MudObject.SendMessage(Client, e.Message);
 			}
 		}

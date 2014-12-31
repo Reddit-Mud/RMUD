@@ -19,7 +19,7 @@ namespace RMUD.Commands
                     Core.CommandTimeoutEnabled = false;
 
                     MudObject.SendGlobalMessage("The database is being saved. There may be a brief delay.");
-                    MudObject.SendPendingMessages();
+                    Core.SendPendingMessages();
 
                     var saved = Core.SaveActiveInstances();
 

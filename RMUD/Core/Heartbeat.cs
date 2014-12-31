@@ -30,7 +30,7 @@ namespace RMUD
                 TimeOfLastHeartbeat = now;
                 GlobalRules.ConsiderPerformRule("heartbeat");
 
-                MudObject.SendPendingMessages();
+                Core.SendPendingMessages();
             }
         }
     }

@@ -81,14 +81,14 @@ namespace RMUD
         {
             try
             {
-                MudObject.SilentFlag = true;
+                Core.SilentFlag = true;
                 var r = ConsiderCheckRule(Name, Arguments);
-                MudObject.SilentFlag = false;
+                Core.SilentFlag = false;
                 return r;
             }
             finally
             {
-                MudObject.SilentFlag = false;
+                Core.SilentFlag = false;
             }
         }
 

@@ -55,7 +55,7 @@ namespace RMUD
 
             ConnectedClients.Add(Client);
 
-            MudObject.SendPendingMessages();
+            Core.SendPendingMessages();
 
             DatabaseLock.ReleaseMutex();
 

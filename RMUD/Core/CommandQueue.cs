@@ -71,12 +71,12 @@ namespace RMUD
                 catch (System.Threading.ThreadAbortException)
                 {
                     LogError("Command worker thread was aborted. Timeout hit?");
-                    MudObject.ClearPendingMessages();
+                    Core.ClearPendingMessages();
                 }
                 catch (Exception e)
                 {
                     LogCommandError(e);
-                    MudObject.ClearPendingMessages();
+                    Core.ClearPendingMessages();
                 }
 
                 NextCommand = null;
@@ -125,14 +125,14 @@ namespace RMUD
 
                         //Reset flags that the last command may have changed
                         CommandTimeoutEnabled = true;
-                        MudObject.SilentFlag = false;
+                        Core.SilentFlag = false;
                         GlobalRules.LogRules(null);
                         
                         CommandReadyHandle.Set(); //Signal worker thread to proceed.
                         if (CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
                         {
                             MudObject.UpdateMarkedObjects();
-                            MudObject.SendPendingMessages();
+                            Core.SendPendingMessages();
                         }
                         else
                         {
@@ -141,7 +141,7 @@ namespace RMUD
                                 //Timeout is disabled, go ahead and wait for infinity.
                                 CommandFinishedHandle.WaitOne();
                                 MudObject.UpdateMarkedObjects();
-                                MudObject.SendPendingMessages();
+                                Core.SendPendingMessages();
                             }
                             else
                             {

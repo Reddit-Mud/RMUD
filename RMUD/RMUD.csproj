@@ -133,7 +133,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="Core\Serialization\BitArraySerializer.cs" />
-    <Compile Include="Core\EnumSerializer.cs" />
+    <Compile Include="Core\Serialization\EnumSerializer.cs" />
     <Compile Include="Core\Serialization\DictionaryStringObjectSerializer.cs" />
     <Compile Include="Lib\Player.cs" />
     <Compile Include="Lib\ConversationTopic.cs" />

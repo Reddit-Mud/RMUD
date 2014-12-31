@@ -66,7 +66,7 @@ namespace RMUD.Commands
                     if (contents.Count() > 0)
                     {
                         contents.Insert(0, item);
-                        MudObject.SendMessage(viewer, "On <the0> is " + MudObject.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
+                        MudObject.SendMessage(viewer, "On <the0> is " + Core.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
                     }
                     return PerformResult.Continue;
                 })
@@ -86,7 +86,7 @@ namespace RMUD.Commands
                     if (contents.Count() > 0)
                     {
                         contents.Insert(0, item);
-                        MudObject.SendMessage(viewer, "In <the0> is " + MudObject.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
+                        MudObject.SendMessage(viewer, "In <the0> is " + Core.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
                     }
                     return PerformResult.Continue;
                 })
