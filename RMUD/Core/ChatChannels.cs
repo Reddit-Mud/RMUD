@@ -44,8 +44,8 @@ namespace RMUD
         {
             var realMessage = String.Format("{0} : {1}", DateTime.Now, Message);
 
-            var chatLogFilename = MudObject.ChatLogsPath + Channel.Short + ".txt";
-            System.IO.Directory.CreateDirectory(MudObject.ChatLogsPath);
+            var chatLogFilename = Core.ChatLogsPath + Channel.Short + ".txt";
+            System.IO.Directory.CreateDirectory(Core.ChatLogsPath);
             System.IO.File.AppendAllText(chatLogFilename, realMessage + "\n");
 
             foreach (var client in Channel.Subscribers.Where(c => c.ConnectedClient != null))

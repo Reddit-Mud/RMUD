@@ -67,7 +67,7 @@ namespace RMUD
 				Console.WriteLine(e.Message);
 
 				this.Socket = null;
-                if (!WasRejected) MudObject.ClientDisconnected(this);
+                if (!WasRejected) Core.ClientDisconnected(this);
 			}
         }
 

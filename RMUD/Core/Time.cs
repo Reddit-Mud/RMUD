@@ -21,5 +21,7 @@ namespace RMUD
 
         public static bool IsDay { get { return true; } }
         public static bool IsNight { get { return false; } }
+
+        public static DateTime TimeOfDay = DateTime.Parse("03/15/2015 11:15:00 -5:00");
     }
 }

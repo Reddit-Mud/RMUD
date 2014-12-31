@@ -98,7 +98,7 @@ namespace RMUD.Commands
                     int count = 20;
                     if (match.ContainsKey("COUNT")) count = (match["COUNT"] as int?).Value;
 
-                    var logFilename = MudObject.ChatLogsPath + channel.Short + ".txt";
+                    var logFilename = Core.ChatLogsPath + channel.Short + ".txt";
                     if (System.IO.File.Exists(logFilename))
                         foreach (var line in (new ReverseLineReader(logFilename)).Take(count).Reverse())
                             MudObject.SendMessage(actor, line);

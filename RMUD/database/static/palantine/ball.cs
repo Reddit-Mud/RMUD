@@ -5,7 +5,7 @@
 
     public void Startup()
     {
-        RMUD.MudObject.DefaultParser.AddCommand(RMUD.CommandFactory.KeyWord("BOUNCE"))
+        RMUD.Core.DefaultParser.AddCommand(RMUD.CommandFactory.KeyWord("BOUNCE"))
             .ProceduralRule((match, actor) =>
             {
                 RMUD.MudObject.SendMessage(actor, "Database defined commands appear to work.");

@@ -27,7 +27,7 @@ namespace RMUD.Commands
                         var maskRegex = new System.Text.RegularExpressions.Regex(ProscriptionList.ConvertGlobToRegex(mask), System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
                         //Iterate over local copy because kicking modifies ConnectedClients.
-                        foreach (var client in new List<Client>(MudObject.ConnectedClients))
+                        foreach (var client in new List<Client>(Core.ConnectedClients))
                         {
                             if (client.IsLoggedOn && maskRegex.Matches(client.IPString).Count > 0)
                             {

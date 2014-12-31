@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace RMUD
 {
-    public partial class MudObject
+    public static partial class Core
     {
         private static Dictionary<String, MudObject> ActiveInstances = new Dictionary<String, MudObject>();
         public static Dictionary<String, PersistentValueSerializer> GlobalSerializers = new Dictionary<String, PersistentValueSerializer>();
@@ -67,7 +67,7 @@ namespace RMUD
 
             //We can't make an instance of nothing; this means that the base object has an error of some kind.
             if (baseObject == null) {
-                MudObject.LogError("ERROR: Invalid baseObject: " + BasePath);
+                Core.LogError("ERROR: Invalid baseObject: " + BasePath);
                 return null;
             }
 
@@ -156,5 +156,11 @@ namespace RMUD
         }
 
 
+    }
+
+    public partial class MudObject
+    {
+        public static void PersistInstance(MudObject Object) { Core.PersistInstance(Object); }
+        public static void ForgetInstance(MudObject Object) { Core.ForgetInstance(Object); }
     }
 }

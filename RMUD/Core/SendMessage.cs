@@ -126,7 +126,7 @@ namespace RMUD
             if (SilentFlag) return;
             OutputQueryTriggered = true;
 
-            foreach (var client in ConnectedClients)
+            foreach (var client in Core.ConnectedClients)
             {
                 if (client.IsLoggedOn)
                     SendMessage(client, Message, MentionedObjects);

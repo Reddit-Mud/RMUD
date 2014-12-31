@@ -15,18 +15,17 @@ namespace RMUD
         }
     }
 
-    public partial class MudObject
+    public static partial class Core
     {
         internal static DateTime TimeOfLastHeartbeat = DateTime.Now;
-        internal static DateTime TimeOfDay = DateTime.Parse("03/15/2015 11:15:00 -5:00");
 		
         internal static void Heartbeat()
         {
             var now = DateTime.Now;
             var timeSinceLastBeat = now - TimeOfLastHeartbeat;
-            if (timeSinceLastBeat.TotalMilliseconds >= MudObject.SettingsObject.HeartbeatInterval)
+            if (timeSinceLastBeat.TotalMilliseconds >= SettingsObject.HeartbeatInterval)
             {
-                TimeOfDay += MudObject.SettingsObject.ClockAdvanceRate;
+                MudObject.TimeOfDay += SettingsObject.ClockAdvanceRate;
 
                 TimeOfLastHeartbeat = now;
                 GlobalRules.ConsiderPerformRule("heartbeat");

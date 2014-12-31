@@ -13,14 +13,6 @@ namespace RMUD
         internal StringBuilder GeneratedManual = null;
         internal PerformRuleBook ProceduralRules;
 
-        public void VerifyCompleteness()
-        {
-            if (String.IsNullOrEmpty(ManualName))
-                MudObject.LogWarning("Command does not have name set - " + Matcher.Emit());
-            if (String.IsNullOrEmpty(ManualPage))
-                MudObject.LogWarning("No manual for command " + ManualName);
-        }
-
         public CommandEntry()
         {
             MudObject.ManPages.Add(this);

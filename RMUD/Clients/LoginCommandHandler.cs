@@ -13,7 +13,7 @@ namespace RMUD
         public static void LogPlayerIn(Client Client, Account Account)
         {
             Client.Account = Account;
-            Client.CommandHandler = MudObject.ParserCommandHandler;
+            Client.CommandHandler = Core.ParserCommandHandler;
             Client.Rank = 500;
 
             if (Account.LoggedInCharacter != null)
@@ -33,10 +33,10 @@ namespace RMUD
                 //Start a new session
                 Client.Player = Core.GetAccountCharacter(Account);
                 MudObject.Move(Client.Player, 
-                    MudObject.GetObject(
-                        MudObject.SettingsObject.NewPlayerStartRoom,
+                    Core.GetObject(
+                        Core.SettingsObject.NewPlayerStartRoom,
                         s => MudObject.SendMessage(Client, s)));
-                MudObject.EnqueuClientCommand(Client, "look");
+                Core.EnqueuClientCommand(Client, "look");
             }
 
             foreach (var c in Core.ChatChannels.Where(c => c.Short == "OOC")) c.Subscribers.Add(Client.Player);
@@ -62,7 +62,7 @@ namespace RMUD
                 if (matchedCommand != null)
                 {
                     matchedCommand.Matches[0].Upsert("CLIENT", Client);
-                    MudObject.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], null);
+                    Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], null);
                 }
                 else
                     MudObject.SendMessage(Client, "I do not understand.");

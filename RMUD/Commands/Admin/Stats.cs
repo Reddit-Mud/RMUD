@@ -26,7 +26,7 @@ namespace RMUD.Commands
                         if (type == "CLIENTS")
                         {
                             MudObject.SendMessage(actor, "~~ CLIENTS ~~");
-                            foreach (var client in MudObject.ConnectedClients)
+                            foreach (var client in Core.ConnectedClients)
                                 MudObject.SendMessage(actor, client.ConnectionDescription + (client.Player == null ? "" : (" - " + client.Player.Short)));
                         }
                         else if (type == "MEMORY")
@@ -34,12 +34,12 @@ namespace RMUD.Commands
                             var mem = System.GC.GetTotalMemory(false);
                             var kb = mem / 1024.0f;
                             MudObject.SendMessage(actor, "Memory usage: " + String.Format("{0:n0}", kb) + " kb");
-                            MudObject.SendMessage(actor, "Named objects loaded: " + MudObject.NamedObjects.Count);
+                            MudObject.SendMessage(actor, "Named objects loaded: " + Core.NamedObjects.Count);
                         }
                         else if (type == "TIME")
                         {
                             MudObject.SendMessage(actor, String.Format("Current time in game: {0}\r\n", MudObject.TimeOfDay));
-                            MudObject.SendMessage(actor, String.Format("Advance rate: {0} per heartbeat\r\n", MudObject.SettingsObject.ClockAdvanceRate));
+                            MudObject.SendMessage(actor, String.Format("Advance rate: {0} per heartbeat\r\n", Core.SettingsObject.ClockAdvanceRate));
                         }
                         else
                             MudObject.SendMessage(actor, "That isn't an option I understand.");

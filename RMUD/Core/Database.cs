@@ -13,7 +13,7 @@ namespace RMUD
         void Startup();
     }
 
-    public partial class MudObject
+    public static partial class Core
     {
         public static String StaticPath { get; private set; }
         public static String DynamicPath { get; private set; }
@@ -55,12 +55,12 @@ namespace RMUD
             try
             {
                 var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("Reddit-Mud"));
-                if (!String.IsNullOrEmpty(MudObject.SettingsObject.GithubAuthToken))
-                    githubClient.Credentials = new Octokit.Credentials(MudObject.SettingsObject.GithubAuthToken);
+                if (!String.IsNullOrEmpty(SettingsObject.GithubAuthToken))
+                    githubClient.Credentials = new Octokit.Credentials(SettingsObject.GithubAuthToken);
 
                 var codeSearch = new Octokit.SearchCodeRequest(".cs")
                 {
-                    Repo = MudObject.SettingsObject.GithubRepo,
+                    Repo = SettingsObject.GithubRepo,
                     In = new[] { Octokit.CodeInQualifier.Path },
                     Page = 1
                 };
@@ -256,11 +256,11 @@ namespace RMUD
             Path = Path.Replace('\\', '/');
             if (Path.Contains("..")) return Tuple.Create(false, "Backtrack path entries are not permitted.");
 
-            if (MudObject.SettingsObject.UseGithubDatabase)
+            if (SettingsObject.UseGithubDatabase)
             {
                 try
                 {
-                    return Tuple.Create(true, WebClient.DownloadString(MudObject.SettingsObject.GithubRawURL + Path + ".cs"));
+                    return Tuple.Create(true, WebClient.DownloadString(SettingsObject.GithubRawURL + Path + ".cs"));
                 }
                 catch (Exception) { }
             }
@@ -424,6 +424,14 @@ namespace RMUD
             {
                 return false;
             }
+        }
+    }
+
+    public partial class MudObject
+    {
+        public static MudObject GetObject(String Path)
+        {
+            return Core.GetObject(Path);
         }
     }
 }

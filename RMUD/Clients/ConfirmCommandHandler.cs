@@ -28,7 +28,7 @@ namespace RMUD
             Client.CommandHandler = ParentHandler;
 
             if (Command.ToUpper() == "YES" || Command.ToUpper() == "Y")
-                MudObject.ProcessPlayerCommand(CheckedCommand.Command, CheckedCommand.Matches[0], Client.Player);
+                Core.ProcessPlayerCommand(CheckedCommand.Command, CheckedCommand.Matches[0], Client.Player);
             else
                 MudObject.SendMessage(Client, "Okay, aborted.");            
         }

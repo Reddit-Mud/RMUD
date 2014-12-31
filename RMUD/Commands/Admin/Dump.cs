@@ -19,7 +19,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     var target = match["TARGET"].ToString();
-                    var source = MudObject.LoadSourceFile(target);
+                    var source = Core.LoadSourceFile(target);
                     if (!source.Item1)
                         MudObject.SendMessage(actor, "Could not display source: " + source.Item2);
                     else

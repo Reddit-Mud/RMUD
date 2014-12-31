@@ -62,7 +62,7 @@ namespace RMUD
             }
             catch (System.IO.IOException e)
             {
-                MudObject.LogCriticalError(e);
+                Core.LogCriticalError(e);
             }
         }
 

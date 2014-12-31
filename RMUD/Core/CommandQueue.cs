@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public partial class MudObject
+    public static partial class Core
     {
         private class PendingCommand
         {
@@ -28,8 +28,8 @@ namespace RMUD
 
 
         internal static ParserCommandHandler ParserCommandHandler;
-        internal static CommandParser DefaultParser;
-        internal static LoginCommandHandler LoginCommandHandler;
+        public static CommandParser DefaultParser;
+        public static LoginCommandHandler LoginCommandHandler;
 
         internal static void EnqueuClientCommand(Client Client, String RawCommand)
         {
@@ -49,9 +49,6 @@ namespace RMUD
         {
             DefaultParser = new CommandParser();
             DiscoverCommandFactories(Assembly.GetExecutingAssembly(), DefaultParser);
-
-            foreach (var cmd in DefaultParser.Commands)
-                cmd.VerifyCompleteness();
 
             ParserCommandHandler = new ParserCommandHandler(DefaultParser);
             LoginCommandHandler = new LoginCommandHandler();
@@ -74,12 +71,12 @@ namespace RMUD
                 catch (System.Threading.ThreadAbortException)
                 {
                     LogError("Command worker thread was aborted. Timeout hit?");
-                    ClearPendingMessages();
+                    MudObject.ClearPendingMessages();
                 }
                 catch (Exception e)
                 {
                     LogCommandError(e);
-                    ClearPendingMessages();
+                    MudObject.ClearPendingMessages();
                 }
 
                 NextCommand = null;
@@ -128,14 +125,14 @@ namespace RMUD
 
                         //Reset flags that the last command may have changed
                         CommandTimeoutEnabled = true;
-                        SilentFlag = false;
+                        MudObject.SilentFlag = false;
                         GlobalRules.LogRules(null);
                         
                         CommandReadyHandle.Set(); //Signal worker thread to proceed.
                         if (CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
                         {
-                            UpdateMarkedObjects();
-                            SendPendingMessages();
+                            MudObject.UpdateMarkedObjects();
+                            MudObject.SendPendingMessages();
                         }
                         else
                         {
@@ -143,15 +140,15 @@ namespace RMUD
                             {
                                 //Timeout is disabled, go ahead and wait for infinity.
                                 CommandFinishedHandle.WaitOne();
-                                UpdateMarkedObjects();
-                                SendPendingMessages();
+                                MudObject.UpdateMarkedObjects();
+                                MudObject.SendPendingMessages();
                             }
                             else
                             {
                                 //Kill the command processor thread.
                                 IndividualCommandThread.Abort();
                                 PendingCommand.Client.Send("Command timeout.\r\n");
-                                MudObject.LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
+                                Core.LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
                                 IndividualCommandThread = new Thread(ProcessIndividualCommand);
                                 IndividualCommandThread.Start();
                             }

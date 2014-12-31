@@ -45,7 +45,7 @@ namespace RMUD.Commands
                     }
 
                     var command = match["COMMAND"].ToString();
-                    var matchedCommand = MudObject.ParserCommandHandler.Parser.ParseCommand(command, targetActor);
+                    var matchedCommand = Core.ParserCommandHandler.Parser.ParseCommand(command, targetActor);
 
                     if (matchedCommand != null)
                     {
@@ -54,7 +54,7 @@ namespace RMUD.Commands
                         else
                         {
                             MudObject.SendMessage(actor, "Enacting your will.");
-                            MudObject.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], targetActor);
+                            Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], targetActor);
                         }
                     }
                     else

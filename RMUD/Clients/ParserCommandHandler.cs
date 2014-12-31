@@ -43,7 +43,7 @@ namespace RMUD
                         return;
                     }
 
-                    MudObject.CommandTimeoutEnabled = false;
+                    Core.CommandTimeoutEnabled = false;
                 }
                 else if (Command.ToUpper().StartsWith("@RULES "))
                 {
@@ -101,7 +101,7 @@ namespace RMUD
                     if (matchedCommand.Matches.Count > 1)
                         Client.CommandHandler = new DisambigCommandHandler(Client, matchedCommand, this);
                     else
-                        MudObject.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Client.Player);
+                        Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Client.Player);
                 }
                 else
                     MudObject.SendMessage(Client, "huh?");

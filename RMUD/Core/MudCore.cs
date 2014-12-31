@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public partial class MudObject
+    public static partial class Core
     {
         internal static List<Client> ConnectedClients = new List<Client>();
         internal static Mutex DatabaseLock = new Mutex();
@@ -50,12 +50,12 @@ namespace RMUD
 
             Client.CommandHandler = LoginCommandHandler;
 
-            MudObject.SendMessage(Client, MudObject.SettingsObject.Banner);
-            MudObject.SendMessage(Client, MudObject.SettingsObject.MessageOfTheDay);
+            MudObject.SendMessage(Client, SettingsObject.Banner);
+            MudObject.SendMessage(Client, SettingsObject.MessageOfTheDay);
 
             ConnectedClients.Add(Client);
 
-            SendPendingMessages();
+            MudObject.SendPendingMessages();
 
             DatabaseLock.ReleaseMutex();
 
@@ -79,7 +79,7 @@ namespace RMUD
 
                 InitializeCommandProcessor();
                 GlobalRules.DiscoverRuleBooks(System.Reflection.Assembly.GetExecutingAssembly());
-                InitializeStaticManPages();
+                MudObject.InitializeStaticManPages();
 
                     var start = DateTime.Now;
                     var errorReported = false;
@@ -113,7 +113,7 @@ namespace RMUD
         {
             Command.ProceduralRules.Consider(Match, Actor);
             if (Actor != null)
-                CheckQuestStatus(Actor);
+                MudObject.CheckQuestStatus(Actor);
         }
     }
 }

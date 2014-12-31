@@ -72,7 +72,7 @@ namespace RMUD
         internal static Player GetAccountCharacter(Account Account)
         {
             var characterName = "account/" + Account.UserName;
-            var existing = MudObject.GetPersistedInstance(characterName + "@main") as Player;
+            var existing = Core.GetPersistedInstance(characterName + "@main") as Player;
             if (existing != null) return existing;
 
             var character = new Player();
@@ -88,7 +88,7 @@ namespace RMUD
         {
             try
             {
-                var directory = MudObject.AccountsPath + account.UserName;
+                var directory = Core.AccountsPath + account.UserName;
                 var filename = directory + "/account.txt";
                 var json = JsonConvert.SerializeObject(account, Formatting.Indented);
                 System.IO.Directory.CreateDirectory(directory);
@@ -96,7 +96,7 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                MudObject.LogError(String.Format("While saving account {0} - {1}", account.UserName, e.Message));
+                Core.LogError(String.Format("While saving account {0} - {1}", account.UserName, e.Message));
             }
         }
 
@@ -105,7 +105,7 @@ namespace RMUD
             Account account = null;
             try 
             {
-                var filename = MudObject.AccountsPath + UserName + "/account.txt";
+                var filename = Core.AccountsPath + UserName + "/account.txt";
                 if (File.Exists(filename))
                 {
                     var json = File.ReadAllText(filename);
@@ -114,7 +114,7 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                MudObject.LogError(String.Format("While loading account {0} - {1}", UserName, e.Message));
+                Core.LogError(String.Format("While loading account {0} - {1}", UserName, e.Message));
             }
 
             return account;

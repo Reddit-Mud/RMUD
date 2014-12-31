@@ -15,7 +15,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     MudObject.SendMessage(actor, "~~~ ALL SET BANS ~~~");
-                    foreach (var proscription in MudObject.ProscriptionList.Proscriptions)
+                    foreach (var proscription in Core.ProscriptionList.Proscriptions)
                         MudObject.SendMessage(actor, proscription.Glob + " : " + proscription.Reason);
                     return PerformResult.Continue;
                 });
@@ -29,7 +29,7 @@ namespace RMUD.Commands
                 .Manual("Ban every player who's ip matches the mask.")
                 .ProceduralRule((match, actor) =>
                 {
-                    MudObject.ProscriptionList.Ban(match["GLOB"].ToString(), match["REASON"].ToString());
+                    Core.ProscriptionList.Ban(match["GLOB"].ToString(), match["REASON"].ToString());
                     MudObject.SendGlobalMessage("^<the0> has banned " + match["GLOB"].ToString(), actor);
                     return PerformResult.Continue;
                 });
@@ -42,7 +42,7 @@ namespace RMUD.Commands
                 .Manual("Remove an existing ban.")
                 .ProceduralRule((match, actor) =>
                 {
-                    MudObject.ProscriptionList.RemoveBan(match["GLOB"].ToString());
+                    Core.ProscriptionList.RemoveBan(match["GLOB"].ToString());
                     MudObject.SendGlobalMessage("^<the0> removes the ban on " + match["GLOB"].ToString(), actor);
                     return PerformResult.Continue;
                 });

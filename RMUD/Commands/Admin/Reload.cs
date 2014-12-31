@@ -19,7 +19,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     var target = match["TARGET"].ToString();
-                    var newObject = MudObject.ReloadObject(target, s => MudObject.SendMessage(actor, s));
+                    var newObject = Core.ReloadObject(target, s => MudObject.SendMessage(actor, s));
                     if (newObject == null) MudObject.SendMessage(actor, "Failed to reload " + target);
                     else MudObject.SendMessage(actor, "Reloaded " + target);
                     return PerformResult.Continue;
@@ -35,7 +35,7 @@ namespace RMUD.Commands
                  .ProceduralRule((match, actor) =>
                  {
                      var target = match["TARGET"].ToString();
-                     if (!MudObject.ResetObject(target, s => MudObject.SendMessage(actor, s))) 
+                     if (!Core.ResetObject(target, s => MudObject.SendMessage(actor, s))) 
                          MudObject.SendMessage(actor, "Failed to reset " + target);
                      else MudObject.SendMessage(actor, "Reset " + target);
                      return PerformResult.Continue;

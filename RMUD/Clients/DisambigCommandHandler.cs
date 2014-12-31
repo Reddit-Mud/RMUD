@@ -83,7 +83,7 @@ namespace RMUD
             //Just retry if the attempt to help has failed.
             if (DisambigObjects == null)
             {
-                MudObject.EnqueuClientCommand(Client, Command);
+                Core.EnqueuClientCommand(Client, Command);
                 return;
             }
             
@@ -98,7 +98,7 @@ namespace RMUD
                     MatchedCommand.Matches = new List<PossibleMatch>(choosenMatches);
 
                     if (MatchedCommand.Matches.Count == 1)
-                        MudObject.ProcessPlayerCommand(MatchedCommand.Command, MatchedCommand.Matches[0], Client.Player);
+                        Core.ProcessPlayerCommand(MatchedCommand.Command, MatchedCommand.Matches[0], Client.Player);
                     else
                     {
                         MudObject.SendMessage(Client, "That helped narrow it down, but I'm still not sure what you mean.");
@@ -108,7 +108,7 @@ namespace RMUD
             }
             else //Player didn't type an ordinal; retry.
             {
-                MudObject.EnqueuClientCommand(Client, Command);
+                Core.EnqueuClientCommand(Client, Command);
             }
         }
     }

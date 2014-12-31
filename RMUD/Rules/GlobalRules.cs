@@ -24,7 +24,7 @@ namespace RMUD
 
         public static bool CheckGlobalRuleBookTypes(String Name, Type ResultType, params Type[] ArgumentTypes)
         {
-            if (Rules == null) throw new InvalidOperationException();
+            if (Rules == null) return true; // This means that rules were declared before global rulebooks were discovered. The only object that does this in normal running is the settings object. So the settings object can potentially blow up everything.
 
             var book = Rules.FindRuleBook(Name);
             if (book == null) return true;

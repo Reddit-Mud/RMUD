@@ -30,7 +30,7 @@ namespace RMUD
         {
             get
             {
-                return (DateTime.Now - TimeOfLastCommand) > TimeSpan.FromMilliseconds(MudObject.SettingsObject.AFKTime);
+                return (DateTime.Now - TimeOfLastCommand) > TimeSpan.FromMilliseconds(Core.SettingsObject.AFKTime);
             }
         }
 
