@@ -20,9 +20,9 @@ namespace RMUD
         internal static RuleSet Rules = null;
         internal static Client LogTo = null;
 
-        public static void LogRules(Client To) { LogTo = To; }
+        internal static void LogRules(Client To) { LogTo = To; }
 
-        public static bool CheckGlobalRuleBookTypes(String Name, Type ResultType, params Type[] ArgumentTypes)
+        internal static bool CheckGlobalRuleBookTypes(String Name, Type ResultType, params Type[] ArgumentTypes)
         {
             if (Rules == null) return true; // This means that rules were declared before global rulebooks were discovered. The only object that does this in normal running is the settings object. So the settings object can potentially blow up everything.
 
@@ -92,7 +92,7 @@ namespace RMUD
             }
         }
 
-        public static void DiscoverRuleBooks(System.Reflection.Assembly In)
+        internal static void DiscoverRuleBooks(System.Reflection.Assembly In)
         {
             Rules = new RuleSet();
 
@@ -104,6 +104,39 @@ namespace RMUD
                     initializer.InitializeRules();
                 }
             }
+        }
+    }
+
+    public partial class MudObject
+    {
+        public static PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
+        {
+            return GlobalRules.ConsiderPerformRule(Name, Arguments);
+        }
+
+        public static CheckResult ConsiderCheckRule(String Name, params Object[] Arguments)
+        {
+            return GlobalRules.ConsiderCheckRule(Name, Arguments);
+        }
+
+        public static RT ConsiderValueRule<RT>(String Name, params Object[] Arguments)
+        {
+            return GlobalRules.ConsiderValueRule<RT>(Name, Arguments);
+        }
+
+        public static CheckResult ConsiderCheckRuleSilently(String Name, params Object[] Arguments)
+        {
+            return GlobalRules.ConsiderCheckRuleSilently(Name, Arguments);
+        }
+
+        public void DeleteRule(String RuleBookName, String RuleID)
+        {
+            if (Rules != null) Rules.DeleteRule(RuleBookName, RuleID);
+        }
+
+        public void DeleteAllRules(String RuleID)
+        {
+            if (Rules != null) Rules.DeleteAll(RuleID);
         }
     }
 }

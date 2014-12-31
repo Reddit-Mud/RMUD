@@ -10,10 +10,10 @@
         AddScenery("Minerva is turned to regard her father Jupiter, and poses with one hand on her hips and the other on the shaft of a massive hammer.", "minerva");
 
         var table = new Table();
-        RMUD.MudObject.Move(table, this);
+        Move(table, this);
 
-        RMUD.MudObject.Move(new RMUD.MudObject("old vase", "An old, cracked vase."), table);
-        RMUD.MudObject.Move(RMUD.MudObject.GetObject("palantine/ball"), this);
+        Move(new RMUD.MudObject("old vase", "An old, cracked vase."), table);
+        Move(GetObject("palantine/ball"), this);
 
 
         OpenLink(RMUD.Direction.NORTH, "palantine/disambig");
@@ -42,11 +42,11 @@ public class Table : RMUD.Container
         Long = "As the years have worn long the wood of this table has dried and shrunk, and split, and what was once a finely crafted table is now pitted and gouged. The top is still mostly smooth, from use but not from care.";
         Nouns.Add("ancient", "table");
 
-        RMUD.MudObject.Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
+        Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
 
         Check<RMUD.MudObject, RMUD.MudObject>("can take?").Do((actor, thing) =>
         {
-            RMUD.MudObject.SendMessage(actor, "It's far too heavy.");
+            SendMessage(actor, "It's far too heavy.");
             return RMUD.CheckResult.Disallow;
         });
 

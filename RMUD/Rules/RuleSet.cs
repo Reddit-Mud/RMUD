@@ -42,19 +42,19 @@ namespace RMUD
             return r;
         }
                 
-        public void DeleteRule(String RuleBookName, String RuleID)
+        internal void DeleteRule(String RuleBookName, String RuleID)
         {
             var book = FindRuleBook(RuleBookName);
             if (book != null) book.DeleteRule(RuleID);
         }
 
-        public void DeleteAll(String RuleID)
+        internal void DeleteAll(String RuleID)
         {
             foreach (var book in RuleBooks)
                 book.DeleteRule(RuleID);
         }
 
-        public RT ConsiderValueRule<RT>(String Name, out bool ValueReturned, params Object[] Args)
+        internal RT ConsiderValueRule<RT>(String Name, out bool ValueReturned, params Object[] Args)
         {
             ValueReturned = false;
             var book = FindRuleBook(Name);
@@ -69,7 +69,7 @@ namespace RMUD
             return default(RT);
         }
 
-        public PerformResult ConsiderPerformRule(String Name, params Object[] Args)
+        internal PerformResult ConsiderPerformRule(String Name, params Object[] Args)
         {
             var book = FindRuleBook(Name);
             if (book != null)
@@ -83,7 +83,7 @@ namespace RMUD
             return PerformResult.Continue;
         }
 
-        public CheckResult ConsiderCheckRule(String Name, params Object[] Args)
+        internal CheckResult ConsiderCheckRule(String Name, params Object[] Args)
         {
             var book = FindRuleBook(Name);
             if (book != null)

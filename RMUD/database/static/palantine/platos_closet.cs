@@ -5,11 +5,11 @@
         RoomType = RMUD.RoomType.Interior;
         Short = "Palantine Villa - Plato's Closet";
 
-        RMUD.MudObject.Move(new lamp(), this);
+        AddScenery(new lamp());
 
-        RMUD.MudObject.Move(RMUD.Clothing.Create("pair of jeans", RMUD.ClothingLayer.Outer, RMUD.ClothingBodyPart.Legs), this);
-        RMUD.MudObject.Move(RMUD.Clothing.Create("polo shirt", RMUD.ClothingLayer.Outer, RMUD.ClothingBodyPart.Torso), this);
-        RMUD.MudObject.Move(RMUD.Clothing.Create("pair of briefs", RMUD.ClothingLayer.Under, RMUD.ClothingBodyPart.Legs), this);
+        Move(RMUD.Clothing.Create("pair of jeans", RMUD.ClothingLayer.Outer, RMUD.ClothingBodyPart.Legs), this);
+        Move(RMUD.Clothing.Create("polo shirt", RMUD.ClothingLayer.Outer, RMUD.ClothingBodyPart.Torso), this);
+        Move(RMUD.Clothing.Create("pair of briefs", RMUD.ClothingLayer.Under, RMUD.ClothingBodyPart.Legs), this);
 
         OpenLink(RMUD.Direction.WEST, "palantine\\solar");
 	}

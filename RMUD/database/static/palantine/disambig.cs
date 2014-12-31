@@ -8,14 +8,14 @@ public class disambig : RMUD.Room
 
         AddScenery("Which do you mean?", "MIRROR", "MIRRORS");
 
-        OpenLink(RMUD.Direction.WEST, "palantine\\library", RMUD.MudObject.GetObject("palantine\\disambig_blue_door"));
-        OpenLink(RMUD.Direction.EAST, "palantine\\dark_room", RMUD.MudObject.GetObject("palantine\\disambig_red_door"));
+        OpenLink(RMUD.Direction.WEST, "palantine\\library", GetObject("palantine\\disambig_blue_door"));
+        OpenLink(RMUD.Direction.EAST, "palantine\\dark_room", GetObject("palantine\\disambig_red_door"));
         OpenLink(RMUD.Direction.SOUTH, "palantine\\antechamber");
 
-        RMUD.MudObject.Move(RMUD.MudObject.GetObject("palantine\\disambig_key"), this);
-        RMUD.MudObject.Move(RMUD.MudObject.GetObject("palantine\\library_key"), this);
-        RMUD.MudObject.Move(new torch(), this);
-        RMUD.MudObject.Move(RMUD.MudObject.GetObject("palantine/skull"), this);
+        Move(GetObject("palantine\\disambig_key"), this);
+        Move(GetObject("palantine\\library_key"), this);
+        Move(new torch(), this);
+        Move(GetObject("palantine/skull"), this);
 	}
 }
 
