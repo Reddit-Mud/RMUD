@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public static partial class Mud
+    public partial class MudObject
     {
         public static Random Random = new Random();
 

@@ -23,7 +23,7 @@ namespace RMUD
                 {
                     if (Open)
                     {
-                        Mud.SendMessage(a, "It is already open.");
+                        MudObject.SendMessage(a, "It is already open.");
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Allow;
@@ -36,7 +36,7 @@ namespace RMUD
                 {
                     if (!Open)
                     {
-                        Mud.SendMessage(a, "It is already closed.");
+                        MudObject.SendMessage(a, "It is already closed.");
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Allow;
@@ -50,8 +50,8 @@ namespace RMUD
                 var otherSide = this.OppositeSide(location);
                 if (otherSide != null)
                 {
-                    Mud.SendLocaleMessage(otherSide as Room, "<a0> opens <the1>.", a, this);
-                    Mud.MarkLocaleForUpdate(otherSide);
+                    MudObject.SendLocaleMessage(otherSide as Room, "<a0> opens <the1>.", a, this);
+                    MudObject.MarkLocaleForUpdate(otherSide);
                 }
 
                 return PerformResult.Continue;
@@ -65,8 +65,8 @@ namespace RMUD
                 var otherSide = this.OppositeSide(location);
                 if (otherSide != null)
                 {
-                    Mud.SendLocaleMessage(otherSide as Room, "<a0> closes <the1>.", a, this);
-                    Mud.MarkLocaleForUpdate(otherSide);
+                    MudObject.SendLocaleMessage(otherSide as Room, "<a0> closes <the1>.", a, this);
+                    MudObject.MarkLocaleForUpdate(otherSide);
                 }
 
                 return PerformResult.Continue;

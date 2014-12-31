@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public static partial class Mud
+    public partial class MudObject
     {
         private class PendingCommand
         {
@@ -38,11 +38,17 @@ namespace RMUD
             PendingCommandLock.ReleaseMutex();
         }
 
+        public static void DiscoverCommandFactories(Assembly In, CommandParser AddTo)
+        {
+            foreach (var type in In.GetTypes())
+                if (type.IsSubclassOf(typeof(CommandFactory)))
+                    CommandFactory.CreateCommandFactory(type).Create(AddTo);
+        }
+
         private static void InitializeCommandProcessor()
         {
             DefaultParser = new CommandParser();
-            foreach (var cmd in CommandFactory.AllCommands)
-                CommandFactory.GetCommand(cmd).Create(DefaultParser);
+            DiscoverCommandFactories(Assembly.GetExecutingAssembly(), DefaultParser);
 
             foreach (var cmd in DefaultParser.Commands)
                 cmd.VerifyCompleteness();
@@ -145,7 +151,7 @@ namespace RMUD
                                 //Kill the command processor thread.
                                 IndividualCommandThread.Abort();
                                 PendingCommand.Client.Send("Command timeout.\r\n");
-                                Mud.LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
+                                MudObject.LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
                                 IndividualCommandThread = new Thread(ProcessIndividualCommand);
                                 IndividualCommandThread.Start();
                             }

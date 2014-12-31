@@ -23,10 +23,10 @@ namespace RMUD.Commands
                     if (System.IO.File.Exists(filename))
                     {
                         foreach (var line in new ReverseLineReader(filename).Take(count).Reverse())
-                            Mud.SendMessage(actor, line);
+                            MudObject.SendMessage(actor, line);
                     }
                     else
-                        Mud.SendMessage(actor, "I could not find that log gile.");
+                        MudObject.SendMessage(actor, "I could not find that log gile.");
                     return PerformResult.Continue;
                 });
         }

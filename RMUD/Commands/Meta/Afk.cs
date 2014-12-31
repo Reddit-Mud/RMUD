@@ -19,7 +19,7 @@ namespace RMUD.Commands
                 {
                     if (actor.ConnectedClient != null)
                         actor.ConnectedClient.Account.AFKMessage = match["MESSAGE"].ToString();
-                    Mud.SendMessage(actor, "AFK message set.");
+                    MudObject.SendMessage(actor, "AFK message set.");
                     return PerformResult.Continue;
                 });
         }

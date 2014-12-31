@@ -20,9 +20,9 @@ namespace RMUD
 
         public static void Introduce(Actor Introductee)
         {
-            var locale = Mud.FindLocale(Introductee);
+            var locale = MudObject.FindLocale(Introductee);
             if (locale != null)
-                foreach (var player in Mud.EnumerateObjectTree(locale).Where(o => o is Player).Select(o => o as Player))
+                foreach (var player in MudObject.EnumerateObjectTree(locale).Where(o => o is Player).Select(o => o as Player))
                     IntroduceActorToActor(Introductee, player);
         }
     }

@@ -27,13 +27,13 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     var target = match["OBJECT"] as MudObject;
-                    Mud.SendMessage(actor, target.GetType().Name);
+                    MudObject.SendMessage(actor, target.GetType().Name);
 
                     foreach (var @interface in target.GetType().GetInterfaces())
-                        Mud.SendMessage(actor, "Implements " + @interface.Name);
+                        MudObject.SendMessage(actor, "Implements " + @interface.Name);
 
                     foreach (var field in target.GetType().GetFields())
-                        Mud.SendMessage(actor, "field " + field.FieldType.Name + " " + field.Name + " = " + WriteValue(field.GetValue(target)));
+                        MudObject.SendMessage(actor, "field " + field.FieldType.Name + " " + field.Name + " = " + WriteValue(field.GetValue(target)));
 
                     foreach (var property in target.GetType().GetProperties())
                     {
@@ -47,7 +47,7 @@ namespace RMUD.Commands
                             }
                             catch (Exception) { s += "[Error reading value]"; }
                         }
-                        Mud.SendMessage(actor, s);
+                        MudObject.SendMessage(actor, s);
                     }
 
                     return PerformResult.Continue;

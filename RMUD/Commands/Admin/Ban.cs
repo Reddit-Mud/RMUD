@@ -14,9 +14,9 @@ namespace RMUD.Commands
                 .Manual("Lists all active bans.")
                 .ProceduralRule((match, actor) =>
                 {
-                    Mud.SendMessage(actor, "~~~ ALL SET BANS ~~~");
-                    foreach (var proscription in Mud.ProscriptionList.Proscriptions)
-                        Mud.SendMessage(actor, proscription.Glob + " : " + proscription.Reason);
+                    MudObject.SendMessage(actor, "~~~ ALL SET BANS ~~~");
+                    foreach (var proscription in MudObject.ProscriptionList.Proscriptions)
+                        MudObject.SendMessage(actor, proscription.Glob + " : " + proscription.Reason);
                     return PerformResult.Continue;
                 });
 
@@ -29,8 +29,8 @@ namespace RMUD.Commands
                 .Manual("Ban every player who's ip matches the mask.")
                 .ProceduralRule((match, actor) =>
                 {
-                    Mud.ProscriptionList.Ban(match["GLOB"].ToString(), match["REASON"].ToString());
-                    Mud.SendGlobalMessage("^<the0> has banned " + match["GLOB"].ToString(), actor);
+                    MudObject.ProscriptionList.Ban(match["GLOB"].ToString(), match["REASON"].ToString());
+                    MudObject.SendGlobalMessage("^<the0> has banned " + match["GLOB"].ToString(), actor);
                     return PerformResult.Continue;
                 });
 
@@ -42,8 +42,8 @@ namespace RMUD.Commands
                 .Manual("Remove an existing ban.")
                 .ProceduralRule((match, actor) =>
                 {
-                    Mud.ProscriptionList.RemoveBan(match["GLOB"].ToString());
-                    Mud.SendGlobalMessage("^<the0> removes the ban on " + match["GLOB"].ToString(), actor);
+                    MudObject.ProscriptionList.RemoveBan(match["GLOB"].ToString());
+                    MudObject.SendGlobalMessage("^<the0> removes the ban on " + match["GLOB"].ToString(), actor);
                     return PerformResult.Continue;
                 });
         }

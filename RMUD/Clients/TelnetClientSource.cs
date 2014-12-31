@@ -74,8 +74,8 @@ namespace RMUD
             }
             catch (SocketException e)
             {
-                Mud.LogCriticalError(e);
-                Mud.LogError("Failed to set keep-alive: " + e.ErrorCode);
+                MudObject.LogCriticalError(e);
+                MudObject.LogError("Failed to set keep-alive: " + e.ErrorCode);
                 return false;
             }
 
@@ -90,7 +90,7 @@ namespace RMUD
             SetKeepAlive(ClientSocket, 1000 * 60, 1000);
 
             var NewClient = new TelnetClient { Socket = ClientSocket };
-            if (Mud.ClientConnected(NewClient) == Mud.ClientAcceptanceStatus.Rejected)
+            if (MudObject.ClientConnected(NewClient) == MudObject.ClientAcceptanceStatus.Rejected)
             {
                 NewClient.WasRejected = true;
                 ClientSocket.Close();
@@ -123,7 +123,7 @@ namespace RMUD
 
             if (Client.Socket == null)
             {
-                if (!Client.WasRejected) Mud.ClientDisconnected(Client);
+                if (!Client.WasRejected) MudObject.ClientDisconnected(Client);
                 return;
             }
 
@@ -133,7 +133,7 @@ namespace RMUD
             }
             catch (Exception) //Just shut this one up.
             {
-                if (!Client.WasRejected) Mud.ClientDisconnected(Client);
+                if (!Client.WasRejected) MudObject.ClientDisconnected(Client);
                 return;
             }
 
@@ -149,7 +149,7 @@ namespace RMUD
                     else
                         Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 
-                    if (!Client.WasRejected) Mud.ClientDisconnected(Client);
+                    if (!Client.WasRejected) MudObject.ClientDisconnected(Client);
                 }
                 else
                 {
@@ -168,7 +168,7 @@ namespace RMUD
                             {
                                 String Command = Client.CommandQueue;
                                 Client.CommandQueue = "";
-                                Mud.EnqueuClientCommand(Client, Command);
+                                MudObject.EnqueuClientCommand(Client, Command);
                             }
                         }
                         else if (character == '\b')
@@ -206,7 +206,7 @@ namespace RMUD
                     Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 				Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
-                if (!Client.WasRejected) Mud.ClientDisconnected(Client);
+                if (!Client.WasRejected) MudObject.ClientDisconnected(Client);
             }
         }
     }

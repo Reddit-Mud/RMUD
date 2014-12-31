@@ -15,7 +15,7 @@ namespace RMUD
             get
             {
                 if (CachedObjectsInScope != null) return CachedObjectsInScope;
-                CachedObjectsInScope = new List<MudObject>(Mud.EnumerateVisibleTree(Mud.FindLocale(ExecutingActor)).Where(thing => !Object.ReferenceEquals(thing, ExecutingActor)));
+                CachedObjectsInScope = new List<MudObject>(MudObject.EnumerateVisibleTree(MudObject.FindLocale(ExecutingActor)).Where(thing => !Object.ReferenceEquals(thing, ExecutingActor)));
                 return CachedObjectsInScope;
             }
         }

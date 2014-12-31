@@ -48,8 +48,8 @@ namespace RMUD
             RankNames.Add(0, "proletarian");
             RankNames.Add(Int32.MinValue, "sentina");
 
-            Mud.ChatChannels.Add(new ChatChannel("OOC"));
-            Mud.ChatChannels.Add(new ChatChannel("SENATE", c => c.Rank >= 100));
+            MudObject.ChatChannels.Add(new ChatChannel("OOC"));
+            MudObject.ChatChannels.Add(new ChatChannel("SENATE", c => c.Rank >= 100));
         }
 
         public String GetNameForRank(int Rank)

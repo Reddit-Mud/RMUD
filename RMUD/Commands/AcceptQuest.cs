@@ -19,7 +19,7 @@ namespace RMUD.Commands
                 {
                     if (!(actor is Player) || (actor as Player).OfferedQuest == null)
                     {
-                        Mud.SendMessage(actor, "Nobody has offered you a quest.");
+                        MudObject.SendMessage(actor, "Nobody has offered you a quest.");
                         return PerformResult.Stop;
                     }
                     else
@@ -33,7 +33,7 @@ namespace RMUD.Commands
                     var player = actor as Player;
                     if (!GlobalRules.ConsiderValueRule<bool>("quest available?", player, player.OfferedQuest))
                     {
-                        Mud.SendMessage(actor, "The quest is no longer available.");
+                        MudObject.SendMessage(actor, "The quest is no longer available.");
                         player.OfferedQuest = null;
                         return PerformResult.Stop;
                     }

@@ -14,11 +14,11 @@ namespace RMUD.Commands
                 .Manual("Displays a list of current logged in players.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var clients = Mud.ConnectedClients.Where(c => c.IsLoggedOn);
-                    Mud.SendMessage(actor, "~~ THESE PLAYERS ARE ONLINE NOW ~~");
+                    var clients = MudObject.ConnectedClients.Where(c => c.IsLoggedOn);
+                    MudObject.SendMessage(actor, "~~ THESE PLAYERS ARE ONLINE NOW ~~");
                     foreach (var client in clients)
-                        Mud.SendMessage(actor,
-                            "[" + Mud.SettingsObject.GetNameForRank(client.Rank) + "] <a0> ["
+                        MudObject.SendMessage(actor,
+                            "[" + MudObject.SettingsObject.GetNameForRank(client.Rank) + "] <a0> ["
                             + client.ConnectionDescription + "]"
                             + (client.IsAfk ? (" afk: " + client.Account.AFKMessage) : "")
                             + (client.Player.Location != null ? (" -- " + client.Player.Location.Path) : ""),

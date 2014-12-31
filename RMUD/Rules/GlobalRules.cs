@@ -7,7 +7,12 @@ namespace RMUD
 {
     public interface DeclaresRules
     {
-        void InitializeGlobalRules();
+        void InitializeRules();
+    }
+
+    public interface HasRules
+    {
+        RuleSet Rules { get; }
     }
 
     public static partial class GlobalRules
@@ -19,33 +24,13 @@ namespace RMUD
 
         public static bool CheckGlobalRuleBookTypes(String Name, Type ResultType, params Type[] ArgumentTypes)
         {
-            if (Rules == null) InitializeGlobalRuleBooks();
+            if (Rules == null) throw new InvalidOperationException();
 
             var book = Rules.FindRuleBook(Name);
             if (book == null) return true;
 
             if (book.ResultType != ResultType) return false;
             return book.CheckArgumentTypes(ResultType, ArgumentTypes);
-        }
-
-        public static CheckResult IsVisibleTo(MudObject Actor, MudObject Item)
-        {
-            if (!Mud.IsVisibleTo(Actor, Item))
-            {
-                Mud.SendMessage(Actor, "That doesn't seem to be here any more.");
-                return CheckResult.Disallow;
-            }
-            return CheckResult.Continue;
-        }
-
-        public static CheckResult IsHolding(MudObject Actor, MudObject Item)
-        {
-            if (!Mud.ObjectContainsObject(Actor, Item))
-            {
-                Mud.SendMessage(Actor, "You don't have that.");
-                return CheckResult.Disallow;
-            }
-            return CheckResult.Continue;
         }
 
         public static void DeleteRule(String RuleBookName, String RuleID)
@@ -56,24 +41,24 @@ namespace RMUD
         public static PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
         {
             foreach (var arg in Arguments)
-                if (arg is MudObject && (arg as MudObject).Rules != null)
-                    if ((arg as MudObject).Rules.ConsiderPerformRule(Name, Arguments) == PerformResult.Stop)
+                if (arg is HasRules && (arg as HasRules).Rules != null)
+                    if ((arg as HasRules).Rules.ConsiderPerformRule(Name, Arguments) == PerformResult.Stop)
                         return PerformResult.Stop;
 
-            if (Rules == null) InitializeGlobalRuleBooks();
+            if (Rules == null) throw new InvalidOperationException();
             return Rules.ConsiderPerformRule(Name, Arguments);
         }
 
         public static CheckResult ConsiderCheckRule(String Name, params Object[] Arguments)
         {
             foreach (var arg in Arguments)
-                if (arg is MudObject && (arg as MudObject).Rules != null)
+                if (arg is HasRules && (arg as HasRules).Rules != null)
                 {
-                    var r = (arg as MudObject).Rules.ConsiderCheckRule(Name, Arguments);
+                    var r = (arg as HasRules).Rules.ConsiderCheckRule(Name, Arguments);
                     if (r != CheckResult.Continue) return r;
                 }
 
-            if (Rules == null) InitializeGlobalRuleBooks();
+            if (Rules == null) throw new InvalidOperationException();
             return Rules.ConsiderCheckRule(Name, Arguments);
         }
 
@@ -82,13 +67,13 @@ namespace RMUD
             bool valueReturned = false;
 
             foreach (var arg in Arguments)
-                if (arg is MudObject && (arg as MudObject).Rules != null)
+                if (arg is HasRules && (arg as HasRules).Rules != null)
                 {
-                    var r = (arg as MudObject).Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
+                    var r = (arg as HasRules).Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
                     if (valueReturned) return r;
                 }
 
-            if (Rules == null) InitializeGlobalRuleBooks();
+            if (Rules == null) throw new InvalidOperationException();
             return Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
         }
 
@@ -96,27 +81,27 @@ namespace RMUD
         {
             try
             {
-                Mud.SilentFlag = true;
+                MudObject.SilentFlag = true;
                 var r = ConsiderCheckRule(Name, Arguments);
-                Mud.SilentFlag = false;
+                MudObject.SilentFlag = false;
                 return r;
             }
             finally
             {
-                Mud.SilentFlag = false;
+                MudObject.SilentFlag = false;
             }
         }
 
-        private static void InitializeGlobalRuleBooks()
+        public static void DiscoverRuleBooks(System.Reflection.Assembly In)
         {
             Rules = new RuleSet();
 
-            foreach (var type in System.Reflection.Assembly.GetExecutingAssembly().GetTypes())
+            foreach (var type in In.GetTypes())
             {
                 if (type.GetInterfaces().Contains(typeof(DeclaresRules)))
                 {
                     var initializer = Activator.CreateInstance(type) as DeclaresRules;
-                    initializer.InitializeGlobalRules();
+                    initializer.InitializeRules();
                 }
             }
         }

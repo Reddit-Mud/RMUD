@@ -33,14 +33,14 @@ namespace RMUD
 
             TelnetClientSource telnetListener = null;
 
-            if (Mud.Start(commandLineOptions.DATABASEPATH))
+            if (MudObject.Start(commandLineOptions.DATABASEPATH))
             {
                 telnetListener = new TelnetClientSource();
-                telnetListener.Port = Mud.SettingsObject.TelnetPort;
+                telnetListener.Port = MudObject.SettingsObject.TelnetPort;
                 telnetListener.Listen();
             }
 
-            if (Mud.SettingsObject.UseConsoleCommands)
+            if (MudObject.SettingsObject.UseConsoleCommands)
             {
                 try
                 {
@@ -52,9 +52,9 @@ namespace RMUD
                             break;
                         else if (command.ToUpper() == "CLIENTS")
                         {
-                            Mud.DatabaseLock.WaitOne();
+                            MudObject.DatabaseLock.WaitOne();
 
-                            foreach (var client in Mud.ConnectedClients)
+                            foreach (var client in MudObject.ConnectedClients)
                             {
                                 Console.Write(client.ConnectionDescription);
                                 if (client.Player != null)
@@ -65,38 +65,38 @@ namespace RMUD
                                 Console.WriteLine();
                             }
 
-                            Mud.DatabaseLock.ReleaseMutex();
+                            MudObject.DatabaseLock.ReleaseMutex();
                         }
                         else if (command.ToUpper() == "MEMORY")
                         {
                             var mem = System.GC.GetTotalMemory(false);
                             var kb = mem / 1024.0f;
                             Console.WriteLine("Memory usage: " + String.Format("{0:n0}", kb) + " kb");
-                            Console.WriteLine("Named objects loaded: " + Mud.NamedObjects.Count);
+                            Console.WriteLine("Named objects loaded: " + MudObject.NamedObjects.Count);
                         }
                         else if (command.ToUpper() == "TIME")
                         {
-                            Mud.DatabaseLock.WaitOne();
-                            Console.WriteLine("Current time in game: {0}", Mud.TimeOfDay);
+                            MudObject.DatabaseLock.WaitOne();
+                            Console.WriteLine("Current time in game: {0}", MudObject.TimeOfDay);
                             Console.WriteLine("Advance rate: {0} per heartbeat",
-                                Mud.SettingsObject.ClockAdvanceRate);
-                            Mud.DatabaseLock.ReleaseMutex();
+                                MudObject.SettingsObject.ClockAdvanceRate);
+                            MudObject.DatabaseLock.ReleaseMutex();
                         }
                         else if (command.ToUpper() == "SAVE")
                         {
-                            Mud.DatabaseLock.WaitOne();
+                            MudObject.DatabaseLock.WaitOne();
                             Console.Write("Saving persistent instances to file...");
-                            var totalInstances = Mud.SaveActiveInstances();
+                            var totalInstances = MudObject.SaveActiveInstances();
                             Console.WriteLine(totalInstances + " instances saved");
                         }
                         else if (command.ToUpper() == "DEBUGON")
                         {
-                            Mud.CommandTimeoutEnabled = false;
+                            MudObject.CommandTimeoutEnabled = false;
                             Console.WriteLine("Debugging mode enabled");
                         }
                         else if (command.ToUpper() == "DEBUGOFF")
                         {
-                            Mud.CommandTimeoutEnabled = true;
+                            MudObject.CommandTimeoutEnabled = true;
                             Console.WriteLine("Debugging mode disabled");
                         }
                     }
@@ -116,7 +116,7 @@ namespace RMUD
             }
 
             telnetListener.Shutdown();
-            Mud.Shutdown();
+            MudObject.Shutdown();
         }
     }
 }

@@ -18,12 +18,12 @@ namespace RMUD.Commands
                 {
                     var buildVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-                    Mud.SendMessage(actor, String.Format("Build: RMUD Hadad {0}", buildVersion));
+                    MudObject.SendMessage(actor, String.Format("Build: RMUD Hadad {0}", buildVersion));
 
                     if (System.IO.File.Exists("version.txt"))
-                        Mud.SendMessage(actor, String.Format("Commit: {0}", System.IO.File.ReadAllText("version.txt")));
+                        MudObject.SendMessage(actor, String.Format("Commit: {0}", System.IO.File.ReadAllText("version.txt")));
                     else
-                        Mud.SendMessage(actor, "Commit version not found.");
+                        MudObject.SendMessage(actor, "Commit version not found.");
                     return PerformResult.Continue;
                 });
 		}

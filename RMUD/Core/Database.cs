@@ -13,7 +13,7 @@ namespace RMUD
         void Startup();
     }
 
-    public static partial class Mud
+    public partial class MudObject
     {
         public static String StaticPath { get; private set; }
         public static String DynamicPath { get; private set; }
@@ -55,12 +55,12 @@ namespace RMUD
             try
             {
                 var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("Reddit-Mud"));
-                if (!String.IsNullOrEmpty(Mud.SettingsObject.GithubAuthToken))
-                    githubClient.Credentials = new Octokit.Credentials(Mud.SettingsObject.GithubAuthToken);
+                if (!String.IsNullOrEmpty(MudObject.SettingsObject.GithubAuthToken))
+                    githubClient.Credentials = new Octokit.Credentials(MudObject.SettingsObject.GithubAuthToken);
 
                 var codeSearch = new Octokit.SearchCodeRequest(".cs")
                 {
-                    Repo = Mud.SettingsObject.GithubRepo,
+                    Repo = MudObject.SettingsObject.GithubRepo,
                     In = new[] { Octokit.CodeInQualifier.Path },
                     Page = 1
                 };
@@ -256,11 +256,11 @@ namespace RMUD
             Path = Path.Replace('\\', '/');
             if (Path.Contains("..")) return Tuple.Create(false, "Backtrack path entries are not permitted.");
 
-            if (Mud.SettingsObject.UseGithubDatabase)
+            if (MudObject.SettingsObject.UseGithubDatabase)
             {
                 try
                 {
-                    return Tuple.Create(true, WebClient.DownloadString(Mud.SettingsObject.GithubRawURL + Path + ".cs"));
+                    return Tuple.Create(true, WebClient.DownloadString(MudObject.SettingsObject.GithubRawURL + Path + ".cs"));
                 }
                 catch (Exception) { }
             }

@@ -18,7 +18,7 @@ namespace RMUD
             this.AuthenticatingCommand = AuthenticatingCommand;
             this.UserName = UserName;
 
-            Mud.SendMessage(Client, "Password: ");
+            MudObject.SendMessage(Client, "Password: ");
             Client.Echo = Echo.Mask; // TODO: Allow config setting to set this to Echo.None for extra security
 		}
 

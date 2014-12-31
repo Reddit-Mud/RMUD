@@ -20,13 +20,13 @@ namespace RMUD
             Check<MudObject, MudObject, MudObject>("can lock?").Do((actor, door, key) =>
                 {
                     if (Open) {
-                        Mud.SendMessage(actor, "You'll have to close it first.");
+                        MudObject.SendMessage(actor, "You'll have to close it first.");
                         return CheckResult.Disallow;
                     }
 
                     if (!IsMatchingKey(key))
                     {
-                        Mud.SendMessage(actor, "That is not the right key.");
+                        MudObject.SendMessage(actor, "That is not the right key.");
                         return CheckResult.Disallow;
                     }
 
@@ -50,7 +50,7 @@ namespace RMUD
                  .When((a, b) => Locked)
                  .Do((a, b) =>
                  {
-                     Mud.SendMessage(a, "It seems to be locked.");
+                     MudObject.SendMessage(a, "It seems to be locked.");
                      return CheckResult.Disallow;
                  })
                  .Name("Can't open locked door rule.");

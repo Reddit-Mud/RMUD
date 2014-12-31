@@ -19,12 +19,12 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     var path = match["PATH"].ToString();
-                    var newObject = Mud.CreateInstance(path + "@" + Guid.NewGuid().ToString(), s => Mud.SendMessage(actor, s));
-                    if (newObject == null) Mud.SendMessage(actor, "Failed to instance " + path + ".");
+                    var newObject = MudObject.CreateInstance(path + "@" + Guid.NewGuid().ToString(), s => MudObject.SendMessage(actor, s));
+                    if (newObject == null) MudObject.SendMessage(actor, "Failed to instance " + path + ".");
                     else
                     {
                         MudObject.Move(newObject, actor);
-                        Mud.SendMessage(actor, "Instanced " + path + ".");
+                        MudObject.SendMessage(actor, "Instanced " + path + ".");
                     }
                     return PerformResult.Continue;
                 });

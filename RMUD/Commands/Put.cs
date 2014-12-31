@@ -43,7 +43,7 @@ namespace RMUD.Commands
 
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("can-put", "[Actor, Item, Container, Location] : Determine if the actor can put the item in or on or under the container.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("on-put", "[Actor, Item, Container, Location] : Handle an actor putting the item in or on or under the container.");
@@ -58,7 +58,7 @@ namespace RMUD.Commands
                 {
                     if (!(container is Container))
                     {
-                        Mud.SendMessage(actor, "You can't put things " + Mud.GetRelativeLocationName(relloc) + " that.");
+                        MudObject.SendMessage(actor, "You can't put things " + MudObject.GetRelativeLocationName(relloc) + " that.");
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Continue;
@@ -77,8 +77,8 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject, MudObject, RelativeLocations>("on-put")
                 .Do((actor, item, container, relloc) =>
                 {
-                    Mud.SendMessage(actor, String.Format("You put <the0> {0} <the1>.", Mud.GetRelativeLocationName(relloc)), item, container);
-                    Mud.SendExternalMessage(actor, String.Format("<a0> puts <a1> {0} <a2>.", Mud.GetRelativeLocationName(relloc)), actor, item, container);
+                    MudObject.SendMessage(actor, String.Format("You put <the0> {0} <the1>.", MudObject.GetRelativeLocationName(relloc)), item, container);
+                    MudObject.SendExternalMessage(actor, String.Format("<a0> puts <a1> {0} <a2>.", MudObject.GetRelativeLocationName(relloc)), actor, item, container);
                     MudObject.Move(item, container, relloc);
                     return PerformResult.Continue;
                 })
@@ -90,7 +90,7 @@ namespace RMUD.Commands
                     var c = container as Container;
                     if (c == null || (c.LocationsSupported & relloc) != relloc)
                     {
-                        Mud.SendMessage(actor, String.Format("You can't put something {0} that.", Mud.GetRelativeLocationName(relloc)));
+                        MudObject.SendMessage(actor, String.Format("You can't put something {0} that.", MudObject.GetRelativeLocationName(relloc)));
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Continue;
@@ -102,7 +102,7 @@ namespace RMUD.Commands
                 {
                     if (relloc == RelativeLocations.In && !GlobalRules.ConsiderValueRule<bool>("open?", container))
                     {
-                        Mud.SendMessage(actor, "It seems to be closed.");
+                        MudObject.SendMessage(actor, "It seems to be closed.");
                         return CheckResult.Disallow;
                     }
 
@@ -112,12 +112,12 @@ namespace RMUD.Commands
 
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
                 .First
-                .Do((actor, item, container, relloc) => GlobalRules.IsVisibleTo(actor, container))
+                .Do((actor, item, container, relloc) => MudObject.CheckIsVisibleTo(actor, container))
                 .Name("Container must be visible rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
                 .First
-                .Do((actor, item, container, relloc) => GlobalRules.IsHolding(actor, item))
+                .Do((actor, item, container, relloc) => MudObject.CheckIsHolding(actor, item))
                 .Name("Must be holding item rule.");
         }
     }

@@ -19,7 +19,7 @@ namespace RMUD.Commands
                 {
                     if (actor != null)
                     {
-                        Mud.SendMessage(actor, "You are already logged in.");
+                        MudObject.SendMessage(actor, "You are already logged in.");
                         return PerformResult.Stop;
                     }
 
@@ -33,17 +33,17 @@ namespace RMUD.Commands
 
         public void Authenticate(Client Client, String UserName, String Password)
         {
-            var existingAccount = Mud.FindAccount(UserName);
+            var existingAccount = MudObject.FindAccount(UserName);
             if (existingAccount != null)
             {
-                Mud.SendMessage(Client, "Account already exists.");
+                MudObject.SendMessage(Client, "Account already exists.");
                 return;
             }
 
-            var newAccount = Mud.CreateAccount(UserName, Password);
+            var newAccount = MudObject.CreateAccount(UserName, Password);
             if (newAccount == null)
             {
-                Mud.SendMessage(Client, "Could not create account.");
+                MudObject.SendMessage(Client, "Could not create account.");
                 return;
             }
 

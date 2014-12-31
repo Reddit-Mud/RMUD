@@ -24,7 +24,7 @@ namespace RMUD.Commands
                 .Perform("locked", "ACTOR", "SUBJECT", "KEY");
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("lockable?", "[Item] : Can this item be locked?");
 
@@ -33,18 +33,18 @@ namespace RMUD.Commands
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject>("can lock?", "[Actor, Item, Key] : Can the item be locked by the actor with the key?");
             
             GlobalRules.Check<MudObject, MudObject, MudObject>("can lock?")
-                .Do((actor, item, key) => GlobalRules.IsVisibleTo(actor, item))
+                .Do((actor, item, key) => MudObject.CheckIsVisibleTo(actor, item))
                 .Name("Item must be visible to lock it.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can lock?")
-                .Do((actor, item, key) => GlobalRules.IsHolding(actor, key))
+                .Do((actor, item, key) => MudObject.CheckIsHolding(actor, key))
                 .Name("Key must be held rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can lock?")
                 .When((actor, item, key) => !GlobalRules.ConsiderValueRule<bool>("lockable?", item))
                 .Do((a, b, c) =>
                 {
-                    Mud.SendMessage(a, "I don't think the concept of 'locked' applies to that.");
+                    MudObject.SendMessage(a, "I don't think the concept of 'locked' applies to that.");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't lock the unlockable rule.");
@@ -57,8 +57,8 @@ namespace RMUD.Commands
 
             GlobalRules.Perform<MudObject, MudObject, MudObject>("locked").Do((actor, target, key) =>
             {
-                Mud.SendMessage(actor, "You lock <the0>.", target);
-                Mud.SendExternalMessage(actor, "<a0> locks <a1> with <a2>.", actor, target, key);
+                MudObject.SendMessage(actor, "You lock <the0>.", target);
+                MudObject.SendExternalMessage(actor, "<a0> locks <a1> with <a2>.", actor, target, key);
                 return PerformResult.Continue;
             });
         }

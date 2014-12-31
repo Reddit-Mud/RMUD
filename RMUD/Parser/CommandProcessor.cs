@@ -14,9 +14,9 @@ namespace RMUD
     {
         public static bool CheckHolding(MudObject Actor, MudObject Target)
         {
-            if (!Mud.ObjectContainsObject(Actor, Target))
+            if (!MudObject.ObjectContainsObject(Actor, Target))
             {
-                Mud.SendMessage(Actor, "You'd have to be holding <the0> for that to work.", Target);
+                MudObject.SendMessage(Actor, "You'd have to be holding <the0> for that to work.", Target);
                 return false;
             }
             return true;

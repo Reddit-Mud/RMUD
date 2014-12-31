@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public static partial class Mud
+    public partial class MudObject
     {
         private static String CriticalLog = "errors.log";
 

@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public static partial class Mud
+    public partial class MudObject
     {
         internal static List<Client> ConnectedClients = new List<Client>();
         internal static Mutex DatabaseLock = new Mutex();
@@ -50,8 +50,8 @@ namespace RMUD
 
             Client.CommandHandler = LoginCommandHandler;
 
-            Mud.SendMessage(Client, Mud.SettingsObject.Banner);
-            Mud.SendMessage(Client, Mud.SettingsObject.MessageOfTheDay);
+            MudObject.SendMessage(Client, MudObject.SettingsObject.Banner);
+            MudObject.SendMessage(Client, MudObject.SettingsObject.MessageOfTheDay);
 
             ConnectedClients.Add(Client);
 
@@ -78,6 +78,7 @@ namespace RMUD
                 ProscriptionList = new ProscriptionList(basePath + SettingsObject.ProscriptionList);
 
                 InitializeCommandProcessor();
+                GlobalRules.DiscoverRuleBooks(System.Reflection.Assembly.GetExecutingAssembly());
                 InitializeStaticManPages();
 
                     var start = DateTime.Now;

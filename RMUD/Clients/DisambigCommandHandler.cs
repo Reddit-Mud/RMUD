@@ -68,11 +68,11 @@ namespace RMUD
                 response.Append("Which did you mean?\r\n");
                 for (var i = 0; i < DisambigObjects.Count; ++i)
                     response.Append(String.Format("{0}: {1}\r\n", i, DisambigObjects[i].Definite(Client.Player)));
-                Mud.SendMessage(Client, response.ToString());
+                MudObject.SendMessage(Client, response.ToString());
             }
             else
             {
-                Mud.SendMessage(Client, "I couldn't figure out how to disambiguate that command.");
+                MudObject.SendMessage(Client, "I couldn't figure out how to disambiguate that command.");
             }
 		}
 
@@ -83,7 +83,7 @@ namespace RMUD
             //Just retry if the attempt to help has failed.
             if (DisambigObjects == null)
             {
-                Mud.EnqueuClientCommand(Client, Command);
+                MudObject.EnqueuClientCommand(Client, Command);
                 return;
             }
             
@@ -91,24 +91,24 @@ namespace RMUD
             if (Int32.TryParse(Command, out ordinal))
             {
                 if (ordinal < 0 || ordinal >= DisambigObjects.Count)
-                    Mud.SendMessage(Client, "That wasn't a valid option. I'm aborting disambiguation.");
+                    MudObject.SendMessage(Client, "That wasn't a valid option. I'm aborting disambiguation.");
                 else
                 {
                     var choosenMatches = MatchedCommand.Matches.Where(m => Object.ReferenceEquals(m[DisambigArgument], DisambigObjects[ordinal]));
                     MatchedCommand.Matches = new List<PossibleMatch>(choosenMatches);
 
                     if (MatchedCommand.Matches.Count == 1)
-                        Mud.ProcessPlayerCommand(MatchedCommand.Command, MatchedCommand.Matches[0], Client.Player);
+                        MudObject.ProcessPlayerCommand(MatchedCommand.Command, MatchedCommand.Matches[0], Client.Player);
                     else
                     {
-                        Mud.SendMessage(Client, "That helped narrow it down, but I'm still not sure what you mean.");
+                        MudObject.SendMessage(Client, "That helped narrow it down, but I'm still not sure what you mean.");
                         Client.CommandHandler = new DisambigCommandHandler(Client, MatchedCommand, ParentHandler);
                     }
                 }
             }
             else //Player didn't type an ordinal; retry.
             {
-                Mud.EnqueuClientCommand(Client, Command);
+                MudObject.EnqueuClientCommand(Client, Command);
             }
         }
     }

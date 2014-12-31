@@ -23,7 +23,7 @@ namespace RMUD.Commands
                 {
                     if (System.Object.ReferenceEquals(actor, match["PLAYER"]))
                     {
-                        Mud.SendMessage(actor, "Talking to yourself?");
+                        MudObject.SendMessage(actor, "Talking to yourself?");
                         return PerformResult.Stop;
                     }
                     return PerformResult.Continue;
@@ -31,10 +31,10 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     var player = match["PLAYER"] as Actor;
-                    Mud.SendMessage(player, "[privately " + DateTime.Now + "] ^<the0> : \"" + match["SPEECH"].ToString() + "\"", actor);
-                    Mud.SendMessage(actor, "[privately to <the0>] ^<the1> : \"" + match["SPEECH"].ToString() + "\"", player, actor);
+                    MudObject.SendMessage(player, "[privately " + DateTime.Now + "] ^<the0> : \"" + match["SPEECH"].ToString() + "\"", actor);
+                    MudObject.SendMessage(actor, "[privately to <the0>] ^<the1> : \"" + match["SPEECH"].ToString() + "\"", player, actor);
                     if (player.ConnectedClient != null && player.ConnectedClient.IsAfk)
-                        Mud.SendMessage(actor, "^<the0> is afk : " + player.ConnectedClient.Account.AFKMessage, player);
+                        MudObject.SendMessage(actor, "^<the0> is afk : " + player.ConnectedClient.Account.AFKMessage, player);
                     return PerformResult.Continue;
                 });
         }

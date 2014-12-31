@@ -16,15 +16,15 @@ namespace RMUD.Commands
                 .Manual("Saves all persistent objects to disc.")
                 .ProceduralRule((match, actor) =>
                 {
-                    Mud.CommandTimeoutEnabled = false;
+                    MudObject.CommandTimeoutEnabled = false;
 
-                    Mud.SendGlobalMessage("The database is being saved. There may be a brief delay.");
-                    Mud.SendPendingMessages();
+                    MudObject.SendGlobalMessage("The database is being saved. There may be a brief delay.");
+                    MudObject.SendPendingMessages();
 
-                    var saved = Mud.SaveActiveInstances();
+                    var saved = MudObject.SaveActiveInstances();
 
-                    Mud.SendGlobalMessage("The database has been saved.");
-                    Mud.SendMessage(actor, String.Format("I saved {0} persistent objects.", saved));
+                    MudObject.SendGlobalMessage("The database has been saved.");
+                    MudObject.SendMessage(actor, String.Format("I saved {0} persistent objects.", saved));
                     return PerformResult.Continue;
                 });
 		}

@@ -44,7 +44,6 @@ namespace RMUD
 			var rootMatch = new PossibleMatch(tokens.First);
             rootMatch.Upsert("ACTOR", Actor);
 
-			//Find all objects in scope
 			var matchContext = new MatchContext { ExecutingActor = Actor };
 
             foreach (var command in Commands)
@@ -60,7 +59,7 @@ namespace RMUD
                     return new MatchedCommand(
                         new CommandEntry().ProceduralRule((match, actor) => 
                         {
-                            Mud.SendMessage(actor, ma.Message);
+                            MudObject.SendMessage(actor, ma.Message);
                             return PerformResult.Continue;
                         }), 
                         new PossibleMatch[] { new PossibleMatch(null) });

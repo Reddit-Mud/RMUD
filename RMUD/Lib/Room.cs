@@ -13,7 +13,7 @@ namespace RMUD
 
     public class RoomLightingRules : DeclaresRules
     {
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, LightingLevel>("emits-light", "[item] -> LightingLevel, How much light does the item emit?");
             GlobalRules.Value<MudObject, LightingLevel>("emits-light").Do(item => LightingLevel.Dark);
@@ -30,9 +30,9 @@ namespace RMUD
 		public void OpenLink(Direction Direction, String Destination, MudObject Portal = null)
 		{
             if (Portal != null && !(Portal is Portal)) 
-                Mud.LogWarning("Object passed to OpenLink in " + Path + " is not a portal.");
+                MudObject.LogWarning("Object passed to OpenLink in " + Path + " is not a portal.");
             if (RemoveAll(thing => thing is Link && (thing as Link).Direction == Direction) > 0)
-                Mud.LogWarning("Opened duplicate link in " + Path);
+                MudObject.LogWarning("Opened duplicate link in " + Path);
 
             var link = new Link { Direction = Direction, Destination = Destination, Portal = Portal as Portal };
             if (Portal is Portal) (Portal as Portal).AddSide(this);
@@ -68,11 +68,11 @@ namespace RMUD
 
             if (RoomType == RMUD.RoomType.Exterior)
             {
-                AmbientLighting = Mud.AmbientExteriorLightingLevel;
+                AmbientLighting = MudObject.AmbientExteriorLightingLevel;
             }
             else
             {
-                foreach (var item in Mud.EnumerateVisibleTree(this))
+                foreach (var item in MudObject.EnumerateVisibleTree(this))
                 {
                     var lightingLevel = GlobalRules.ConsiderValueRule<LightingLevel>("emits-light", item);
                     if (lightingLevel > AmbientLighting) AmbientLighting = lightingLevel;

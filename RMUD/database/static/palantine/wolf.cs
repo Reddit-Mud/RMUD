@@ -7,7 +7,7 @@
         Perform<RMUD.MudObject, RMUD.MudObject, RMUD.MudObject>("topic response")
             .Do((actor, npc, topic) =>
             {
-                RMUD.Mud.SendLocaleMessage(actor, "The wolf snarls and howls, showing its large sharp teeth.");
+                RMUD.MudObject.SendLocaleMessage(actor, "The wolf snarls and howls, showing its large sharp teeth.");
                 return RMUD.PerformResult.Stop;
             });
 
@@ -18,9 +18,9 @@
 
         Perform<RMUD.MudObject, RMUD.MudObject>("handle-entrail-drop").Do((wolf, entrails) =>
             {
-                RMUD.Mud.SendLocaleMessage(this, "The wolf snatches up the entrails.");
+                RMUD.MudObject.SendLocaleMessage(this, "The wolf snatches up the entrails.");
                 IsFed = true;
-                RMUD.MudObject.Move(entrails, RMUD.Mud.GetObject("palantine/soranus"), RMUD.RelativeLocations.Worn);
+                RMUD.MudObject.Move(entrails, RMUD.MudObject.GetObject("palantine/soranus"), RMUD.RelativeLocations.Worn);
                 return RMUD.PerformResult.Stop;
             });
 
@@ -35,7 +35,7 @@
         RMUD.GlobalRules.Perform("heartbeat").Do(() =>
         {
             if (!IsFed)
-                RMUD.Mud.SendLocaleMessage(this, "The wolf whines for food.");
+                RMUD.MudObject.SendLocaleMessage(this, "The wolf whines for food.");
             return RMUD.PerformResult.Continue;
         });
     }

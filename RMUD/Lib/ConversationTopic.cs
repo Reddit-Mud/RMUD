@@ -7,7 +7,7 @@ namespace RMUD
 {
     public class ConversationRules : DeclaresRules
     {
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, MudObject, MudObject, bool>("topic available?", "[Actor, NPC, Topic -> bool] : Is the topic available for discussion with the NPC to the actor?");
 

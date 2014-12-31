@@ -13,7 +13,7 @@
         RMUD.MudObject.Move(table, this);
 
         RMUD.MudObject.Move(new RMUD.MudObject("old vase", "An old, cracked vase."), table);
-        RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine/ball"), this);
+        RMUD.MudObject.Move(RMUD.MudObject.GetObject("palantine/ball"), this);
 
 
         OpenLink(RMUD.Direction.NORTH, "palantine/disambig");
@@ -46,7 +46,7 @@ public class Table : RMUD.Container
 
         Check<RMUD.MudObject, RMUD.MudObject>("can take?").Do((actor, thing) =>
         {
-            RMUD.Mud.SendMessage(actor, "It's far too heavy.");
+            RMUD.MudObject.SendMessage(actor, "It's far too heavy.");
             return RMUD.CheckResult.Disallow;
         });
 

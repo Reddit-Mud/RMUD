@@ -27,11 +27,11 @@ namespace RMUD.Commands
                         var maskRegex = new System.Text.RegularExpressions.Regex(ProscriptionList.ConvertGlobToRegex(mask), System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
                         //Iterate over local copy because kicking modifies ConnectedClients.
-                        foreach (var client in new List<Client>(Mud.ConnectedClients))
+                        foreach (var client in new List<Client>(MudObject.ConnectedClients))
                         {
                             if (client.IsLoggedOn && maskRegex.Matches(client.IPString).Count > 0)
                             {
-                                Mud.MarkLocaleForUpdate(client.Player);
+                                MudObject.MarkLocaleForUpdate(client.Player);
                                 KickPlayer(client.Player, actor);
                             }
                         }
@@ -45,11 +45,11 @@ namespace RMUD.Commands
         {
             if (Player.ConnectedClient != null)
             {
-                Mud.MarkLocaleForUpdate(Player);
+                MudObject.MarkLocaleForUpdate(Player);
 
-                Mud.SendMessage(Player, Actor.Short + " has removed you from the server.");
+                MudObject.SendMessage(Player, Actor.Short + " has removed you from the server.");
                 Player.ConnectedClient.Disconnect();
-                Mud.SendGlobalMessage(Actor.Short + " has removed " + Player.Short + " from the server.");
+                MudObject.SendGlobalMessage(Actor.Short + " has removed " + Player.Short + " from the server.");
             }
         }
     }

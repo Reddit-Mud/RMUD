@@ -18,7 +18,7 @@ namespace RMUD
         }
     }
 
-    public static partial class Mud
+    public partial class MudObject
     {
         public static List<ChatChannel> ChatChannels = new List<ChatChannel>();
 
@@ -36,7 +36,7 @@ namespace RMUD
             System.IO.File.AppendAllText(chatLogFilename, realMessage + "\n");
 
             foreach (var client in Channel.Subscribers.Where(c => c.IsLoggedOn))
-                Mud.SendMessage(client, realMessage);
+                MudObject.SendMessage(client, realMessage);
         }
 
         public static void RemoveClientFromAllChannels(Client Client)
@@ -59,7 +59,7 @@ namespace RMUD
         {
             var r = new List<PossibleMatch>();
             if (State.Next == null) return r;
-            var channel = Mud.FindChatChannel(State.Next.Value.ToUpper());
+            var channel = MudObject.FindChatChannel(State.Next.Value.ToUpper());
             if (channel != null)
                 r.Add(State.AdvanceWith(ArgumentName, channel));
             return r;

@@ -39,7 +39,7 @@ And we can dance")
                 .Perform("dance", "ACTOR");
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("silly?", "[Thing -> bool] : Determine if an object is silly.");
             GlobalRules.Value<MudObject, bool>("silly?").Last.Do((thing) => false).Name("Things are serious by default rule.");
@@ -50,20 +50,20 @@ And we can dance")
                 .When((actor, target) => !(target is Actor))
                 .Do((actor, target) =>
                 {
-                    Mud.SendMessage(actor, "That just sounds silly.");
+                    MudObject.SendMessage(actor, "That just sounds silly.");
                     return CheckResult.Disallow;
                 })
                 .Name("Can only silly actors rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can silly?")
-                .Do((actor, target) => GlobalRules.IsVisibleTo(actor, target))
+                .Do((actor, target) => MudObject.CheckIsVisibleTo(actor, target))
                 .Name("Silly target must be visible.");
 
             GlobalRules.Check<MudObject, MudObject>("can silly?")
                 .When((actor, target) => GlobalRules.ConsiderValueRule<bool>("silly?", target))
                 .Do((actor, target) =>
                 {
-                    Mud.SendMessage(actor, "^<the0> is already silly.", target);
+                    MudObject.SendMessage(actor, "^<the0> is already silly.", target);
                     return CheckResult.Disallow;
                 })
                 .Name("Can't silly if already silly rule.");
@@ -78,8 +78,8 @@ And we can dance")
             GlobalRules.Perform<MudObject, MudObject>("silly")
                 .Do((actor, target) =>
                 {
-                    Mud.SendExternalMessage(actor, "^<the0> applies extra silly to <the1>.", actor, target);
-                    Mud.SendMessage(actor, "You apply extra silly to <the0>.", target);
+                    MudObject.SendExternalMessage(actor, "^<the0> applies extra silly to <the1>.", actor, target);
+                    MudObject.SendMessage(actor, "You apply extra silly to <the0>.", target);
 
                     var ruleID = Guid.NewGuid();
                     var counter = 100;
@@ -103,7 +103,7 @@ And we can dance")
                             counter -= 1;
                             if (counter <= 0)
                             {
-                                Mud.SendExternalMessage(target, "^<the0> is serious now.", target);
+                                MudObject.SendExternalMessage(target, "^<the0> is serious now.", target);
                                 target.Nouns.Remove("silly");
                                 target.Rules.DeleteAll(ruleID.ToString());
                                 GlobalRules.DeleteRule("heartbeat", ruleID.ToString());
@@ -123,7 +123,7 @@ And we can dance")
                 .When(actor => !GlobalRules.ConsiderValueRule<bool>("silly?", actor))
                 .Do(actor =>
                 {
-                    Mud.SendMessage(actor, "You don't feel silly enough for that.");
+                    MudObject.SendMessage(actor, "You don't feel silly enough for that.");
                     return CheckResult.Disallow;
                 })
                 .Name("Your friends don't dance rule.");
@@ -138,8 +138,8 @@ And we can dance")
             GlobalRules.Perform<MudObject>("dance")
                 .Do(actor =>
                 {
-                    Mud.SendExternalMessage(actor, "^<the0> does a very silly dance.", actor);
-                    Mud.SendMessage(actor, "You do a very silly dance.");
+                    MudObject.SendExternalMessage(actor, "^<the0> does a very silly dance.", actor);
+                    MudObject.SendMessage(actor, "You do a very silly dance.");
                     return PerformResult.Continue;
                 })
                 .Name("They aren't no friends of mine rule.");

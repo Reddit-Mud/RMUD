@@ -12,7 +12,7 @@ namespace RMUD
         Dark = 0
     }
 
-    public partial class Mud
+    public partial class MudObject
     {
         /// <summary>
         /// This should factor in the time of day, and the phase of the moon if at night, to determine if there is adequate lighting for exterior rooms to be visible.

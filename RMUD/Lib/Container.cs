@@ -83,7 +83,7 @@ namespace RMUD
                 Reader.Read();
                 while (Reader.TokenType != Newtonsoft.Json.JsonToken.EndArray)
                 {
-                    var mudObject = Mud.GetObject(Reader.Value.ToString());
+                    var mudObject = MudObject.GetObject(Reader.Value.ToString());
                     if (mudObject != null) l.Add(mudObject);
                     mudObject.Location = Owner;
                     Reader.Read();

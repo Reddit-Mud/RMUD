@@ -19,7 +19,7 @@ namespace RMUD.Commands
                 {
                     if (actor != null)
                     {
-                        Mud.SendMessage(actor, "You are already logged in.");
+                        MudObject.SendMessage(actor, "You are already logged in.");
                         return PerformResult.Stop;
                     }
 
@@ -33,10 +33,10 @@ namespace RMUD.Commands
 
         public void Authenticate(Client Client, String UserName, String Password)
         {
-            var existingAccount = Mud.FindAccount(UserName);
-            if (existingAccount == null || Mud.VerifyAccount(existingAccount, Password) == false)
+            var existingAccount = MudObject.FindAccount(UserName);
+            if (existingAccount == null || MudObject.VerifyAccount(existingAccount, Password) == false)
             {
-                Mud.SendMessage(Client, "Could not verify account.");
+                MudObject.SendMessage(Client, "Could not verify account.");
                 return;
             }
 

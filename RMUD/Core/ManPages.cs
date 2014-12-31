@@ -27,11 +27,11 @@ namespace RMUD
 
         public void SendManPage(MudObject To)
         {
-            Mud.SendMessage(To, Text);
+            MudObject.SendMessage(To, Text);
         }
     }
     
-    public static partial class Mud
+    public partial class MudObject
     {
         public static List<ManPage> ManPages = new List<ManPage>();
 

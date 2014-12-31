@@ -20,7 +20,7 @@ namespace RMUD.Commands
                 .Perform("removed", "ACTOR", "OBJECT");
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can remove?", "[Actor, Item] : Can the actor remove the item?");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("removed", "[Actor, Item] : Handle the actor removing the item.");
@@ -29,7 +29,7 @@ namespace RMUD.Commands
                 .When((a, b) => !(a is Actor) || !(a as Actor).Contains(b, RelativeLocations.Worn))
                 .Do((actor, item) =>
                 {
-                    Mud.SendMessage(actor, "You'd have to be actually wearing that first.");
+                    MudObject.SendMessage(actor, "You'd have to be actually wearing that first.");
                     return CheckResult.Disallow;
                 });
            
@@ -37,9 +37,9 @@ namespace RMUD.Commands
 
             GlobalRules.Perform<MudObject, MudObject>("removed").Do((actor, target) =>
                 {
-                    Mud.SendMessage(actor, "You remove <the0>.", target);
-                    Mud.SendExternalMessage(actor, "<a0> removes <a1>.", actor, target);
-                    Mud.Move(target, actor, RelativeLocations.Held);
+                    MudObject.SendMessage(actor, "You remove <the0>.", target);
+                    MudObject.SendExternalMessage(actor, "<a0> removes <a1>.", actor, target);
+                    MudObject.Move(target, actor, RelativeLocations.Held);
                     return PerformResult.Continue;
                 });
         }

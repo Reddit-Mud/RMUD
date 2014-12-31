@@ -45,7 +45,7 @@
                     builder.Append("\r\n");
                 }
 
-                RMUD.Mud.SendMessage(viewer, builder.ToString());
+                SendMessage(viewer, builder.ToString());
                 return RMUD.PerformResult.Continue;
             });
     }
@@ -68,7 +68,7 @@
         foreach (var _link in Location.EnumerateObjects().Where(t => t is RMUD.Link))
         {
             var link = _link as RMUD.Link;
-            var destination = RMUD.Mud.GetObject(link.Destination) as RMUD.Room;
+            var destination = GetObject(link.Destination) as RMUD.Room;
             var directionVector = RMUD.Link.GetAsVector(link.Direction);
             PlaceEdge(MapGrid, X + directionVector.X, Y + directionVector.Y, link.Direction);
 

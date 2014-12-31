@@ -24,7 +24,7 @@ namespace RMUD.Commands
                 .Perform("closed", "ACTOR", "SUBJECT");
 		}
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can close?", "[Actor, Item] : Determine if the item can be closed.");
 
@@ -34,7 +34,7 @@ namespace RMUD.Commands
                 .When((actor, item) => !GlobalRules.ConsiderValueRule<bool>("openable?", item))
                 .Do((a, b) =>
                 {
-                    Mud.SendMessage(a, "I don't think the concept of 'open' applies to that.");
+                    MudObject.SendMessage(a, "I don't think the concept of 'open' applies to that.");
                     return CheckResult.Disallow;
                 })
                 .Name("Default can't close unopenable things rule.");
@@ -45,12 +45,12 @@ namespace RMUD.Commands
 
             GlobalRules.Perform<MudObject, MudObject>("closed").Do((actor, target) =>
             {
-                Mud.SendMessage(actor, "You close <the0>.", target);
-                Mud.SendExternalMessage(actor, "^<a0> closes <a1>.", actor, target);
+                MudObject.SendMessage(actor, "You close <the0>.", target);
+                MudObject.SendExternalMessage(actor, "^<a0> closes <a1>.", actor, target);
                 return PerformResult.Continue;
             }).Name("Default close reporting rule.");
 
-            GlobalRules.Check<MudObject, MudObject>("can close?").First.Do((actor, item) => GlobalRules.IsVisibleTo(actor, item)).Name("Item must be visible rule.");
+            GlobalRules.Check<MudObject, MudObject>("can close?").First.Do((actor, item) => MudObject.CheckIsVisibleTo(actor, item)).Name("Item must be visible rule.");
         }
     }
 }

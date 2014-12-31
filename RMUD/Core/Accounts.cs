@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace RMUD
 {
-    public static partial class Mud
+    public partial class MudObject
     {
         public static List<Account> Accounts = new List<Account>();
 
@@ -80,7 +80,7 @@ namespace RMUD
             character.Instance = "main";
             character.Short = Account.UserName;
             character.Nouns.Add(Account.UserName.ToUpper());
-            Mud.PersistInstance(character);            
+            MudObject.PersistInstance(character);            
             return character;
         }
 
@@ -88,7 +88,7 @@ namespace RMUD
         {
             try
             {
-                var directory = Mud.AccountsPath + account.UserName;
+                var directory = MudObject.AccountsPath + account.UserName;
                 var filename = directory + "/account.txt";
                 var json = JsonConvert.SerializeObject(account, Formatting.Indented);
                 System.IO.Directory.CreateDirectory(directory);
@@ -96,7 +96,7 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                Mud.LogError(String.Format("While saving account {0} - {1}", account.UserName, e.Message));
+                MudObject.LogError(String.Format("While saving account {0} - {1}", account.UserName, e.Message));
             }
         }
 
@@ -105,7 +105,7 @@ namespace RMUD
             Account account = null;
             try 
             {
-                var filename = Mud.AccountsPath + UserName + "/account.txt";
+                var filename = MudObject.AccountsPath + UserName + "/account.txt";
                 if (File.Exists(filename))
                 {
                     var json = File.ReadAllText(filename);
@@ -114,7 +114,7 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                Mud.LogError(String.Format("While loading account {0} - {1}", UserName, e.Message));
+                MudObject.LogError(String.Format("While loading account {0} - {1}", UserName, e.Message));
             }
 
             return account;

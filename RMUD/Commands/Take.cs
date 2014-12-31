@@ -28,20 +28,20 @@ namespace RMUD.Commands
                 .MarkLocaleForUpdate();
 		}
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can take?", "[Actor, Item] : Can the actor take the item?");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("taken", "[Actor, Item] : Handle the actor taking the item.");
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
-                .Do((actor, item) => GlobalRules.IsVisibleTo(actor, item))
+                .Do((actor, item) => MudObject.CheckIsVisibleTo(actor, item))
                 .Name("Item must be visible to take rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .When((actor, item) => actor is Container && (actor as Container).Contains(item, RelativeLocations.Held))
                 .Do((actor, item) =>
                 {
-                    Mud.SendMessage(actor, "You are already holding that.");
+                    MudObject.SendMessage(actor, "You are already holding that.");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't take what you're already holding rule.");
@@ -54,8 +54,8 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject>("taken")
                 .Do((actor, target) =>
                 {
-                    Mud.SendMessage(actor, "You take <a0>.", target);
-                    Mud.SendExternalMessage(actor, "<a0> takes <a1>.", actor, target);
+                    MudObject.SendMessage(actor, "You take <a0>.", target);
+                    MudObject.SendExternalMessage(actor, "<a0> takes <a1>.", actor, target);
                     MudObject.Move(target, actor);
                     return PerformResult.Continue;
                 })

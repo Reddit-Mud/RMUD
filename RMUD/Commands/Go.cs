@@ -28,13 +28,13 @@ namespace RMUD.Commands
                 .Perform("go", "ACTOR", "LINK")
                 .ProceduralRule((match, actor) =>
                 {
-                    Mud.MarkLocaleForUpdate(actor);
-                    Mud.MarkLocaleForUpdate(match["LINK"] as MudObject);
+                    MudObject.MarkLocaleForUpdate(actor);
+                    MudObject.MarkLocaleForUpdate(match["LINK"] as MudObject);
                     return PerformResult.Continue;
                 }, "Mark both sides of link for update rule");
 		}
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, Link>("can go?", "[Actor, Link] : Can the actor go through that link?");
 
@@ -42,7 +42,7 @@ namespace RMUD.Commands
                 .When((actor, link) => link == null)
                 .Do((actor, link) =>
                 {
-                    Mud.SendMessage(actor, "You can't go that way.");
+                    MudObject.SendMessage(actor, "You can't go that way.");
                     return CheckResult.Disallow;
                 })
                 .Name("No link found rule.");
@@ -51,7 +51,7 @@ namespace RMUD.Commands
                 .When((actor, link) => (link.Portal != null) && !GlobalRules.ConsiderValueRule<bool>("open?", link.Portal))
                 .Do((actor, link) =>
                 {
-                    Mud.SendMessage(actor, "The door is closed.");
+                    MudObject.SendMessage(actor, "The door is closed.");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't go through closed door rule.");
@@ -65,8 +65,8 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, Link>("go")
                 .Do((actor, link) =>
                 {
-                    Mud.SendMessage(actor, "You went " + link.Direction.ToString().ToLower() + ".");
-                    Mud.SendExternalMessage(actor, "^<the0> went " + link.Direction.ToString().ToLower() + ".", actor);
+                    MudObject.SendMessage(actor, "You went " + link.Direction.ToString().ToLower() + ".");
+                    MudObject.SendExternalMessage(actor, "^<the0> went " + link.Direction.ToString().ToLower() + ".", actor);
                     return PerformResult.Continue;
                 })
                 .Name("Report leaving rule.");
@@ -74,10 +74,10 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, Link>("go")
                 .Do((actor, link) =>
                 {
-                    var destination = Mud.GetObject(link.Destination, s => Mud.SendMessage(actor, s)) as Room;
+                    var destination = MudObject.GetObject(link.Destination, s => MudObject.SendMessage(actor, s)) as Room;
                     if (destination == null)
                     {
-                        Mud.SendMessage(actor, "Error - Link does not lead to a room.");
+                        MudObject.SendMessage(actor, "Error - Link does not lead to a room.");
                         return PerformResult.Stop;
                     }
                     MudObject.Move(actor, destination);
@@ -89,7 +89,7 @@ namespace RMUD.Commands
                 .Do((actor, link) =>
                 {
                     var arriveMessage = Link.FromMessage(Link.Opposite(link.Direction));
-                    Mud.SendExternalMessage(actor, "^<the0> arrives " + arriveMessage + ".", actor);
+                    MudObject.SendExternalMessage(actor, "^<the0> arrives " + arriveMessage + ".", actor);
                     return PerformResult.Continue;
                 })
                 .Name("Report arrival rule.");
@@ -98,7 +98,7 @@ namespace RMUD.Commands
                 .When((actor, link) => actor is Player && (actor as Player).ConnectedClient != null)
                 .Do((actor, link) =>
                 {
-                    Mud.EnqueuClientCommand((actor as Player).ConnectedClient, "look");
+                    MudObject.EnqueuClientCommand((actor as Player).ConnectedClient, "look");
                     return PerformResult.Continue;
                 })
                 .Name("Players look after going rule.");

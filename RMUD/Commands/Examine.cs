@@ -22,14 +22,14 @@ namespace RMUD.Commands
                 .Perform("describe", "ACTOR", "OBJECT");
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can examine?", "[Actor, Item] : Can the viewer examine the item?");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe", "[Actor, Item] : Generates descriptions of the item.");
 
             GlobalRules.Check<MudObject, MudObject>("can examine?")
                 .First
-                .Do((viewer, item) => GlobalRules.IsVisibleTo(viewer, item))
+                .Do((viewer, item) => MudObject.CheckIsVisibleTo(viewer, item))
                 .Name("Can't examine what isn't here rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can examine?")
@@ -41,7 +41,7 @@ namespace RMUD.Commands
                 .When((viewer, item) => !String.IsNullOrEmpty(item.Long))
                 .Do((viewer, item) =>
                 {
-                    Mud.SendMessage(viewer, item.Long);
+                    MudObject.SendMessage(viewer, item.Long);
                     return PerformResult.Continue;
                 })
                 .Name("Basic description rule.");
@@ -51,9 +51,9 @@ namespace RMUD.Commands
                 .Do((viewer, item) =>
                 {
                     if (GlobalRules.ConsiderValueRule<bool>("is-open", item))
-                        Mud.SendMessage(viewer, "^<the0> is open.", item);
+                        MudObject.SendMessage(viewer, "^<the0> is open.", item);
                     else
-                        Mud.SendMessage(viewer, "^<the0> is closed.", item);
+                        MudObject.SendMessage(viewer, "^<the0> is closed.", item);
                     return PerformResult.Continue;
                 })
                 .Name("Describe open or closed state rule.");
@@ -66,7 +66,7 @@ namespace RMUD.Commands
                     if (contents.Count() > 0)
                     {
                         contents.Insert(0, item);
-                        Mud.SendMessage(viewer, "On <the0> is " + Mud.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
+                        MudObject.SendMessage(viewer, "On <the0> is " + MudObject.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
                     }
                     return PerformResult.Continue;
                 })
@@ -86,7 +86,7 @@ namespace RMUD.Commands
                     if (contents.Count() > 0)
                     {
                         contents.Insert(0, item);
-                        Mud.SendMessage(viewer, "In <the0> is " + Mud.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
+                        MudObject.SendMessage(viewer, "In <the0> is " + MudObject.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
                     }
                     return PerformResult.Continue;
                 })

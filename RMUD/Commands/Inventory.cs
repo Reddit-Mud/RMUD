@@ -18,7 +18,7 @@ namespace RMUD.Commands
                 .Perform("inventory", "ACTOR");
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclarePerformRuleBook<MudObject>("inventory", "[Actor] : Describes a player's inventory to themselves.");
 
@@ -31,12 +31,12 @@ namespace RMUD.Commands
                 .Do(a =>
                 {
                     var wornObjects = (a as Actor).GetContents(RelativeLocations.Worn);
-                    if (wornObjects.Count == 0) Mud.SendMessage(a, "You are naked.");
+                    if (wornObjects.Count == 0) MudObject.SendMessage(a, "You are naked.");
                     else
                     {
-                        Mud.SendMessage(a, "You are wearing..");
+                        MudObject.SendMessage(a, "You are wearing..");
                         foreach (var item in wornObjects)
-                            Mud.SendMessage(a, "  <a0>", item);
+                            MudObject.SendMessage(a, "  <a0>", item);
                     }
                     return PerformResult.Continue;
                 })
@@ -46,12 +46,12 @@ namespace RMUD.Commands
                 .Do(a =>
                 {
                     var heldObjects = (a as Actor).GetContents(RelativeLocations.Held);
-                    if (heldObjects.Count == 0) Mud.SendMessage(a, "You have nothing.");
+                    if (heldObjects.Count == 0) MudObject.SendMessage(a, "You have nothing.");
                     else
                     {
-                        Mud.SendMessage(a, "You are carrying..");
+                        MudObject.SendMessage(a, "You are carrying..");
                         foreach (var item in heldObjects)
-                            Mud.SendMessage(a, "  <a0>", item);
+                            MudObject.SendMessage(a, "  <a0>", item);
                     }
                     return PerformResult.Continue;
                 })

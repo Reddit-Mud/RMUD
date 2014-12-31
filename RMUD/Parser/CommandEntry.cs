@@ -16,14 +16,14 @@ namespace RMUD
         public void VerifyCompleteness()
         {
             if (String.IsNullOrEmpty(ManualName))
-                Mud.LogWarning("Command does not have name set - " + Matcher.Emit());
+                MudObject.LogWarning("Command does not have name set - " + Matcher.Emit());
             if (String.IsNullOrEmpty(ManualPage))
-                Mud.LogWarning("No manual for command " + ManualName);
+                MudObject.LogWarning("No manual for command " + ManualName);
         }
 
         public CommandEntry()
         {
-            Mud.ManPages.Add(this);
+            MudObject.ManPages.Add(this);
             GeneratedManual = new StringBuilder();
             ProceduralRules = new PerformRuleBook
             {
@@ -102,7 +102,7 @@ namespace RMUD
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    Mud.MarkLocaleForUpdate(match["ACTOR"] as MudObject);
+                    MudObject.MarkLocaleForUpdate(match["ACTOR"] as MudObject);
                     return PerformResult.Continue;
                 }),
                 DescriptiveName = "Procedural rule to mark locale for update."
@@ -124,7 +124,7 @@ namespace RMUD
             builder.AppendLine();
             if (GeneratedManual != null) builder.AppendLine(GeneratedManual.ToString());
             builder.Append(ManualPage);
-            Mud.SendMessage(To, builder.ToString());
+            MudObject.SendMessage(To, builder.ToString());
         }
     }
 }

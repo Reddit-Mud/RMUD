@@ -25,7 +25,7 @@ namespace RMUD
 
     public class QuestRules : DeclaresRules
     {
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("quest reset", "[quest, thing] : The quest is being reset. Quests can call this on objects they interact with.");
             

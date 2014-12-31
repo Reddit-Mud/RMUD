@@ -50,14 +50,14 @@ namespace RMUD.Commands
                 .Perform("emote", "ACTOR", "SPEECH");
 		}
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclarePerformRuleBook<MudObject, String>("speak", "[Actor, Text] : Handle the actor speaking the text.");
 
             GlobalRules.Perform<MudObject, String>("speak")
                 .Do((actor, text) =>
                 {
-                    Mud.SendLocaleMessage(actor, "^<the0> : \"" + text + "\"", actor);
+                    MudObject.SendLocaleMessage(actor, "^<the0> : \"" + text + "\"", actor);
                     return PerformResult.Continue;
                 })
                 .Name("Default motormouth rule.");
@@ -67,7 +67,7 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, String>("emote")
                 .Do((actor, text) =>
                 {
-                    Mud.SendLocaleMessage(actor, "^<the0> " + text, actor);
+                    MudObject.SendLocaleMessage(actor, "^<the0> " + text, actor);
                     return PerformResult.Continue;
                 })
                 .Name("Default exhibitionist rule.");

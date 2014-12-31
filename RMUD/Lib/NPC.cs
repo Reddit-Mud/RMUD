@@ -13,7 +13,7 @@ namespace RMUD
         {
             return Response(Topic, (actor, npc, topic) =>
                 {
-                    Mud.SendMessage(actor, StringResponse, npc);
+                    MudObject.SendMessage(actor, StringResponse, npc);
                     return PerformResult.Stop;
                 });
         }
@@ -29,7 +29,7 @@ namespace RMUD
 
         public void Wear(MudObject Item)
         {
-            Mud.Move(Item, this, RelativeLocations.Worn);
+            MudObject.Move(Item, this, RelativeLocations.Worn);
         }
 
         public void Wear(String Short, ClothingLayer Layer, ClothingBodyPart BodyPart)

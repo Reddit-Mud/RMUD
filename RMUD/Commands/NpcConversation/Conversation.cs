@@ -71,7 +71,7 @@ namespace RMUD.Commands
                 {
                     if ((actor as Player).CurrentInterlocutor == null)
                     {
-                        Mud.SendMessage(actor, "You aren't talking to anyone.");
+                        MudObject.SendMessage(actor, "You aren't talking to anyone.");
                         return PerformResult.Stop;
                     }
                     return PerformResult.Continue;
@@ -86,7 +86,7 @@ namespace RMUD.Commands
                 .Perform("list topics", "ACTOR");
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can converse?", "[Actor, Item] : Can the actor converse with the item?");
 
@@ -94,13 +94,13 @@ namespace RMUD.Commands
                 .When((actor, item) => !(item is NPC))
                 .Do((actor, item) =>
                 {
-                    Mud.SendMessage(actor, "You can't converse with that.");
+                    MudObject.SendMessage(actor, "You can't converse with that.");
                     return CheckResult.Disallow;
                 })
                 .Name("Can only converse with NPCs rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can converse?")
-                .Do((actor, item) => GlobalRules.IsVisibleTo(actor, item))
+                .Do((actor, item) => MudObject.CheckIsVisibleTo(actor, item))
                 .Name("Locutor must be visible rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can converse?")
@@ -116,7 +116,7 @@ namespace RMUD.Commands
                 .When(actor => !(actor is Player) || ((actor as Player).CurrentInterlocutor == null))
                 .Do(actor =>
                 {
-                    Mud.SendMessage(actor, "You aren't talking to anyone.");
+                    MudObject.SendMessage(actor, "You aren't talking to anyone.");
                     return PerformResult.Stop;
                 })
                 .Name("Need interlocutor to list topics rule.");
@@ -128,7 +128,7 @@ namespace RMUD.Commands
                     var npc = (actor as Player).CurrentInterlocutor;
                     var suggestedTopics = npc.ConversationTopics.Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", actor, npc, topic));
                     if (suggestedTopics.Count() != 0)
-                        Mud.SendMessage(actor, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Short)) + ".");
+                        MudObject.SendMessage(actor, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Short)) + ".");
                     return PerformResult.Continue;
                 })
                 .Name("List un-discussed available topics rule.");
@@ -146,7 +146,7 @@ namespace RMUD.Commands
             GlobalRules.Perform<MudObject, MudObject, MudObject>("topic response")
                 .Do((actor, npc, topic) =>
                 {
-                    Mud.SendMessage(actor, "There doesn't seem to be a response defined for that topic.");
+                    MudObject.SendMessage(actor, "There doesn't seem to be a response defined for that topic.");
                     return PerformResult.Stop;
                 })
                 .Name("No response rule for the topic rule.");

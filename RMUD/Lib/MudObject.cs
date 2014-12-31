@@ -14,7 +14,7 @@ namespace RMUD
 
     public class MudObjectRules : DeclaresRules
     {
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String, String>("printed name", "[Viewer, Object, Article -> String] : Find the name that should be displayed for an object.");
 
@@ -25,7 +25,7 @@ namespace RMUD
        }
     }
 
-	public partial class MudObject
+	public partial class MudObject : HasRules
     {
         public ObjectState State = ObjectState.Unitialized; 
 		public String Path { get; internal set; }
@@ -52,7 +52,7 @@ namespace RMUD
         public String Article = "a";
 		public NounList Nouns { get; set; }
         public MudObject Location { get; set; }
-        public RuleSet Rules = null;
+        public RuleSet Rules { get; set; }
         
         public String Indefinite(MudObject RequestedBy) 
         {
@@ -69,6 +69,7 @@ namespace RMUD
 			Nouns = new NounList();
             State = ObjectState.Alive;
             IsPersistent = false;
+            Rules = null;
 		}
 
         public MudObject(String Short, String Long)
@@ -84,6 +85,8 @@ namespace RMUD
 
             State = ObjectState.Alive;
             IsPersistent = false;
+
+            Rules = null;
         }
 
         public void SimpleName(String Short, params String[] Synonyms)
@@ -96,31 +99,12 @@ namespace RMUD
         public void Destroy(bool DestroyChildren)
         {
             State = ObjectState.Destroyed;
-            Mud.ForgetInstance(this);
+            MudObject.ForgetInstance(this);
 
             if (DestroyChildren && this is Container)
                 foreach (var child in (this as Container).EnumerateObjects())
                     if (child.State != ObjectState.Destroyed)
                         child.Destroy(true);
         }
-
-		public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
-		{
-            if (Object.Location != null)
-			{
-                var container = Object.Location as Container;
-				if (container != null)
-                    container.Remove(Object);
-                Object.Location = null;
-			}
-
-			if (Destination != null)
-			{
-				var destinationContainer = Destination as Container;
-				if (destinationContainer != null)
-                    destinationContainer.Add(Object, Location);
-                Object.Location = Destination;
-			}
-		}
     }
 }

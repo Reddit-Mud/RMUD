@@ -21,16 +21,16 @@ namespace RMUD.Commands
                 {
                     if (!match.ContainsKey("COMMAND"))
                     {
-                        Mud.SendMessage(actor, "Available help topics");
+                        MudObject.SendMessage(actor, "Available help topics");
                         var line = "";
-                        foreach (var manPage in Mud.ManPages.Select(p => p.Name).Distinct().OrderBy(s => s))
+                        foreach (var manPage in MudObject.ManPages.Select(p => p.Name).Distinct().OrderBy(s => s))
                         {
                             line += manPage;
                             if (line.Length < 20) line += new String(' ', 20 - line.Length);
                             else if (line.Length < 40) line += new String(' ', 40 - line.Length);
                             else
                             {
-                                Mud.SendMessage(actor, line);
+                                MudObject.SendMessage(actor, line);
                                 line = "";
                             }
                         }
@@ -38,12 +38,12 @@ namespace RMUD.Commands
                     else
                     {
                         var manPageName = match["COMMAND"].ToString().ToUpper();
-                        var pages = new List<ManPage>(Mud.ManPages.Where(p => p.Name == manPageName));
+                        var pages = new List<ManPage>(MudObject.ManPages.Where(p => p.Name == manPageName));
                         if (pages.Count > 0)
                             foreach (var manPage in pages)
                                 manPage.SendManPage(actor);
                         else
-                            Mud.SendMessage(actor, "No help for that topic.");
+                            MudObject.SendMessage(actor, "No help for that topic.");
 
                     }
                     return PerformResult.Continue;

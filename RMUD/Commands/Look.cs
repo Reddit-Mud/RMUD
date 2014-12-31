@@ -17,7 +17,7 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) => GlobalRules.ConsiderPerformRule("describe locale", actor, actor.Location));
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe in locale", "[Actor, Item] : Generate a locale description for the item.");
 
@@ -28,7 +28,7 @@ namespace RMUD.Commands
                 .When((viewer, room) => room == null || !(room is Room))
                 .Do((viewer, room) =>
                 {
-                    Mud.SendMessage(viewer, "You aren't in any room.");
+                    MudObject.SendMessage(viewer, "You aren't in any room.");
                     return PerformResult.Stop;
                 })
                 .Name("Can't describe the locale if there isn't one rule.");
@@ -46,7 +46,7 @@ namespace RMUD.Commands
                 .First
                 .Do((viewer, room) =>
                 {
-                    Mud.SendMessage(viewer, room.Short);
+                    MudObject.SendMessage(viewer, room.Short);
                     return PerformResult.Continue;
                 })
                 .Name("Display room name rule.");
@@ -56,7 +56,7 @@ namespace RMUD.Commands
                 .When((viewer, room) => (room as Room).AmbientLighting == LightingLevel.Dark)
                 .Do((viewer, room) =>
                 {
-                    Mud.SendMessage(viewer, "It is too dark to see.");
+                    MudObject.SendMessage(viewer, "It is too dark to see.");
                     return PerformResult.Stop;
                 })
                 .Name("Can't see in darkness rule.");
@@ -77,9 +77,9 @@ namespace RMUD.Commands
 
                     foreach (var thing in visibleThings)
                     {
-                        Mud.BeginOutputQuery();
+                        MudObject.BeginOutputQuery();
                         GlobalRules.ConsiderPerformRule("describe in locale", viewer, thing);
-                        if (!Mud.CheckOutputQuery()) normalContents.Add(thing);
+                        if (!MudObject.CheckOutputQuery()) normalContents.Add(thing);
                     }
 
                     if (normalContents.Count > 0)
@@ -110,7 +110,7 @@ namespace RMUD.Commands
                             return subBuilder.ToString();
                         })));
 
-                        Mud.SendMessage(viewer, builder.ToString());
+                        MudObject.SendMessage(viewer, builder.ToString());
                     }
 
                     return PerformResult.Continue;
@@ -122,13 +122,13 @@ namespace RMUD.Commands
                 {
                     if ((room as Room).EnumerateObjects(RelativeLocations.Links).Count() > 0)
                     {
-                        Mud.SendMessage(viewer, "Obvious exits:");
+                        MudObject.SendMessage(viewer, "Obvious exits:");
 
                         foreach (var link in (room as Room).EnumerateObjects<Link>(RelativeLocations.Links))
                         {
                             var builder = new StringBuilder();
                             builder.Append("  ");
-                            builder.Append(Mud.CapFirst(link.Direction.ToString()));
+                            builder.Append(MudObject.CapFirst(link.Direction.ToString()));
 
                             if (link.Portal != null)
                             {
@@ -136,14 +136,14 @@ namespace RMUD.Commands
                                 builder.Append(link.Portal.Definite(viewer));
                             }
 
-                            var destinationRoom = Mud.GetObject(link.Destination) as Room;
+                            var destinationRoom = MudObject.GetObject(link.Destination) as Room;
                             if (destinationRoom != null)
                             {
                                 builder.Append(", to ");
                                 builder.Append(destinationRoom.Short);
                             }
 
-                            Mud.SendMessage(viewer, builder.ToString());
+                            MudObject.SendMessage(viewer, builder.ToString());
                         }
                     }
 

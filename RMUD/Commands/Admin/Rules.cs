@@ -36,25 +36,25 @@ namespace RMUD.Commands
         private static void DisplaySingleBook(Actor Actor, RuleSet From, String BookName)
         {
             if (From == null || From.FindRuleBook(BookName) == null)
-                Mud.SendMessage(Actor, "[no rules]");
+                MudObject.SendMessage(Actor, "[no rules]");
             else
             {
                 var book = From.FindRuleBook(BookName);
                 DisplayBookHeader(Actor, book);
                 foreach (var rule in book.Rules)
-                    Mud.SendMessage(Actor, rule.DescriptiveName == null ? "[Unnamed rule]" : rule.DescriptiveName);
+                    MudObject.SendMessage(Actor, rule.DescriptiveName == null ? "[Unnamed rule]" : rule.DescriptiveName);
             }
         }
 
         private static void DisplayBookHeader(Actor Actor, RuleBook Book)
         {
-            Mud.SendMessage(Actor, Book.Name + " [" + String.Join(", ", Book.ArgumentTypes.Select(t => t.Name)) + " -> " + Book.ResultType.Name + "] : " + Book.Description);
+            MudObject.SendMessage(Actor, Book.Name + " [" + String.Join(", ", Book.ArgumentTypes.Select(t => t.Name)) + " -> " + Book.ResultType.Name + "] : " + Book.Description);
         }
 
         private static void DisplayBookList(Actor Actor, RuleSet Rules)
         {
             if (Rules == null || Rules.RuleBooks.Count == 0)
-                Mud.SendMessage(Actor, "[no rules]");
+                MudObject.SendMessage(Actor, "[no rules]");
             else
                 foreach (var book in Rules.RuleBooks)
                     DisplayBookHeader(Actor, book);

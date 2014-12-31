@@ -24,14 +24,14 @@ namespace RMUD.Commands
                 .Perform("unlocked", "ACTOR", "ITEM", "KEY");
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("unlocked", "[Actor, Item, Key] : Handle the actor unlocking the item with the key.");
 
             GlobalRules.Perform<MudObject, MudObject, MudObject>("unlocked").Do((actor, target, key) =>
             {
-                Mud.SendMessage(actor, "You unlock <the0>.", target);
-                Mud.SendExternalMessage(actor, "<a0> unlocks <a1> with <a2>.", actor, target, key);
+                MudObject.SendMessage(actor, "You unlock <the0>.", target);
+                MudObject.SendExternalMessage(actor, "<a0> unlocks <a1> with <a2>.", actor, target, key);
                 return PerformResult.Continue;
             });
         }

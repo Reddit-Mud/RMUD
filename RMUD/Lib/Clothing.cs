@@ -8,7 +8,7 @@ namespace RMUD
 {
     public class ClothingRules : DeclaresRules
     {
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.Value<MudObject, bool>("wearable?")
                 .When(a => a is Clothing)
@@ -23,7 +23,7 @@ namespace RMUD
                     foreach (var wornItem in (actor as Actor).EnumerateObjects<Clothing>(RelativeLocations.Worn))
                         if (wornItem.BodyPart == article.BodyPart && article.Layer <= wornItem.Layer)
                         {
-                            Mud.SendMessage(actor, "You'll have to remove <the0> first.", wornItem);
+                            MudObject.SendMessage(actor, "You'll have to remove <the0> first.", wornItem);
                             return CheckResult.Disallow;
                         }
                     return CheckResult.Continue;
@@ -38,7 +38,7 @@ namespace RMUD
                     foreach (var wornItem in (actor as Actor).EnumerateObjects<Clothing>(RelativeLocations.Worn))
                         if (wornItem.BodyPart == article.BodyPart && article.Layer < wornItem.Layer)
                         {
-                            Mud.SendMessage(actor, "You'll have to remove <the0> first.", wornItem);
+                            MudObject.SendMessage(actor, "You'll have to remove <the0> first.", wornItem);
                             return CheckResult.Disallow;
                         }
                     return CheckResult.Allow;

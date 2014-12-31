@@ -13,14 +13,14 @@ namespace RMUD
 
     public class ActorRules : DeclaresRules
     {
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
                 .When((actor, thing) => thing is Actor)
                 .Do((actor, thing) =>
                 {
-                    Mud.SendMessage(actor, "You can't take people.");
+                    MudObject.SendMessage(actor, "You can't take people.");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't take people rule.");
@@ -47,19 +47,19 @@ namespace RMUD
                 {
                     var actor = item as Actor;
                     if (viewer is Actor && Introduction.ActorKnowsActor(viewer as Actor, actor))
-                        Mud.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
+                        MudObject.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
 
                     var wornItems = new List<Clothing>(actor.EnumerateObjects<Clothing>(RelativeLocations.Worn));
                     if (wornItems.Count == 0)
-                        Mud.SendMessage(viewer, "^<the0> is naked.", actor);
+                        MudObject.SendMessage(viewer, "^<the0> is naked.", actor);
                     else
-                        Mud.SendMessage(viewer, "^<the0> is wearing " + String.Join(", ", wornItems.Select(c => c.Indefinite(viewer))) + ".", actor);
+                        MudObject.SendMessage(viewer, "^<the0> is wearing " + String.Join(", ", wornItems.Select(c => c.Indefinite(viewer))) + ".", actor);
 
                     var heldItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Held));
                     if (heldItems.Count == 0)
-                        Mud.SendMessage(viewer, "^<the0> is empty handed.", actor);
+                        MudObject.SendMessage(viewer, "^<the0> is empty handed.", actor);
                     else
-                        Mud.SendMessage(viewer, "^<the0> is holding " + String.Join(", ", heldItems.Select(i => i.Indefinite(viewer))) + ".", actor);
+                        MudObject.SendMessage(viewer, "^<the0> is holding " + String.Join(", ", heldItems.Select(i => i.Indefinite(viewer))) + ".", actor);
 
                     return PerformResult.Continue;
                 })

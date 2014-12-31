@@ -5,7 +5,7 @@
         RoomType = RMUD.RoomType.Exterior;
         Short = "Palantine Villa - Garden";
 
-        RMUD.MudObject.Move(RMUD.Mud.GetObject("palantine/wolf"), this);
+        Move(GetObject("palantine/wolf"), this);
 
         OpenLink(RMUD.Direction.EAST, "palantine\\antechamber");
 	}

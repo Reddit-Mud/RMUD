@@ -5,7 +5,7 @@
         Nouns.Add("RED");
         Open = false;
         Locked = true;
-        IsMatchingKey = k => object.ReferenceEquals(k, RMUD.Mud.GetObject("palantine\\disambig_key"));
+        IsMatchingKey = k => object.ReferenceEquals(k, GetObject("palantine\\disambig_key"));
         Short = "red door";
     }
 }

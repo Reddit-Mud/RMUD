@@ -5,10 +5,10 @@
 
     public void Startup()
     {
-        RMUD.Mud.DefaultParser.AddCommand(RMUD.CommandFactory.KeyWord("BOUNCE"))
+        RMUD.MudObject.DefaultParser.AddCommand(RMUD.CommandFactory.KeyWord("BOUNCE"))
             .ProceduralRule((match, actor) =>
             {
-                RMUD.Mud.SendMessage(actor, "Database defined commands appear to work.");
+                RMUD.MudObject.SendMessage(actor, "Database defined commands appear to work.");
                 return RMUD.PerformResult.Continue;
             });
     }

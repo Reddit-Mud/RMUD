@@ -19,7 +19,7 @@ namespace RMUD
             this.ParentHandler = ParentHandler;
             this.CheckedCommand = CheckedCommand;
 
-            Mud.SendMessage(Client, "Are you sure you want to do that? (Y/N)");
+            MudObject.SendMessage(Client, "Are you sure you want to do that? (Y/N)");
 		}
 
         public void HandleCommand(Client Client, String Command)
@@ -28,9 +28,9 @@ namespace RMUD
             Client.CommandHandler = ParentHandler;
 
             if (Command.ToUpper() == "YES" || Command.ToUpper() == "Y")
-                Mud.ProcessPlayerCommand(CheckedCommand.Command, CheckedCommand.Matches[0], Client.Player);
+                MudObject.ProcessPlayerCommand(CheckedCommand.Command, CheckedCommand.Matches[0], Client.Player);
             else
-                Mud.SendMessage(Client, "Okay, aborted.");            
+                MudObject.SendMessage(Client, "Okay, aborted.");            
         }
     }
 }

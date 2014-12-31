@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public static partial class Mud
+    public partial class MudObject
     {
         public static bool SilentFlag = false;
 
@@ -81,7 +81,7 @@ namespace RMUD
             if (SilentFlag) return;
             OutputQueryTriggered = true;
 
-            var container = Mud.FindLocale(Object) as Container;
+            var container = MudObject.FindLocale(Object) as Container;
             if (container != null)
                 foreach (var actor in container.EnumerateObjects<Actor>().Where(a => a.ConnectedClient != null))
                     PendingMessages.Add(new RawPendingMessage(actor.ConnectedClient, FormatMessage(actor, Message, MentionedObjects)));

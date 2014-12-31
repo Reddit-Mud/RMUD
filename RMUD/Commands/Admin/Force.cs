@@ -23,10 +23,10 @@ namespace RMUD.Commands
                     {
                         if (match.ContainsKey("PATH"))
                         {
-                            var target = Mud.GetObject(match["PATH"].ToString());
+                            var target = MudObject.GetObject(match["PATH"].ToString());
                             if (target == null)
                             {
-                                Mud.SendMessage(actor, "I can't find whomever it is you want to submit to your foolish whims.");
+                                MudObject.SendMessage(actor, "I can't find whomever it is you want to submit to your foolish whims.");
                                 return PerformResult.Stop;
                             }
                             match.Upsert("OBJECT", target);
@@ -40,25 +40,25 @@ namespace RMUD.Commands
                     var targetActor = target as Actor;
                     if (targetActor == null)
                     {
-                        Mud.SendMessage(actor, "You can order inanimate objects about as much as you like, they aren't going to listen.");
+                        MudObject.SendMessage(actor, "You can order inanimate objects about as much as you like, they aren't going to listen.");
                         return PerformResult.Stop;
                     }
 
                     var command = match["COMMAND"].ToString();
-                    var matchedCommand = Mud.ParserCommandHandler.Parser.ParseCommand(command, targetActor);
+                    var matchedCommand = MudObject.ParserCommandHandler.Parser.ParseCommand(command, targetActor);
 
                     if (matchedCommand != null)
                     {
                         if (matchedCommand.Matches.Count > 1)
-                            Mud.SendMessage(actor, "The command was ambigious.");
+                            MudObject.SendMessage(actor, "The command was ambigious.");
                         else
                         {
-                            Mud.SendMessage(actor, "Enacting your will.");
-                            Mud.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], targetActor);
+                            MudObject.SendMessage(actor, "Enacting your will.");
+                            MudObject.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], targetActor);
                         }
                     }
                     else
-                        Mud.SendMessage(actor, "The command did not match.");
+                        MudObject.SendMessage(actor, "The command did not match.");
 
                     return PerformResult.Continue;
                 });

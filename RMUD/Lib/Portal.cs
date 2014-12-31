@@ -7,11 +7,11 @@ namespace RMUD
 {
     public class PortalRules : DeclaresRules
     {
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.Check<MudObject, MudObject>("can take?").When((actor, thing) => thing is Portal).Do((actor, thing) =>
             {
-                Mud.SendMessage(actor, "Portals cannot be taken.");
+                MudObject.SendMessage(actor, "Portals cannot be taken.");
                 return CheckResult.Disallow;
             });
         }

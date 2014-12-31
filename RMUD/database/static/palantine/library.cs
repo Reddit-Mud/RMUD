@@ -5,7 +5,7 @@
 		Short = "Palantine Villa - The Ancient Library of Kuz";
         RMUD.MudObject.Move(new kuz_shelf(), this);
 
-        OpenLink(RMUD.Direction.EAST, "palantine/disambig", RMUD.Mud.GetObject("palantine/disambig_blue_door"));
+        OpenLink(RMUD.Direction.EAST, "palantine/disambig", RMUD.MudObject.GetObject("palantine/disambig_blue_door"));
 	}
 }
 
@@ -19,7 +19,7 @@ public class kuz_shelf : RMUD.MudObject
 
         Perform<RMUD.MudObject, RMUD.MudObject>("describe in locale").Do((actor, item) =>
             {
-                RMUD.Mud.SendMessage(actor, "A massive book shelf looms in the center of the room.");
+                RMUD.MudObject.SendMessage(actor, "A massive book shelf looms in the center of the room.");
                 return RMUD.PerformResult.Continue;
             });
 
@@ -30,8 +30,8 @@ public class kuz_shelf : RMUD.MudObject
                 var newBook = new kuz_book();
                 RMUD.MudObject.Move(newBook, actor);
 
-                RMUD.Mud.SendMessage(actor, "You take <a0>.", newBook);
-                RMUD.Mud.SendExternalMessage(actor, "<a0> takes <a1>.", actor, newBook);
+                RMUD.MudObject.SendMessage(actor, "You take <a0>.", newBook);
+                RMUD.MudObject.SendExternalMessage(actor, "<a0> takes <a1>.", actor, newBook);
                 return RMUD.PerformResult.Stop;
             });
     }
@@ -80,8 +80,6 @@ public class kuz_book : RMUD.MudObject
         "ragged",
         "embossed"
     });
-
-    public static System.Random Random = new System.Random();
 
     public static System.String Latin = "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat...\r\n (It's written in Latin.)";
 

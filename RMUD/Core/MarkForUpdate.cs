@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public static partial class Mud
+    public partial class MudObject
     {
        internal static List<MudObject> MarkedObjects = new List<MudObject>();
 		

@@ -13,7 +13,7 @@ namespace RMUD
         public static void LogPlayerIn(Client Client, Account Account)
         {
             Client.Account = Account;
-            Client.CommandHandler = Mud.ParserCommandHandler;
+            Client.CommandHandler = MudObject.ParserCommandHandler;
             Client.Rank = 500;
 
             if (Account.LoggedInCharacter != null)
@@ -31,15 +31,15 @@ namespace RMUD
             else
             {
                 //Start a new session
-                Client.Player = Mud.GetAccountCharacter(Account);
+                Client.Player = MudObject.GetAccountCharacter(Account);
                 MudObject.Move(Client.Player, 
-                    Mud.GetObject(
-                        Mud.SettingsObject.NewPlayerStartRoom,
-                        s => Mud.SendMessage(Client, s)));
-                Mud.EnqueuClientCommand(Client, "look");
+                    MudObject.GetObject(
+                        MudObject.SettingsObject.NewPlayerStartRoom,
+                        s => MudObject.SendMessage(Client, s)));
+                MudObject.EnqueuClientCommand(Client, "look");
             }
 
-            Mud.FindChatChannel("OOC").Subscribers.Add(Client); //Everyone is on ooc!
+            MudObject.FindChatChannel("OOC").Subscribers.Add(Client); //Everyone is on ooc!
             Client.Player.ConnectedClient = Client;
             Account.LoggedInCharacter = Client.Player;
         }
@@ -48,9 +48,9 @@ namespace RMUD
 		{
 			Parser = new CommandParser();
 
-            CommandFactory.GetCommand(typeof(Commands.Login)).Create(Parser);
-            CommandFactory.GetCommand(typeof(Commands.Register)).Create(Parser);
-            CommandFactory.GetCommand(typeof(Commands.Quit)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Commands.Login)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Commands.Register)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Commands.Quit)).Create(Parser);
 
 		}
 
@@ -62,15 +62,15 @@ namespace RMUD
                 if (matchedCommand != null)
                 {
                     matchedCommand.Matches[0].Upsert("CLIENT", Client);
-                    Mud.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], null);
+                    MudObject.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], null);
                 }
                 else
-                    Mud.SendMessage(Client, "I do not understand.");
+                    MudObject.SendMessage(Client, "I do not understand.");
 			}
 			catch (Exception e)
 			{
-				Mud.ClearPendingMessages();
-                Mud.SendMessage(Client, e.Message);
+				MudObject.ClearPendingMessages();
+                MudObject.SendMessage(Client, e.Message);
 			}
 		}
 	}

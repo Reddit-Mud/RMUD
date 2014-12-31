@@ -20,7 +20,7 @@ namespace RMUD.Commands
                 .Perform("worn", "ACTOR", "OBJECT");
         }
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("wearable?", "[Item => bool] : Can the item be worn?");
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can wear?", "[Actor, Item] : Can the actor wear the item?");
@@ -29,10 +29,10 @@ namespace RMUD.Commands
             GlobalRules.Value<MudObject, bool>("wearable?").Do(a => false).Name("Things unwearable by default rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((a, b) => !Mud.ObjectContainsObject(a, b))
+                .When((a, b) => !MudObject.ObjectContainsObject(a, b))
                 .Do((actor, item) =>
                 {
-                    Mud.SendMessage(actor, "You'd have to be holding that first.");
+                    MudObject.SendMessage(actor, "You'd have to be holding that first.");
                     return CheckResult.Disallow;
                 });
 
@@ -40,7 +40,7 @@ namespace RMUD.Commands
                 .When((a, b) => a is Actor && (a as Actor).RelativeLocationOf(b) == RelativeLocations.Worn)
                 .Do((a, b) =>
                 {
-                    Mud.SendMessage(a, "You're already wearing that.");
+                    MudObject.SendMessage(a, "You're already wearing that.");
                     return CheckResult.Disallow;
                 });
 
@@ -48,7 +48,7 @@ namespace RMUD.Commands
                 .When((actor, item) => GlobalRules.ConsiderValueRule<bool>("wearable?", item) == false)
                 .Do((actor, item) =>
                 {
-                    Mud.SendMessage(actor, "That isn't something that can be worn.");
+                    MudObject.SendMessage(actor, "That isn't something that can be worn.");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't wear unwearable things rule.");
@@ -57,9 +57,9 @@ namespace RMUD.Commands
 
             GlobalRules.Perform<MudObject, MudObject>("worn").Do((actor, target) =>
                 {
-                    Mud.SendMessage(actor, "You wear <the0>.", target);
-                    Mud.SendExternalMessage(actor, "<a0> wears <a1>.", actor, target);
-                    Mud.Move(target, actor, RelativeLocations.Worn);
+                    MudObject.SendMessage(actor, "You wear <the0>.", target);
+                    MudObject.SendExternalMessage(actor, "<a0> wears <a1>.", actor, target);
+                    MudObject.Move(target, actor, RelativeLocations.Worn);
                     return PerformResult.Continue;
                 });
         }

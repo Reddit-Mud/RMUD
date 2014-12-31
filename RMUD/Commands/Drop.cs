@@ -20,17 +20,17 @@ namespace RMUD.Commands
                 .Perform("dropped", "ACTOR", "SUBJECT");
 		}
 
-        public void InitializeGlobalRules()
+        public void InitializeRules()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can drop?", "[Actor, Item] : Determine if the item can be dropped.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("dropped", "[Actor, Item] : Handle an item being dropped.");
 
             GlobalRules.Check<MudObject, MudObject>("can drop?")
                 .First
-                .When((actor, item) => !Mud.ObjectContainsObject(actor, item))
+                .When((actor, item) => !MudObject.ObjectContainsObject(actor, item))
                 .Do((actor, item) =>
                 {
-                    Mud.SendMessage(actor, "You aren't holding that.");
+                    MudObject.SendMessage(actor, "You aren't holding that.");
                     return CheckResult.Disallow;
                 })
                 .Name("Must be holding it to drop it rule.");
@@ -53,8 +53,8 @@ namespace RMUD.Commands
 
             GlobalRules.Perform<MudObject, MudObject>("dropped").Do((actor, target) =>
             {
-                Mud.SendMessage(actor, "You drop <a0>.", target);
-                Mud.SendExternalMessage(actor, "<a0> drops <a1>.", actor, target);
+                MudObject.SendMessage(actor, "You drop <a0>.", target);
+                MudObject.SendExternalMessage(actor, "<a0> drops <a1>.", actor, target);
                 MudObject.Move(target, actor.Location);
                 return PerformResult.Continue;
             }).Name("Default drop handler rule.");
