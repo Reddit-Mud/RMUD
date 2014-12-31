@@ -5,67 +5,59 @@ using System.Text;
 
 namespace RMUD
 {
-    public class ChatChannel
+    public class ChatChannelRules : DeclaresRules
     {
-        public String Name;
-        public List<Client> Subscribers = new List<Client>();
-        public Func<Client, bool> AccessFilter = null;
-
-        public ChatChannel(String Name, Func<Client, bool> AccessFilter = null)
+        public void InitializeRules()
         {
-            this.Name = Name;
-            this.AccessFilter = AccessFilter;
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can access channel?", "[Client, Channel] : Can the client access the chat channel?");
+
+            GlobalRules.Check<MudObject, MudObject>("can access channel?")
+                .Do((client, channel) => CheckResult.Allow)
+                .Name("Default allow channel access rule.");
         }
     }
 
-    public partial class MudObject
+    public class ChatChannel : MudObject
     {
-        public static List<ChatChannel> ChatChannels = new List<ChatChannel>();
+        public List<Actor> Subscribers = new List<Actor>();
 
-        public static ChatChannel FindChatChannel(String Name)
+        public ChatChannel(String Short) : base(Short, "")
         {
-            return ChatChannels.FirstOrDefault(c => c.Name == Name);
+            Article = "";
         }
+    }
 
-        public static void SendChatMessage(ChatChannel Channel, String Message)
-        {
-            var realMessage = String.Format("{0} : {1}", DateTime.Now, Message);
+    public static partial class Core
+    {
+        internal static List<ChatChannel> ChatChannels = new List<ChatChannel>();
 
-            var chatLogFilename = ChatLogsPath + Channel.Name + ".txt";
-            System.IO.Directory.CreateDirectory(ChatLogsPath);
-            System.IO.File.AppendAllText(chatLogFilename, realMessage + "\n");
-
-            foreach (var client in Channel.Subscribers.Where(c => c.IsLoggedOn))
-                MudObject.SendMessage(client, realMessage);
-        }
-
-        public static void RemoveClientFromAllChannels(Client Client)
+        internal static void RemoveClientFromAllChannels(Client Client)
         {
             foreach (var channel in ChatChannels)
                 channel.Subscribers.RemoveAll(c => Object.ReferenceEquals(c, Client));
         }
     }
 
-    public class ChatChannelNameMatcher : CommandTokenMatcher
+    public partial class MudObject
     {
-        public String ArgumentName;
-
-        public ChatChannelNameMatcher(String ArgumentName)
+        public static void SendChatMessage(ChatChannel Channel, String Message)
         {
-            this.ArgumentName = ArgumentName;
-        }
+            var realMessage = String.Format("{0} : {1}", DateTime.Now, Message);
 
-        public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
+            var chatLogFilename = MudObject.ChatLogsPath + Channel.Short + ".txt";
+            System.IO.Directory.CreateDirectory(MudObject.ChatLogsPath);
+            System.IO.File.AppendAllText(chatLogFilename, realMessage + "\n");
+
+            foreach (var client in Channel.Subscribers.Where(c => c.ConnectedClient != null))
+                MudObject.SendMessage(client, realMessage);
+        }
+    }
+
+    public class ChatChannelObjectSource : IObjectSource
+    {
+        public List<MudObject> GetObjects(PossibleMatch State, MatchContext Context)
         {
-            var r = new List<PossibleMatch>();
-            if (State.Next == null) return r;
-            var channel = MudObject.FindChatChannel(State.Next.Value.ToUpper());
-            if (channel != null)
-                r.Add(State.AdvanceWith(ArgumentName, channel));
-            return r;
+            return new List<MudObject>(Core.ChatChannels);
         }
-
-        public String FindFirstKeyWord() { return null; }
-        public string Emit() { return "[CHANNEL]"; }
     }
 }

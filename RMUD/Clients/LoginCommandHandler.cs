@@ -31,7 +31,7 @@ namespace RMUD
             else
             {
                 //Start a new session
-                Client.Player = MudObject.GetAccountCharacter(Account);
+                Client.Player = Core.GetAccountCharacter(Account);
                 MudObject.Move(Client.Player, 
                     MudObject.GetObject(
                         MudObject.SettingsObject.NewPlayerStartRoom,
@@ -39,7 +39,7 @@ namespace RMUD
                 MudObject.EnqueuClientCommand(Client, "look");
             }
 
-            MudObject.FindChatChannel("OOC").Subscribers.Add(Client); //Everyone is on ooc!
+            foreach (var c in Core.ChatChannels.Where(c => c.Short == "OOC")) c.Subscribers.Add(Client.Player);
             Client.Player.ConnectedClient = Client;
             Account.LoggedInCharacter = Client.Player;
         }

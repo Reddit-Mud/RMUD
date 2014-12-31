@@ -19,7 +19,7 @@ namespace RMUD
         public static void ClientDisconnected(Client client)
         {
             DatabaseLock.WaitOne();
-            RemoveClientFromAllChannels(client);
+            Core.RemoveClientFromAllChannels(client);
             ConnectedClients.Remove(client);
             if (client.Player != null)
             {
@@ -75,7 +75,7 @@ namespace RMUD
                 else SettingsObject = settings;
                 NamedObjects.Clear();
 
-                ProscriptionList = new ProscriptionList(basePath + SettingsObject.ProscriptionList);
+                ProscriptionList = new ProscriptionList(basePath + SettingsObject.ProscriptionListFile);
 
                 InitializeCommandProcessor();
                 GlobalRules.DiscoverRuleBooks(System.Reflection.Assembly.GetExecutingAssembly());

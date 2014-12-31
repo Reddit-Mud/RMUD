@@ -8,11 +8,11 @@ using Newtonsoft.Json;
 
 namespace RMUD
 {
-    public partial class MudObject
+    public static partial class Core
     {
-        public static List<Account> Accounts = new List<Account>();
+        internal static List<Account> Accounts = new List<Account>();
 
-        public static Account FindAccount(String UserName)
+        internal static Account FindAccount(String UserName)
         {
             var account = Accounts.FirstOrDefault(a => a.UserName == UserName);
             if (account == null)
@@ -26,7 +26,7 @@ namespace RMUD
             return account;
         }
 
-        public static string GenerateRandomSalt()
+        private static string GenerateRandomSalt()
         {
             var bytes = new Byte[64];
             var rng = new RNGCryptoServiceProvider();
@@ -42,14 +42,14 @@ namespace RMUD
             return System.Convert.ToBase64String(hash);
         }
 
-        public static bool VerifyAccount(Account Account, String Password)
+        internal static bool VerifyAccount(Account Account, String Password)
         {
             var hashedPassword = HashPassword(Password, Account.Salt);
 
             return Account.HashedPassword == hashedPassword;
         }
 
-        public static Account CreateAccount(String UserName, String Password)
+        internal static Account CreateAccount(String UserName, String Password)
         {
             if (FindAccount(UserName) != null)
             {
@@ -69,10 +69,10 @@ namespace RMUD
             return newAccount;
         }
 
-        public static Player GetAccountCharacter(Account Account)
+        internal static Player GetAccountCharacter(Account Account)
         {
             var characterName = "account/" + Account.UserName;
-            var existing = GetPersistedInstance(characterName + "@main") as Player;
+            var existing = MudObject.GetPersistedInstance(characterName + "@main") as Player;
             if (existing != null) return existing;
 
             var character = new Player();
@@ -84,7 +84,7 @@ namespace RMUD
             return character;
         }
 
-        private static void SaveAccount(Account account)
+        internal static void SaveAccount(Account account)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace RMUD
             }
         }
 
-        private static Account LoadAccount(String UserName)
+        internal static Account LoadAccount(String UserName)
         {
             Account account = null;
             try 

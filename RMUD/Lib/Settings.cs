@@ -29,7 +29,7 @@ namespace RMUD
 
         public int AFKTime = 1000 * 60 * 5; //Go AFK after five minutes of inactivity.
 
-        public String ProscriptionList = "proscriptions.txt";
+        public String ProscriptionListFile = "proscriptions.txt";
         public int MaximumChatChannelLogSize = 1000;
         public int HeartbeatInterval = 1000; //Heartbeat every second
         public TimeSpan ClockAdvanceRate = TimeSpan.FromSeconds(10);
@@ -48,8 +48,17 @@ namespace RMUD
             RankNames.Add(0, "proletarian");
             RankNames.Add(Int32.MinValue, "sentina");
 
-            MudObject.ChatChannels.Add(new ChatChannel("OOC"));
-            MudObject.ChatChannels.Add(new ChatChannel("SENATE", c => c.Rank >= 100));
+            Core.ChatChannels.Add(new ChatChannel("OOC"));
+
+            var senate = new ChatChannel("SENATE");
+            senate.Check<MudObject, MudObject>("can access channel?")
+                .When((actor, channel) => !(actor is Actor) || (actor as Actor).ConnectedClient == null || (actor as Actor).ConnectedClient.Rank < 100)
+                .Do((actor, channel) =>
+                {
+                    SendMessage(actor, "You must have a rank of 100 or greater to access this channel.");
+                    return CheckResult.Disallow;
+                });
+            Core.ChatChannels.Add(senate);
         }
 
         public String GetNameForRank(int Rank)

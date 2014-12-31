@@ -33,8 +33,8 @@ namespace RMUD.Commands
 
         public void Authenticate(Client Client, String UserName, String Password)
         {
-            var existingAccount = MudObject.FindAccount(UserName);
-            if (existingAccount == null || MudObject.VerifyAccount(existingAccount, Password) == false)
+            var existingAccount = Core.FindAccount(UserName);
+            if (existingAccount == null || Core.VerifyAccount(existingAccount, Password) == false)
             {
                 MudObject.SendMessage(Client, "Could not verify account.");
                 return;

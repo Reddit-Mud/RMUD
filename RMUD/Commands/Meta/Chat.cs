@@ -13,19 +13,15 @@ namespace RMUD.Commands
                 Sequence(
                     KeyWord("SUBSCRIBE"),
                     MustMatch("I don't recognize that channel.",
-                        new ChatChannelNameMatcher("CHANNEL"))))
+                        Object("CHANNEL", new ChatChannelObjectSource()))))
                 .Manual("Subscribes you to the specified chat channel, if you are able to access it.")
+                .Check("can access channel?", "ACTOR", "CHANNEL")
                 .ProceduralRule((match, actor) =>
                 {
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
-                    if (actor.ConnectedClient == null || (channel.AccessFilter != null && !channel.AccessFilter(actor.ConnectedClient)))
-                        MudObject.SendMessage(actor, "You do not have access to that channel.");
-                    else
-                    {
-                        if (!channel.Subscribers.Contains(actor.ConnectedClient))
-                            channel.Subscribers.Add(actor.ConnectedClient);
-                        MudObject.SendMessage(actor, "You are now subscribed to " + channel.Name + ".");
-                    }
+                    if (!channel.Subscribers.Contains(actor))
+                        channel.Subscribers.Add(actor);
+                    MudObject.SendMessage(actor, "You are now subscribed to <a0>.", channel);
                     return PerformResult.Continue;
                 });
 
@@ -33,13 +29,13 @@ namespace RMUD.Commands
                 Sequence(
                     KeyWord("UNSUBSCRIBE"),
                     MustMatch("I don't recognize that channel.",
-                        new ChatChannelNameMatcher("CHANNEL"))))
+                        Object("CHANNEL", new ChatChannelObjectSource()))))
                 .Manual("Unsubscribe from the specified chat channel.")
                 .ProceduralRule((match, actor) =>
                 {
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
                     channel.Subscribers.RemoveAll(c => System.Object.ReferenceEquals(c, actor.ConnectedClient));
-                    MudObject.SendMessage(actor, "You are now unsubscribed from " + channel.Name + ".");
+                    MudObject.SendMessage(actor, "You are now unsubscribed from <a0>.", channel);
                     return PerformResult.Continue;
                 });
 
@@ -49,14 +45,14 @@ namespace RMUD.Commands
                 .ProceduralRule((match, actor) =>
                 {
                     MudObject.SendMessage(actor, "~~ CHANNELS ~~");
-                    foreach (var channel in MudObject.ChatChannels)
-                        MudObject.SendMessage(actor, (channel.Subscribers.Contains(actor.ConnectedClient) ? "*" : "") + channel.Name);
+                    foreach (var channel in Core.ChatChannels)
+                        MudObject.SendMessage(actor, (channel.Subscribers.Contains(actor) ? "*" : "") + channel.Short);
                     return PerformResult.Continue;
                 });
 
             Parser.AddCommand(
                 Sequence(
-                    new ChatChannelNameMatcher("CHANNEL"),
+                    Object("CHANNEL", new ChatChannelObjectSource()),
                     Rest("TEXT")))
                 .Name("CHAT")
                 .Manual("Chat on a chat channel.")
@@ -64,16 +60,13 @@ namespace RMUD.Commands
                 {
                     if (actor.ConnectedClient == null) return PerformResult.Stop;
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
-                    if (!channel.Subscribers.Contains(actor.ConnectedClient))
+                    if (!channel.Subscribers.Contains(actor))
                     {
-                        if (channel.AccessFilter != null && !channel.AccessFilter(actor.ConnectedClient))
-                        {
-                            MudObject.SendMessage(actor, "You do not have access to that channel.");
+                        if (GlobalRules.ConsiderCheckRule("can access channel?", actor, channel) != CheckResult.Allow)
                             return PerformResult.Stop;
-                        }
 
-                        channel.Subscribers.Add(actor.ConnectedClient);
-                        MudObject.SendMessage(actor, "You are now subscribed to " + channel.Name + ".");
+                        channel.Subscribers.Add(actor);
+                        MudObject.SendMessage(actor, "You are now subscribed to <a0>.", channel);
                     }
                     return PerformResult.Continue;
                 }, "Subscribe to channels before chatting rule.")
@@ -81,7 +74,7 @@ namespace RMUD.Commands
                 {
                     var message = match["TEXT"].ToString();
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
-                    MudObject.SendChatMessage(channel, "[" + channel.Name + "] " + actor.Short +
+                    MudObject.SendChatMessage(channel, "[" + channel.Short + "] " + actor.Short +
                         (message.StartsWith("\"") ?
                             (" " + message.Substring(1).Trim())
                             : (": \"" + message + "\"")));
@@ -93,23 +86,19 @@ namespace RMUD.Commands
                 Sequence(
                     KeyWord("RECALL"),
                     MustMatch("I don't recognize that channel.",
-                        new ChatChannelNameMatcher("CHANNEL")),
+                        Object("channel", new ChatChannelObjectSource())),
                     Optional(Number("COUNT"))))
                 .Manual("Recalls past conversation on a chat channel. An optional line count parameter allows you to peek further into the past.")
+                .Check("can access channel?", "ACTOR", "CHANNEL")
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor.ConnectedClient == null) return PerformResult.Stop;
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
-                    if (channel.AccessFilter != null && !channel.AccessFilter(actor.ConnectedClient))
-                    {
-                        MudObject.SendMessage(actor, "You do not have access to that channel.");
-                        return PerformResult.Stop;
-                    }
-
+                    
                     int count = 20;
                     if (match.ContainsKey("COUNT")) count = (match["COUNT"] as int?).Value;
 
-                    var logFilename = MudObject.ChatLogsPath + channel.Name + ".txt";
+                    var logFilename = MudObject.ChatLogsPath + channel.Short + ".txt";
                     if (System.IO.File.Exists(logFilename))
                         foreach (var line in (new ReverseLineReader(logFilename)).Take(count).Reverse())
                             MudObject.SendMessage(actor, line);

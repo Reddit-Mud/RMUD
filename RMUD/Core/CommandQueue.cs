@@ -24,11 +24,11 @@ namespace RMUD
         private static PendingCommand NextCommand;
 
         //The client command handler can set this flag when it wants the command timeout to be ignored.
-        public static bool CommandTimeoutEnabled = true;
+        internal static bool CommandTimeoutEnabled = true;
 
 
         internal static ParserCommandHandler ParserCommandHandler;
-        public static CommandParser DefaultParser;
+        internal static CommandParser DefaultParser;
         internal static LoginCommandHandler LoginCommandHandler;
 
         internal static void EnqueuClientCommand(Client Client, String RawCommand)
@@ -38,7 +38,7 @@ namespace RMUD
             PendingCommandLock.ReleaseMutex();
         }
 
-        public static void DiscoverCommandFactories(Assembly In, CommandParser AddTo)
+        internal static void DiscoverCommandFactories(Assembly In, CommandParser AddTo)
         {
             foreach (var type in In.GetTypes())
                 if (type.IsSubclassOf(typeof(CommandFactory)))

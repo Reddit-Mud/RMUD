@@ -33,14 +33,14 @@ namespace RMUD.Commands
 
         public void Authenticate(Client Client, String UserName, String Password)
         {
-            var existingAccount = MudObject.FindAccount(UserName);
+            var existingAccount = Core.FindAccount(UserName);
             if (existingAccount != null)
             {
                 MudObject.SendMessage(Client, "Account already exists.");
                 return;
             }
 
-            var newAccount = MudObject.CreateAccount(UserName, Password);
+            var newAccount = Core.CreateAccount(UserName, Password);
             if (newAccount == null)
             {
                 MudObject.SendMessage(Client, "Could not create account.");
