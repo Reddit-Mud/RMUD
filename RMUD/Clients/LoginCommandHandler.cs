@@ -49,9 +49,9 @@ namespace RMUD
 		{
 			Parser = new CommandParser();
 
-            CommandFactory.CreateCommandFactory(typeof(Commands.Login)).Create(Parser);
-            CommandFactory.CreateCommandFactory(typeof(Commands.Register)).Create(Parser);
-            CommandFactory.CreateCommandFactory(typeof(Commands.Quit)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Modules.ClientLogin.Login)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Modules.ClientLogin.Register)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Modules.ClientLogin.Quit)).Create(Parser);
 
 		}
 
