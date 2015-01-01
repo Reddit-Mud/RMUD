@@ -15,7 +15,7 @@ namespace RMUD
         }
     }
 
-    public class CommandEntry : ManPage
+    public sealed class CommandEntry : ManPage
     {
         internal CommandTokenMatcher Matcher;
         internal String ManualName = "";

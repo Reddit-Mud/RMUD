@@ -100,7 +100,7 @@ namespace RMUD
                 LogError("Failed to start mud engine.");
                 LogError(e.Message);
                 LogError(e.StackTrace);
-                throw e;
+                throw;
             }
             return true;
         }
