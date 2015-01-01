@@ -14,7 +14,7 @@
         Response("wolves", (actor, npc, topic) =>
         {
             SendLocaleMessage(actor, "^<the0> grins, expossing a pair of wicked yellow canines. \"Oh don't worry, they aren't here now.\"", this);
-            var quest = GetObject("palantine/entrail_quest") as RMUD.Quest;
+            var quest = GetObject("palantine/entrail_quest");
             if (ConsiderValueRule<bool>("quest available?", actor, quest))
             {
                 SendMessage(actor, "\"Would you mind feeding them for me?\" <the0> asks.", this);

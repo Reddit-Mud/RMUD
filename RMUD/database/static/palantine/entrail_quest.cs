@@ -1,4 +1,4 @@
-﻿class entrail_quest : RMUD.Quest
+﻿class entrail_quest : RMUD.MudObject
 {
     public override void Initialize()
     {
@@ -33,8 +33,8 @@
         Perform<RMUD.MudObject, RMUD.MudObject>("quest completed").Do((questor, quest) =>
             {
                 SendMessage(questor, "Entrail quest completed.");
-                ResetObject(GetObject("palantine/wolf"));
-                ResetObject(GetObject("palantine/soranus"));
+                ResetQuestObject(GetObject("palantine/wolf"));
+                ResetQuestObject(GetObject("palantine/soranus"));
                 Active = false;
                 return RMUD.PerformResult.Continue;
             });
@@ -42,8 +42,8 @@
         Perform<RMUD.MudObject, RMUD.MudObject>("quest failed").Do((questor, quest) =>
             {
                 SendMessage(questor, "Entrail quest failed.");
-                ResetObject(GetObject("palantine/wolf"));
-                ResetObject(GetObject("palantine/soranus"));
+                ResetQuestObject(GetObject("palantine/wolf"));
+                ResetQuestObject(GetObject("palantine/soranus"));
                 Move(GetObject("palantine/entrails"), GetObject("palantine/soranus"), RMUD.RelativeLocations.Worn);
                 Active = false;
                 return RMUD.PerformResult.Continue;

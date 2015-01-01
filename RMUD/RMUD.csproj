@@ -78,7 +78,7 @@
     <Compile Include="Core\Introduction.cs" />
     <Compile Include="Lib\Conversation.cs" />
     <Compile Include="Commands\Admin\ReadLog.cs" />
-    <Compile Include="Commands\AcceptQuest.cs" />
+    <Compile Include="Modules\Quests\AcceptQuest.cs" />
     <Compile Include="Commands\Wear.cs" />
     <Compile Include="Commands\Admin\Save.cs" />
     <Compile Include="Commands\Meta\Register.cs" />
@@ -94,7 +94,8 @@
     <Compile Include="Commands\Close.cs" />
     <Compile Include="Core\Accounts.cs" />
     <Compile Include="Core\Move.cs" />
-    <Compile Include="Core\Quests.cs" />
+    <Compile Include="Modules\Quests\TypeExtensions.cs" />
+    <Compile Include="Modules\Quests\QuestRules.cs" />
     <Compile Include="Core\FindLocale.cs" />
     <Compile Include="Core\Heartbeat.cs" />
     <Compile Include="Core\MarkForUpdate.cs" />
@@ -140,7 +141,6 @@
     <Compile Include="Lib\NPC.cs" />
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
-    <Compile Include="Lib\Quest.cs" />
     <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
     <Compile Include="Parser\CommandEntry.cs" />
     <Compile Include="Parser\MatchContext.cs" />

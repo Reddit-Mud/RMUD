@@ -5,12 +5,9 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Player : Actor
+	public partial class Player : Actor
 	{
         public NPC CurrentInterlocutor = null;
-
-        public Quest OfferedQuest { get; set; }
-        public Quest ActiveQuest { get; set; }
 
         [Persist(typeof(DictionaryStringObjectSerializer))]
         public Dictionary<String, Object> Memory { get; set; }

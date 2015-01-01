@@ -2,33 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Reflection;
 
-namespace RMUD
+namespace RMUD.Modules.Quests
 {
-    public enum QuestStatus
-    {
-        Unavailable,
-        Available,
-        InProgress,
-        Completed,
-        Impossible,
-        Abandoned
-    }
-
-    public enum QuestEvents
-    {
-        Accepted,
-        Completed,
-        Abandoned,
-        Impossible
-    }
-
-    public class QuestRules : DeclaresRules
+    public class QuestProceduralRules : DeclaresRules
     {
         public void InitializeRules()
         {
+            GlobalRules.Perform<PossibleMatch, Actor>("after acting")
+                .Do((match, actor) =>
+                {
+                    var player = actor as Player;
+                    if (player != null && player.ActiveQuest != null)
+                    {
+                        var quest = player.ActiveQuest;
+
+                        if (GlobalRules.ConsiderValueRule<bool>("quest complete?", player, quest))
+                        {
+                            player.ActiveQuest = null;
+                            GlobalRules.ConsiderPerformRule("quest completed", player, quest);
+                        }
+                        else if (GlobalRules.ConsiderValueRule<bool>("quest failed?", player, quest))
+                        {
+                            player.ActiveQuest = null;
+                            GlobalRules.ConsiderPerformRule("quest failed", player, quest);
+                        }
+                    }
+
+                    return PerformResult.Continue;
+                })
+                .Name("Check quest status after acting rule.");
+
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("quest reset", "[quest, thing] : The quest is being reset. Quests can call this on objects they interact with.");
-            
+
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("quest accepted", "[actor, quest] : Handle accepting a quest.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("quest completed", "[actor, quest] : Handle when a quest is completed.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("quest failed", "[actor, quest] : Handle when a quest is failed.");
@@ -60,14 +68,6 @@ namespace RMUD
                 .Do((actor, quest) => false)
                 .Name("Quests can't fail by default rule.");
 
-        }
-    }
-
-    public class Quest : MudObject
-    {
-        public void ResetObject(MudObject Thing)
-        {
-            GlobalRules.ConsiderPerformRule("quest reset", this, Thing);
         }
     }
 }
