@@ -76,7 +76,7 @@ namespace RMUD.Modules.StandardActions
             GlobalRules.Perform<MudObject, Link>("go")
                 .Do((actor, link) =>
                 {
-                    var destination = Core.GetObject(link.Destination, s => MudObject.SendMessage(actor, s)) as Room;
+                    var destination = MudObject.GetObject(link.Destination) as Room;
                     if (destination == null)
                     {
                         MudObject.SendMessage(actor, "Error - Link does not lead to a room.");

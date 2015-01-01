@@ -21,7 +21,7 @@ namespace RMUD.Modules.Admin
                     MudObject.SendGlobalMessage("The database is being saved. There may be a brief delay.");
                     Core.SendPendingMessages();
 
-                    var saved = Core.SaveActiveInstances();
+                    var saved = Core.Database.Save();
 
                     MudObject.SendGlobalMessage("The database has been saved.");
                     MudObject.SendMessage(actor, String.Format("I saved {0} persistent objects.", saved));

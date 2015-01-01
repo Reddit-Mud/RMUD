@@ -31,10 +31,10 @@ namespace RMUD.Modules.Admin
                         }
                         else if (type == "MEMORY")
                         {
-                            var mem = System.GC.GetTotalMemory(false);
-                            var kb = mem / 1024.0f;
-                            MudObject.SendMessage(actor, "Memory usage: " + String.Format("{0:n0}", kb) + " kb");
-                            MudObject.SendMessage(actor, "Named objects loaded: " + Core.NamedObjects.Count);
+                            //var mem = System.GC.GetTotalMemory(false);
+                            //var kb = mem / 1024.0f;
+                            //MudObject.SendMessage(actor, "Memory usage: " + String.Format("{0:n0}", kb) + " kb");
+                            //MudObject.SendMessage(actor, "Named objects loaded: " + Core.NamedObjects.Count);
                         }
                         else if (type == "TIME")
                         {

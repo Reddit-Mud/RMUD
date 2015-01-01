@@ -30,6 +30,7 @@ namespace RMUD
     public static partial class Core
     {
         internal static List<ChatChannel> ChatChannels = new List<ChatChannel>();
+        internal static String ChatLogsPath { get; set; }
 
         internal static void RemoveClientFromAllChannels(Client Client)
         {

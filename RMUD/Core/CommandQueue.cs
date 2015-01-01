@@ -52,7 +52,10 @@ namespace RMUD
 
             ParserCommandHandler = new ParserCommandHandler(DefaultParser);
             LoginCommandHandler = new LoginCommandHandler();
+        }
 
+        private static void StartCommandProcesor()
+        {
             CommandExecutionThread = new Thread(ProcessCommands);
             CommandExecutionThread.Start();
         }

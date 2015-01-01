@@ -64,35 +64,22 @@ namespace RMUD
 
         public static bool Start(String basePath)
         {
+            ChatLogsPath = basePath + "chatlogs/";
+            AccountsPath = basePath + "accounts/";
+
             try
             {
-                PrepareSerializers();
-                InitializeDatabase(basePath);
-
-                SettingsObject = new Settings();
-                var settings = GetObject("settings") as Settings;
-                if (settings == null) LogError("No settings object found in database. Using default settings.");
-                else SettingsObject = settings;
-                NamedObjects.Clear();
-
-                ProscriptionList = new ProscriptionList(basePath + SettingsObject.ProscriptionListFile);
-
                 InitializeCommandProcessor();
                 GlobalRules.DiscoverRuleBooks(System.Reflection.Assembly.GetExecutingAssembly());
                 InitializeStaticManPages();
+                AddGlobalSerializer(new BitArraySerializer());
 
-                var start = DateTime.Now;
-                var errorReported = false;
-                InitialBulkCompile((s) =>
-                {
-                    LogError(s);
-                    errorReported = true;
-                });
+                Database = new GithubDatabase();
+                Database.Initialize(basePath);
 
-                if (errorReported) Console.WriteLine("Bulk compilation failed. Using ad-hoc compilation as fallback.");
-                else
-                    Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
+                ProscriptionList = new ProscriptionList(basePath + SettingsObject.ProscriptionListFile);
 
+                StartCommandProcesor();
                 Console.WriteLine("Engine ready with path " + basePath + ".");
             }
             catch (Exception e)

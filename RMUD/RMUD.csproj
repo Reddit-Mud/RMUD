@@ -59,6 +59,8 @@
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
+    <Compile Include="Core\WorldDataService.cs" />
+    <Compile Include="Core\GlobalSerializers.cs" />
     <Compile Include="Modules\Admin\Force.cs" />
     <Compile Include="Modules\Clothing\NPCExtension.cs" />
     <Compile Include="Modules\Clothing\Rules.cs" />

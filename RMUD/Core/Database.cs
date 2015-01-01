@@ -15,30 +15,45 @@ namespace RMUD
 
     public static partial class Core
     {
-        public static String StaticPath { get; private set; }
-        public static String DynamicPath { get; private set; }
-        public static String AccountsPath { get; private set; }
-        public static String ChatLogsPath { get; private set; }
-        private static String UsingDeclarations = "using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\n";
-        private static System.Net.WebClient WebClient = new System.Net.WebClient();
+        internal static WorldDataService Database;
+    }
 
-        internal static Dictionary<String, MudObject> NamedObjects = null;
+    public partial class GithubDatabase : WorldDataService
+    {
+        public String StaticPath { get; private set; }
+        public String DynamicPath { get; private set; }
+        private String UsingDeclarations = "using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\n";
+        private System.Net.WebClient WebClient = new System.Net.WebClient();
 
-        internal static void InitializeDatabase(String basePath)
+        internal Dictionary<String, MudObject> NamedObjects = null;
+
+        public void Initialize(String basePath)
         {
             NamedObjects = new Dictionary<string, MudObject>();
             StaticPath = basePath + "static/";
             DynamicPath = basePath + "dynamic/";
-            AccountsPath = basePath + "accounts/";
-            ChatLogsPath = basePath + "chatlogs/";
+
+            Core.SettingsObject = new Settings();
+            var settings = GetObject("settings") as Settings;
+            if (settings == null) Core.LogError("No settings object found in database. Using default settings.");
+            else Core.SettingsObject = settings;
+            NamedObjects.Clear();
+
+            var start = DateTime.Now;
+            var errorReported = false;
+            InitialBulkCompile((s) =>
+            {
+                Core.LogError(s);
+                errorReported = true;
+            });
+
+            if (errorReported) Console.WriteLine("Bulk compilation failed. Using ad-hoc compilation as fallback.");
+            else
+                Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
+
         }
 
-        internal static String GetObjectRealPath(String Path)
-        {
-            return StaticPath + Path + ".cs";
-        }
-		
-        internal static List<String> EnumerateLocalDatabase(String DirectoryPath)
+        private List<String> EnumerateLocalDatabase(String DirectoryPath)
         {
             var path = StaticPath + DirectoryPath;
             var r = new List<String>();
@@ -50,17 +65,17 @@ namespace RMUD
             return r;
         }
 
-        internal static List<String> EnumerateGithubDatabase()
+        private List<String> EnumerateGithubDatabase()
         {
             try
             {
                 var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("Reddit-Mud"));
-                if (!String.IsNullOrEmpty(SettingsObject.GithubAuthToken))
-                    githubClient.Credentials = new Octokit.Credentials(SettingsObject.GithubAuthToken);
+                if (!String.IsNullOrEmpty(Core.SettingsObject.GithubAuthToken))
+                    githubClient.Credentials = new Octokit.Credentials(Core.SettingsObject.GithubAuthToken);
 
                 var codeSearch = new Octokit.SearchCodeRequest(".cs")
                 {
-                    Repo = SettingsObject.GithubRepo,
+                    Repo = Core.SettingsObject.GithubRepo,
                     In = new[] { Octokit.CodeInQualifier.Path },
                     Page = 1
                 };
@@ -97,7 +112,7 @@ namespace RMUD
             return "__" + Path.Replace("/", "_").Replace("-", "_");
         }
 
-        internal static void InitialBulkCompile(Action<String> ReportErrors)
+        private void InitialBulkCompile(Action<String> ReportErrors)
         {
             if (NamedObjects.Count != 0) //That is, if anything besides Settings has been loaded...
                 throw new InvalidOperationException("Bulk compilation must happen before any other objects are loaded or bad things happen.");
@@ -110,7 +125,7 @@ namespace RMUD
             var fileList = EnumerateGithubDatabase();
             foreach (var item in EnumerateLocalDatabase(""))
             {
-                if (fileList.Contains(item)) LogError("Object present in github and local database: " + item);
+                if (fileList.Contains(item)) Core.LogError("Object present in github and local database: " + item);
                 else fileList.Add(item);
             }
 
@@ -176,7 +191,7 @@ namespace RMUD
             }
         }
 
-        public static MudObject GetObject(String Path, Action<String> ReportErrors = null)
+        public MudObject GetObject(String Path)
         {
             Path = Path.Replace('\\', '/');
 
@@ -199,7 +214,7 @@ namespace RMUD
                     r = NamedObjects[BasePath];
                 else
                 {
-                    r = CompileObject(BasePath, ReportErrors);
+                    r = CompileObject(BasePath);
                     if (r != null) NamedObjects.Upsert(BasePath, r);
                 }
 
@@ -214,14 +229,14 @@ namespace RMUD
             }
         }
 
-        private static String PreprocessSourceFile(String Path, List<String> FilesLoaded = null)
+        private String PreprocessSourceFile(String Path, List<String> FilesLoaded = null)
         {
             Path = Path.Replace('\\', '/');
 
             var source = LoadSourceFile(Path);
             if (source.Item1 == false)
             {
-                LogError(Path + " - " + source.Item2);
+                Core.LogError(Path + " - " + source.Item2);
                 return "";
             }
 
@@ -251,16 +266,16 @@ namespace RMUD
             return output.ToString();
         }
 
-        public static Tuple<bool, String> LoadSourceFile(String Path)
+        public Tuple<bool, String> LoadSourceFile(String Path)
         {
             Path = Path.Replace('\\', '/');
             if (Path.Contains("..")) return Tuple.Create(false, "Backtrack path entries are not permitted.");
 
-            if (SettingsObject.UseGithubDatabase)
+            if (Core.SettingsObject.UseGithubDatabase)
             {
                 try
                 {
-                    return Tuple.Create(true, WebClient.DownloadString(SettingsObject.GithubRawURL + Path + ".cs"));
+                    return Tuple.Create(true, WebClient.DownloadString(Core.SettingsObject.GithubRawURL + Path + ".cs"));
                 }
                 catch (Exception) { }
             }
@@ -271,7 +286,7 @@ namespace RMUD
             return Tuple.Create(true, System.IO.File.ReadAllText(realPath));
         }
 
-        public static Assembly CompileCode(String Source, String ErrorPath, Func<int,String> TranslateBulkFilenames = null)
+        private Assembly CompileCode(String Source, String ErrorPath, Func<int,String> TranslateBulkFilenames = null)
         {
             CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
 
@@ -305,14 +320,14 @@ namespace RMUD
                     errorString.Append(filename + " : " + error.ToString());
                     errorString.AppendLine();
                 }
-                LogError(errorString.ToString());
+                Core.LogError(errorString.ToString());
             }
 
             if (realError) return null;
             return compilationResults.CompiledAssembly;
         }
 
-		private static MudObject CompileObject(String Path, Action<String> ReportErrors)
+		private MudObject CompileObject(String Path)
         {
             Path = Path.Replace('\\', '/');
 
@@ -323,7 +338,7 @@ namespace RMUD
             var source = UsingDeclarations + preprocessedFile;
             var assembly = CompileCode(source, Path, i => Path);
 
-            LogError(String.Format("Compiled {0} in {1} milliseconds.", Path, (DateTime.Now - start).TotalMilliseconds));
+            Core.LogError(String.Format("Compiled {0} in {1} milliseconds.", Path, (DateTime.Now - start).TotalMilliseconds));
 
 			if (assembly == null) return null;
 
@@ -337,19 +352,19 @@ namespace RMUD
 			}
 			else
 			{
-                LogError(String.Format("Type {0} not found in {1}", objectLeafName, Path));
+                Core.LogError(String.Format("Type {0} not found in {1}", objectLeafName, Path));
 				return null;
 			}
 		}
 
-		internal static MudObject ReloadObject(String Path, Action<String> ReportErrors)
+		public MudObject ReloadObject(String Path)
 		{
             Path = Path.Replace('\\', '/');
 
 			if (NamedObjects.ContainsKey(Path))
 			{
 				var existing = NamedObjects[Path];
-				var newObject = CompileObject(Path, ReportErrors);
+				var newObject = CompileObject(Path);
 				if (newObject == null)  return null;
 
                 existing.State = ObjectState.Destroyed;
@@ -382,10 +397,10 @@ namespace RMUD
 				return newObject;
 			}
 			else
-				return GetObject(Path, ReportErrors);
+				return GetObject(Path);
 		}
 
-        internal static bool ResetObject(String Path, Action<String> ReportErrors)
+        public MudObject ResetObject(String Path)
         {
             Path = Path.Replace('\\', '/');
 
@@ -393,7 +408,7 @@ namespace RMUD
             {
                 var existing = NamedObjects[Path];
                 existing.State = ObjectState.Destroyed;
-                
+
                 var newObject = Activator.CreateInstance(existing.GetType()) as MudObject;
                 NamedObjects.Upsert(Path, newObject);
                 newObject.Initialize();
@@ -408,7 +423,7 @@ namespace RMUD
                             (newObject as Container).Add(item.Item1, item.Item2);
                             item.Item1.Location = newObject;
                         }
-                    
+
                 if (existing is MudObject && (existing as MudObject).Location != null)
                 {
                     var loc = ((existing as MudObject).Location as Container).RelativeLocationOf(existing);
@@ -418,12 +433,10 @@ namespace RMUD
 
                 existing.Destroy(false);
 
-                return true;
+                return newObject;
             }
             else
-            {
-                return false;
-            }
+                return null;
         }
     }
 
@@ -431,7 +444,7 @@ namespace RMUD
     {
         public static MudObject GetObject(String Path)
         {
-            return Core.GetObject(Path);
+            return Core.Database.GetObject(Path);
         }
     }
 }

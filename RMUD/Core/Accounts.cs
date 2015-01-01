@@ -11,6 +11,8 @@ namespace RMUD
     public static partial class Core
     {
         internal static List<Account> Accounts = new List<Account>();
+        private static String AccountsPath { get; set; }
+
 
         internal static Account FindAccount(String UserName)
         {
@@ -72,7 +74,7 @@ namespace RMUD
         internal static Player GetAccountCharacter(Account Account)
         {
             var characterName = "account/" + Account.UserName;
-            var existing = Core.GetPersistedInstance(characterName + "@main") as Player;
+            var existing = Core.Database.GetObject(characterName + "@main") as Player;
             if (existing != null) return existing;
 
             var character = new Player();

@@ -7,22 +7,11 @@ using Newtonsoft.Json;
 
 namespace RMUD
 {
-    public static partial class Core
+    public partial class GithubDatabase
     {
-        private static Dictionary<String, MudObject> ActiveInstances = new Dictionary<String, MudObject>();
-        public static Dictionary<String, PersistentValueSerializer> GlobalSerializers = new Dictionary<String, PersistentValueSerializer>();
-
-        public static void AddGlobalSerializer(PersistentValueSerializer Serializer)
-        {
-            GlobalSerializers.Upsert(Serializer.TargetType.Name, Serializer);
-        }
-
-        public static void PrepareSerializers()
-        {
-            AddGlobalSerializer(new BitArraySerializer());
-        }
+        private Dictionary<String, MudObject> ActiveInstances = new Dictionary<String, MudObject>();
         
-        public static void PersistInstance(MudObject Object)
+        public void PersistInstance(MudObject Object)
         {
             if (Object.IsPersistent) return; //The object is already persistent.
             if (ActiveInstances.ContainsKey(Object.GetFullName()))
@@ -37,13 +26,7 @@ namespace RMUD
                 throw new InvalidOperationException("Anonymous objects cannot be persisted.");
         }
 
-        public static MudObject GetPersistedInstance(String Path)
-        {
-            if (ActiveInstances.ContainsKey(Path)) return ActiveInstances[Path];
-            return null;
-        }
-
-        public static void ForgetInstance(MudObject Object)
+        public void ForgetInstance(MudObject Object)
         {
             var instanceName = Object.Path + "@" + Object.Instance;
             if (ActiveInstances.ContainsKey(instanceName))
@@ -51,7 +34,7 @@ namespace RMUD
             Object.IsPersistent = false;
         }
 
-        public static MudObject CreateInstance(String FullName, Action<String> ReportErrors = null)
+        public MudObject CreateInstance(String FullName)
         {
             FullName = FullName.Replace('\\', '/');
 
@@ -63,7 +46,7 @@ namespace RMUD
             if (String.IsNullOrEmpty(BasePath))
                 throw new InvalidOperationException("Basepath can't be empty.");
                                     
-            var baseObject = GetObject(BasePath, ReportErrors);
+            var baseObject = GetObject(BasePath);
 
             //We can't make an instance of nothing; this means that the base object has an error of some kind.
             if (baseObject == null) {
@@ -91,7 +74,7 @@ namespace RMUD
             }
         }
 
-        public static int SaveActiveInstances()
+        public int Save()
         {
             var counter = 0;
             foreach (var instance in ActiveInstances)
@@ -102,7 +85,7 @@ namespace RMUD
             return counter;
         }
 
-        private static void SerializeObject(MudObject Object)
+        private void SerializeObject(MudObject Object)
         {
             var filename = DynamicPath + Object.GetFullName() + ".txt";
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(filename));
@@ -121,7 +104,7 @@ namespace RMUD
             System.IO.File.WriteAllText(filename, dest.ToString());
         }
 
-        private static void DeserializeObject(MudObject Object)
+        private void DeserializeObject(MudObject Object)
         {
             var filename = DynamicPath + Object.GetFullName() + ".txt";
             if (!System.IO.File.Exists(filename)) return;
@@ -160,7 +143,7 @@ namespace RMUD
 
     public partial class MudObject
     {
-        public static void PersistInstance(MudObject Object) { Core.PersistInstance(Object); }
-        public static void ForgetInstance(MudObject Object) { Core.ForgetInstance(Object); }
+        public static void PersistInstance(MudObject Object) { Core.Database.PersistInstance(Object); }
+        public static void ForgetInstance(MudObject Object) { Core.Database.ForgetInstance(Object); }
     }
 }

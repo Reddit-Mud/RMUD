@@ -33,10 +33,7 @@ namespace RMUD
                 //Start a new session
                 Client.Player = Core.GetAccountCharacter(Account);
                 Client.Player.Rank = Client.Rank;
-                MudObject.Move(Client.Player, 
-                    Core.GetObject(
-                        Core.SettingsObject.NewPlayerStartRoom,
-                        s => MudObject.SendMessage(Client, s)));
+                MudObject.Move(Client.Player, MudObject.GetObject(Core.SettingsObject.NewPlayerStartRoom));
                 Core.EnqueuClientCommand(Client, "look");
             }
 

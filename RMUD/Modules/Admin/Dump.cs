@@ -19,11 +19,11 @@ namespace RMUD.Modules.Admin
                 .ProceduralRule((match, actor) =>
                 {
                     var target = match["TARGET"].ToString();
-                    var source = Core.LoadSourceFile(target);
-                    if (!source.Item1)
-                        MudObject.SendMessage(actor, "Could not display source: " + source.Item2);
-                    else
-                        MudObject.SendMessage(actor, "Source of " + target + "\n" + source.Item2);
+                        var source = Core.Database.LoadSourceFile(target);
+                        if (!source.Item1)
+                            MudObject.SendMessage(actor, "Could not display source: " + source.Item2);
+                        else
+                            MudObject.SendMessage(actor, "Source of " + target + "\n" + source.Item2);
                     return PerformResult.Continue;
                 });
         }
