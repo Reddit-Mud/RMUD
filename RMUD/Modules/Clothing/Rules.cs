@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RMUD
+namespace RMUD.Modules._Clothing
 {
     public class ClothingRules : DeclaresRules
     {
@@ -44,46 +44,31 @@ namespace RMUD
                     return CheckResult.Allow;
                 })
                 .Name("Can't remove items under other items rule.");
-        }
-    }
 
-    public enum ClothingLayer
-    {
-        Under = 0,
-        Outer = 1,
-        Assecories = 2,
-        Over = 3
-    }
+            GlobalRules.Perform<MudObject, MudObject>("describe")
+                .First
+                .When((viewer, item) => item is Actor)
+                .Do((viewer, item) =>
+                {
+                    var actor = item as Actor;
+                    if (viewer is Actor && MudObject.ActorKnowsActor(viewer as Actor, actor))
+                        MudObject.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
 
-    public enum ClothingBodyPart
-    {
-        Feet,
-        Legs,
-        Torso,
-        Hands,
-        Neck,
-        Head,
-        Wrist,
-        Fingers,
-        Ears,
-        Face,
-        Cloak,
-    }
+                    var wornItems = new List<Clothing>(actor.EnumerateObjects<Clothing>(RelativeLocations.Worn));
+                    if (wornItems.Count == 0)
+                        MudObject.SendMessage(viewer, "^<the0> is naked.", actor);
+                    else
+                        MudObject.SendMessage(viewer, "^<the0> is wearing " + String.Join(", ", wornItems.Select(c => c.Indefinite(viewer))) + ".", actor);
 
-    public class Clothing : MudObject
-    {
-        public ClothingLayer Layer = ClothingLayer.Outer;
-        public ClothingBodyPart BodyPart = ClothingBodyPart.Torso;
+                    var heldItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Held));
+                    if (heldItems.Count == 0)
+                        MudObject.SendMessage(viewer, "^<the0> is empty handed.", actor);
+                    else
+                        MudObject.SendMessage(viewer, "^<the0> is holding " + String.Join(", ", heldItems.Select(i => i.Indefinite(viewer))) + ".", actor);
 
-        public Clothing() : base() { }
-        public Clothing(String Short, String Long) : base(Short, Long) { }
-
-        public static Clothing Create(String Short, ClothingLayer Layer, ClothingBodyPart BodyPart)
-        {
-            var r = new Clothing(Short, "This is a generic " + Short + ". Layer: " + Layer + " BodyPart: " + BodyPart);
-            r.Layer = Layer;
-            r.BodyPart = BodyPart;
-            return r;
+                    return PerformResult.Continue;
+                })
+                .Name("List worn and held items when describing an actor rule.");
         }
     }
 }

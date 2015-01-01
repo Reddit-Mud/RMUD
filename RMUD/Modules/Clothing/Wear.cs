@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD.Commands
+namespace RMUD.Modules._Clothing
 {
 	internal class Wear : CommandFactory, DeclaresRules
 	{

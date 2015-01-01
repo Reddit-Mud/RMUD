@@ -40,30 +40,7 @@ namespace RMUD
                 .Do((viewer, actor, article) => article + " woman")
                 .Name("Default name for unintroduced female actor.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe")
-                .First
-                .When((viewer, item) => item is Actor)
-                .Do((viewer, item) =>
-                {
-                    var actor = item as Actor;
-                    if (viewer is Actor && MudObject.ActorKnowsActor(viewer as Actor, actor))
-                        MudObject.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
-
-                    var wornItems = new List<Clothing>(actor.EnumerateObjects<Clothing>(RelativeLocations.Worn));
-                    if (wornItems.Count == 0)
-                        MudObject.SendMessage(viewer, "^<the0> is naked.", actor);
-                    else
-                        MudObject.SendMessage(viewer, "^<the0> is wearing " + String.Join(", ", wornItems.Select(c => c.Indefinite(viewer))) + ".", actor);
-
-                    var heldItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Held));
-                    if (heldItems.Count == 0)
-                        MudObject.SendMessage(viewer, "^<the0> is empty handed.", actor);
-                    else
-                        MudObject.SendMessage(viewer, "^<the0> is holding " + String.Join(", ", heldItems.Select(i => i.Indefinite(viewer))) + ".", actor);
-
-                    return PerformResult.Continue;
-                })
-                .Name("List worn and held items when describing an actor rule.");
+            
         }
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD
+namespace RMUD.Modules.Conversation
 {
     public class ConversationRules : DeclaresRules
     {
@@ -17,11 +17,6 @@ namespace RMUD
                 .Do((actor, npc, topic) => true)
                 .Name("Topics available by default rule.");
         }
-
-    }
-
-    public class ConversationTopic : MudObject
-    {
 
     }
 }

@@ -60,11 +60,14 @@
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
     <Compile Include="Commands\Admin\Force.cs" />
-    <Compile Include="Commands\NpcConversation\TopicMatcher.cs" />
+    <Compile Include="Modules\Clothing\NPCExtension.cs" />
+    <Compile Include="Modules\Clothing\Rules.cs" />
+    <Compile Include="Modules\Conversation\NPCExtension.cs" />
+    <Compile Include="Modules\Conversation\TopicObjectSource.cs" />
     <Compile Include="Commands\Silly.cs" />
     <Compile Include="Commands\Introduce.cs" />
     <Compile Include="Commands\Admin\Rules.cs" />
-    <Compile Include="Commands\Remove.cs" />
+    <Compile Include="Modules\Clothing\Remove.cs" />
     <Compile Include="Core\ManPages.cs" />
     <Compile Include="Core\Serialization\PersistentValueSerializer.cs" />
     <Compile Include="Core\Serialization\PersistAttribute.cs" />
@@ -74,18 +77,17 @@
     <Compile Include="database\static\palantine\platos_closet.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="Lib\Clothing.cs" />
+    <Compile Include="Modules\Clothing\Clothing.cs" />
     <Compile Include="Core\Introduction.cs" />
-    <Compile Include="Lib\Conversation.cs" />
     <Compile Include="Commands\Admin\ReadLog.cs" />
     <Compile Include="Modules\Quests\AcceptQuest.cs" />
-    <Compile Include="Commands\Wear.cs" />
+    <Compile Include="Modules\Clothing\Wear.cs" />
     <Compile Include="Commands\Admin\Save.cs" />
     <Compile Include="Commands\Meta\Register.cs" />
     <Compile Include="Commands\Meta\Login.cs" />
     <Compile Include="Commands\Meta\Quit.cs" />
     <Compile Include="Commands\Meta\Afk.cs" />
-    <Compile Include="Commands\NpcConversation\Conversation.cs" />
+    <Compile Include="Modules\Conversation\Conversation.cs" />
     <Compile Include="Commands\Admin\Stats.cs" />
     <Compile Include="Commands\Admin\Dump.cs" />
     <Compile Include="Commands\Admin\Instance.cs" />
@@ -137,7 +139,7 @@
     <Compile Include="Core\Serialization\EnumSerializer.cs" />
     <Compile Include="Core\Serialization\DictionaryStringObjectSerializer.cs" />
     <Compile Include="Lib\Player.cs" />
-    <Compile Include="Lib\ConversationTopic.cs" />
+    <Compile Include="Modules\Conversation\Rules.cs" />
     <Compile Include="Lib\NPC.cs" />
     <Compile Include="Lib\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
