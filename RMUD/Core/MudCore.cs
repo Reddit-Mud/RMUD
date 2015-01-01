@@ -112,9 +112,22 @@ namespace RMUD
 
         public static void ProcessPlayerCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
         {
-            Command.ProceduralRules.Consider(Match, Actor);
-            if (Actor != null)
-                CheckQuestStatus(Actor);
+            Match.Upsert("COMMAND", Command);
+            if (GlobalRules.ConsiderPerformRule("before command", Match, Actor) == PerformResult.Continue)
+            {
+                Command.ProceduralRules.Consider(Match, Actor);
+                GlobalRules.ConsiderPerformRule("after command", Match, Actor);
+            }
+        }
+    }
+
+    public class BeforeAndAfterCommandRules : DeclaresRules
+    {
+        public void InitializeRules()
+        {
+            GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("before command", "[Match, Actor] : Considered before every command's procedural rules are run.");
+
+            GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("after command", "[Match, Actor] : Considered after every command's procedural rules are run, unless the before command rules stopped the command.");
         }
     }
 }

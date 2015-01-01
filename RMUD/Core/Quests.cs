@@ -7,9 +7,23 @@ using System.Reflection;
 
 namespace RMUD
 {
+    public class QuestProceduralRules : DeclaresRules
+    {
+        public void InitializeRules()
+        {
+            GlobalRules.Perform<PossibleMatch, Actor>("after acting")
+                .Do((match, actor) =>
+                {
+                    Core.CheckQuestStatus(actor);
+                    return PerformResult.Continue;
+                })
+                .Name("Check quest status after acting rule.");
+        }
+    }
+
     public static partial class Core
     {
-        private static void CheckQuestStatus(Actor Actor)
+        internal static void CheckQuestStatus(Actor Actor)
         {
             var player = Actor as Player;
             if (player != null && player.ActiveQuest != null)

@@ -17,13 +17,15 @@ namespace RMUD.Commands
                         KeyWord("ME"),
                         KeyWord("SELF"))))
                 .Manual("This is a specialized version of the commad to handle 'introduce me'.")
+                .BeforeActing()
                 .ProceduralRule((match, actor) =>
                 {
                     MudObject.Introduce(actor);
                     MudObject.SendExternalMessage(actor, "^<the0> introduces themselves.", actor);
                     MudObject.SendMessage(actor, "You introduce yourself.");
                     return PerformResult.Continue;
-                }, "Introduce yourself rule.");
+                }, "Introduce yourself rule.")
+                .AfterActing();
 
 
             Parser.AddCommand(
@@ -37,7 +39,9 @@ namespace RMUD.Commands
                         }))))
                 .Manual("Introduces someone you know to everyone present. Now they will know them, too.")
                 .Check("can introduce?", "ACTOR", "OBJECT")
-                .Perform("introduce", "ACTOR", "OBJECT");
+                .BeforeActing()
+                .Perform("introduce", "ACTOR", "OBJECT")
+                .AfterActing();
         }
 
         public void InitializeRules()

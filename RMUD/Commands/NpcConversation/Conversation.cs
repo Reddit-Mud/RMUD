@@ -22,7 +22,9 @@ namespace RMUD.Commands
                         }))))
                 .Manual("Initiates a conversation with the npc.")
                 .Check("can converse?", "ACTOR", "LOCUTOR")
+                .BeforeActing()
                 .Perform("greet", "ACTOR", "LOCUTOR")
+                .AfterActing()
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor is Player)

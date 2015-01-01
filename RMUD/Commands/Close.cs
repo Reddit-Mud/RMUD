@@ -21,7 +21,9 @@ namespace RMUD.Commands
                                 })))))
                 .Manual("Closes a thing.")
                 .Check("can close?", "ACTOR", "SUBJECT")
-                .Perform("closed", "ACTOR", "SUBJECT");
+                .BeforeActing()
+                .Perform("closed", "ACTOR", "SUBJECT")
+                .AfterActing();
 		}
 
         public void InitializeRules()

@@ -21,7 +21,9 @@ namespace RMUD.Commands
                             Object("KEY", InScope, PreferHeld)))))
                 .Manual("Use the KEY to unlock the ITEM.")
                 .Check("can lock?", "ACTOR", "ITEM", "KEY")
-                .Perform("unlocked", "ACTOR", "ITEM", "KEY");
+                .BeforeActing()
+                .Perform("unlocked", "ACTOR", "ITEM", "KEY")
+                .AfterActing();
         }
 
         public void InitializeRules()

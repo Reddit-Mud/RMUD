@@ -24,7 +24,9 @@ namespace RMUD.Commands
                             })))))
                 .Manual("Takes an item and adds it to your inventory.")
                 .Check("can take?", "ACTOR", "SUBJECT")
+                .BeforeActing()
                 .Perform("taken", "ACTOR", "SUBJECT")
+                .AfterActing()
                 .MarkLocaleForUpdate();
 		}
 

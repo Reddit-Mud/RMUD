@@ -17,7 +17,9 @@ namespace RMUD.Commands
                             Object("OBJECT", InScope, PreferHeld)))))
                 .Manual("Cover your disgusting flesh.")
                 .Check("can wear?", "ACTOR", "OBJECT")
-                .Perform("worn", "ACTOR", "OBJECT");
+                .BeforeActing()
+                .Perform("worn", "ACTOR", "OBJECT")
+                .AfterActing();
         }
 
         public void InitializeRules()

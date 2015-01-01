@@ -38,7 +38,9 @@ namespace RMUD.Commands
                     return PerformResult.Continue;
                 }, "Supply default for optional relloc procedural rule.")
                 .Check("can-put", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
+                .BeforeActing()
                 .Perform("on-put", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
+                .AfterActing()
                 .MarkLocaleForUpdate();
 
         }

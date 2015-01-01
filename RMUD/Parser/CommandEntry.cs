@@ -5,6 +5,16 @@ using System.Text;
 
 namespace RMUD
 {
+    public class StandardProceduralRules : DeclaresRules
+    {
+        public void InitializeRules()
+        {
+            GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("before acting", "[Match, Actor] : Considered before performing in world actions.");
+
+            GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("after acting", "[Match, Actor] : Considered after performing in world actions.");
+        }
+    }
+
     public class CommandEntry : ManPage
     {
         internal CommandTokenMatcher Matcher;
@@ -69,7 +79,7 @@ namespace RMUD
 
         public CommandEntry Perform(String RuleName, params String[] RuleArguments)
         {
-            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + " with arguments " + String.Join(", ", RuleArguments));
+            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + " with arguments " + String.Join(", ", RuleArguments) + " and discard the result.");
 
             var rule = new Rule<PerformResult>
             {
@@ -82,6 +92,44 @@ namespace RMUD
                 DescriptiveName = "Procedural rule to perform " + RuleName
             };
             ProceduralRules.AddRule(rule);
+            return this;
+        }
+
+        public CommandEntry AbideBy(String RuleName, params String[] RuleArguments)
+        {
+            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + " with arguments " + String.Join(", ", RuleArguments) + " and abide by the result.");
+
+            var rule = new Rule<PerformResult>
+            {
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
+                (match, actor) =>
+                    GlobalRules.ConsiderPerformRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray())
+                    ),
+                DescriptiveName = "Procedural rule to abide by " + RuleName
+            };
+            ProceduralRules.AddRule(rule);
+            return this;
+        }
+
+        public CommandEntry BeforeActing()
+        {
+            ProceduralRules.AddRule(new Rule<PerformResult>{
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => GlobalRules.ConsiderPerformRule("before acting", match, actor)),
+                DescriptiveName = "Before acting procedural rule."});
+            return this;
+        }
+
+        public CommandEntry AfterActing()
+        {
+            ProceduralRules.AddRule(new Rule<PerformResult>
+            {
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => 
+                {
+                    GlobalRules.ConsiderPerformRule("after acting", match, actor);
+                    return PerformResult.Continue;
+                }),
+                DescriptiveName = "After acting procedural rule."
+            });
             return this;
         }
 

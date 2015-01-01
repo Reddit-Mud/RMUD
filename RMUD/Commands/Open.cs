@@ -21,7 +21,9 @@ namespace RMUD.Commands
                             })))))
                 .Manual("Opens an openable thing.")
                 .Check("can open?", "ACTOR", "SUBJECT")
-                .Perform("opened", "ACTOR", "SUBJECT");
+                .BeforeActing()
+                .Perform("opened", "ACTOR", "SUBJECT")
+                .AfterActing();
         }
 
         public void InitializeRules()

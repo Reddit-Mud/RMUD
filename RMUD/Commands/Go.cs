@@ -25,7 +25,9 @@ namespace RMUD.Commands
                     return PerformResult.Continue;
                 }, "lookup link rule")
                 .Check("can go?", "ACTOR", "LINK")
+                .BeforeActing()
                 .Perform("go", "ACTOR", "LINK")
+                .AfterActing()
                 .ProceduralRule((match, actor) =>
                 {
                     MudObject.MarkLocaleForUpdate(actor);

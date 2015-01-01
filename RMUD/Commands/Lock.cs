@@ -21,7 +21,9 @@ namespace RMUD.Commands
                                 Object("KEY", InScope, PreferHeld))))))
                 .Manual("Lock the subject with a key.")
                 .Check("can lock?", "ACTOR", "SUBJECT", "KEY")
-                .Perform("locked", "ACTOR", "SUBJECT", "KEY");
+                .BeforeActing()
+                .Perform("locked", "ACTOR", "SUBJECT", "KEY")
+                .AfterActing();
         }
 
         public void InitializeRules()

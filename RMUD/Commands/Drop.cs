@@ -17,7 +17,9 @@ namespace RMUD.Commands
                             Object("SUBJECT", InScope, PreferHeld)))))
                 .Manual("Drop a held item. This can also be used to remove and drop a worn item.")
                 .Check("can drop?", "ACTOR", "SUBJECT")
-                .Perform("dropped", "ACTOR", "SUBJECT");
+                .BeforeActing()
+                .Perform("dropped", "ACTOR", "SUBJECT")
+                .AfterActing();
 		}
 
         public void InitializeRules()

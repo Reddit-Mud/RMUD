@@ -17,7 +17,9 @@ namespace RMUD.Commands
                             Object("OBJECT", InScope, PreferWorn)))))
                 .Manual("Expose your amazingly supple flesh.")
                 .Check("can remove?", "ACTOR", "OBJECT")
-                .Perform("removed", "ACTOR", "OBJECT");
+                .BeforeActing()
+                .Perform("removed", "ACTOR", "OBJECT")
+                .AfterActing();
         }
 
         public void InitializeRules()
