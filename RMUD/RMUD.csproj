@@ -56,6 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\Chat\ChatChannel.cs" />
+    <Compile Include="Modules\Chat\ChatChannelObjectSource.cs" />
+    <Compile Include="Modules\Chat\MudObjectExtensions.cs" />
     <Compile Include="Modules\ClientLogin\Account.cs" />
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Modules\ClientLogin\ClientExtensions.cs" />
@@ -163,10 +166,10 @@
     <Compile Include="Parser\Matchers\GenericMatcher.cs" />
     <Compile Include="Parser\Matchers\ScoreGate.cs" />
     <Compile Include="Core\RelativeLocationNames.cs" />
-    <Compile Include="Core\ChatChannels.cs" />
+    <Compile Include="Modules\Chat\ChatChannelRules.cs" />
     <Compile Include="Clients\Client.cs" />
     <Compile Include="CommandLine.cs" />
-    <Compile Include="Modules\Meta\Chat.cs" />
+    <Compile Include="Modules\Chat\Commands.cs" />
     <Compile Include="Modules\StandardActions\Put.cs" />
     <Compile Include="Modules\Admin\Kick.cs" />
     <Compile Include="Modules\Admin\Ban.cs" />

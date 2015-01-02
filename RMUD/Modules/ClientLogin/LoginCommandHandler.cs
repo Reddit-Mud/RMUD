@@ -37,9 +37,11 @@ namespace RMUD.Modules.ClientLogin
                 Core.EnqueuClientCommand(Client, "look");
             }
 
-            foreach (var c in Core.ChatChannels.Where(c => c.Short == "OOC")) c.Subscribers.Add(Client.Player);
+
             Client.Player.ConnectedClient = Client;
             Account.LoggedInCharacter = Client.Player;
+
+            GlobalRules.ConsiderPerformRule("player joined", Client.Player);
         }
 
 		public LoginCommandHandler()

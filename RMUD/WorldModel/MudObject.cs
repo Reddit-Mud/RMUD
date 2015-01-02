@@ -19,7 +19,6 @@ namespace RMUD
         public bool IsPersistent { get; set; }
         
 		public virtual void Initialize() { }
-        public virtual void HandleMarkedUpdate() { }
 
         public override string ToString()
         {

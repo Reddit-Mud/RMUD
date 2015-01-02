@@ -7,6 +7,32 @@ using System.Reflection;
 
 namespace RMUD
 {
+    public class UpdateRules : DeclaresRules
+    {
+        public void InitializeRules()
+        {
+            GlobalRules.DeclarePerformRuleBook<MudObject>("update", "[Thing] : Considered for all things that have been marked for update.");
+
+            GlobalRules.Perform("after every command")
+                .First
+                .Do(() =>
+                    {
+                        Core.UpdateMarkedObjects();
+                        return PerformResult.Continue;
+                    })
+                .Name("Update marked objects at end of turn rule.");
+
+            GlobalRules.Perform("after every command")
+                .Last
+                .Do(() =>
+                    {
+                        Core.SendPendingMessages();
+                        return PerformResult.Continue;
+                    })
+               .Name("Send pending messages at end of turn rule.");
+        }
+    }
+
     public static partial class Core
     {
        internal static List<MudObject> MarkedObjects = new List<MudObject>();
@@ -22,7 +48,7 @@ namespace RMUD
         {
             var startCount = MarkedObjects.Count;
             for (int i = 0; i < startCount; ++i)
-                MarkedObjects[i].HandleMarkedUpdate();
+                GlobalRules.ConsiderPerformRule("update", MarkedObjects[i]);
             MarkedObjects.RemoveRange(0, startCount);
         }
     }

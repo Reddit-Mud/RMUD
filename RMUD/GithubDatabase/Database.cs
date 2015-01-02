@@ -209,11 +209,7 @@ namespace RMUD
                 }
 
                 if (r != null && r.State == ObjectState.Unitialized)
-                {
-                    r.Initialize();
-                    r.State = ObjectState.Alive;
-                    r.HandleMarkedUpdate();
-                }
+                    InitializeMudObject(r);
 
                 return r;
             }
@@ -359,9 +355,7 @@ namespace RMUD
 
                 existing.State = ObjectState.Destroyed;
 				NamedObjects.Upsert(Path, newObject);
-                newObject.Initialize(); 
-                newObject.State = ObjectState.Alive;
-				newObject.HandleMarkedUpdate();
+                InitializeMudObject(newObject);
 
 				//Preserve contents
 				if (existing is Container && newObject is Container)
@@ -401,9 +395,7 @@ namespace RMUD
 
                 var newObject = Activator.CreateInstance(existing.GetType()) as MudObject;
                 NamedObjects.Upsert(Path, newObject);
-                newObject.Initialize();
-                newObject.State = ObjectState.Alive;
-                newObject.HandleMarkedUpdate();
+                InitializeMudObject(newObject);
 
                 //Preserve the location of actors, and actors only.
                 if (existing is Container)
@@ -427,6 +419,13 @@ namespace RMUD
             }
             else
                 return null;
+        }
+
+        private static void InitializeMudObject(MudObject Object)
+        {
+            Object.Initialize();
+            Object.State = ObjectState.Alive;
+            GlobalRules.ConsiderPerformRule("update", Object);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace RMUD.Modules.StandardActions
                 .First
                 .Do((viewer, room) =>
                 {
-                    room.HandleMarkedUpdate();
+                    GlobalRules.ConsiderPerformRule("update", room);
                     return PerformResult.Continue;
                 })
                 .Name("Update room lighting before generating description rule.");

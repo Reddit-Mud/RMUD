@@ -47,7 +47,7 @@ namespace RMUD
 
         public LightingLevel AmbientLighting { get; private set; }
 
-        private void UpdateLighting()
+        public void UpdateLighting()
         {           
             AmbientLighting = LightingLevel.Dark;
 
@@ -63,11 +63,6 @@ namespace RMUD
                     if (lightingLevel > AmbientLighting) AmbientLighting = lightingLevel;
                 }
             }
-        }
-
-        public override void HandleMarkedUpdate()
-        {
-            UpdateLighting();
         }
     }
 }

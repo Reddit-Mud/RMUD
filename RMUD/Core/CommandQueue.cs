@@ -130,24 +130,15 @@ namespace RMUD
                         GlobalRules.LogRules(null);
                         
                         CommandReadyHandle.Set(); //Signal worker thread to proceed.
-                        if (CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
+                        if (!CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
                         {
-                            UpdateMarkedObjects();
-                            SendPendingMessages();
-                        }
-                        else
-                        {
-                            if (!CommandTimeoutEnabled)
-                            {
-                                //Timeout is disabled, go ahead and wait for infinity.
+                            if (!CommandTimeoutEnabled) //Timeout is disabled, go ahead and wait for infinity.
                                 CommandFinishedHandle.WaitOne();
-                                UpdateMarkedObjects();
-                                SendPendingMessages();
-                            }
                             else
                             {
                                 //Kill the command processor thread.
                                 IndividualCommandThread.Abort();
+                                ClearPendingMessages();
                                 PendingCommand.Client.Send("Command timeout.\r\n");
                                 LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
                                 IndividualCommandThread = new Thread(ProcessIndividualCommand);

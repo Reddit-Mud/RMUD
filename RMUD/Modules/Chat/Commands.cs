@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD.Modules.Meta
+namespace RMUD.Modules.Chat
 {
-    internal class Chat : CommandFactory
+    internal class Commands : CommandFactory
     {
         public override void Create(CommandParser Parser)
         {
@@ -45,7 +45,7 @@ namespace RMUD.Modules.Meta
                 .ProceduralRule((match, actor) =>
                 {
                     MudObject.SendMessage(actor, "~~ CHANNELS ~~");
-                    foreach (var channel in Core.ChatChannels)
+                    foreach (var channel in ChatChannel.ChatChannels)
                         MudObject.SendMessage(actor, (channel.Subscribers.Contains(actor) ? "*" : "") + channel.Short);
                     return PerformResult.Continue;
                 });
@@ -86,7 +86,7 @@ namespace RMUD.Modules.Meta
                 Sequence(
                     KeyWord("RECALL"),
                     MustMatch("I don't recognize that channel.",
-                        Object("channel", new ChatChannelObjectSource())),
+                        Object("CHANNEL", new ChatChannelObjectSource())),
                     Optional(Number("COUNT"))))
                 .Manual("Recalls past conversation on a chat channel. An optional line count parameter allows you to peek further into the past.")
                 .Check("can access channel?", "ACTOR", "CHANNEL")
@@ -98,7 +98,7 @@ namespace RMUD.Modules.Meta
                     int count = 20;
                     if (match.ContainsKey("COUNT")) count = (match["COUNT"] as int?).Value;
 
-                    var logFilename = Core.ChatLogsPath + channel.Short + ".txt";
+                    var logFilename = ChatChannel.ChatLogsPath + channel.Short + ".txt";
                     if (System.IO.File.Exists(logFilename))
                         foreach (var line in (new ReverseLineReader(logFilename)).Take(count).Reverse())
                             MudObject.SendMessage(actor, line);

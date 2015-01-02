@@ -21,10 +21,10 @@ namespace RMUD
         internal static void ClientDisconnected(Client client)
         {
             DatabaseLock.WaitOne();
-            Core.RemoveClientFromAllChannels(client);
             ConnectedClients.Remove(client);
             if (client.Player != null)
             {
+                GlobalRules.ConsiderPerformRule("player left", client.Player);
                 client.Player.ConnectedClient = null;
                 client.Account.LoggedInCharacter = null;
                 MudObject.Move(client.Player, null);
@@ -66,8 +66,6 @@ namespace RMUD
 
         public static bool Start()
         {
-            ChatLogsPath = "database/chatlogs/";
-
             try
             {
                 InitializeCommandProcessor();
@@ -105,6 +103,7 @@ namespace RMUD
                 Command.ProceduralRules.Consider(Match, Actor);
                 GlobalRules.ConsiderPerformRule("after command", Match, Actor);
             }
+            GlobalRules.ConsiderPerformRule("after every command");
         }
     }
 
@@ -115,6 +114,12 @@ namespace RMUD
             GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("before command", "[Match, Actor] : Considered before every command's procedural rules are run.");
 
             GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("after command", "[Match, Actor] : Considered after every command's procedural rules are run, unless the before command rules stopped the command.");
+
+            GlobalRules.DeclarePerformRuleBook("after every command", "[] : Considered after every command, even if earlier rules stopped the command.");
+
+            GlobalRules.DeclarePerformRuleBook<Player>("player joined", "[Player] : Considered when a player enters the game.");
+
+            GlobalRules.DeclarePerformRuleBook<Player>("player left", "[Player] : Considered when a player leaves the game.");
         }
     }
 }
