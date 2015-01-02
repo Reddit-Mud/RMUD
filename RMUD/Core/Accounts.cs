@@ -73,17 +73,13 @@ namespace RMUD
 
         internal static Player GetAccountCharacter(Account Account)
         {
-            var characterName = "account/" + Account.UserName;
-            var existing = Core.Database.GetObject(characterName + "@main") as Player;
-            if (existing != null) return existing;
+            Core.CommandTimeoutEnabled = false;
+            var playerObject = Core.Database.GetObject(SettingsObject.PlayerBaseObject + "@" + Account.UserName) as Player;
 
-            var character = new Player();
-            character.Path = characterName;
-            character.Instance = "main";
-            character.Short = Account.UserName;
-            character.Nouns.Add(Account.UserName.ToUpper());
-            MudObject.PersistInstance(character);            
-            return character;
+            playerObject.Short = Account.UserName;
+            playerObject.Nouns.Add(Account.UserName.ToUpper());
+            MudObject.PersistInstance(playerObject);
+            return playerObject;
         }
 
         internal static void SaveAccount(Account account)

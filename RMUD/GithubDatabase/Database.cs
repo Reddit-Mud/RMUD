@@ -8,16 +8,6 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public interface Startup
-    {
-        void Startup();
-    }
-
-    public static partial class Core
-    {
-        internal static WorldDataService Database;
-    }
-
     public partial class GithubDatabase : WorldDataService
     {
         public String StaticPath { get; private set; }
@@ -165,7 +155,7 @@ namespace RMUD
                     newObject.Path = s;
                     newObject.State = ObjectState.Unitialized;
 
-                    if (newObject is Startup) (newObject as Startup).Startup();
+                    if (newObject is DeclaresRules) (newObject as DeclaresRules).InitializeRules();
 
                     NamedObjects.Upsert(s, newObject);
                 }
@@ -437,14 +427,6 @@ namespace RMUD
             }
             else
                 return null;
-        }
-    }
-
-    public partial class MudObject
-    {
-        public static MudObject GetObject(String Path)
-        {
-            return Core.Database.GetObject(Path);
         }
     }
 }

@@ -16,6 +16,8 @@ namespace RMUD
         internal static Settings SettingsObject;
         internal static ProscriptionList ProscriptionList;
 
+        internal static WorldDataService Database;
+
         internal static void ClientDisconnected(Client client)
         {
             DatabaseLock.WaitOne();

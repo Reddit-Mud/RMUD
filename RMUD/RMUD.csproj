@@ -59,8 +59,12 @@
     <Compile Include="Clients\Account.cs" />
     <Compile Include="Clients\ConfirmCommandHandler.cs" />
     <Compile Include="Clients\PasswordCommandHandler.cs" />
+    <Compile Include="Core\ObjectSerialization.cs" />
     <Compile Include="Core\WorldDataService.cs" />
     <Compile Include="Core\GlobalSerializers.cs" />
+    <Compile Include="database\static\player_base.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Modules\Admin\Force.cs" />
     <Compile Include="Modules\Clothing\NPCExtension.cs" />
     <Compile Include="Modules\Clothing\Rules.cs" />
@@ -106,7 +110,7 @@
     <Compile Include="Core\CommandQueue.cs" />
     <Compile Include="Core\ObjectContainsObject.cs" />
     <Compile Include="Core\PendingMessages.cs" />
-    <Compile Include="Core\Persistence.cs" />
+    <Compile Include="GithubDatabase\Persistence.cs" />
     <Compile Include="Core\Random.cs" />
     <Compile Include="Core\Time.cs" />
     <None Include="app.config" />
@@ -278,7 +282,7 @@
     <Compile Include="Parser\Matchers\SequenceMatcher.cs" />
     <Compile Include="Parser\PossibleMatch.cs" />
     <Compile Include="WorldModel\Room.cs" />
-    <Compile Include="Core\Database.cs" />
+    <Compile Include="GithubDatabase\Database.cs" />
     <Compile Include="Core\MudCore.cs" />
     <Compile Include="WorldModel\MudObject.cs" />
     <Compile Include="Program.cs" />

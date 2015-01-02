@@ -13,6 +13,7 @@ namespace RMUD
         public int TelnetPort = 8669;
 
         public String NewPlayerStartRoom = "palantine/antechamber";
+        public String PlayerBaseObject = "player_base";
         public bool UseGithubDatabase = true;
         public String GithubAuthToken = "";
         public String GithubRawURL = "https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/";

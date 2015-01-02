@@ -20,7 +20,7 @@ namespace RMUD
             {
                 Object.IsPersistent = true;
                 ActiveInstances.Upsert(Object.GetFullName(), Object);
-                DeserializeObject(Object);
+                ReadPersistentObject(Object);
             }
             else
                 throw new InvalidOperationException("Anonymous objects cannot be persisted.");
@@ -80,65 +80,26 @@ namespace RMUD
             foreach (var instance in ActiveInstances)
             {
                 ++counter;
-                SerializeObject(instance.Value);
+                SavePersistentObject(instance.Value);
             }
             return counter;
         }
 
-        private void SerializeObject(MudObject Object)
+        private void SavePersistentObject(MudObject Object)
         {
             var filename = DynamicPath + Object.GetFullName() + ".txt";
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(filename));
-            
-            var dest = new System.IO.StringWriter();
-            var jsonWriter = new JsonTextWriter(dest);
-
-            jsonWriter.WriteStartObject();
-            foreach (var property in EnumeratePersistentProperties(Object))
-            {
-                jsonWriter.WritePropertyName(property.Item1.Name);
-                property.Item2.WriteValue(property.Item1.GetValue(Object, null), jsonWriter, Object);
-            }
-            jsonWriter.WriteEndObject();
-
-            System.IO.File.WriteAllText(filename, dest.ToString());
+            var data = Core.SerializeObject(Object);
+            System.IO.File.WriteAllText(filename, data);
         }
 
-        private void DeserializeObject(MudObject Object)
+        private void ReadPersistentObject(MudObject Object)
         {
             var filename = DynamicPath + Object.GetFullName() + ".txt";
             if (!System.IO.File.Exists(filename)) return;
-
-            var persistentProperties = new List<Tuple<System.Reflection.PropertyInfo, PersistAttribute>>(EnumeratePersistentProperties(Object));
-            var jsonReader = new JsonTextReader(new System.IO.StreamReader(filename));
-
-            jsonReader.Read();
-            jsonReader.Read();
-            while (jsonReader.TokenType != JsonToken.EndObject)
-            {
-                var propertyName = jsonReader.Value.ToString();
-
-                var prop = persistentProperties.FirstOrDefault(t => t.Item1.Name == propertyName);
-                if (prop == null) throw new InvalidOperationException();
-                jsonReader.Read();
-
-                prop.Item1.SetValue(Object, prop.Item2.ReadValue(prop.Item1.PropertyType, jsonReader, Object), null);
-
-            }
-
-            jsonReader.Close();
+            var data = System.IO.File.ReadAllText(filename);
+            Core.DeserializeObject(Object, data);
         }
-
-
-        private static IEnumerable<Tuple<System.Reflection.PropertyInfo, PersistAttribute>> EnumeratePersistentProperties(MudObject Object)
-        {
-            return 
-                Object.GetType().GetProperties()
-                .Where(pi => pi.GetCustomAttributes(true).Count(a => a is PersistAttribute) >= 1)
-                .Select(pi => Tuple.Create(pi, pi.GetCustomAttributes(true).FirstOrDefault(a => a is PersistAttribute) as PersistAttribute));
-        }
-
-
     }
 
     public partial class MudObject

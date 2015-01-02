@@ -86,5 +86,10 @@ namespace RMUD
                     if (child.State != ObjectState.Destroyed)
                         child.Destroy(true);
         }
+
+        public static MudObject GetObject(String Path)
+        {
+            return Core.Database.GetObject(Path);
+        }
     }
 }
