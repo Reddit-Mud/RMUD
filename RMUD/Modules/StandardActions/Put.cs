@@ -60,7 +60,7 @@ namespace RMUD.Modules.StandardActions
                 {
                     if (!(container is Container))
                     {
-                        MudObject.SendMessage(actor, "You can't put things " + MudObject.GetRelativeLocationName(relloc) + " that.");
+                        MudObject.SendMessage(actor, "You can't put things " + Relloc.GetRelativeLocationName(relloc) + " that.");
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Continue;
@@ -79,8 +79,8 @@ namespace RMUD.Modules.StandardActions
             GlobalRules.Perform<MudObject, MudObject, MudObject, RelativeLocations>("on-put")
                 .Do((actor, item, container, relloc) =>
                 {
-                    MudObject.SendMessage(actor, String.Format("You put <the0> {0} <the1>.", MudObject.GetRelativeLocationName(relloc)), item, container);
-                    MudObject.SendExternalMessage(actor, String.Format("<a0> puts <a1> {0} <a2>.", MudObject.GetRelativeLocationName(relloc)), actor, item, container);
+                    MudObject.SendMessage(actor, String.Format("You put <the0> {0} <the1>.", Relloc.GetRelativeLocationName(relloc)), item, container);
+                    MudObject.SendExternalMessage(actor, String.Format("<a0> puts <a1> {0} <a2>.", Relloc.GetRelativeLocationName(relloc)), actor, item, container);
                     MudObject.Move(item, container, relloc);
                     return PerformResult.Continue;
                 })
@@ -92,7 +92,7 @@ namespace RMUD.Modules.StandardActions
                     var c = container as Container;
                     if (c == null || (c.LocationsSupported & relloc) != relloc)
                     {
-                        MudObject.SendMessage(actor, String.Format("You can't put something {0} that.", MudObject.GetRelativeLocationName(relloc)));
+                        MudObject.SendMessage(actor, String.Format("You can't put something {0} that.", Relloc.GetRelativeLocationName(relloc)));
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Continue;

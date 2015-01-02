@@ -165,10 +165,8 @@
     <Compile Include="Parser\Matchers\NumberMatcher.cs" />
     <Compile Include="Parser\Matchers\GenericMatcher.cs" />
     <Compile Include="Parser\Matchers\ScoreGate.cs" />
-    <Compile Include="Core\RelativeLocationNames.cs" />
     <Compile Include="Modules\Chat\ChatChannelRules.cs" />
     <Compile Include="Clients\Client.cs" />
-    <Compile Include="CommandLine.cs" />
     <Compile Include="Modules\Chat\Commands.cs" />
     <Compile Include="Modules\StandardActions\Put.cs" />
     <Compile Include="Modules\Admin\Kick.cs" />

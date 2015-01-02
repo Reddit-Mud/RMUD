@@ -33,7 +33,7 @@ namespace RMUD.Modules.StandardActions
                 .When((actor, item, relloc) => !(item is Container) || (((item as Container).LocationsSupported & relloc) != relloc))
                 .Do((actor, item, relloc) =>
                 {
-                    MudObject.SendMessage(actor, "You can't look " + MudObject.GetRelativeLocationName(relloc) + " that.");
+                    MudObject.SendMessage(actor, "You can't look " + Relloc.GetRelativeLocationName(relloc) + " that.");
                     return CheckResult.Disallow;
                 })
                 .Name("Container must support relloc rule.");
@@ -59,12 +59,12 @@ namespace RMUD.Modules.StandardActions
                     var contents = (item as Container).GetContents(relloc);
                     if (contents.Count > 0)
                     {
-                        MudObject.SendMessage(actor, "^" + MudObject.GetRelativeLocationName(relloc) + " <the0> is ", item);
+                        MudObject.SendMessage(actor, "^" + Relloc.GetRelativeLocationName(relloc) + " <the0> is ", item);
                         foreach (var thing in contents)
                             MudObject.SendMessage(actor, "  <a0>", thing);
                     }
                     else
-                        MudObject.SendMessage(actor, "There is nothing " + MudObject.GetRelativeLocationName(relloc) + " <the0>.", item);
+                        MudObject.SendMessage(actor, "There is nothing " + Relloc.GetRelativeLocationName(relloc) + " <the0>.", item);
                     return PerformResult.Continue;
                 })
                 .Name("List contents in relative location rule.");
