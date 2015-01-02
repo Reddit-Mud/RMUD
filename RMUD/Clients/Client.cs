@@ -12,7 +12,7 @@ namespace RMUD
         Mask,   // A mask character will be echoed back
     }
 
-    public class Client
+    public partial class Client
     {
         public virtual void Send(String message) { }
         public virtual void Disconnect() { }
@@ -20,7 +20,6 @@ namespace RMUD
         public virtual String IPString { get { throw new NotImplementedException(); } }
 
         public bool IsLoggedOn { get { return Player != null; } }
-        public Account Account;
         public Player Player;
         public int Rank = 0;
 		public ClientCommandHandler CommandHandler;

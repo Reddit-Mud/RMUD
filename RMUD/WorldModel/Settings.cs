@@ -19,6 +19,8 @@ namespace RMUD
         public String GithubRawURL = "https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/";
         public String GithubRepo = "Reddit-Mud/RMUD-DB";
 
+        public ClientCommandHandler NewClientCommandHandler = new Modules.ClientLogin.LoginCommandHandler();
+
         public int AllowedCommandRate = 100; //How many milliseconds to allow between commands - default is to not limit very much.
 
         //How many milliseconds should a command be allowed to run before it is aborted?

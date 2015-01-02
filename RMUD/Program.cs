@@ -10,30 +10,11 @@ namespace RMUD
 {
     class Program
     {
-		internal class CommandLineOptions
-		{
-			public String DATABASEPATH { get; set; }
-
-			public CommandLineOptions()
-			{
-				DATABASEPATH = "database/";
-			}
-		}
-
         static void Main(string[] args)
         {
-            var commandLineOptions = new CommandLineOptions();
-            var error = CommandLine.ParseCommandLine(commandLineOptions);
-
-            if (error != CommandLine.Error.Success)
-            {
-                Console.WriteLine("Command line error: " + error);
-                return;
-            }
-
             TelnetClientSource telnetListener = null;
 
-            if (Core.Start(commandLineOptions.DATABASEPATH))
+            if (Core.Start())
             {
                 telnetListener = new TelnetClientSource();
                 telnetListener.Port = Core.SettingsObject.TelnetPort;

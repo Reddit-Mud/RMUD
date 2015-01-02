@@ -6,27 +6,11 @@ using System.IO;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 
-namespace RMUD
+namespace RMUD.Modules.ClientLogin
 {
-    public static partial class Core
+    public static class Accounts
     {
-        internal static List<Account> Accounts = new List<Account>();
-        private static String AccountsPath { get; set; }
-
-
-        internal static Account FindAccount(String UserName)
-        {
-            var account = Accounts.FirstOrDefault(a => a.UserName == UserName);
-            if (account == null)
-            {
-                account = LoadAccount(UserName);
-                if (account != null)
-                {
-                    Accounts.Add(account);
-                }
-            }
-            return account;
-        }
+        private static String AccountsPath = "database/accounts/";
 
         private static string GenerateRandomSalt()
         {
@@ -53,7 +37,7 @@ namespace RMUD
 
         internal static Account CreateAccount(String UserName, String Password)
         {
-            if (FindAccount(UserName) != null)
+            if (LoadAccount(UserName) != null)
             {
                 throw new InvalidOperationException("Account already exists");
             }
@@ -66,7 +50,6 @@ namespace RMUD
             var salt = GenerateRandomSalt();
             var hash = HashPassword(Password, salt);
             var newAccount = new Account { UserName = UserName, HashedPassword = hash, Salt = salt };
-            Accounts.Add(newAccount);
             SaveAccount(newAccount);
             return newAccount;
         }
@@ -74,7 +57,7 @@ namespace RMUD
         internal static Player GetAccountCharacter(Account Account)
         {
             Core.CommandTimeoutEnabled = false;
-            var playerObject = Core.Database.GetObject(SettingsObject.PlayerBaseObject + "@" + Account.UserName) as Player;
+            var playerObject = Core.Database.GetObject(Core.SettingsObject.PlayerBaseObject + "@" + Account.UserName) as Player;
 
             playerObject.Short = Account.UserName;
             playerObject.Nouns.Add(Account.UserName.ToUpper());
@@ -86,7 +69,7 @@ namespace RMUD
         {
             try
             {
-                var directory = Core.AccountsPath + account.UserName;
+                var directory = AccountsPath + account.UserName;
                 var filename = directory + "/account.txt";
                 var json = JsonConvert.SerializeObject(account, Formatting.Indented);
                 System.IO.Directory.CreateDirectory(directory);
@@ -103,7 +86,7 @@ namespace RMUD
             Account account = null;
             try 
             {
-                var filename = Core.AccountsPath + UserName + "/account.txt";
+                var filename = AccountsPath + UserName + "/account.txt";
                 if (File.Exists(filename))
                 {
                     var json = File.ReadAllText(filename);

@@ -29,7 +29,6 @@ namespace RMUD
 
         internal static ParserCommandHandler ParserCommandHandler;
         public static CommandParser DefaultParser;
-        public static LoginCommandHandler LoginCommandHandler;
 
         internal static void EnqueuClientCommand(Client Client, String RawCommand)
         {
@@ -51,7 +50,6 @@ namespace RMUD
             DiscoverCommandFactories(Assembly.GetExecutingAssembly(), DefaultParser);
 
             ParserCommandHandler = new ParserCommandHandler(DefaultParser);
-            LoginCommandHandler = new LoginCommandHandler();
         }
 
         private static void StartCommandProcesor()

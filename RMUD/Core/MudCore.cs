@@ -50,7 +50,7 @@ namespace RMUD
 
             DatabaseLock.WaitOne();
 
-            Client.CommandHandler = LoginCommandHandler;
+            Client.CommandHandler = SettingsObject.NewClientCommandHandler;
 
             MudObject.SendMessage(Client, SettingsObject.Banner);
             MudObject.SendMessage(Client, SettingsObject.MessageOfTheDay);
@@ -64,10 +64,9 @@ namespace RMUD
             return ClientAcceptanceStatus.Accepted;
         }
 
-        public static bool Start(String basePath)
+        public static bool Start()
         {
-            ChatLogsPath = basePath + "chatlogs/";
-            AccountsPath = basePath + "accounts/";
+            ChatLogsPath = "database/chatlogs/";
 
             try
             {
@@ -77,12 +76,11 @@ namespace RMUD
                 AddGlobalSerializer(new BitArraySerializer());
 
                 Database = new GithubDatabase();
-                Database.Initialize(basePath);
+                Database.Initialize();
 
-                ProscriptionList = new ProscriptionList(basePath + SettingsObject.ProscriptionListFile);
+                ProscriptionList = new ProscriptionList(SettingsObject.ProscriptionListFile);
 
                 StartCommandProcesor();
-                Console.WriteLine("Engine ready with path " + basePath + ".");
             }
             catch (Exception e)
             {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-namespace RMUD
+namespace RMUD.Modules.ClientLogin
 {
 	public class PasswordCommandHandler : ClientCommandHandler
 	{

@@ -15,11 +15,11 @@ namespace RMUD.Modules.Meta
                         KeyWord("HELP"),
                         KeyWord("MAN"),
                         KeyWord("?")),
-                    Optional(Rest("COMMAND"))))
+                    Optional(Rest("TOPIC"))))
                 .Manual("This is the command you typed to get this message.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (!match.ContainsKey("COMMAND"))
+                    if (!match.ContainsKey("TOPIC"))
                     {
                         MudObject.SendMessage(actor, "Available help topics");
                         var line = "";
@@ -37,7 +37,7 @@ namespace RMUD.Modules.Meta
                     }
                     else
                     {
-                        var manPageName = match["COMMAND"].ToString().ToUpper();
+                        var manPageName = match["TOPIC"].ToString().ToUpper();
                         var pages = new List<ManPage>(Core.ManPages.Where(p => p.Name == manPageName));
                         if (pages.Count > 0)
                             foreach (var manPage in pages)

@@ -21,6 +21,6 @@ namespace RMUD
 
         int Save();
 
-        void Initialize(String BasePath);
+        void Initialize();
     }
 }

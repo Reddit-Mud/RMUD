@@ -17,11 +17,11 @@ namespace RMUD
 
         internal Dictionary<String, MudObject> NamedObjects = null;
 
-        public void Initialize(String basePath)
+        public void Initialize()
         {
             NamedObjects = new Dictionary<string, MudObject>();
-            StaticPath = basePath + "static/";
-            DynamicPath = basePath + "dynamic/";
+            StaticPath = "database/static/";
+            DynamicPath = "database/dynamic/";
 
             Core.SettingsObject = new Settings();
             var settings = GetObject("settings") as Settings;

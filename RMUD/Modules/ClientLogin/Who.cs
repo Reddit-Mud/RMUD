@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD.Modules.Meta
+namespace RMUD.Modules.ClientLogin
 {
 	internal class Who : CommandFactory
 	{

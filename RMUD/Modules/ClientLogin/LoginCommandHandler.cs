@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-namespace RMUD
+namespace RMUD.Modules.ClientLogin
 {
 	public class LoginCommandHandler : ClientCommandHandler
 	{
@@ -31,7 +31,7 @@ namespace RMUD
             else
             {
                 //Start a new session
-                Client.Player = Core.GetAccountCharacter(Account);
+                Client.Player = Accounts.GetAccountCharacter(Account);
                 Client.Player.Rank = Client.Rank;
                 MudObject.Move(Client.Player, MudObject.GetObject(Core.SettingsObject.NewPlayerStartRoom));
                 Core.EnqueuClientCommand(Client, "look");
