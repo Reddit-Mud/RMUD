@@ -1,5 +1,5 @@
 # RMUD *(title pending)*
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/Reddit-Mud/RMUD?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/Reddit-Mud?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 ### A Brief History
