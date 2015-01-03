@@ -23,31 +23,30 @@ namespace RMUD.Modules.ClientLogin
                         return PerformResult.Stop;
                     }
 
-                    var client = match["CLIENT"] as Client;
                     var userName = match["USERNAME"].ToString();
 
-                    client.CommandHandler = new PasswordCommandHandler(client, Authenticate, userName);
+                    actor.CommandHandler = new PasswordCommandHandler(actor, Authenticate, userName);
                     return PerformResult.Continue;
                 });
         }
 
-        public void Authenticate(Client Client, String UserName, String Password)
+        public void Authenticate(Actor Actor, String UserName, String Password)
         {
             var existingAccount = Accounts.LoadAccount(UserName);
             if (existingAccount != null)
             {
-                MudObject.SendMessage(Client, "Account already exists.");
+                MudObject.SendMessage(Actor, "Account already exists.");
                 return;
             }
 
             var newAccount = Accounts.CreateAccount(UserName, Password);
             if (newAccount == null)
             {
-                MudObject.SendMessage(Client, "Could not create account.");
+                MudObject.SendMessage(Actor, "Could not create account.");
                 return;
             }
 
-            LoginCommandHandler.LogPlayerIn(Client, newAccount);
+            LoginCommandHandler.LogPlayerIn(Actor.ConnectedClient, newAccount);
         }
     }
 }

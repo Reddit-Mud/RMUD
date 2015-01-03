@@ -7,6 +7,6 @@ namespace RMUD
 {
 	public interface ClientCommandHandler
 	{
-		void HandleCommand(Client Client, String Command);
+		void HandleCommand(Actor Actor, String Command);
 	}
 }

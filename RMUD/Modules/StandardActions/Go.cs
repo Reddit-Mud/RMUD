@@ -100,7 +100,7 @@ namespace RMUD.Modules.StandardActions
                 .When((actor, link) => actor is Player && (actor as Player).ConnectedClient != null)
                 .Do((actor, link) =>
                 {
-                    Core.EnqueuClientCommand((actor as Player).ConnectedClient, "look");
+                    Core.EnqueuClientCommand(actor as Actor, "look");
                     return PerformResult.Continue;
                 })
                 .Name("Players look after going rule.");

@@ -17,7 +17,7 @@ namespace RMUD.Modules.Admin
                         FirstOf(
                             Object("OBJECT", InScope),
                             Path("PATH"))),
-                    Rest("COMMAND")))
+                    Rest("RAW-COMMAND")))
                 .Manual("An administrative command that allows you to execute a command as if you were another actor or player. The other entity will see all output from the command, and rules restricting their access to the command are considered.")
                 .ProceduralRule((match, actor) =>
                     {
@@ -44,7 +44,7 @@ namespace RMUD.Modules.Admin
                         return PerformResult.Stop;
                     }
 
-                    var command = match["COMMAND"].ToString();
+                    var command = match["RAW-COMMAND"].ToString();
                     var matchedCommand = Core.ParserCommandHandler.Parser.ParseCommand(command, targetActor);
 
                     if (matchedCommand != null)

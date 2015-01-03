@@ -168,7 +168,7 @@ namespace RMUD
                             {
                                 String Command = Client.CommandQueue;
                                 Client.CommandQueue = "";
-                                Core.EnqueuClientCommand(Client, Command);
+                                Core.EnqueuClientCommand(Client.Player, Command);
                             }
                         }
                         else if (character == '\b')

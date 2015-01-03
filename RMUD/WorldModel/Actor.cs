@@ -7,6 +7,7 @@ namespace RMUD
 {
     public class Actor : Container
     {
+        public ClientCommandHandler CommandHandler;
         public Client ConnectedClient;
         public int Rank;
 

@@ -19,10 +19,9 @@ namespace RMUD
 		public virtual String ConnectionDescription { get { throw new NotImplementedException(); } }
         public virtual String IPString { get { throw new NotImplementedException(); } }
 
-        public bool IsLoggedOn { get { return Player != null; } }
-        public Player Player;
+        public bool IsLoggedOn { get; set; }
+        public Actor Player;
         public int Rank = 0;
-		public ClientCommandHandler CommandHandler;
         public DateTime TimeOfLastCommand = DateTime.Now;
 
         public bool IsAfk
@@ -35,6 +34,11 @@ namespace RMUD
 
         protected Echo _myEcho = Echo.All;
         public virtual Echo Echo { get { return _myEcho; } set { _myEcho = value; } }
+
+        public Client()
+        {
+            IsLoggedOn = false;
+        }
 
     }
 }

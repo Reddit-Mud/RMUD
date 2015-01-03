@@ -17,30 +17,31 @@ namespace RMUD.Modules.ClientLogin
                 .Manual("If you got this far, you know how to login.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor != null)
+                    if (actor.ConnectedClient == null) return PerformResult.Stop;
+
+                    if (actor.ConnectedClient.IsLoggedOn)
                     {
                         MudObject.SendMessage(actor, "You are already logged in.");
                         return PerformResult.Stop;
                     }
 
-                    var client = match["CLIENT"] as Client;
                     var userName = match["USERNAME"].ToString();
 
-                    client.CommandHandler = new PasswordCommandHandler(client, Authenticate, userName);
+                    actor.CommandHandler = new PasswordCommandHandler(actor, Authenticate, userName);
                     return PerformResult.Continue;
                 });
         }
 
-        public void Authenticate(Client Client, String UserName, String Password)
+        public void Authenticate(Actor Actor, String UserName, String Password)
         {
             var existingAccount = Accounts.LoadAccount(UserName);
             if (existingAccount == null || Accounts.VerifyAccount(existingAccount, Password) == false)
             {
-                MudObject.SendMessage(Client, "Could not verify account.");
+                MudObject.SendMessage(Actor, "Could not verify account.");
                 return;
             }
 
-            LoginCommandHandler.LogPlayerIn(Client, existingAccount);
+            LoginCommandHandler.LogPlayerIn(Actor.ConnectedClient, existingAccount);
         }
 	}
 }

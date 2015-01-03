@@ -14,7 +14,7 @@ namespace RMUD
         public List<MudObject> DisambigObjects = null;
 
 		public DisambigCommandHandler(
-            Client Client, 
+            Actor Actor, 
             CommandParser.MatchedCommand MatchedCommand, 
             ParserCommandHandler ParentHandler)
 		{
@@ -67,23 +67,23 @@ namespace RMUD
                 var response = new StringBuilder();
                 response.Append("Which did you mean?\r\n");
                 for (var i = 0; i < DisambigObjects.Count; ++i)
-                    response.Append(String.Format("{0}: {1}\r\n", i, DisambigObjects[i].Definite(Client.Player)));
-                MudObject.SendMessage(Client, response.ToString());
+                    response.Append(String.Format("{0}: {1}\r\n", i, DisambigObjects[i].Definite(Actor)));
+                MudObject.SendMessage(Actor, response.ToString());
             }
             else
             {
-                MudObject.SendMessage(Client, "I couldn't figure out how to disambiguate that command.");
+                MudObject.SendMessage(Actor, "I couldn't figure out how to disambiguate that command.");
             }
 		}
 
-        public void HandleCommand(Client Client, String Command)
+        public void HandleCommand(Actor Actor, String Command)
         {
-            Client.CommandHandler = ParentHandler;
+            Actor.CommandHandler = ParentHandler;
             
             //Just retry if the attempt to help has failed.
             if (DisambigObjects == null)
             {
-                Core.EnqueuClientCommand(Client, Command);
+                Core.EnqueuClientCommand(Actor, Command);
                 return;
             }
             
@@ -91,24 +91,24 @@ namespace RMUD
             if (Int32.TryParse(Command, out ordinal))
             {
                 if (ordinal < 0 || ordinal >= DisambigObjects.Count)
-                    MudObject.SendMessage(Client, "That wasn't a valid option. I'm aborting disambiguation.");
+                    MudObject.SendMessage(Actor, "That wasn't a valid option. I'm aborting disambiguation.");
                 else
                 {
                     var choosenMatches = MatchedCommand.Matches.Where(m => Object.ReferenceEquals(m[DisambigArgument], DisambigObjects[ordinal]));
                     MatchedCommand.Matches = new List<PossibleMatch>(choosenMatches);
 
                     if (MatchedCommand.Matches.Count == 1)
-                        Core.ProcessPlayerCommand(MatchedCommand.Command, MatchedCommand.Matches[0], Client.Player);
+                        Core.ProcessPlayerCommand(MatchedCommand.Command, MatchedCommand.Matches[0], Actor);
                     else
                     {
-                        MudObject.SendMessage(Client, "That helped narrow it down, but I'm still not sure what you mean.");
-                        Client.CommandHandler = new DisambigCommandHandler(Client, MatchedCommand, ParentHandler);
+                        MudObject.SendMessage(Actor, "That helped narrow it down, but I'm still not sure what you mean.");
+                        Actor.CommandHandler = new DisambigCommandHandler(Actor, MatchedCommand, ParentHandler);
                     }
                 }
             }
             else //Player didn't type an ordinal; retry.
             {
-                Core.EnqueuClientCommand(Client, Command);
+                Core.EnqueuClientCommand(Actor, Command);
             }
         }
     }

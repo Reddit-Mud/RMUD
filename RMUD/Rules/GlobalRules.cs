@@ -18,9 +18,9 @@ namespace RMUD
     public static partial class GlobalRules
     {
         internal static RuleSet Rules = null;
-        internal static Client LogTo = null;
+        internal static Actor LogTo = null;
 
-        internal static void LogRules(Client To) { LogTo = To; }
+        internal static void LogRules(Actor To) { LogTo = To; }
 
         internal static bool CheckGlobalRuleBookTypes(String Name, Type ResultType, params Type[] ArgumentTypes)
         {

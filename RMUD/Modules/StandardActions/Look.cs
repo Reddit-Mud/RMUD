@@ -127,8 +127,8 @@ namespace RMUD.Modules.StandardActions
                         foreach (var link in (room as Room).EnumerateObjects<Link>(RelativeLocations.Links))
                         {
                             var builder = new StringBuilder();
-                            builder.Append("  ");
-                            builder.Append(MudObject.CapFirst(link.Direction.ToString()));
+                            builder.Append("  ^");
+                            builder.Append(link.Direction.ToString());
 
                             if (link.Portal != null)
                             {

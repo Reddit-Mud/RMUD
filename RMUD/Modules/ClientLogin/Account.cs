@@ -10,6 +10,6 @@ namespace RMUD.Modules.ClientLogin
         public String AFKMessage = "AFK";
 
         [Newtonsoft.Json.JsonIgnore]
-        public Player LoggedInCharacter;
+        public Actor LoggedInCharacter;
     }
 }

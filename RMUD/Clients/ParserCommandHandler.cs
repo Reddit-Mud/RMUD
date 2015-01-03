@@ -15,7 +15,7 @@ namespace RMUD
             this.Parser = Parser;
 		}
 
-        public void HandleCommand(Client Client, String Command)
+        public void HandleCommand(Actor Actor, String Command)
         {
             if (String.IsNullOrEmpty(Command)) return;
 
@@ -37,9 +37,9 @@ namespace RMUD
                 else if (Command.ToUpper().StartsWith("@DEBUG "))
                 {
                     Command = Command.Substring("@DEBUG ".Length);
-                    if (Client.Rank < 500)
+                    if (Actor.Rank < 500)
                     {
-                        MudObject.SendMessage(Client, "You do not have sufficient rank to use the debug command.");
+                        MudObject.SendMessage(Actor, "You do not have sufficient rank to use the debug command.");
                         return;
                     }
 
@@ -48,18 +48,18 @@ namespace RMUD
                 else if (Command.ToUpper().StartsWith("@RULES "))
                 {
                     Command = Command.Substring("@RULES ".Length);
-                    GlobalRules.LogRules(Client);
+                    GlobalRules.LogRules(Actor);
                 }
                 else
                 {
-                    MudObject.SendMessage(Client, "I don't recognize that debugging command.");
+                    MudObject.SendMessage(Actor, "I don't recognize that debugging command.");
                     return;
                 }
             }
 
             var startTime = DateTime.Now;
 
-            var matchedCommand = Parser.ParseCommand(Command, Client.Player);
+            var matchedCommand = Parser.ParseCommand(Command, Actor);
 
             if (displayMatches)
             {
@@ -67,12 +67,12 @@ namespace RMUD
 
                 if (matchedCommand == null)
                 {
-                    MudObject.SendMessage(Client, String.Format("Matched nothing in {0:n0} milliseconds.",
+                    MudObject.SendMessage(Actor, String.Format("Matched nothing in {0:n0} milliseconds.",
                         (matchEndTime - startTime).TotalMilliseconds));
                 }
                 else
                 {
-                    MudObject.SendMessage(Client, String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.",
+                    MudObject.SendMessage(Actor, String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.",
                         matchedCommand.Command.ManualName,
                         (matchEndTime - startTime).TotalMilliseconds,
                         matchedCommand.Matches.Count));
@@ -89,7 +89,7 @@ namespace RMUD
                             builder.Append("] ");
                         }
 
-                        MudObject.SendMessage(Client, builder.ToString());
+                        MudObject.SendMessage(Actor, builder.ToString());
                     }
                 }
             }
@@ -99,12 +99,12 @@ namespace RMUD
                 if (matchedCommand != null)
                 {
                     if (matchedCommand.Matches.Count > 1)
-                        Client.CommandHandler = new DisambigCommandHandler(Client, matchedCommand, this);
+                        Actor.CommandHandler = new DisambigCommandHandler(Actor, matchedCommand, this);
                     else
-                        Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Client.Player);
+                        Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Actor);
                 }
                 else
-                    MudObject.SendMessage(Client, "huh?");
+                    MudObject.SendMessage(Actor, "huh?");
             }
 
             GlobalRules.LogRules(null);
@@ -113,7 +113,7 @@ namespace RMUD
             {
                 var endTime = DateTime.Now;
 
-                MudObject.SendMessage(Client, String.Format("Command completed in {0} milliseconds.", (endTime - startTime).TotalMilliseconds));
+                MudObject.SendMessage(Actor, String.Format("Command completed in {0} milliseconds.", (endTime - startTime).TotalMilliseconds));
             }
         }
     }

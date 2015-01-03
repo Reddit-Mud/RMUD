@@ -12,25 +12,25 @@ namespace RMUD
         public CommandParser.MatchedCommand CheckedCommand;
 
 		public ConfirmCommandHandler(
-            Client Client, 
+            Actor Actor, 
             CommandParser.MatchedCommand CheckedCommand, 
             ClientCommandHandler ParentHandler)
 		{
             this.ParentHandler = ParentHandler;
             this.CheckedCommand = CheckedCommand;
 
-            MudObject.SendMessage(Client, "Are you sure you want to do that? (Y/N)");
+            MudObject.SendMessage(Actor, "Are you sure you want to do that? (Y/N)");
 		}
 
-        public void HandleCommand(Client Client, String Command)
+        public void HandleCommand(Actor Actor, String Command)
         {
             //Whatever the outcome of the confirmation, command handling should continue as normal afterwards.
-            Client.CommandHandler = ParentHandler;
+            Actor.CommandHandler = ParentHandler;
 
             if (Command.ToUpper() == "YES" || Command.ToUpper() == "Y")
-                Core.ProcessPlayerCommand(CheckedCommand.Command, CheckedCommand.Matches[0], Client.Player);
+                Core.ProcessPlayerCommand(CheckedCommand.Command, CheckedCommand.Matches[0], Actor);
             else
-                MudObject.SendMessage(Client, "Okay, aborted.");            
+                MudObject.SendMessage(Actor, "Okay, aborted.");            
         }
     }
 }

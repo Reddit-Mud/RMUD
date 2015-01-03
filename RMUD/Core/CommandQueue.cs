@@ -11,7 +11,7 @@ namespace RMUD
     {
         private class PendingCommand
         {
-            internal Client Client;
+            internal Actor Actor;
             internal String RawCommand;
         }
 
@@ -30,10 +30,10 @@ namespace RMUD
         internal static ParserCommandHandler ParserCommandHandler;
         public static CommandParser DefaultParser;
 
-        internal static void EnqueuClientCommand(Client Client, String RawCommand)
+        internal static void EnqueuClientCommand(Actor Actor, String RawCommand)
         {
             PendingCommandLock.WaitOne();
-            PendingCommands.AddLast(new PendingCommand { Client = Client, RawCommand = RawCommand });
+            PendingCommands.AddLast(new PendingCommand { Actor = Actor, RawCommand = RawCommand });
             PendingCommandLock.ReleaseMutex();
         }
 
@@ -66,8 +66,9 @@ namespace RMUD
 
                 try
                 {
-                    NextCommand.Client.TimeOfLastCommand = DateTime.Now;
-                    NextCommand.Client.CommandHandler.HandleCommand(NextCommand.Client, NextCommand.RawCommand);
+                    if (NextCommand.Actor.ConnectedClient != null)
+                        NextCommand.Actor.ConnectedClient.TimeOfLastCommand = DateTime.Now;
+                    NextCommand.Actor.CommandHandler.HandleCommand(NextCommand.Actor, NextCommand.RawCommand);
                 }
                 catch (System.Threading.ThreadAbortException)
                 {
@@ -106,7 +107,11 @@ namespace RMUD
 
                     try
                     {
-                        PendingCommand = PendingCommands.FirstOrDefault(pc => (DateTime.Now - pc.Client.TimeOfLastCommand).TotalMilliseconds > SettingsObject.AllowedCommandRate);
+                        PendingCommand = PendingCommands.FirstOrDefault(pc =>
+                            {
+                                if (pc.Actor.ConnectedClient == null) return true;
+                                else return (DateTime.Now - pc.Actor.ConnectedClient.TimeOfLastCommand).TotalMilliseconds > SettingsObject.AllowedCommandRate;
+                            });
                         if (PendingCommand != null)
                             PendingCommands.Remove(PendingCommand);
                     }
@@ -139,8 +144,13 @@ namespace RMUD
                                 //Kill the command processor thread.
                                 IndividualCommandThread.Abort();
                                 ClearPendingMessages();
-                                PendingCommand.Client.Send("Command timeout.\r\n");
-                                LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Client.IPString, PendingCommand.RawCommand));
+                                if (PendingCommand.Actor.ConnectedClient != null)
+                                {
+                                    PendingCommand.Actor.ConnectedClient.Send("Command timeout.\r\n");
+                                    LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Actor.ConnectedClient.IPString, PendingCommand.RawCommand));
+                                }
+                                else
+                                    LogError(String.Format("Command timeout [No client] - {1}", PendingCommand.RawCommand));
                                 IndividualCommandThread = new Thread(ProcessIndividualCommand);
                                 IndividualCommandThread.Start();
                             }

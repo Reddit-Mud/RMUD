@@ -120,7 +120,7 @@ namespace RMUD
 
             Core.PendingMessages.Add(new RawPendingMessage(Client,
                 Client.IsLoggedOn ?
-                    Core.FormatMessage(Client.Account.LoggedInCharacter, Message, MentionedObjects) :
+                    Core.FormatMessage(Client.Player, Message, MentionedObjects) :
                     Message));
         }
 

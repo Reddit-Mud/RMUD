@@ -249,7 +249,6 @@
     <Compile Include="Clients\TelnetClient.cs" />
     <Compile Include="Clients\TelnetControlCodes.cs" />
     <Compile Include="Core\IsVisibleTo.cs" />
-    <Compile Include="Core\TextUtility.cs" />
     <Compile Include="database\static\palantine\library.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

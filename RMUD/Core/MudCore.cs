@@ -50,7 +50,9 @@ namespace RMUD
 
             DatabaseLock.WaitOne();
 
-            Client.CommandHandler = SettingsObject.NewClientCommandHandler;
+            Client.Player = new Actor();
+            Client.Player.CommandHandler = SettingsObject.NewClientCommandHandler;
+            Client.Player.ConnectedClient = Client;
 
             MudObject.SendMessage(Client, SettingsObject.Banner);
             MudObject.SendMessage(Client, SettingsObject.MessageOfTheDay);

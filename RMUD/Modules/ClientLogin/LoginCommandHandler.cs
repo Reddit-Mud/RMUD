@@ -13,7 +13,6 @@ namespace RMUD.Modules.ClientLogin
         public static void LogPlayerIn(Client Client, Account Account)
         {
             Client.Account = Account;
-            Client.CommandHandler = Core.ParserCommandHandler;
             Client.Rank = 500;
 
             if (Account.LoggedInCharacter != null)
@@ -34,10 +33,11 @@ namespace RMUD.Modules.ClientLogin
                 Client.Player = Accounts.GetAccountCharacter(Account);
                 Client.Player.Rank = Client.Rank;
                 MudObject.Move(Client.Player, MudObject.GetObject(Core.SettingsObject.NewPlayerStartRoom));
-                Core.EnqueuClientCommand(Client, "look");
+                Core.EnqueuClientCommand(Client.Player, "look");
             }
 
-
+            Client.IsLoggedOn = true;
+            Client.Player.CommandHandler = Core.ParserCommandHandler;
             Client.Player.ConnectedClient = Client;
             Account.LoggedInCharacter = Client.Player;
 
@@ -54,23 +54,22 @@ namespace RMUD.Modules.ClientLogin
 
 		}
 
-		public void HandleCommand(Client Client, String Command)
+		public void HandleCommand(Actor Actor, String Command)
 		{
             try
 			{
 				var matchedCommand = Parser.ParseCommand(Command, null);
                 if (matchedCommand != null)
                 {
-                    matchedCommand.Matches[0].Upsert("CLIENT", Client);
-                    Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], null);
+                    Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Actor);
                 }
                 else
-                    MudObject.SendMessage(Client, "I do not understand.");
+                    MudObject.SendMessage(Actor, "I do not understand.");
 			}
 			catch (Exception e)
 			{
 				Core.ClearPendingMessages();
-                MudObject.SendMessage(Client, e.Message);
+                MudObject.SendMessage(Actor, e.Message);
 			}
 		}
 	}

@@ -10,23 +10,23 @@ namespace RMUD.Modules.ClientLogin
 	{
 		public ClientCommandHandler ParentHandler;
         public String UserName;
-        public Action<Client, String, String> AuthenticatingCommand;
+        public Action<Actor, String, String> AuthenticatingCommand;
 
-        public PasswordCommandHandler(Client Client, Action<Client, String, String> AuthenticatingCommand, String UserName)
+        public PasswordCommandHandler(Actor Actor, Action<Actor, String, String> AuthenticatingCommand, String UserName)
 		{
-            this.ParentHandler = Client.CommandHandler;
+            this.ParentHandler = Actor.CommandHandler;
             this.AuthenticatingCommand = AuthenticatingCommand;
             this.UserName = UserName;
 
-            MudObject.SendMessage(Client, "Password: ");
-            Client.Echo = Echo.Mask; // TODO: Allow config setting to set this to Echo.None for extra security
+            MudObject.SendMessage(Actor, "Password: ");
+            Actor.ConnectedClient.Echo = Echo.Mask; // TODO: Allow config setting to set this to Echo.None for extra security
 		}
 
-        public void HandleCommand(Client Client, String Password)
+        public void HandleCommand(Actor Actor, String Password)
         {
-            Client.Echo = Echo.All;
-            Client.CommandHandler = ParentHandler;
-            AuthenticatingCommand(Client, UserName, Password);
+            Actor.ConnectedClient.Echo = Echo.All;
+            Actor.CommandHandler = ParentHandler;
+            AuthenticatingCommand(Actor, UserName, Password);
         }
     }
 }
