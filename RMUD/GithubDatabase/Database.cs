@@ -285,7 +285,7 @@ namespace RMUD
             parameters.ReferencedAssemblies.Add("System.dll");
             parameters.ReferencedAssemblies.Add("System.Core.dll");
             parameters.ReferencedAssemblies.Add("System.Data.Linq.dll");
-            parameters.ReferencedAssemblies.Add("System.Data.Entity.dll");
+            //parameters.ReferencedAssemblies.Add("System.Data.Entity.dll");
 
             CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, Source);
             bool realError = false;
