@@ -9,6 +9,13 @@ namespace RMUD
 {
     public class PersistentValueSerializer
     {
+        public static Dictionary<String, PersistentValueSerializer> GlobalSerializers = new Dictionary<String, PersistentValueSerializer>();
+
+        public static void AddGlobalSerializer(PersistentValueSerializer Serializer)
+        {
+            GlobalSerializers.Upsert(Serializer.TargetType.Name, Serializer);
+        }
+
         public Type TargetType;
 
         public virtual void WriteValue(Object Value, JsonWriter Writer, MudObject Owner)

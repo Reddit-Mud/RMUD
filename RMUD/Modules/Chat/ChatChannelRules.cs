@@ -15,7 +15,7 @@ namespace RMUD.Modules.Chat
                 .Do((client, channel) => CheckResult.Allow)
                 .Name("Default allow channel access rule.");
 
-            GlobalRules.Perform<Player>("player joined")
+            GlobalRules.Perform<Actor>("player joined")
                 .Do(player =>
                 {
                     foreach (var c in ChatChannel.ChatChannels.Where(c => c.Short == "OOC"))
@@ -24,7 +24,7 @@ namespace RMUD.Modules.Chat
                 })
                 .Name("Subscribe new players to OOC rule.");
 
-            GlobalRules.Perform<Player>("player left")
+            GlobalRules.Perform<Actor>("player left")
                 .Do(player =>
                 {
                     ChatChannel.RemoveFromAllChannels(player);

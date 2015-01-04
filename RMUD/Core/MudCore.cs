@@ -66,16 +66,16 @@ namespace RMUD
             return ClientAcceptanceStatus.Accepted;
         }
 
-        public static bool Start()
+        public static bool Start(WorldDataService Database)
         {
             try
             {
                 InitializeCommandProcessor();
                 GlobalRules.DiscoverRuleBooks(System.Reflection.Assembly.GetExecutingAssembly());
                 InitializeStaticManPages();
-                AddGlobalSerializer(new BitArraySerializer());
+                PersistentValueSerializer.AddGlobalSerializer(new BitArraySerializer());
 
-                Database = new GithubDatabase();
+                Core.Database = Database;
                 Database.Initialize();
 
                 ProscriptionList = new ProscriptionList(SettingsObject.ProscriptionListFile);
@@ -119,9 +119,9 @@ namespace RMUD
 
             GlobalRules.DeclarePerformRuleBook("after every command", "[] : Considered after every command, even if earlier rules stopped the command.");
 
-            GlobalRules.DeclarePerformRuleBook<Player>("player joined", "[Player] : Considered when a player enters the game.");
+            GlobalRules.DeclarePerformRuleBook<Actor>("player joined", "[Player] : Considered when a player enters the game.");
 
-            GlobalRules.DeclarePerformRuleBook<Player>("player left", "[Player] : Considered when a player leaves the game.");
+            GlobalRules.DeclarePerformRuleBook<Actor>("player left", "[Player] : Considered when a player leaves the game.");
         }
     }
 }

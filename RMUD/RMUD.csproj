@@ -56,18 +56,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GithubDatabase\EnumerateDatabase.cs" />
     <Compile Include="Modules\Chat\ChatChannel.cs" />
     <Compile Include="Modules\Chat\ChatChannelObjectSource.cs" />
     <Compile Include="Modules\Chat\MudObjectExtensions.cs" />
     <Compile Include="Modules\ClientLogin\Account.cs" />
-    <Compile Include="Clients\ConfirmCommandHandler.cs" />
+    <Compile Include="Parser\ConfirmCommandHandler.cs" />
     <Compile Include="Modules\ClientLogin\ClientExtensions.cs" />
     <Compile Include="Modules\ClientLogin\PasswordCommandHandler.cs" />
-    <Compile Include="Core\Serialization\ObjectSerialization.cs" />
+    <Compile Include="Serialization\ObjectSerialization.cs" />
     <Compile Include="Core\WorldDataService.cs" />
-    <Compile Include="Core\GlobalSerializers.cs" />
     <Compile Include="database\static\player_base.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Modules\Admin\Force.cs" />
     <Compile Include="Modules\Clothing\NPCExtension.cs" />
@@ -79,8 +79,8 @@
     <Compile Include="Modules\Admin\Rules.cs" />
     <Compile Include="Modules\Clothing\Remove.cs" />
     <Compile Include="Core\ManPages.cs" />
-    <Compile Include="Core\Serialization\PersistentValueSerializer.cs" />
-    <Compile Include="Core\Serialization\PersistAttribute.cs" />
+    <Compile Include="Serialization\PersistentValueSerializer.cs" />
+    <Compile Include="Serialization\PersistAttribute.cs" />
     <Compile Include="database\static\palantine\ball.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
@@ -145,10 +145,10 @@
     <None Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="Core\Serialization\BitArraySerializer.cs" />
-    <Compile Include="Core\Serialization\EnumSerializer.cs" />
-    <Compile Include="Core\Serialization\DictionaryStringObjectSerializer.cs" />
-    <Compile Include="Core\Serialization\ContainerSerializer.cs" />
+    <Compile Include="Serialization\BitArraySerializer.cs" />
+    <Compile Include="Serialization\EnumSerializer.cs" />
+    <Compile Include="Serialization\DictionaryStringObjectSerializer.cs" />
+    <Compile Include="Serialization\ContainerSerializer.cs" />
     <Compile Include="WorldModel\ObjectState.cs" />
     <Compile Include="WorldModel\MudObjectRules.cs" />
     <Compile Include="WorldModel\RelativeLocations.cs" />
@@ -205,7 +205,7 @@
     <Compile Include="database\static\palantine\antechamber.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="Core\EnumerateObjects.cs" />
+    <Compile Include="WorldModel\EnumerateObjectTree.cs" />
     <Compile Include="WorldModel\Container.cs" />
     <Compile Include="WorldModel\NounList.cs" />
     <Compile Include="Parser\Matchers\RelativeLocationMatcher.cs" />
@@ -257,17 +257,17 @@
     </Compile>
     <Compile Include="WorldModel\BasicDoor.cs" />
     <Compile Include="WorldModel\LockedDoor.cs" />
-    <Compile Include="Clients\DisambigCommandHandler.cs" />
+    <Compile Include="Parser\DisambigCommandHandler.cs" />
     <Compile Include="Parser\Matchers\InScopeObjectSource.cs" />
     <Compile Include="WorldModel\RoomType.cs" />
     <Compile Include="WorldModel\RoomLightingRules.cs" />
     <Compile Include="WorldModel\Scenery.cs" />
     <Compile Include="WorldModel\Settings.cs" />
     <Compile Include="Modules\ClientLogin\LoginCommandHandler.cs" />
-    <Compile Include="Clients\ClientCommandHandler.cs" />
+    <Compile Include="Parser\ClientCommandHandler.cs" />
     <Compile Include="WorldModel\Actor.cs" />
     <Compile Include="WorldModel\Links.cs" />
-    <Compile Include="Clients\ParserCommandHandler.cs" />
+    <Compile Include="Parser\ParserCommandHandler.cs" />
     <Compile Include="Parser\CommandParser.cs" />
     <Compile Include="Parser\CommandFactory.cs" />
     <Compile Include="Parser\CommandProcessor.cs" />

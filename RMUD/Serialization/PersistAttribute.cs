@@ -27,7 +27,7 @@ namespace RMUD
         {
             var name = Value.GetType().Name;
             PersistentValueSerializer serializer = null;
-            if (Core.GlobalSerializers.TryGetValue(name, out serializer))
+            if (PersistentValueSerializer.GlobalSerializers.TryGetValue(name, out serializer))
             {
                 Writer.WriteStartObject();
                 Writer.WritePropertyName("$type");
@@ -55,14 +55,14 @@ namespace RMUD
             else 
             {
                 PersistentValueSerializer serializer = null;
-                if (ValueType != null && Core.GlobalSerializers.TryGetValue(ValueType.Name, out serializer))
+                if (ValueType != null && PersistentValueSerializer.GlobalSerializers.TryGetValue(ValueType.Name, out serializer))
                     return serializer.ReadValue(ValueType, Reader, Owner);
                 else if (Reader.TokenType == JsonToken.StartObject)
                 {
                     Reader.Read();
                     if (Reader.TokenType != JsonToken.PropertyName || Reader.Value.ToString() != "$type") throw new InvalidOperationException();
                     Reader.Read();
-                    if (!Core.GlobalSerializers.TryGetValue(Reader.Value.ToString(), out serializer))
+                    if (!PersistentValueSerializer.GlobalSerializers.TryGetValue(Reader.Value.ToString(), out serializer))
                         throw new InvalidOperationException();
                     Reader.Read();
                     Reader.Read();

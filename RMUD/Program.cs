@@ -14,20 +14,24 @@ namespace RMUD
         {
             TelnetClientSource telnetListener = null;
 
-            if (Core.Start())
+            if (Core.Start(new GithubDatabase()))
             {
                 telnetListener = new TelnetClientSource();
                 telnetListener.Port = Core.SettingsObject.TelnetPort;
                 telnetListener.Listen();
-            }
 
-                while (true) 
-                { 
+                while (true)
+                {
                     //Todo: Shutdown server command breaks this loop.
                 }
-            
-            telnetListener.Shutdown();
-            Core.Shutdown();
+
+                telnetListener.Shutdown();
+                Core.Shutdown();
+            }
+            else
+            {
+                while (true) { }
+            }
         }
     }
 }
