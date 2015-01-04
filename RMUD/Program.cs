@@ -12,11 +12,11 @@ namespace RMUD
     {
         static void Main(string[] args)
         {
-            TelnetClientSource telnetListener = null;
+            Telnet.TelnetClientSource telnetListener = null;
 
             if (Core.Start(new GithubDatabase()))
             {
-                telnetListener = new TelnetClientSource();
+                telnetListener = new Telnet.TelnetClientSource();
                 telnetListener.Port = Core.SettingsObject.TelnetPort;
                 telnetListener.Listen();
 
