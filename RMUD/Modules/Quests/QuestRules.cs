@@ -7,9 +7,9 @@ using System.Reflection;
 
 namespace RMUD.Modules.Quests
 {
-    public class QuestProceduralRules : DeclaresRules
+    public class QuestProceduralRules 
     {
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.Perform<PossibleMatch, Actor>("after acting")
                 .Do((match, actor) =>

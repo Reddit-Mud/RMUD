@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RMUD.Modules.ClientLogin
+namespace RMUD.Modules.Network
 {
     public class Account
     {

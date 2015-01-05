@@ -7,9 +7,9 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public class UpdateRules : DeclaresRules
+    public class UpdateRules 
     {
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclarePerformRuleBook<MudObject>("update", "[Thing] : Considered for all things that have been marked for update.");
 

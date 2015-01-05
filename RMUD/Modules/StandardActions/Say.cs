@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-	internal class Say : CommandFactory, DeclaresRules
+	internal class Say : CommandFactory
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -50,7 +50,7 @@ namespace RMUD.Modules.StandardActions
                 .Perform("emote", "ACTOR", "SPEECH");
 		}
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclarePerformRuleBook<MudObject, String>("speak", "[Actor, Text] : Handle the actor speaking the text.");
 

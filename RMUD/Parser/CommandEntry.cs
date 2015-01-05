@@ -5,9 +5,9 @@ using System.Text;
 
 namespace RMUD
 {
-    public class StandardProceduralRules : DeclaresRules
+    public class StandardProceduralRules 
     {
-        public void InitializeRules()
+        public void Initialize()
         {
             GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("before acting", "[Match, Actor] : Considered before performing in world actions.");
 
@@ -25,7 +25,7 @@ namespace RMUD
 
         public CommandEntry()
         {
-            Core.ManPages.Add(this);
+            ManPages.Pages.Add(this);
             GeneratedManual = new StringBuilder();
             ProceduralRules = new PerformRuleBook
             {

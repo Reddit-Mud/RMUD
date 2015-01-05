@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-	internal class Drop : CommandFactory, DeclaresRules
+	internal class Drop : CommandFactory
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -22,7 +22,7 @@ namespace RMUD.Modules.StandardActions
                 .AfterActing();
 		}
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can drop?", "[Actor, Item] : Determine if the item can be dropped.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("dropped", "[Actor, Item] : Handle an item being dropped.");

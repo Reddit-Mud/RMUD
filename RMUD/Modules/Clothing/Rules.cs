@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace RMUD.Modules._Clothing
 {
-    public class ClothingRules : DeclaresRules
+    public class ClothingRules 
     {
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.Value<MudObject, bool>("wearable?")
                 .When(a => a is Clothing)

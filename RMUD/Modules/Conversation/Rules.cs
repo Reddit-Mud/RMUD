@@ -5,9 +5,9 @@ using System.Text;
 
 namespace RMUD.Modules.Conversation
 {
-    public class ConversationRules : DeclaresRules
+    public class ConversationRules 
     {
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, MudObject, MudObject, bool>("topic available?", "[Actor, NPC, Topic -> bool] : Is the topic available for discussion with the NPC to the actor?");
 

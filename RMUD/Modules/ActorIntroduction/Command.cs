@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.ActorIntroduction
 {
-    internal class Introduce : CommandFactory, DeclaresRules
+    internal class Introduce : CommandFactory
     {
         public override void Create(CommandParser Parser)
         {
@@ -44,7 +44,7 @@ namespace RMUD.Modules.ActorIntroduction
                 .AfterActing();
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can introduce?", "[Actor A, Actor B] : Can A introduce B?");
 

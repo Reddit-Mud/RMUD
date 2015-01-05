@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules._Clothing
 {
-	internal class Remove : CommandFactory, DeclaresRules
+	internal class Remove : CommandFactory
 	{
         public override void Create(CommandParser Parser)
         {
@@ -22,7 +22,7 @@ namespace RMUD.Modules._Clothing
                 .AfterActing();
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can remove?", "[Actor, Item] : Can the actor remove the item?");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("removed", "[Actor, Item] : Handle the actor removing the item.");

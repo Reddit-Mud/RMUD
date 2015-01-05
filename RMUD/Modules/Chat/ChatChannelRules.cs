@@ -5,9 +5,9 @@ using System.Text;
 
 namespace RMUD.Modules.Chat
 {
-    public class ChatChannelRules : DeclaresRules
+    public class ChatChannelRules 
     {
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can access channel?", "[Client, Channel] : Can the client access the chat channel?");
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD.Modules.Admin
+namespace RMUD.Modules.Network
 {
     internal class Kick : CommandFactory
     {
@@ -14,7 +14,7 @@ namespace RMUD.Modules.Admin
                     RequiredRank(500),
                     KeyWord("KICK"),
                     Or(
-                        Object("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),
+                        Object("PLAYER", new Network.ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),
                         SingleWord("MASK"))))
                 .Manual("Makes bad people go away.")
                 .ProceduralRule((match, actor) =>
@@ -27,9 +27,10 @@ namespace RMUD.Modules.Admin
                         var maskRegex = new System.Text.RegularExpressions.Regex(ProscriptionList.ConvertGlobToRegex(mask), System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
                         //Iterate over local copy because kicking modifies ConnectedClients.
-                        foreach (var client in new List<Client>(Core.ConnectedClients))
+                        foreach (var client in new List<Client>(Clients.ConnectedClients))
                         {
-                            if (client.IsLoggedOn && maskRegex.Matches(client.IPString).Count > 0)
+                            var netClient = client as Modules.Network.NetworkClient;
+                            if (netClient != null && netClient.IsLoggedOn && maskRegex.Matches(netClient.IPString).Count > 0)
                             {
                                 MudObject.MarkLocaleForUpdate(client.Player);
                                 KickPlayer(client.Player, actor);

@@ -31,18 +31,18 @@ namespace RMUD
         }
     }
     
-    public static partial class Core
+    public static partial class ManPages
     {
-        internal static List<ManPage> ManPages = new List<ManPage>();
+        internal static List<ManPage> Pages = new List<ManPage>();
 
-        internal static void InitializeStaticManPages()
+        internal static void AtStartup()
         {
             foreach (var type in System.Reflection.Assembly.GetExecutingAssembly().GetTypes())
             {
                 if (type.IsSubclassOf(typeof(StaticManPage)))
                 {
                     var page = Activator.CreateInstance(type) as StaticManPage;
-                    ManPages.Add(page);
+                    Pages.Add(page);
                 }
             }
         }       

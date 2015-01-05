@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules._Clothing
 {
-	internal class Wear : CommandFactory, DeclaresRules
+	internal class Wear : CommandFactory
 	{
         public override void Create(CommandParser Parser)
         {
@@ -22,7 +22,7 @@ namespace RMUD.Modules._Clothing
                 .AfterActing();
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("wearable?", "[Item => bool] : Can the item be worn?");
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can wear?", "[Actor, Item] : Can the actor wear the item?");

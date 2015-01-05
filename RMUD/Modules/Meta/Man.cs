@@ -23,7 +23,7 @@ namespace RMUD.Modules.Meta
                     {
                         MudObject.SendMessage(actor, "Available help topics");
                         var line = "";
-                        foreach (var manPage in Core.ManPages.Select(p => p.Name).Distinct().OrderBy(s => s))
+                        foreach (var manPage in ManPages.Pages.Select(p => p.Name).Distinct().OrderBy(s => s))
                         {
                             line += manPage;
                             if (line.Length < 20) line += new String(' ', 20 - line.Length);
@@ -38,7 +38,7 @@ namespace RMUD.Modules.Meta
                     else
                     {
                         var manPageName = match["TOPIC"].ToString().ToUpper();
-                        var pages = new List<ManPage>(Core.ManPages.Where(p => p.Name == manPageName));
+                        var pages = new List<ManPage>(ManPages.Pages.Where(p => p.Name == manPageName));
                         if (pages.Count > 0)
                             foreach (var manPage in pages)
                                 manPage.SendManPage(actor);

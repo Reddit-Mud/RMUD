@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-	internal class Take : CommandFactory, DeclaresRules
+	internal class Take : CommandFactory
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -30,7 +30,7 @@ namespace RMUD.Modules.StandardActions
                 .MarkLocaleForUpdate();
 		}
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can take?", "[Actor, Item] : Can the actor take the item?");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("taken", "[Actor, Item] : Handle the actor taking the item.");

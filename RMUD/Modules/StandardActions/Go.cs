@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-	internal class Go : CommandFactory, DeclaresRules
+	internal class Go : CommandFactory
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -36,7 +36,7 @@ namespace RMUD.Modules.StandardActions
                 }, "Mark both sides of link for update rule");
 		}
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, Link>("can go?", "[Actor, Link] : Can the actor go through that link?");
 

@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-namespace RMUD.Modules.ClientLogin
+namespace RMUD.Modules.Network
 {
 	public class LoginCommandHandler : ClientCommandHandler
 	{
 		internal CommandParser Parser;
 
-        public static void LogPlayerIn(Client Client, Account Account)
+        public static void LogPlayerIn(NetworkClient Client, Account Account)
         {
             Client.Account = Account;
-            Client.Rank = 500;
+            bool newSession = false;
 
             if (Account.LoggedInCharacter != null)
             {
@@ -31,26 +31,25 @@ namespace RMUD.Modules.ClientLogin
             {
                 //Start a new session
                 Client.Player = Accounts.GetAccountCharacter(Account);
-                Client.Player.Rank = Client.Rank;
-                MudObject.Move(Client.Player, MudObject.GetObject(Core.SettingsObject.NewPlayerStartRoom));
-                Core.EnqueuClientCommand(Client.Player, "look");
+                newSession = true;
             }
 
             Client.IsLoggedOn = true;
             Client.Player.CommandHandler = Core.ParserCommandHandler;
-            Client.Player.ConnectedClient = Client;
             Account.LoggedInCharacter = Client.Player;
+            Core.TiePlayerToClient(Client, Client.Player);
 
-            GlobalRules.ConsiderPerformRule("player joined", Client.Player);
+            if (newSession)
+                Core.AddPlayer(Client.Player);
         }
 
 		public LoginCommandHandler()
 		{
 			Parser = new CommandParser();
 
-            CommandFactory.CreateCommandFactory(typeof(Modules.ClientLogin.Login)).Create(Parser);
-            CommandFactory.CreateCommandFactory(typeof(Modules.ClientLogin.Register)).Create(Parser);
-            CommandFactory.CreateCommandFactory(typeof(Modules.ClientLogin.Quit)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Modules.Network.Login)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Modules.Network.Register)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Modules.Network.Quit)).Create(Parser);
 
 		}
 

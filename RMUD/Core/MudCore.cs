@@ -16,21 +16,43 @@ namespace RMUD
 
         internal static WorldDataService Database;
 
+        public static void TiePlayerToClient(Client Client, Actor Actor)
+        {
+            Client.Player = Actor;
+            Actor.ConnectedClient = Client;
+        }
+
+        public static void AddPlayer(Actor Actor)
+        {
+            Actor.Rank = 500;
+            MudObject.Move(Actor, MudObject.GetObject(Core.SettingsObject.NewPlayerStartRoom));
+            Core.EnqueuClientCommand(Actor, "look");
+            GlobalRules.ConsiderPerformRule("player joined", Actor);
+        }
+
+        public static void RemovePlayer(Actor Actor)
+        {
+            GlobalRules.ConsiderPerformRule("player left", Actor);
+            Actor.ConnectedClient = null;
+            MudObject.Move(Actor, null);
+        }
+
         public static bool Start(WorldDataService Database)
         {
             try
             {
                 InitializeCommandProcessor();
-                GlobalRules.DiscoverRuleBooks(System.Reflection.Assembly.GetExecutingAssembly());
-                InitializeStaticManPages();
+
+                foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
+                    foreach (var method in type.GetMethods())
+                        if (method.IsStatic && method.Name == "AtStartup")
+                            method.Invoke(null, null);
+
                 PersistentValueSerializer.AddGlobalSerializer(new BitArraySerializer());
 
                 Core.Database = Database;
                 Database.Initialize();
 
-                foreach (var method in typeof(Core).GetMethods())
-                    if (method.IsStatic && method.Name.StartsWith("InitializeModule_"))
-                        method.Invoke(null, null);
 
                 StartCommandProcesor();
             }

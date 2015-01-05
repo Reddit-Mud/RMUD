@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-	internal class Lock : CommandFactory, DeclaresRules
+	internal class Lock : CommandFactory
 	{
         public override void Create(CommandParser Parser)
         {
@@ -26,7 +26,7 @@ namespace RMUD.Modules.StandardActions
                 .AfterActing();
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("lockable?", "[Item] : Can this item be locked?");
 

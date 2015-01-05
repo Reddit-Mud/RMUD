@@ -118,10 +118,7 @@ namespace RMUD
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
-            Core.PendingMessages.Add(new RawPendingMessage(Client,
-                Client.IsLoggedOn ?
-                    Core.FormatMessage(Client.Player, Message, MentionedObjects) :
-                    Message));
+            Core.PendingMessages.Add(new RawPendingMessage(Client, Core.FormatMessage(Client.Player, Message, MentionedObjects)));
         }
 
         public static void SendGlobalMessage(String Message, params MudObject[] MentionedObjects)
@@ -129,11 +126,8 @@ namespace RMUD
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
-            foreach (var client in Core.ConnectedClients)
-            {
-                if (client.IsLoggedOn)
+            foreach (var client in Modules.Network.Clients.ConnectedClients)
                     SendMessage(client, Message, MentionedObjects);
-            }
         }
     }
 }

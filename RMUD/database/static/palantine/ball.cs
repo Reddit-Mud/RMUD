@@ -1,9 +1,9 @@
-﻿public class ball : RMUD.MudObject, RMUD.DeclaresRules
+﻿public class ball : RMUD.MudObject
 {
     public ball() : base("ball", "This is a small dirty ball.") { }
 
 
-    public void InitializeRules()
+    public static void AtStartup()
     {
         RMUD.Core.DefaultParser.AddCommand(RMUD.CommandFactory.KeyWord("BOUNCE"))
             .ProceduralRule((match, actor) =>

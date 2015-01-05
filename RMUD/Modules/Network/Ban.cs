@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD.Modules.Admin
+namespace RMUD.Modules.Network
 {
     internal class Ban : CommandFactory
     {
@@ -15,7 +15,7 @@ namespace RMUD.Modules.Admin
                 .ProceduralRule((match, actor) =>
                 {
                     MudObject.SendMessage(actor, "~~~ ALL SET BANS ~~~");
-                    foreach (var proscription in Core.ProscriptionList.Proscriptions)
+                    foreach (var proscription in Clients.ProscriptionList.Proscriptions)
                         MudObject.SendMessage(actor, proscription.Glob + " : " + proscription.Reason);
                     return PerformResult.Continue;
                 });
@@ -29,7 +29,7 @@ namespace RMUD.Modules.Admin
                 .Manual("Ban every player who's ip matches the mask.")
                 .ProceduralRule((match, actor) =>
                 {
-                    Core.ProscriptionList.Ban(match["GLOB"].ToString(), match["REASON"].ToString());
+                    Clients.ProscriptionList.Ban(match["GLOB"].ToString(), match["REASON"].ToString());
                     MudObject.SendGlobalMessage("^<the0> has banned " + match["GLOB"].ToString(), actor);
                     return PerformResult.Continue;
                 });
@@ -42,7 +42,7 @@ namespace RMUD.Modules.Admin
                 .Manual("Remove an existing ban.")
                 .ProceduralRule((match, actor) =>
                 {
-                    Core.ProscriptionList.RemoveBan(match["GLOB"].ToString());
+                    Clients.ProscriptionList.RemoveBan(match["GLOB"].ToString());
                     MudObject.SendGlobalMessage("^<the0> removes the ban on " + match["GLOB"].ToString(), actor);
                     return PerformResult.Continue;
                 });

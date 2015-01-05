@@ -7,9 +7,9 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public class HeartbeatRules : DeclaresRules
+    public class HeartbeatRules 
     {
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclarePerformRuleBook("heartbeat", "[] : Considered every tick.");
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-	internal class Put : CommandFactory, DeclaresRules
+	internal class Put : CommandFactory
 	{
         public override void Create(CommandParser Parser)
         {
@@ -45,7 +45,7 @@ namespace RMUD.Modules.StandardActions
 
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("can-put", "[Actor, Item, Container, Location] : Determine if the actor can put the item in or on or under the container.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("on-put", "[Actor, Item, Container, Location] : Handle an actor putting the item in or on or under the container.");

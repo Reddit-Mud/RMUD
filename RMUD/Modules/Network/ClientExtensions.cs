@@ -8,6 +8,6 @@ namespace RMUD
 {
     public partial class Client
     {
-        public Modules.ClientLogin.Account Account;
+        public Modules.Network.Account Account;
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-    internal class Inventory : CommandFactory, DeclaresRules
+    internal class Inventory : CommandFactory
     {
         public override void Create(CommandParser Parser)
         {
@@ -18,7 +18,7 @@ namespace RMUD.Modules.StandardActions
                 .Perform("inventory", "ACTOR");
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclarePerformRuleBook<MudObject>("inventory", "[Actor] : Describes a player's inventory to themselves.");
 

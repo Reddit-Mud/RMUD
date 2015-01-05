@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.Conversation
 {
-    internal class ConversationCommandFactory : CommandFactory, DeclaresRules
+    internal class ConversationCommandFactory : CommandFactory
     {
         public override void Create(CommandParser Parser)
         {
@@ -88,7 +88,7 @@ namespace RMUD.Modules.Conversation
                 .Perform("list topics", "ACTOR");
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can converse?", "[Actor, Item] : Can the actor converse with the item?");
 

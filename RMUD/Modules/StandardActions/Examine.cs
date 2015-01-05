@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-	internal class Examine : CommandFactory, DeclaresRules
+	internal class Examine : CommandFactory
 	{
         public override void Create(CommandParser Parser)
         {
@@ -22,7 +22,7 @@ namespace RMUD.Modules.StandardActions
                 .Perform("describe", "ACTOR", "OBJECT");
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can examine?", "[Actor, Item] : Can the viewer examine the item?");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe", "[Actor, Item] : Generates descriptions of the item.");

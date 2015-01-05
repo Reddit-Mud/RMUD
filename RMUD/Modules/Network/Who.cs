@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD.Modules.ClientLogin
+namespace RMUD.Modules.Network
 {
 	internal class Who : CommandFactory
 	{
@@ -14,11 +14,11 @@ namespace RMUD.Modules.ClientLogin
                 .Manual("Displays a list of current logged in players.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var clients = Core.ConnectedClients.Where(c => c.IsLoggedOn);
+                    var clients = Clients.ConnectedClients.Where(c => c is NetworkClient && (c as NetworkClient).IsLoggedOn);
                     MudObject.SendMessage(actor, "~~ THESE PLAYERS ARE ONLINE NOW ~~");
-                    foreach (var client in clients)
+                    foreach (NetworkClient client in clients)
                         MudObject.SendMessage(actor,
-                            "[" + Core.SettingsObject.GetNameForRank(client.Rank) + "] <a0> ["
+                            "[" + Core.SettingsObject.GetNameForRank(client.Player.Rank) + "] <a0> ["
                             + client.ConnectionDescription + "]"
                             + (client.IsAfk ? (" afk: " + client.Account.AFKMessage) : "")
                             + (client.Player.Location != null ? (" -- " + client.Player.Location.Path) : ""),

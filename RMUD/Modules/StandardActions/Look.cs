@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-    internal class Look : CommandFactory, DeclaresRules
+    internal class Look : CommandFactory
     {
         public override void Create(CommandParser Parser)
         {
@@ -17,7 +17,7 @@ namespace RMUD.Modules.StandardActions
                 .ProceduralRule((match, actor) => GlobalRules.ConsiderPerformRule("describe locale", actor, actor.Location));
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe in locale", "[Actor, Item] : Generate a locale description for the item.");
 

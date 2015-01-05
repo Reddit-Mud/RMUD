@@ -20,8 +20,6 @@ namespace RMUD
         public String GithubRawURL = "https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/";
         public String GithubRepo = "Reddit-Mud/RMUD-DB";
 
-        public ClientCommandHandler NewClientCommandHandler = new Modules.ClientLogin.LoginCommandHandler();
-
         public int AllowedCommandRate = 100; //How many milliseconds to allow between commands - default is to not limit very much.
 
         //How many milliseconds should a command be allowed to run before it is aborted?
@@ -32,7 +30,6 @@ namespace RMUD
 
         public int AFKTime = 1000 * 60 * 5; //Go AFK after five minutes of inactivity.
 
-        public String ProscriptionListFile = "proscriptions.txt";
         public int MaximumChatChannelLogSize = 1000;
         public int HeartbeatInterval = 1000; //Heartbeat every second
         public TimeSpan ClockAdvanceRate = TimeSpan.FromSeconds(10);

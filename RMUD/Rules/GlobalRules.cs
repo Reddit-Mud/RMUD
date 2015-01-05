@@ -5,11 +5,6 @@ using System.Text;
 
 namespace RMUD
 {
-    public interface DeclaresRules
-    {
-        void InitializeRules();
-    }
-
     public interface HasRules
     {
         RuleSet Rules { get; }
@@ -17,7 +12,7 @@ namespace RMUD
 
     public static partial class GlobalRules
     {
-        internal static RuleSet Rules = null;
+        internal static RuleSet Rules = new RuleSet();
         internal static Actor LogTo = null;
 
         internal static void LogRules(Actor To) { LogTo = To; }
@@ -89,20 +84,6 @@ namespace RMUD
             finally
             {
                 Core.SilentFlag = false;
-            }
-        }
-
-        internal static void DiscoverRuleBooks(System.Reflection.Assembly In)
-        {
-            Rules = new RuleSet();
-
-            foreach (var type in In.GetTypes())
-            {
-                if (type.GetInterfaces().Contains(typeof(DeclaresRules)))
-                {
-                    var initializer = Activator.CreateInstance(type) as DeclaresRules;
-                    initializer.InitializeRules();
-                }
             }
         }
     }

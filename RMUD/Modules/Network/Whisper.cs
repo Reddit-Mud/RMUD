@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD.Modules.Meta
+namespace RMUD.Modules.Network
 {
 	internal class Whisper : CommandFactory
 	{
@@ -33,7 +33,7 @@ namespace RMUD.Modules.Meta
                     var player = match["PLAYER"] as Actor;
                     MudObject.SendMessage(player, "[privately " + DateTime.Now + "] ^<the0> : \"" + match["SPEECH"].ToString() + "\"", actor);
                     MudObject.SendMessage(actor, "[privately to <the0>] ^<the1> : \"" + match["SPEECH"].ToString() + "\"", player, actor);
-                    if (player.ConnectedClient != null && player.ConnectedClient.IsAfk)
+                    if (player.ConnectedClient is NetworkClient && (player.ConnectedClient as NetworkClient).IsAfk)
                         MudObject.SendMessage(actor, "^<the0> is afk : " + player.ConnectedClient.Account.AFKMessage, player);
                     return PerformResult.Continue;
                 });

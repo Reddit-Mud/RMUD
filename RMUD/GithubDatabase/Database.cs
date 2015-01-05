@@ -107,7 +107,9 @@ namespace RMUD
                     newObject.Path = s;
                     newObject.State = ObjectState.Unitialized;
 
-                    if (newObject is DeclaresRules) (newObject as DeclaresRules).InitializeRules();
+                    foreach (var method in newObject.GetType().GetMethods())
+                        if (method.IsStatic && method.Name == "AtStartup")
+                            method.Invoke(null, null);
 
                     NamedObjects.Upsert(s, newObject);
                 }

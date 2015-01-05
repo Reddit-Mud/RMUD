@@ -26,8 +26,11 @@ namespace RMUD.Modules.Admin
                         if (type == "CLIENTS")
                         {
                             MudObject.SendMessage(actor, "~~ CLIENTS ~~");
-                            foreach (var client in Core.ConnectedClients)
-                                MudObject.SendMessage(actor, client.ConnectionDescription + (client.Player == null ? "" : (" - " + client.Player.Short)));
+                            foreach (var client in Network.Clients.ConnectedClients)
+                                if (client is Modules.Network.NetworkClient)
+                                    MudObject.SendMessage(actor, (client as Modules.Network.NetworkClient).ConnectionDescription + (client.Player == null ? "" : (" - " + client.Player.Short)));
+                                else
+                                    MudObject.SendMessage(actor, "local " + (client.Player == null ? "" : (" - " + client.Player.Short)));
                         }
                         else if (type == "MEMORY")
                         {

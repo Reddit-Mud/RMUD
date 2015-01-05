@@ -5,9 +5,9 @@ using System.Text;
 
 namespace RMUD
 {
-    public class MudObjectRules : DeclaresRules
+    public class MudObjectRules 
     {
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, MudObject, String, String>("printed name", "[Viewer, Object, Article -> String] : Find the name that should be displayed for an object.");
 

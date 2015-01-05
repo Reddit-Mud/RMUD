@@ -66,8 +66,8 @@ namespace RMUD
 
                 try
                 {
-                    if (NextCommand.Actor.ConnectedClient != null)
-                        NextCommand.Actor.ConnectedClient.TimeOfLastCommand = DateTime.Now;
+                    //if (NextCommand.Actor.ConnectedClient != null)
+                    //    NextCommand.Actor.ConnectedClient.TimeOfLastCommand = DateTime.Now;
                     NextCommand.Actor.CommandHandler.HandleCommand(NextCommand.Actor, NextCommand.RawCommand);
                 }
                 catch (System.Threading.ThreadAbortException)
@@ -109,8 +109,9 @@ namespace RMUD
                     {
                         PendingCommand = PendingCommands.FirstOrDefault(pc =>
                             {
-                                if (pc.Actor.ConnectedClient == null) return true;
-                                else return (DateTime.Now - pc.Actor.ConnectedClient.TimeOfLastCommand).TotalMilliseconds > SettingsObject.AllowedCommandRate;
+                                return true;
+                                //if (pc.Actor.ConnectedClient == null) return true;
+                                //else return (DateTime.Now - pc.Actor.ConnectedClient.TimeOfLastCommand).TotalMilliseconds > SettingsObject.AllowedCommandRate;
                             });
                         if (PendingCommand != null)
                             PendingCommands.Remove(PendingCommand);
@@ -147,7 +148,7 @@ namespace RMUD
                                 if (PendingCommand.Actor.ConnectedClient != null)
                                 {
                                     PendingCommand.Actor.ConnectedClient.Send("Command timeout.\r\n");
-                                    LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Actor.ConnectedClient.IPString, PendingCommand.RawCommand));
+                                    LogError(String.Format("Command timeout. {0} - {1}", /*PendingCommand.Actor.ConnectedClient.IPString*/"?", PendingCommand.RawCommand));
                                 }
                                 else
                                     LogError(String.Format("Command timeout [No client] - {1}", PendingCommand.RawCommand));

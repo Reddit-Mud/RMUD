@@ -5,9 +5,9 @@ using System.Text;
 
 namespace RMUD
 {
-    public class RoomLightingRules : DeclaresRules
+    public class RoomLightingRules 
     {
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, LightingLevel>("emits-light", "[item] -> LightingLevel, How much light does the item emit?");
             GlobalRules.Value<MudObject, LightingLevel>("emits-light").Do(item => LightingLevel.Dark);

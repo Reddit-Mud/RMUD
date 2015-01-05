@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-namespace RMUD.Modules.ClientLogin
+namespace RMUD.Modules.Network
 {
 	public class PasswordCommandHandler : ClientCommandHandler
 	{
@@ -19,12 +19,10 @@ namespace RMUD.Modules.ClientLogin
             this.UserName = UserName;
 
             MudObject.SendMessage(Actor, "Password: ");
-            Actor.ConnectedClient.Echo = Echo.Mask; // TODO: Allow config setting to set this to Echo.None for extra security
 		}
 
         public void HandleCommand(Actor Actor, String Password)
         {
-            Actor.ConnectedClient.Echo = Echo.All;
             Actor.CommandHandler = ParentHandler;
             AuthenticatingCommand(Actor, UserName, Password);
         }

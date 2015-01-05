@@ -6,7 +6,7 @@ using System.IO;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 
-namespace RMUD.Modules.ClientLogin
+namespace RMUD.Modules.Network
 {
     public static class Accounts
     {

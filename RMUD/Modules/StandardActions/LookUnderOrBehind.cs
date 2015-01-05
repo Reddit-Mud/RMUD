@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-    internal class LookUnderOrBehind : CommandFactory, DeclaresRules
+    internal class LookUnderOrBehind : CommandFactory
     {
         public override void Create(CommandParser Parser)
         {
@@ -21,7 +21,7 @@ namespace RMUD.Modules.StandardActions
                 .Perform("look relloc", "ACTOR", "OBJECT", "RELLOC");
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, RelativeLocations>("can look relloc?", "[Actor, Item, Relative Location] : Can the actor look in/on/under/behind the item?");
 

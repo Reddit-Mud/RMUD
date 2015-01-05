@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Telnet
 {
-    public class TelnetClient : Client
+    public class TelnetClient : Modules.Network.NetworkClient
     {
         public System.Net.Sockets.Socket Socket { get; set; }
         public String CommandQueue = "";
@@ -67,7 +67,7 @@ namespace RMUD.Telnet
 				Console.WriteLine(e.Message);
 
 				this.Socket = null;
-                if (!WasRejected) Core.ClientDisconnected(this);
+                if (!WasRejected) Modules.Network.Clients.ClientDisconnected(this);
 			}
         }
 

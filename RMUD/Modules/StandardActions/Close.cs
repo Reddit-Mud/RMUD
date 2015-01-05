@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD.Modules.StandardActions
 {
-	internal class OpenClose : CommandFactory, DeclaresRules
+	internal class OpenClose : CommandFactory
 	{
 		public override void Create(CommandParser Parser)
 		{
@@ -26,7 +26,7 @@ namespace RMUD.Modules.StandardActions
                 .AfterActing();
 		}
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can close?", "[Actor, Item] : Determine if the item can be closed.");
 

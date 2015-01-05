@@ -12,9 +12,6 @@ namespace RMUD.Telnet
 
         System.Net.Sockets.Socket ListenSocket = null;
 
-        static System.Threading.Mutex ClientLock = new System.Threading.Mutex();
-        static LinkedList<TelnetClient> Clients = new LinkedList<TelnetClient>();
-
         public void Listen()
         {
             ListenSocket = new System.Net.Sockets.Socket(
@@ -90,7 +87,7 @@ namespace RMUD.Telnet
             SetKeepAlive(ClientSocket, 1000 * 60, 1000);
 
             var NewClient = new TelnetClient { Socket = ClientSocket };
-            if (Core.ClientConnected(NewClient) == Core.ClientAcceptanceStatus.Rejected)
+            if (Modules.Network.Clients.ClientConnected(NewClient) == Modules.Network.ClientAcceptanceStatus.Rejected)
             {
                 NewClient.WasRejected = true;
                 ClientSocket.Close();
@@ -123,7 +120,7 @@ namespace RMUD.Telnet
 
             if (Client.Socket == null)
             {
-                if (!Client.WasRejected) Core.ClientDisconnected(Client);
+                if (!Client.WasRejected) Modules.Network.Clients.ClientDisconnected(Client);
                 return;
             }
 
@@ -133,7 +130,7 @@ namespace RMUD.Telnet
             }
             catch (Exception) //Just shut this one up.
             {
-                if (!Client.WasRejected) Core.ClientDisconnected(Client);
+                if (!Client.WasRejected) Modules.Network.Clients.ClientDisconnected(Client);
                 return;
             }
 
@@ -149,7 +146,7 @@ namespace RMUD.Telnet
                     else
                         Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 
-                    if (!Client.WasRejected) Core.ClientDisconnected(Client);
+                    if (!Client.WasRejected) Modules.Network.Clients.ClientDisconnected(Client);
                 }
                 else
                 {
@@ -206,7 +203,7 @@ namespace RMUD.Telnet
                     Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 				Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
-                if (!Client.WasRejected) Core.ClientDisconnected(Client);
+                if (!Client.WasRejected) Modules.Network.Clients.ClientDisconnected(Client);
             }
         }
     }

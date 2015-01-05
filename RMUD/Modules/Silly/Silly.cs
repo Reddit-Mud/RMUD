@@ -6,7 +6,7 @@ using System.Text;
 namespace RMUD.Modules.Silly
 {
 
-    internal class Silly : CommandFactory, DeclaresRules
+    internal class Silly : CommandFactory
     {
         public override void Create(CommandParser Parser)
         {
@@ -39,7 +39,7 @@ And we can dance")
                 .Perform("dance", "ACTOR");
         }
 
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("silly?", "[Thing -> bool] : Determine if an object is silly.");
             GlobalRules.Value<MudObject, bool>("silly?").Last.Do((thing) => false).Name("Things are serious by default rule.");

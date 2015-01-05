@@ -21,9 +21,9 @@ namespace RMUD
         }
     }
 
-    public class BeforeAndAfterCommandRules : DeclaresRules
+    public class BeforeAndAfterCommandRules 
     {
-        public void InitializeRules()
+        public static void AtStartup()
         {
             GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("before command", "[Match, Actor] : Considered before every command's procedural rules are run.");
 
