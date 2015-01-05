@@ -30,7 +30,7 @@ namespace RMUD
         internal static ParserCommandHandler ParserCommandHandler;
         public static CommandParser DefaultParser;
 
-        internal static void EnqueuClientCommand(Actor Actor, String RawCommand)
+        internal static void EnqueuActorCommand(Actor Actor, String RawCommand)
         {
             PendingCommandLock.WaitOne();
             PendingCommands.AddLast(new PendingCommand { Actor = Actor, RawCommand = RawCommand });

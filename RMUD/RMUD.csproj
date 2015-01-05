@@ -64,7 +64,7 @@
     <Compile Include="Modules\Chat\MudObjectExtensions.cs" />
     <Compile Include="Modules\Network\Account.cs" />
     <Compile Include="Modules\Network\NetworkClient.cs" />
-    <Compile Include="Parser\ConfirmCommandHandler.cs" />
+    <Compile Include="Core\Parser\ConfirmCommandHandler.cs" />
     <Compile Include="Modules\Network\ClientExtensions.cs" />
     <Compile Include="Modules\Network\PasswordCommandHandler.cs" />
     <Compile Include="Serialization\ObjectSerialization.cs" />
@@ -161,13 +161,13 @@
     <Compile Include="WorldModel\NPC.cs" />
     <Compile Include="WorldModel\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
-    <Compile Include="Parser\AuthenticationCommandProcessor.cs" />
-    <Compile Include="Parser\CommandEntry.cs" />
-    <Compile Include="Parser\MatchContext.cs" />
-    <Compile Include="Parser\Matchers\FailIf.cs" />
-    <Compile Include="Parser\Matchers\NumberMatcher.cs" />
-    <Compile Include="Parser\Matchers\GenericMatcher.cs" />
-    <Compile Include="Parser\Matchers\ScoreGate.cs" />
+    <Compile Include="Core\Parser\AuthenticationCommandProcessor.cs" />
+    <Compile Include="Core\Parser\CommandEntry.cs" />
+    <Compile Include="Core\Parser\MatchContext.cs" />
+    <Compile Include="Core\Parser\Matchers\FailIf.cs" />
+    <Compile Include="Core\Parser\Matchers\NumberMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\GenericMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\ScoreGate.cs" />
     <Compile Include="Modules\Chat\ChatChannelRules.cs" />
     <Compile Include="Core\Client.cs" />
     <Compile Include="Modules\Chat\Commands.cs" />
@@ -175,14 +175,14 @@
     <Compile Include="Modules\Network\Kick.cs" />
     <Compile Include="Modules\Network\Ban.cs" />
     <Compile Include="Modules\Network\Whisper.cs" />
-    <Compile Include="Modules\Meta\Version.cs" />
+    <Compile Include="Core\Meta\Version.cs" />
     <Compile Include="Modules\Network\Who.cs" />
     <Compile Include="Modules\Admin\Reload.cs" />
     <Compile Include="Modules\StandardActions\Lock.cs" />
     <Compile Include="Modules\StandardActions\Open.cs" />
     <Compile Include="Modules\StandardActions\Drop.cs" />
     <Compile Include="Modules\StandardActions\Inventory.cs" />
-    <Compile Include="Modules\Meta\Man.cs" />
+    <Compile Include="Core\Meta\Man.cs" />
     <Compile Include="Modules\StandardActions\Say.cs" />
     <Compile Include="Modules\StandardActions\Take.cs" />
     <Compile Include="Modules\Admin\Move.cs" />
@@ -211,46 +211,46 @@
     <Compile Include="WorldModel\EnumerateObjectTree.cs" />
     <Compile Include="WorldModel\Container.cs" />
     <Compile Include="WorldModel\NounList.cs" />
-    <Compile Include="Parser\Matchers\RelativeLocationMatcher.cs" />
-    <Compile Include="Parser\Matchers\FailIfNoMatches.cs" />
-    <Compile Include="ReverseLineReader.cs" />
-    <Compile Include="Rules\GlobalRules.cs" />
-    <Compile Include="Rules\RuleBook.cs" />
-    <Compile Include="Rules\RuleBuilderGen.cs">
+    <Compile Include="Core\Parser\Matchers\RelativeLocationMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\FailIfNoMatches.cs" />
+    <Compile Include="Modules\Admin\ReverseLineReader.cs" />
+    <Compile Include="Core\Rules\GlobalRules.cs" />
+    <Compile Include="Core\Rules\RuleBook.cs" />
+    <Compile Include="Core\Rules\RuleBuilderGen.cs">
       <DependentUpon>RuleBuilderGen.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Rules\GlobalRulesAddRuleGen.cs">
+    <Compile Include="Core\Rules\GlobalRulesAddRuleGen.cs">
       <DependentUpon>GlobalRulesAddRuleGen.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Rules\MudObjectAddRuleGen.cs">
+    <Compile Include="Core\Rules\MudObjectAddRuleGen.cs">
       <DependentUpon>MudObjectAddRuleGen.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Rules\RuleSetAddRuleGen.cs">
+    <Compile Include="Core\Rules\RuleSetAddRuleGen.cs">
       <DependentUpon>RuleSetAddRuleGen.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Rules\RuleDelegatesGen.cs">
+    <Compile Include="Core\Rules\RuleDelegatesGen.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>RuleDelegatesGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Rules\RuleSet.cs" />
-    <Compile Include="Rules\RuleResult.cs" />
-    <Compile Include="Rules\Rule.cs" />
+    <Compile Include="Core\Rules\RuleSet.cs" />
+    <Compile Include="Core\Rules\RuleResult.cs" />
+    <Compile Include="Core\Rules\Rule.cs" />
     <Compile Include="Core\SendMessage.cs" />
     <Compile Include="Modules\Network\ConnectedPlayersObjectSource.cs" />
-    <Compile Include="Parser\Matchers\OptionalMatcher.cs" />
-    <Compile Include="Parser\Matchers\FirstOfMatcher.cs" />
-    <Compile Include="Core\ProscriptionList.cs" />
-    <Compile Include="Telnet\TelnetClient.cs" />
-    <Compile Include="Telnet\TelnetControlCodes.cs" />
+    <Compile Include="Core\Parser\Matchers\OptionalMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\FirstOfMatcher.cs" />
+    <Compile Include="Modules\Network\ProscriptionList.cs" />
+    <Compile Include="Modules\Network\Telnet\TelnetClient.cs" />
+    <Compile Include="Modules\Network\Telnet\TelnetControlCodes.cs" />
     <Compile Include="Core\IsVisibleTo.cs" />
     <Compile Include="database\static\palantine\library.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -260,58 +260,58 @@
     </Compile>
     <Compile Include="WorldModel\BasicDoor.cs" />
     <Compile Include="WorldModel\LockedDoor.cs" />
-    <Compile Include="Parser\DisambigCommandHandler.cs" />
-    <Compile Include="Parser\Matchers\InScopeObjectSource.cs" />
+    <Compile Include="Core\Parser\DisambigCommandHandler.cs" />
+    <Compile Include="Core\Parser\Matchers\InScopeObjectSource.cs" />
     <Compile Include="WorldModel\RoomType.cs" />
     <Compile Include="WorldModel\RoomLightingRules.cs" />
     <Compile Include="WorldModel\Scenery.cs" />
     <Compile Include="WorldModel\Settings.cs" />
     <Compile Include="Modules\Network\LoginCommandHandler.cs" />
-    <Compile Include="Parser\ClientCommandHandler.cs" />
+    <Compile Include="Core\Parser\ClientCommandHandler.cs" />
     <Compile Include="WorldModel\Actor.cs" />
     <Compile Include="WorldModel\Links.cs" />
-    <Compile Include="Parser\ParserCommandHandler.cs" />
-    <Compile Include="Parser\CommandParser.cs" />
-    <Compile Include="Parser\CommandFactory.cs" />
-    <Compile Include="Parser\CommandProcessor.cs" />
-    <Compile Include="Parser\CommandTokenMatcher.cs" />
-    <Compile Include="Parser\Matchers\CardinalMatcher.cs" />
-    <Compile Include="Parser\Matchers\RestMatcher.cs" />
-    <Compile Include="Parser\Matchers\PathMatcher.cs" />
-    <Compile Include="Parser\Matchers\RankGate.cs" />
-    <Compile Include="Parser\Matchers\SingleWordMatcher.cs" />
-    <Compile Include="Parser\Matchers\OrMatcher.cs" />
-    <Compile Include="Parser\Matchers\ObjectMatcher.cs" />
-    <Compile Include="Parser\Matchers\KeywordMatcher.cs" />
-    <Compile Include="Parser\Matchers\SequenceMatcher.cs" />
-    <Compile Include="Parser\PossibleMatch.cs" />
+    <Compile Include="Core\Parser\ParserCommandHandler.cs" />
+    <Compile Include="Core\Parser\CommandParser.cs" />
+    <Compile Include="Core\Parser\CommandFactory.cs" />
+    <Compile Include="Core\Parser\CommandProcessor.cs" />
+    <Compile Include="Core\Parser\CommandTokenMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\CardinalMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\RestMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\PathMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\RankGate.cs" />
+    <Compile Include="Core\Parser\Matchers\SingleWordMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\OrMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\ObjectMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\KeywordMatcher.cs" />
+    <Compile Include="Core\Parser\Matchers\SequenceMatcher.cs" />
+    <Compile Include="Core\Parser\PossibleMatch.cs" />
     <Compile Include="WorldModel\Room.cs" />
     <Compile Include="GithubDatabase\Database.cs" />
     <Compile Include="Modules\Network\Clients.cs" />
     <Compile Include="WorldModel\MudObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Telnet\TelnetClientSource.cs" />
+    <Compile Include="Modules\Network\Telnet\TelnetClientSource.cs" />
     <Compile Include="HelperExtensions.cs" />
     <None Include="packages.config" />
-    <None Include="Rules\RuleGen.t4" />
-    <None Include="Rules\RuleBuilderGen.tt">
+    <None Include="Core\Rules\RuleGen.t4" />
+    <None Include="Core\Rules\RuleBuilderGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RuleBuilderGen.cs</LastGenOutput>
     </None>
-    <None Include="Rules\GlobalRulesAddRuleGen.tt">
+    <None Include="Core\Rules\GlobalRulesAddRuleGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>GlobalRulesAddRuleGen.cs</LastGenOutput>
     </None>
-    <None Include="Rules\MudObjectAddRuleGen.tt">
+    <None Include="Core\Rules\MudObjectAddRuleGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MudObjectAddRuleGen.cs</LastGenOutput>
     </None>
-    <None Include="Rules\RuleSetAddRuleGen.tt">
+    <None Include="Core\Rules\RuleSetAddRuleGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RuleSetAddRuleGen.cs</LastGenOutput>
     </None>
-    <None Include="Rules\RuleDelegatesGen.tt">
+    <None Include="Core\Rules\RuleDelegatesGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RuleDelegatesGen.cs</LastGenOutput>
     </None>

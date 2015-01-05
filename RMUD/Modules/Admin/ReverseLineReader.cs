@@ -7,7 +7,7 @@ using System.Text;
 // http://stackoverflow.com/questions/452902/how-to-read-a-text-file-reversely-with-iterator-in-c-sharp
 // Why write what you can steal from StackOverflow?
 
-namespace RMUD
+namespace RMUD.Modules.Admin
 {
     /// <summary>
     /// Takes an encoding (defaulting to UTF-8) and a function which produces a seekable stream

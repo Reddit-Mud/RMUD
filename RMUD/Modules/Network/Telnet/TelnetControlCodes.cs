@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD.Telnet
+namespace RMUD.Modules.Network.Telnet
 {
     // http://www.faqs.org/rfcs/rfc854.html
     public enum TelnetControlCodes : byte

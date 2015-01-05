@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 
-namespace RMUD.Telnet
+namespace RMUD.Modules.Network.Telnet
 {
     public class TelnetClientSource
     {
@@ -165,7 +165,7 @@ namespace RMUD.Telnet
                             {
                                 String Command = Client.CommandQueue;
                                 Client.CommandQueue = "";
-                                Core.EnqueuClientCommand(Client.Player, Command);
+                                Core.EnqueuActorCommand(Client.Player, Command);
                             }
                         }
                         else if (character == '\b')

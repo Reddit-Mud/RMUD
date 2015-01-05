@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD.Telnet
+namespace RMUD.Modules.Network.Telnet
 {
     public class TelnetClient : Modules.Network.NetworkClient
     {

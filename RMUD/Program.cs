@@ -5,6 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.IO;
 using System.Net;
+using RMUD.Modules.Network.Telnet;
 
 namespace RMUD
 {
@@ -12,11 +13,11 @@ namespace RMUD
     {
         static void Main(string[] args)
         {
-            Telnet.TelnetClientSource telnetListener = null;
+            TelnetClientSource telnetListener = null;
 
             if (Core.Start(new GithubDatabase()))
             {
-                telnetListener = new Telnet.TelnetClientSource();
+                telnetListener = new TelnetClientSource();
                 telnetListener.Port = Core.SettingsObject.TelnetPort;
                 telnetListener.Listen();
 

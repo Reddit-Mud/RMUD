@@ -83,7 +83,7 @@ namespace RMUD
             //Just retry if the attempt to help has failed.
             if (DisambigObjects == null)
             {
-                Core.EnqueuClientCommand(Actor, Command);
+                Core.EnqueuActorCommand(Actor, Command);
                 return;
             }
             
@@ -108,7 +108,7 @@ namespace RMUD
             }
             else //Player didn't type an ordinal; retry.
             {
-                Core.EnqueuClientCommand(Actor, Command);
+                Core.EnqueuActorCommand(Actor, Command);
             }
         }
     }
