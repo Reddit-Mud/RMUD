@@ -27,10 +27,10 @@ namespace RMUD
         internal static bool CommandTimeoutEnabled = true;
 
 
-        internal static ParserCommandHandler ParserCommandHandler;
+        public static ParserCommandHandler ParserCommandHandler;
         public static CommandParser DefaultParser;
 
-        internal static void EnqueuActorCommand(Actor Actor, String RawCommand)
+        public static void EnqueuActorCommand(Actor Actor, String RawCommand)
         {
             PendingCommandLock.WaitOne();
             PendingCommands.AddLast(new PendingCommand { Actor = Actor, RawCommand = RawCommand });

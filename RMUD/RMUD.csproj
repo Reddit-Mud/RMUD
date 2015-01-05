@@ -67,7 +67,7 @@
     <Compile Include="Core\Parser\ConfirmCommandHandler.cs" />
     <Compile Include="Modules\Network\ClientExtensions.cs" />
     <Compile Include="Modules\Network\PasswordCommandHandler.cs" />
-    <Compile Include="Serialization\ObjectSerialization.cs" />
+    <Compile Include="Core\Serialization\ObjectSerialization.cs" />
     <Compile Include="Core\WorldDataService.cs" />
     <Compile Include="database\static\player_base.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -82,8 +82,8 @@
     <Compile Include="Modules\Admin\Rules.cs" />
     <Compile Include="Modules\Clothing\Remove.cs" />
     <Compile Include="Core\ManPages.cs" />
-    <Compile Include="Serialization\PersistentValueSerializer.cs" />
-    <Compile Include="Serialization\PersistAttribute.cs" />
+    <Compile Include="Core\Serialization\PersistentValueSerializer.cs" />
+    <Compile Include="Core\Serialization\PersistAttribute.cs" />
     <Compile Include="database\static\palantine\ball.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
@@ -148,10 +148,10 @@
     <None Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="Serialization\BitArraySerializer.cs" />
-    <Compile Include="Serialization\EnumSerializer.cs" />
-    <Compile Include="Serialization\DictionaryStringObjectSerializer.cs" />
-    <Compile Include="Serialization\ContainerSerializer.cs" />
+    <Compile Include="Core\Serialization\BitArraySerializer.cs" />
+    <Compile Include="Core\Serialization\EnumSerializer.cs" />
+    <Compile Include="Core\Serialization\DictionaryStringObjectSerializer.cs" />
+    <Compile Include="Core\Serialization\ContainerSerializer.cs" />
     <Compile Include="WorldModel\ObjectState.cs" />
     <Compile Include="WorldModel\MudObjectRules.cs" />
     <Compile Include="WorldModel\RelativeLocations.cs" />

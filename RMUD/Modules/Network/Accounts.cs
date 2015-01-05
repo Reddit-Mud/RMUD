@@ -54,7 +54,7 @@ namespace RMUD.Modules.Network
             return newAccount;
         }
 
-        internal static Player GetAccountCharacter(Account Account)
+        public static Player GetAccountCharacter(Account Account)
         {
             Core.CommandTimeoutEnabled = false;
             var playerObject = Core.Database.GetObject(Core.SettingsObject.PlayerBaseObject + "@" + Account.UserName) as Player;

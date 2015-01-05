@@ -11,10 +11,8 @@ namespace RMUD
     {
         internal static Mutex DatabaseLock = new Mutex();
         private static bool ShuttingDown = false;
-
-        internal static Settings SettingsObject;
-
-        internal static WorldDataService Database;
+        public static Settings SettingsObject;
+        public static WorldDataService Database;
 
         public static void TiePlayerToClient(Client Client, Actor Actor)
         {
