@@ -9,9 +9,7 @@ namespace RMUD
 {
     public partial class GithubDatabase
     {
-        private Dictionary<String, MudObject> ActiveInstances = new Dictionary<String, MudObject>();
-        
-        public void PersistInstance(MudObject Object)
+        override public void PersistInstance(MudObject Object)
         {
             if (Object.IsPersistent) return; //The object is already persistent.
             if (ActiveInstances.ContainsKey(Object.GetFullName()))
@@ -26,7 +24,7 @@ namespace RMUD
                 throw new InvalidOperationException("Anonymous objects cannot be persisted.");
         }
 
-        public void ForgetInstance(MudObject Object)
+        override public void ForgetInstance(MudObject Object)
         {
             var instanceName = Object.Path + "@" + Object.Instance;
             if (ActiveInstances.ContainsKey(instanceName))
@@ -34,45 +32,7 @@ namespace RMUD
             Object.IsPersistent = false;
         }
 
-        public MudObject CreateInstance(String FullName)
-        {
-            FullName = FullName.Replace('\\', '/');
-
-            String BasePath, InstanceName;
-            SplitObjectName(FullName, out BasePath, out InstanceName);
-
-            if (String.IsNullOrEmpty(InstanceName)) 
-                throw new InvalidOperationException("Instance can't be empty.");
-            if (String.IsNullOrEmpty(BasePath))
-                throw new InvalidOperationException("Basepath can't be empty.");
-                                    
-            var baseObject = GetObject(BasePath);
-
-            //We can't make an instance of nothing; this means that the base object has an error of some kind.
-            if (baseObject == null) {
-                Core.LogError("ERROR: Invalid baseObject: " + BasePath);
-                return null;
-            }
-
-            //Create the new instance of the same class as the base type.
-            var newMudObject = Activator.CreateInstance(baseObject.GetType()) as MudObject;
-
-            //It should not be possible for newMudObject to be null.
-            if (newMudObject != null)
-            {
-                newMudObject.Path = BasePath;
-                newMudObject.Instance = InstanceName;
-
-                InitializeMudObject(newMudObject);
-                return newMudObject;
-            }
-            else
-            {
-                throw new InvalidProgramException();
-            }
-        }
-
-        public int Save()
+        override public int Save()
         {
             var counter = 0;
             foreach (var instance in ActiveInstances)

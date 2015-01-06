@@ -42,7 +42,9 @@ namespace RMUD
                 InitializeCommandProcessor();
 
                 var assemblies = new List<Assembly>(Assemblies);
-                assemblies.Add(Assembly.GetExecutingAssembly());
+                assemblies.Insert(0, Assembly.GetExecutingAssembly());
+
+                GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");
 
                 foreach (var assembly in assemblies.Distinct())
                     foreach (var type in assembly.GetTypes())
@@ -54,9 +56,10 @@ namespace RMUD
 
                 Core.Database = Database;
                 Database.Initialize();
-
-
+                
                 StartCommandProcesor();
+
+                GlobalRules.ConsiderPerformRule("at startup");
             }
             catch (Exception e)
             {

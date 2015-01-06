@@ -21,4 +21,10 @@ using System.Text;
             if (Dict.ContainsKey(Key)) return Dict[Key];
             else return default(B);
         }
+
+        public static B TypedValue<B>(this Dictionary<String, Object> Dict, String Key) where B: class
+        {
+            if (Dict.ContainsKey(Key)) return Dict[Key] as B;
+            else return default(B);
+        }
     }

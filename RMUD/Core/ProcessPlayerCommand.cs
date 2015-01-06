@@ -12,12 +12,13 @@ namespace RMUD
         public static void ProcessPlayerCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
         {
             Match.Upsert("COMMAND", Command);
-            if (GlobalRules.ConsiderPerformRule("before command", Match, Actor) == PerformResult.Continue)
+            Match.Upsert("LOCATION", Actor == null ? null : Actor.Location);
+            if (GlobalRules.ConsiderMatchBasedPerformRule("before command", Match, Actor) == PerformResult.Continue)
             {
                 Command.ProceduralRules.Consider(Match, Actor);
-                GlobalRules.ConsiderPerformRule("after command", Match, Actor);
+                GlobalRules.ConsiderMatchBasedPerformRule("after command", Match, Actor);
             }
-            GlobalRules.ConsiderPerformRule("after every command");
+            GlobalRules.ConsiderPerformRule("after every command", Actor);
         }
     }
 
@@ -29,7 +30,7 @@ namespace RMUD
 
             GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("after command", "[Match, Actor] : Considered after every command's procedural rules are run, unless the before command rules stopped the command.");
 
-            GlobalRules.DeclarePerformRuleBook("after every command", "[] : Considered after every command, even if earlier rules stopped the command.");
+            GlobalRules.DeclarePerformRuleBook<Actor>("after every command", "[Actor] : Considered after every command, even if earlier rules stopped the command.");
 
             GlobalRules.DeclarePerformRuleBook<Actor>("player joined", "[Player] : Considered when a player enters the game.");
 

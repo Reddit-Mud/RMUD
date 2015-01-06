@@ -152,6 +152,7 @@
     <Compile Include="Core\Serialization\EnumSerializer.cs" />
     <Compile Include="Core\Serialization\DictionaryStringObjectSerializer.cs" />
     <Compile Include="Core\Serialization\ContainerSerializer.cs" />
+    <Compile Include="SinglePlayer\CompiledDatabase.cs" />
     <Compile Include="WorldModel\ObjectState.cs" />
     <Compile Include="WorldModel\MudObjectRules.cs" />
     <Compile Include="WorldModel\RelativeLocations.cs" />

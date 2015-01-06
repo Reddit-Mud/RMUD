@@ -23,7 +23,7 @@ namespace SinglePlayer
     {
         static void Main(string[] args)
         {
-            if (RMUD.Core.Start(new CompiledDatabase(), System.Reflection.Assembly.GetExecutingAssembly()))
+            if (RMUD.Core.Start(new RMUD.SinglePlayer.CompiledDatabase(System.Reflection.Assembly.GetExecutingAssembly(), "SinglePlayer.Database"), System.Reflection.Assembly.GetExecutingAssembly()))
             {
                 var playerObject = RMUD.Core.Database.GetObject("Player") as RMUD.Player;
 

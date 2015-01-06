@@ -15,9 +15,7 @@ namespace RMUD
         private String UsingDeclarations = "using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\n";
         private System.Net.WebClient WebClient = new System.Net.WebClient();
 
-        internal Dictionary<String, MudObject> NamedObjects = null;
-
-        public void Initialize()
+        override public void Initialize()
         {
             NamedObjects = new Dictionary<string, MudObject>();
             StaticPath = "database/static/";
@@ -122,26 +120,7 @@ namespace RMUD
             }
         }
 
-        public static void SplitObjectName(String FullName, out String BasePath, out String InstanceName)
-        {
-            var split = FullName.IndexOf('@');
-            if (split > 0)
-            {
-                BasePath = FullName.Substring(0, split);
-
-                if (split < FullName.Length - 1)
-                    InstanceName = FullName.Substring(split + 1);
-                else
-                    InstanceName = null;
-            }
-            else
-            {
-                BasePath = FullName;
-                InstanceName = null;
-            }
-        }
-
-        public MudObject GetObject(String Path)
+        override public MudObject GetObject(String Path)
         {
             Path = Path.Replace('\\', '/');
 
@@ -212,7 +191,7 @@ namespace RMUD
             return output.ToString();
         }
 
-        public Tuple<bool, String> LoadSourceFile(String Path)
+        override public Tuple<bool, String> LoadSourceFile(String Path)
         {
             Path = Path.Replace('\\', '/');
             if (Path.Contains("..")) return Tuple.Create(false, "Backtrack path entries are not permitted.");
@@ -303,7 +282,7 @@ namespace RMUD
 			}
 		}
 
-		public MudObject ReloadObject(String Path)
+		override public MudObject ReloadObject(String Path)
 		{
             Path = Path.Replace('\\', '/');
 
@@ -343,49 +322,5 @@ namespace RMUD
 			else
 				return GetObject(Path);
 		}
-
-        public MudObject ResetObject(String Path)
-        {
-            Path = Path.Replace('\\', '/');
-
-            if (NamedObjects.ContainsKey(Path))
-            {
-                var existing = NamedObjects[Path];
-                existing.State = ObjectState.Destroyed;
-
-                var newObject = Activator.CreateInstance(existing.GetType()) as MudObject;
-                NamedObjects.Upsert(Path, newObject);
-                InitializeMudObject(newObject);
-
-                //Preserve the location of actors, and actors only.
-                if (existing is Container)
-                    foreach (var item in (existing as Container).EnumerateObjectsAndRelloc())
-                        if (item.Item1 is Actor)
-                        {
-                            (newObject as Container).Add(item.Item1, item.Item2);
-                            item.Item1.Location = newObject;
-                        }
-
-                if (existing is MudObject && (existing as MudObject).Location != null)
-                {
-                    var loc = ((existing as MudObject).Location as Container).RelativeLocationOf(existing);
-                    MudObject.Move(newObject as MudObject, (existing as MudObject).Location, loc);
-                    MudObject.Move(existing as MudObject, null, RelativeLocations.None);
-                }
-
-                existing.Destroy(false);
-
-                return newObject;
-            }
-            else
-                return null;
-        }
-
-        private static void InitializeMudObject(MudObject Object)
-        {
-            Object.Initialize();
-            Object.State = ObjectState.Alive;
-            GlobalRules.ConsiderPerformRule("update", Object);
-        }
     }
 }

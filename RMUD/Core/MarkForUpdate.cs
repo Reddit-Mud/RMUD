@@ -13,18 +13,18 @@ namespace RMUD
         {
             GlobalRules.DeclarePerformRuleBook<MudObject>("update", "[Thing] : Considered for all things that have been marked for update.");
 
-            GlobalRules.Perform("after every command")
+            GlobalRules.Perform<Actor>("after every command")
                 .First
-                .Do(() =>
+                .Do((actor) =>
                     {
                         Core.UpdateMarkedObjects();
                         return PerformResult.Continue;
                     })
                 .Name("Update marked objects at end of turn rule.");
 
-            GlobalRules.Perform("after every command")
+            GlobalRules.Perform<Actor>("after every command")
                 .Last
-                .Do(() =>
+                .Do((actor) =>
                     {
                         Core.SendPendingMessages();
                         return PerformResult.Continue;

@@ -33,6 +33,11 @@ namespace RMUD
             };
         }
 
+        public bool IsNamed(String Name)
+        {
+            return ManualName == Name;
+        }
+
         public CommandEntry Name(String Name)
         {
             this.ManualName = Name.ToUpper();
@@ -114,7 +119,7 @@ namespace RMUD
         public CommandEntry BeforeActing()
         {
             ProceduralRules.AddRule(new Rule<PerformResult>{
-                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => GlobalRules.ConsiderPerformRule("before acting", match, actor)),
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => GlobalRules.ConsiderMatchBasedPerformRule("before acting", match, actor)),
                 DescriptiveName = "Before acting procedural rule."});
             return this;
         }
@@ -125,7 +130,7 @@ namespace RMUD
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => 
                 {
-                    GlobalRules.ConsiderPerformRule("after acting", match, actor);
+                    GlobalRules.ConsiderMatchBasedPerformRule("after acting", match, actor);
                     return PerformResult.Continue;
                 }),
                 DescriptiveName = "After acting procedural rule."

@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompiledDatabase.cs" />
     <Compile Include="Database\Cloakroom.cs" />
     <Compile Include="Database\Bar.cs" />
     <Compile Include="Database\Outside.cs" />
@@ -60,9 +59,6 @@
       <Project>{a0af04ab-7049-44b0-9496-7b2297aee262}</Project>
       <Name>RMUD</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CloakOfDarknessI7.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

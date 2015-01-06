@@ -44,6 +44,17 @@ namespace RMUD
             return Rules.ConsiderPerformRule(Name, Arguments);
         }
 
+        public static PerformResult ConsiderMatchBasedPerformRule(String Name, PossibleMatch Match, Actor Actor)
+        {
+            foreach (var arg in Match)
+                if (arg.Value is HasRules && (arg.Value as HasRules).Rules != null)
+                    if ((arg.Value as HasRules).Rules.ConsiderPerformRule(Name, Match, Actor) == PerformResult.Stop)
+                        return PerformResult.Stop;
+
+            if (Rules == null) throw new InvalidOperationException();
+            return Rules.ConsiderPerformRule(Name, Match, Actor);
+        }
+
         public static CheckResult ConsiderCheckRule(String Name, params Object[] Arguments)
         {
             foreach (var arg in Arguments)
