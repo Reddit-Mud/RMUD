@@ -23,9 +23,9 @@ namespace SinglePlayer
     {
         static void Main(string[] args)
         {
-            if (RMUD.Core.Start(new RMUD.GithubDatabase()))
+            if (RMUD.Core.Start(new CompiledDatabase(), System.Reflection.Assembly.GetExecutingAssembly()))
             {
-                var playerObject = RMUD.Core.Database.GetObject(RMUD.Core.SettingsObject.PlayerBaseObject + "@" + "player") as RMUD.Player;
+                var playerObject = RMUD.Core.Database.GetObject("Player") as RMUD.Player;
 
                 playerObject.Short = "Player";
                 playerObject.Nouns.Add("PLAYER");

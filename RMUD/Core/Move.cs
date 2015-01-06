@@ -11,6 +11,8 @@ namespace RMUD
     {
         public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
         {
+            if (Object == null) return;
+
             if (Object.Location != null)
             {
                 var container = Object.Location as Container;

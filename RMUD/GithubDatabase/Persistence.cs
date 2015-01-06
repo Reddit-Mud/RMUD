@@ -63,9 +63,7 @@ namespace RMUD
                 newMudObject.Path = BasePath;
                 newMudObject.Instance = InstanceName;
 
-                newMudObject.Initialize(); //Initialize must call 'PersistInstance' to setup persistence.
-                newMudObject.State = ObjectState.Alive;
-                GlobalRules.ConsiderPerformRule("update", newMudObject);
+                InitializeMudObject(newMudObject);
                 return newMudObject;
             }
             else

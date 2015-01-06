@@ -45,24 +45,25 @@ namespace RMUD
 
         #endregion
 
-        public LightingLevel AmbientLighting { get; private set; }
+        public LightingLevel Light { get; private set; }
+        public LightingLevel AmbientLighting = LightingLevel.Dark;
 
         public void UpdateLighting()
-        {           
-            AmbientLighting = LightingLevel.Dark;
+        {
+            Light = LightingLevel.Dark;
 
             if (RoomType == RMUD.RoomType.Exterior)
             {
-                AmbientLighting = MudObject.AmbientExteriorLightingLevel;
+                Light = AmbientExteriorLightingLevel;
             }
-            else
+
+            foreach (var item in MudObject.EnumerateVisibleTree(this))
             {
-                foreach (var item in MudObject.EnumerateVisibleTree(this))
-                {
-                    var lightingLevel = GlobalRules.ConsiderValueRule<LightingLevel>("emits-light", item);
-                    if (lightingLevel > AmbientLighting) AmbientLighting = lightingLevel;
-                }
+                var lightingLevel = GlobalRules.ConsiderValueRule<LightingLevel>("emits-light", item);
+                if (lightingLevel > Light) Light = lightingLevel;
             }
+
+            if (AmbientLighting > Light) Light = AmbientLighting;
         }
     }
 }

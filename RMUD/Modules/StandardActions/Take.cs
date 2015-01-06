@@ -25,7 +25,7 @@ namespace RMUD.Modules.StandardActions
                 .Manual("Takes an item and adds it to your inventory.")
                 .Check("can take?", "ACTOR", "SUBJECT")
                 .BeforeActing()
-                .Perform("taken", "ACTOR", "SUBJECT")
+                .Perform("take", "ACTOR", "SUBJECT")
                 .AfterActing()
                 .MarkLocaleForUpdate();
 		}
@@ -33,7 +33,7 @@ namespace RMUD.Modules.StandardActions
         public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can take?", "[Actor, Item] : Can the actor take the item?");
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("taken", "[Actor, Item] : Handle the actor taking the item.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("take", "[Actor, Item] : Handle the actor taking the item.");
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .Do((actor, item) => MudObject.CheckIsVisibleTo(actor, item))
@@ -53,7 +53,7 @@ namespace RMUD.Modules.StandardActions
                 .Do((a, t) => CheckResult.Allow)
                 .Name("Default allow taking rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("taken")
+            GlobalRules.Perform<MudObject, MudObject>("take")
                 .Do((actor, target) =>
                 {
                     MudObject.SendMessage(actor, "You take <a0>.", target);

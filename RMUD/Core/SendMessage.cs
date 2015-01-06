@@ -63,6 +63,7 @@ namespace RMUD
     {
         public static void SendMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
         {
+            if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
@@ -72,6 +73,7 @@ namespace RMUD
 
         public static void SendMessage(MudObject MudObject, String Message, params MudObject[] MentionedObjects)
         {
+            if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
@@ -81,6 +83,7 @@ namespace RMUD
 
         public static void SendLocaleMessage(MudObject Object, String Message, params MudObject[] MentionedObjects)
         {
+            if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
@@ -92,6 +95,7 @@ namespace RMUD
 
         public static void SendExternalMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
         {
+            if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
@@ -106,6 +110,7 @@ namespace RMUD
 
         public static void SendExternalMessage(MudObject Actor, String Message, params MudObject[] MentionedObjects)
         {
+            if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
@@ -115,6 +120,7 @@ namespace RMUD
 
         public static void SendMessage(Client Client, String Message, params MudObject[] MentionedObjects)
         {
+            if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
@@ -123,6 +129,7 @@ namespace RMUD
 
         public static void SendGlobalMessage(String Message, params MudObject[] MentionedObjects)
         {
+            if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 

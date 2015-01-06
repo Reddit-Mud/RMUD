@@ -18,14 +18,14 @@ namespace RMUD.Modules.StandardActions
                 .Manual("Drop a held item. This can also be used to remove and drop a worn item.")
                 .Check("can drop?", "ACTOR", "SUBJECT")
                 .BeforeActing()
-                .Perform("dropped", "ACTOR", "SUBJECT")
+                .Perform("drop", "ACTOR", "SUBJECT")
                 .AfterActing();
 		}
 
         public static void AtStartup()
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can drop?", "[Actor, Item] : Determine if the item can be dropped.");
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("dropped", "[Actor, Item] : Handle an item being dropped.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("drop", "[Actor, Item] : Handle an item being dropped.");
 
             GlobalRules.Check<MudObject, MudObject>("can drop?")
                 .First
@@ -53,7 +53,7 @@ namespace RMUD.Modules.StandardActions
 
             GlobalRules.Check<MudObject, MudObject>("can drop?").Do((a, b) => CheckResult.Allow).Name("Default can drop anything rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("dropped").Do((actor, target) =>
+            GlobalRules.Perform<MudObject, MudObject>("drop").Do((actor, target) =>
             {
                 MudObject.SendMessage(actor, "You drop <a0>.", target);
                 MudObject.SendExternalMessage(actor, "<a0> drops <a1>.", actor, target);

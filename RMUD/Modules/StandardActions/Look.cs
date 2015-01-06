@@ -46,14 +46,14 @@ namespace RMUD.Modules.StandardActions
                 .First
                 .Do((viewer, room) =>
                 {
-                    MudObject.SendMessage(viewer, room.Short);
+                    if (!String.IsNullOrEmpty(room.Short)) MudObject.SendMessage(viewer, room.Short);
                     return PerformResult.Continue;
                 })
                 .Name("Display room name rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .First
-                .When((viewer, room) => (room as Room).AmbientLighting == LightingLevel.Dark)
+                .When((viewer, room) => (room as Room).Light == LightingLevel.Dark)
                 .Do((viewer, room) =>
                 {
                     MudObject.SendMessage(viewer, "It is too dark to see.");

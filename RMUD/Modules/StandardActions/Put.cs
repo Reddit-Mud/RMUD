@@ -37,9 +37,9 @@ namespace RMUD.Modules.StandardActions
                     }
                     return PerformResult.Continue;
                 }, "Supply default for optional relloc procedural rule.")
-                .Check("can-put", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
+                .Check("can put?", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
                 .BeforeActing()
-                .Perform("on-put", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
+                .Perform("put", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
                 .AfterActing()
                 .MarkLocaleForUpdate();
 
@@ -47,15 +47,15 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup()
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("can-put", "[Actor, Item, Container, Location] : Determine if the actor can put the item in or on or under the container.");
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("on-put", "[Actor, Item, Container, Location] : Handle an actor putting the item in or on or under the container.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("can put?", "[Actor, Item, Container, Location] : Determine if the actor can put the item in or on or under the container.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("put", "[Actor, Item, Container, Location] : Handle an actor putting the item in or on or under the container.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Last
                 .Do((a, b, c, d) => CheckResult.Allow)
                 .Name("Allow putting as default rule.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
                     if (!(container is Container))
@@ -67,16 +67,16 @@ namespace RMUD.Modules.StandardActions
                 })
                 .Name("Can't put things in things that aren't containers rule.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
-                    if (GlobalRules.ConsiderCheckRule("can-drop", actor, item) != CheckResult.Allow)
+                    if (GlobalRules.ConsiderCheckRule("can drop?", actor, item) != CheckResult.Allow)
                         return CheckResult.Disallow;
                     return CheckResult.Continue;
                 })
                 .Name("Putting is dropping rule.");
 
-            GlobalRules.Perform<MudObject, MudObject, MudObject, RelativeLocations>("on-put")
+            GlobalRules.Perform<MudObject, MudObject, MudObject, RelativeLocations>("put")
                 .Do((actor, item, container, relloc) =>
                 {
                     MudObject.SendMessage(actor, String.Format("You put <the0> {0} <the1>.", Relloc.GetRelativeLocationName(relloc)), item, container);
@@ -86,7 +86,7 @@ namespace RMUD.Modules.StandardActions
                 })
                 .Name("Default putting things in things handler.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
                     var c = container as Container;
@@ -99,7 +99,7 @@ namespace RMUD.Modules.StandardActions
                 })
                 .Name("Check supported locations before putting rule.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
                     if (relloc == RelativeLocations.In && !GlobalRules.ConsiderValueRule<bool>("open?", container))
@@ -112,12 +112,12 @@ namespace RMUD.Modules.StandardActions
                 })
                 .Name("Can't put things in closed container rule.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .First
                 .Do((actor, item, container, relloc) => MudObject.CheckIsVisibleTo(actor, container))
                 .Name("Container must be visible rule.");
 
-            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can-put")
+            GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .First
                 .Do((actor, item, container, relloc) => MudObject.CheckIsHolding(actor, item))
                 .Name("Must be holding item rule.");

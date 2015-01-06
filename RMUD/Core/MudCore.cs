@@ -35,16 +35,20 @@ namespace RMUD
             MudObject.Move(Actor, null);
         }
 
-        public static bool Start(WorldDataService Database)
+        public static bool Start(WorldDataService Database, params System.Reflection.Assembly[] Assemblies)
         {
             try
             {
                 InitializeCommandProcessor();
 
-                foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-                    foreach (var method in type.GetMethods())
-                        if (method.IsStatic && method.Name == "AtStartup")
-                            method.Invoke(null, null);
+                var assemblies = new List<Assembly>(Assemblies);
+                assemblies.Add(Assembly.GetExecutingAssembly());
+
+                foreach (var assembly in assemblies.Distinct())
+                    foreach (var type in assembly.GetTypes())
+                        foreach (var method in type.GetMethods())
+                            if (method.IsStatic && method.Name == "AtStartup")
+                                method.Invoke(null, null);
 
                 PersistentValueSerializer.AddGlobalSerializer(new BitArraySerializer());
 

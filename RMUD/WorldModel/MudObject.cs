@@ -8,8 +8,8 @@ namespace RMUD
 	public partial class MudObject : HasRules
     {
         public ObjectState State = ObjectState.Unitialized; 
-		public String Path { get; internal set; }
-		public String Instance { get; internal set; }
+		public String Path { get; set; }
+		public String Instance { get; set; }
 
         public bool IsNamedObject { get { return Path != null; } }
         public bool IsAnonymousObject { get { return Path == null; } }
@@ -89,6 +89,11 @@ namespace RMUD
         public static MudObject GetObject(String Path)
         {
             return Core.Database.GetObject(Path);
+        }
+
+        public static T GetObject<T>(String Path) where T: MudObject
+        {
+            return GetObject(Path) as T;
         }
     }
 }

@@ -8,7 +8,7 @@
         BodyPart = RMUD.ClothingBodyPart.Cloak;
         Article = "some";
 
-        Perform<RMUD.MudObject, RMUD.MudObject>("dropped").Do((actor, item) =>
+        Perform<RMUD.MudObject, RMUD.MudObject>("drop").Do((actor, item) =>
             {
                 var wolf = GetObject("palantine/wolf");
                 if (wolf.Location == actor.Location)
