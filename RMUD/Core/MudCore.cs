@@ -10,7 +10,7 @@ namespace RMUD
     public static partial class Core
     {
         internal static Mutex DatabaseLock = new Mutex();
-        private static bool ShuttingDown = false;
+        public static bool ShuttingDown { get; private set; }
         public static Settings SettingsObject;
         public static WorldDataService Database;
         public static Action OnShutDown = null;
@@ -38,6 +38,8 @@ namespace RMUD
 
         public static bool Start(WorldDataService Database, params System.Reflection.Assembly[] Assemblies)
         {
+            ShuttingDown = false;
+
             try
             {
                 InitializeCommandProcessor();
