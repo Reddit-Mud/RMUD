@@ -32,17 +32,25 @@ namespace SinglePlayer
                 RMUD.Core.TiePlayerToClient(client, playerObject);
                 RMUD.Core.AddPlayer(playerObject);
 
-                while (true)
+                bool playing = true;
+                RMUD.Core.OnShutDown += () => playing = false;
+
+                var commandQueuReady = new System.Threading.AutoResetEvent(false);
+
+                while (playing)
                 {
                     var input = Console.ReadLine();
-                    RMUD.Core.EnqueuActorCommand(playerObject, input);
+                    RMUD.Core.EnqueuActorCommand(playerObject, input, () => commandQueuReady.Set());
+                    commandQueuReady.WaitOne();
                 }
             }
             else
             {
                 Console.WriteLine("ERROR.");
-                while (true) { }
             }
+
+            Console.WriteLine("[Press any key to exit..]");
+            Console.ReadKey();
         }
     }
 }

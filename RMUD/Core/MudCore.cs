@@ -13,6 +13,7 @@ namespace RMUD
         private static bool ShuttingDown = false;
         public static Settings SettingsObject;
         public static WorldDataService Database;
+        public static Action OnShutDown = null;
 
         public static void TiePlayerToClient(Client Client, Actor Actor)
         {
@@ -56,10 +57,9 @@ namespace RMUD
 
                 Core.Database = Database;
                 Database.Initialize();
-                
-                StartCommandProcesor();
 
                 GlobalRules.ConsiderPerformRule("at startup");
+                StartCommandProcesor();
             }
             catch (Exception e)
             {

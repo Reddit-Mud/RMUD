@@ -48,12 +48,14 @@ Instead of examining the trampled message:
                     if (messageScuffed)
                     {
                         SendMessage(actor, "The message has been carelessly trampled, making it difficult to read. You can just distinguish the words...");
-                        //End game in failure.
+                        SendMessage(actor, "YOU HAVE LOST.");
+                        Core.Shutdown();
                     }
                     else
                     {
                         SendMessage(actor, "The message, neatly marked in the sawdust, reads...");
-                        //End game in victory.
+                        SendMessage(actor, "YOU HAVE WON!");
+                        Core.Shutdown();
                     }
                     return PerformResult.Stop;
                 });

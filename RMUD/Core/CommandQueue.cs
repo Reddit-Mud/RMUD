@@ -13,6 +13,7 @@ namespace RMUD
         {
             internal Actor Actor;
             internal String RawCommand;
+            internal Action ProcessingCompleteCallback;
         }
 
         private static Mutex PendingCommandLock = new Mutex();
@@ -37,6 +38,13 @@ namespace RMUD
             PendingCommandLock.ReleaseMutex();
         }
 
+        public static void EnqueuActorCommand(Actor Actor, String RawCommand, Action ProcessingCompleteCallback)
+        {
+            PendingCommandLock.WaitOne();
+            PendingCommands.AddLast(new PendingCommand { Actor = Actor, RawCommand = RawCommand, ProcessingCompleteCallback = ProcessingCompleteCallback });
+            PendingCommandLock.ReleaseMutex();
+        }
+
         internal static void DiscoverCommandFactories(Assembly In, CommandParser AddTo)
         {
             foreach (var type in In.GetTypes())
@@ -58,7 +66,7 @@ namespace RMUD
             CommandExecutionThread.Start();
         }
 
-        private static void ProcessIndividualCommand()
+        private static void ProcessCommandsWorkerThread()
         {
             while (!ShuttingDown)
             {
@@ -89,7 +97,7 @@ namespace RMUD
                 
         private static void ProcessCommands()
         {
-            IndividualCommandThread = new Thread(ProcessIndividualCommand);
+            IndividualCommandThread = new Thread(ProcessCommandsWorkerThread);
             IndividualCommandThread.Start();
 
             while (!ShuttingDown)
@@ -99,7 +107,7 @@ namespace RMUD
                 Heartbeat();
                 DatabaseLock.ReleaseMutex();
 
-                while (PendingCommands.Count > 0)
+                while (PendingCommands.Count > 0 && !ShuttingDown)
                 {
                     PendingCommand PendingCommand = null;
 
@@ -152,15 +160,20 @@ namespace RMUD
                                 }
                                 else
                                     LogError(String.Format("Command timeout [No client] - {1}", PendingCommand.RawCommand));
-                                IndividualCommandThread = new Thread(ProcessIndividualCommand);
+                                IndividualCommandThread = new Thread(ProcessCommandsWorkerThread);
                                 IndividualCommandThread.Start();
                             }
                         }
+
+                        if (PendingCommand.ProcessingCompleteCallback != null)
+                            PendingCommand.ProcessingCompleteCallback();
                                                 
                         DatabaseLock.ReleaseMutex();
                     }
                 }
             }
+
+            if (Core.OnShutDown != null) Core.OnShutDown();
         }
     }
 }
