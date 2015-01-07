@@ -58,6 +58,13 @@
   <ItemGroup>
     <Compile Include="Core\MudCore.cs" />
     <Compile Include="Core\ProcessPlayerCommand.cs" />
+    <Compile Include="GithubDatabase\Compile.cs" />
+    <Compile Include="GithubDatabase\GetObject.cs" />
+    <Compile Include="GithubDatabase\ReloadObject.cs" />
+    <Compile Include="GithubDatabase\Initialize.cs" />
+    <Compile Include="GithubDatabase\InitialBulkCompile.cs" />
+    <Compile Include="GithubDatabase\LoadSourceFile.cs" />
+    <Compile Include="GithubDatabase\Preprocess.cs" />
     <Compile Include="GithubDatabase\EnumerateDatabase.cs" />
     <Compile Include="Modules\Chat\ChatChannel.cs" />
     <Compile Include="Modules\Chat\ChatChannelObjectSource.cs" />

@@ -26,9 +26,6 @@ namespace SinglePlayer
             if (RMUD.Core.Start(new RMUD.SinglePlayer.CompiledDatabase(System.Reflection.Assembly.GetExecutingAssembly(), "SinglePlayer.Database"), System.Reflection.Assembly.GetExecutingAssembly()))
             {
                 var playerObject = RMUD.Core.Database.GetObject("Player") as RMUD.Player;
-
-                playerObject.Short = "Player";
-                playerObject.Nouns.Add("PLAYER");
                 playerObject.CommandHandler = RMUD.Core.ParserCommandHandler;
 
                 var client = new DummyClient();
