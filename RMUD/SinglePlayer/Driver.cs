@@ -10,6 +10,7 @@ namespace RMUD.SinglePlayer
     {
         private DummyClient Client;
         private RMUD.Player Player;
+        public bool BlockOnInput { get; set; }
         private System.Threading.AutoResetEvent CommandQueueReady = new System.Threading.AutoResetEvent(false);
         public bool IsRunning
         {
@@ -17,6 +18,11 @@ namespace RMUD.SinglePlayer
             {
                 return !RMUD.Core.ShuttingDown;
             }
+        }
+
+        public Driver()
+        {
+            BlockOnInput = true;
         }
 
         public bool Start(
@@ -43,8 +49,14 @@ namespace RMUD.SinglePlayer
 
         public void Input(String Command)
         {
-            RMUD.Core.EnqueuActorCommand(Player, Command, () => CommandQueueReady.Set());
-            CommandQueueReady.WaitOne();
+            if (BlockOnInput)
+            {
+                RMUD.Core.EnqueuActorCommand(Player, Command, () =>
+                    CommandQueueReady.Set());
+                CommandQueueReady.WaitOne();
+            }
+            else
+                RMUD.Core.EnqueuActorCommand(Player, Command);
         }
     }
 }

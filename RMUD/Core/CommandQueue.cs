@@ -173,6 +173,7 @@ namespace RMUD
                 }
             }
 
+            IndividualCommandThread.Abort();
             if (Core.OnShutDown != null) Core.OnShutDown();
         }
     }

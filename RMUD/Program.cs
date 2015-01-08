@@ -21,13 +21,12 @@ namespace RMUD
                 telnetListener.Port = Core.SettingsObject.TelnetPort;
                 telnetListener.Listen();
 
-                while (true)
+                while (!Core.ShuttingDown)
                 {
                     //Todo: Shutdown server command breaks this loop.
                 }
 
                 telnetListener.Shutdown();
-                Core.Shutdown();
             }
             else
             {
