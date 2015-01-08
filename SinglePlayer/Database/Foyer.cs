@@ -8,6 +8,7 @@ namespace SinglePlayer.Database
         public static void AtStartup()
         {
             GlobalRules.Check<MudObject, Link>("can go?")
+                .First
                 .When((actor, link) => link != null && link.Location is Foyer && link.Direction == Direction.NORTH)
                 .Do((actor, link) =>
                 {

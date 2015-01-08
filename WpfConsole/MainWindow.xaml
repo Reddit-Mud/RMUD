@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="SHARP" Height="350" Width="525" WindowState="Maximized" Background="Black" Closing="Window_Closing">
     <DockPanel>
-        <Grid Background="Black">
+        <Grid Background="#FFBAE4F7">
             <Grid.RowDefinitions>
                 <RowDefinition Height="181*"/>
                 <RowDefinition x:Name="BottomRow" Height="115*"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="InputBox" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" VerticalContentAlignment="Stretch" SpellCheck.IsEnabled="True" TextChanged="TextBox_TextChanged" VerticalScrollBarVisibility="Auto" PreviewKeyDown="InputBox_PreviewKeyDown" Grid.Row="1" FontSize="14" Background="Black" Foreground="#FFFF5D00" BorderBrush="#FF4E5757" BorderThickness="0"/>
-            <WebBrowser x:Name="OutputBox" Margin="0,0,0,0" Navigating="OutputBox_Navigating" Navigated="OutputBox_Navigated"/>
+            <TextBox x:Name="InputBox" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" VerticalContentAlignment="Stretch" SpellCheck.IsEnabled="True" TextChanged="TextBox_TextChanged" VerticalScrollBarVisibility="Auto" PreviewKeyDown="InputBox_PreviewKeyDown" Grid.Row="1" FontSize="14" Background="#FFBAE4F7" Foreground="Black" BorderBrush="#FF4E5757" BorderThickness="0" Margin="50,0"/>
+            <WebBrowser x:Name="OutputBox" Margin="0,0,0,0" Navigating="OutputBox_Navigating" Navigated="OutputBox_Navigated" LoadCompleted="OutputBox_LoadCompleted"/>
         </Grid>
     </DockPanel>
 </Window>

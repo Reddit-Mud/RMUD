@@ -41,28 +41,49 @@ namespace WpfConsole
 
             AfterNavigating = () => Driver.Start(typeof(SinglePlayer.Database.Player).Assembly, "SinglePlayer.Database", "Player", 
                 s => 
-                    Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, s.Replace("\n", "<br>")));
+                    Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, PrepareString(s)));
 
             Clear();
 
             Driver.BlockOnInput = false;
         }
 
+        public String PrepareString(String s)
+        {
+            s = s.Replace("\n", "<br>");
+            s = s.Replace("  ", "&nbsp;&nbsp;");
+            return s;
+        }
+
         public void Output(String s)
         {
             var doc = OutputBox.Document as mshtml.HTMLDocument;
+            
+            while (doc.body == null) ;
+
             doc.body.innerHTML += s;
+            OutputBox.InvokeScript("scroll");
         }
 
         public void Clear()
         {
             OutputBox.NavigateToString(
-@"<script>
+@"<head>
+<style>
+body
+{
+    margin-right: 50px;
+    margin-left: 50px;
+
+    background-color: #BAE4F7;
+}
+</style>
+<script>
     function scroll()
     {
-        window.scrollTo(0,document.body.scrollHeight);
+        window.scrollTo(0,document.body.scrollHeight + 1000);
     } 
-</script><body></body>");
+</script></head><body></body>");
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -103,24 +124,24 @@ namespace WpfConsole
 
                 e.Handled = true;
             }
-            else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.Return)
+            else if (e.Key == Key.Return)
             {
                 var saveInput = InputBox.Text.Trim();
 
                 try
                 {
                     InputBox.Clear();
+                    (OutputBox.Document as dynamic).body.innerHTML += "<font color=red>" + saveInput + "</font><br>";
                     Driver.Input(saveInput);
                     CommandMemory.Add(saveInput);
                     MemoryScrollIndex = CommandMemory.Count;
                 }
                 catch (Exception x)
                 {
-                    (OutputBox.Document as dynamic).body.innerHTML += x.Message;
+                    (OutputBox.Document as dynamic).body.innerHTML += "<br><font color=red>" + x.Message + "</font><br>";
                     InputBox.Text = saveInput;
                 }
 
-                OutputBox.InvokeScript("scroll");
                 e.Handled = true;
             }
         }
@@ -132,14 +153,19 @@ namespace WpfConsole
 
         private void OutputBox_Navigated(object sender, NavigationEventArgs e)
         {
-            if (AfterNavigating != null)
-                AfterNavigating();
-            AfterNavigating = null;
+            
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             RMUD.Core.Shutdown();
+        }
+
+        private void OutputBox_LoadCompleted(object sender, NavigationEventArgs e)
+        {
+            if (AfterNavigating != null)
+                AfterNavigating();
+            AfterNavigating = null;
         }
     }
 }
