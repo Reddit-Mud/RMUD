@@ -18,7 +18,7 @@ namespace RMUD
         }
     }
 
-    internal class KeyWord : CommandTokenMatcher
+    public class KeyWord : CommandTokenMatcher
     {
         public String Word;
         public bool Optional = false;

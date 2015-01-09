@@ -12,7 +12,6 @@ namespace RMUD
         public static void ProcessPlayerCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
         {
             Match.Upsert("COMMAND", Command);
-            Match.Upsert("LOCATION", Actor == null ? null : Actor.Location);
             if (GlobalRules.ConsiderMatchBasedPerformRule("before command", Match, Actor) == PerformResult.Continue)
             {
                 Command.ProceduralRules.Consider(Match, Actor);

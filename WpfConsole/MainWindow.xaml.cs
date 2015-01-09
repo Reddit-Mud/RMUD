@@ -46,6 +46,10 @@ namespace WpfConsole
             Clear();
 
             Driver.BlockOnInput = false;
+            RMUD.Core.OnShutDown += () =>
+                {
+                    Dispatcher.Invoke(new Action(() => Close()));
+                };
         }
 
         public String PrepareString(String s)

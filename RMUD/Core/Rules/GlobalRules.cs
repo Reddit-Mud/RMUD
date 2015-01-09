@@ -5,11 +5,6 @@ using System.Text;
 
 namespace RMUD
 {
-    public interface HasRules
-    {
-        RuleSet Rules { get; }
-    }
-
     public static partial class GlobalRules
     {
         internal static RuleSet Rules = new RuleSet();
@@ -33,12 +28,22 @@ namespace RMUD
             Rules.DeleteRule(RuleBookName, RuleID);
         }
 
-        public static PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
+        public static IEnumerable<RuleSet> EnumerateRuleSets(Object[] Arguments)
         {
             foreach (var arg in Arguments)
-                if (arg is HasRules && (arg as HasRules).Rules != null)
-                    if ((arg as HasRules).Rules.ConsiderPerformRule(Name, Arguments) == PerformResult.Stop)
-                        return PerformResult.Stop;
+                if (arg is MudObject && (arg as MudObject).Rules != null) yield return (arg as MudObject).Rules;
+            foreach (var arg in Arguments)
+                if (arg is MudObject)
+                    if ((arg as MudObject).Location != null)
+                        if ((arg as MudObject).Location.Rules != null)
+                            yield return (arg as MudObject).Location.Rules;
+        }
+
+        public static PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
+        {
+            foreach (var ruleset in EnumerateRuleSets(Arguments))
+                if (ruleset.ConsiderPerformRule(Name, Arguments) == PerformResult.Stop)
+                    return PerformResult.Stop;
 
             if (Rules == null) throw new InvalidOperationException();
             return Rules.ConsiderPerformRule(Name, Arguments);
@@ -47,8 +52,8 @@ namespace RMUD
         public static PerformResult ConsiderMatchBasedPerformRule(String Name, PossibleMatch Match, Actor Actor)
         {
             foreach (var arg in Match)
-                if (arg.Value is HasRules && (arg.Value as HasRules).Rules != null)
-                    if ((arg.Value as HasRules).Rules.ConsiderPerformRule(Name, Match, Actor) == PerformResult.Stop)
+                if (arg.Value is MudObject && (arg.Value as MudObject).Rules != null)
+                    if ((arg.Value as MudObject).Rules.ConsiderPerformRule(Name, Match, Actor) == PerformResult.Stop)
                         return PerformResult.Stop;
 
             if (Rules == null) throw new InvalidOperationException();
@@ -57,12 +62,11 @@ namespace RMUD
 
         public static CheckResult ConsiderCheckRule(String Name, params Object[] Arguments)
         {
-            foreach (var arg in Arguments)
-                if (arg is HasRules && (arg as HasRules).Rules != null)
-                {
-                    var r = (arg as HasRules).Rules.ConsiderCheckRule(Name, Arguments);
-                    if (r != CheckResult.Continue) return r;
-                }
+            foreach (var ruleset in EnumerateRuleSets(Arguments))
+            {
+                var r = ruleset.ConsiderCheckRule(Name, Arguments);
+                if (r != CheckResult.Continue) return r;
+            }
 
             if (Rules == null) throw new InvalidOperationException();
             return Rules.ConsiderCheckRule(Name, Arguments);
@@ -72,12 +76,11 @@ namespace RMUD
         {
             bool valueReturned = false;
 
-            foreach (var arg in Arguments)
-                if (arg is HasRules && (arg as HasRules).Rules != null)
-                {
-                    var r = (arg as HasRules).Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
-                    if (valueReturned) return r;
-                }
+            foreach (var ruleset in EnumerateRuleSets(Arguments))
+            {
+                var r = ruleset.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
+                if (valueReturned) return r;
+            }
 
             if (Rules == null) throw new InvalidOperationException();
             return Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);

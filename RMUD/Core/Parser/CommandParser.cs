@@ -43,6 +43,7 @@ namespace RMUD
 			var tokens = new LinkedList<String>(Command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
 			var rootMatch = new PossibleMatch(tokens.First);
             rootMatch.Upsert("ACTOR", Actor);
+            rootMatch.Upsert("LOCATION", Actor == null ? null : Actor.Location);
 
 			var matchContext = new MatchContext { ExecutingActor = Actor };
 

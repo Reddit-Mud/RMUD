@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public partial class MudObject : HasRules
+	public partial class MudObject
     {
         public ObjectState State = ObjectState.Unitialized; 
 		public String Path { get; set; }

@@ -46,6 +46,7 @@
     <Compile Include="Database\Bar.cs" />
     <Compile Include="Database\Outside.cs" />
     <Compile Include="Database\Foyer.cs" />
+    <Compile Include="Database\Cloak.cs" />
     <Compile Include="Database\Player.cs" />
     <Compile Include="Database\settings.cs" />
     <Compile Include="Program.cs" />
