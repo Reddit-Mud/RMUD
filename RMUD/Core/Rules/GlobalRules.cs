@@ -30,13 +30,26 @@ namespace RMUD
 
         public static IEnumerable<RuleSet> EnumerateRuleSets(Object[] Arguments)
         {
+            var objectsExamined = new List<MudObject>();
+
             foreach (var arg in Arguments)
-                if (arg is MudObject && (arg as MudObject).Rules != null) yield return (arg as MudObject).Rules;
+                if (arg is MudObject 
+                    && !objectsExamined.Contains(arg as MudObject) 
+                    && (arg as MudObject).Rules != null)
+                {
+                    objectsExamined.Add(arg as MudObject);
+                    yield return (arg as MudObject).Rules;
+                }
+
             foreach (var arg in Arguments)
                 if (arg is MudObject)
                     if ((arg as MudObject).Location != null)
-                        if ((arg as MudObject).Location.Rules != null)
-                            yield return (arg as MudObject).Location.Rules;
+                        if (!objectsExamined.Contains((arg as MudObject).Location))
+                            if ((arg as MudObject).Location.Rules != null)
+                            {
+                                objectsExamined.Add((arg as MudObject).Location);
+                                yield return (arg as MudObject).Location.Rules;
+                            }
         }
 
         public static PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
