@@ -12,7 +12,7 @@ namespace SinglePlayer
         static void Main(string[] args)
         {
             var driver = new RMUD.SinglePlayer.Driver();
-            driver.Start(System.Reflection.Assembly.GetExecutingAssembly(), "SinglePlayer.Database", "Player", Console.Write);
+            driver.Start(System.Reflection.Assembly.GetExecutingAssembly(), "CloakOfDarkness", Console.Write);
             while (driver.IsRunning)
                 driver.Input(Console.ReadLine());
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using RMUD;
 
-namespace SinglePlayer.Database
+namespace CloakOfDarkness
 {
 	public class settings : RMUD.Settings
 	{
@@ -37,6 +37,7 @@ namespace SinglePlayer.Database
         public settings()
         {
             NewPlayerStartRoom = "Foyer";
+            PlayerBaseObject = "Player";
         }
 	}
 }

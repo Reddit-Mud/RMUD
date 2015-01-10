@@ -27,15 +27,14 @@ namespace RMUD.SinglePlayer
 
         public bool Start(
             System.Reflection.Assembly DatabaseAssembly, 
-            String ObjectNamespace, 
-            String PlayerObjectName,
+            String ObjectNamespace,
             Action<String> Output)
         {
             if (RMUD.Core.Start(
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, ObjectNamespace),
                 DatabaseAssembly))
             {
-                Player = RMUD.MudObject.GetObject<RMUD.Player>(PlayerObjectName);
+                Player = RMUD.MudObject.GetObject<RMUD.Player>(RMUD.Core.SettingsObject.PlayerBaseObject);
                 Player.CommandHandler = RMUD.Core.ParserCommandHandler;
                 Client = new DummyClient(Output);
                 RMUD.Core.TiePlayerToClient(Client, Player);

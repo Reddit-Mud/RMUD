@@ -39,7 +39,7 @@ namespace WpfConsole
                 MessageBox.Show(e.Message);
             }
 
-            AfterNavigating = () => Driver.Start(typeof(SinglePlayer.Database.Player).Assembly, "SinglePlayer.Database", "Player", 
+            AfterNavigating = () => Driver.Start(typeof(CloakOfDarkness.Player).Assembly, "CloakOfDarkness", 
                 s => 
                     Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, PrepareString(s)));
 

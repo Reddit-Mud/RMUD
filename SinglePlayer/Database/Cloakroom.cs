@@ -1,6 +1,6 @@
 ﻿using RMUD;
 
-namespace SinglePlayer.Database
+namespace CloakOfDarkness
 {
     public class Cloakroom : RMUD.Room
     {

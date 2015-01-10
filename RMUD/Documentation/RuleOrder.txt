@@ -1,0 +1,56 @@
+﻿Rule Order
+
+When considering a rulebook, objects passed as arguments to the rulebook are searched for applicable rules first, in the order they are passed. For example, the rulebook 'can take?' is declared to accept an Actor and the item the actor wishes to take. By convention, the actor is passed first, so any rules present on the actor are considered first. 
+Next, the locations of the arguments are searched for applicable rules, in the order the arguments are passed. Rules on the same object will not be considered twice. It is quite likely that the location of the actor and of the item when considering 'can take?' will be the same object. Considering the room's rules twice could lead to undeseriable behavior.
+Finally, any global rules that apply are considered.
+
+Example Command: take ball
+Rules will be considered in this order: player, ball, location of the player, location of the ball (likely the same as the player, and thus skipped), global.
+
+The First and Last methods can be used to give rules differing priorities. By default, rules are listed and considered in the order they are declared. Marking a rule first will move the rule to the front of the list, however it will still be considered in the order it was declared relative other rules marked first. It is guaranteed that the rule marked first will be considered before any rule not marked, or marked last. Last behaves the same, except rules marked last are placed at the end of the rulebook.
+Remember that objects have their own rulebooks, and first and last can only move a rule within its rulebook. Marking a global rule first will not cause it to be considered before rules on an object passed as an argument to consider, though perhaps it should.
+
+It is tempting to consider the fact that a rule is declared on an object as an implicit when clause. Afterall, this object must have been passed to consider as an argument, or this rule would never have been found, but it's important to remember that the implicit when clause of a rule such as 'Check<MudObject, MudObject>("can take?")' defined on an object is not 'when the actor wants to take this' but is actually 'when this object is involved or contains something that is involved'. The rule could very well be invoked because the object is itself trying to take something. Consider this example that illustrates the flaw.
+
+class HeavyChest : Container
+{
+	public HeavyChest() : base(RelativeLocations.In, RelativeLocations.In) 
+	{}
+
+	override void Initialize()
+	{
+		SimpleName("heavy chest");
+
+		Check<MudObject, MudObject>("can take?")
+			.Do((actor, item) =>
+			{
+				SendMessage(actor, "That chest is far too heavy.");
+				return CheckResult.Disallow;
+			});
+	}
+}
+
+This seems straightforward, but there is one terrible flaw. Lets place an item in the chest, in Initialize - Move(new MudObject("ball", "A small red ball"), this); Now when the player comes along, and tries to take the ball, they are greeted with
+
+That chest is far too heavy.
+
+Not exactly what we wanted to see. The solution is a simple when clause on the rule.
+
+class HeavyChest : Container
+{
+	public HeavyChest() : base(RelativeLocations.In, RelativeLocations.In) 
+	{}
+
+	override void Initialize()
+	{
+		SimpleName("heavy chest");
+
+		Check<MudObject, MudObject>("can take?")
+			.When((actor, item) => item == this)
+			.Do((actor, item) =>
+			{
+				SendMessage(actor, "That chest is far too heavy.");
+				return CheckResult.Disallow;
+			});
+	}
+}
