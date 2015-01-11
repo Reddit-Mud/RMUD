@@ -42,13 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\Cloakroom.cs" />
-    <Compile Include="Database\Bar.cs" />
-    <Compile Include="Database\Outside.cs" />
-    <Compile Include="Database\Foyer.cs" />
-    <Compile Include="Database\Cloak.cs" />
-    <Compile Include="Database\Player.cs" />
-    <Compile Include="Database\settings.cs" />
+    <Compile Include="CloakOfDarkness\Cloakroom.cs" />
+    <Compile Include="CloakOfDarkness\Bar.cs" />
+    <Compile Include="CloakOfDarkness\Outside.cs" />
+    <Compile Include="CloakOfDarkness\Foyer.cs" />
+    <Compile Include="CloakOfDarkness\Cloak.cs" />
+    <Compile Include="CloakOfDarkness\Player.cs" />
+    <Compile Include="CloakOfDarkness\settings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

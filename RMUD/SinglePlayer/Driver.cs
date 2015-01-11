@@ -32,7 +32,7 @@ namespace RMUD.SinglePlayer
         {
             if (RMUD.Core.Start(
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, ObjectNamespace),
-                DatabaseAssembly))
+                new RMUD.StartUpAssembly(DatabaseAssembly, ObjectNamespace)))
             {
                 Player = RMUD.MudObject.GetObject<RMUD.Player>(RMUD.Core.SettingsObject.PlayerBaseObject);
                 Player.CommandHandler = RMUD.Core.ParserCommandHandler;

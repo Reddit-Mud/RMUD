@@ -7,6 +7,18 @@ using System.Reflection;
 
 namespace RMUD
 {
+    public class StartUpAssembly
+    {
+        public Assembly Assembly;
+        public String BaseName;
+
+        public StartUpAssembly(Assembly Assembly, String BaseName)
+        {
+            this.Assembly = Assembly;
+            this.BaseName = BaseName;
+        }
+    }
+
     public static partial class Core
     {
         internal static Mutex DatabaseLock = new Mutex();
@@ -36,7 +48,16 @@ namespace RMUD
             MudObject.Move(Actor, null);
         }
 
-        public static bool Start(WorldDataService Database, params System.Reflection.Assembly[] Assemblies)
+        private static void LoadStartupAssembly(StartUpAssembly StartUp)
+        {
+            foreach (var type in StartUp.Assembly.GetTypes())
+                if (type.FullName.StartsWith(StartUp.BaseName))
+                    foreach (var method in type.GetMethods())
+                        if (method.IsStatic && method.Name == "AtStartup")
+                            method.Invoke(null, null);
+        }
+
+        public static bool Start(WorldDataService Database, params StartUpAssembly[] Assemblies)
         {
             ShuttingDown = false;
 
@@ -44,16 +65,11 @@ namespace RMUD
             {
                 InitializeCommandProcessor();
 
-                var assemblies = new List<Assembly>(Assemblies);
-                assemblies.Insert(0, Assembly.GetExecutingAssembly());
-
                 GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");
 
-                foreach (var assembly in assemblies.Distinct())
-                    foreach (var type in assembly.GetTypes())
-                        foreach (var method in type.GetMethods())
-                            if (method.IsStatic && method.Name == "AtStartup")
-                                method.Invoke(null, null);
+                LoadStartupAssembly(new StartUpAssembly(Assembly.GetExecutingAssembly(), "RMUD"));
+                foreach (var startupAssembly in Assemblies)
+                    LoadStartupAssembly(startupAssembly);
 
                 PersistentValueSerializer.AddGlobalSerializer(new BitArraySerializer());
 
