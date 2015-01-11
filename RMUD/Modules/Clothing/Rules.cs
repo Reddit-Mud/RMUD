@@ -8,7 +8,7 @@ namespace RMUD.Modules._Clothing
 {
     public class ClothingRules 
     {
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.Value<MudObject, bool>("wearable?")
                 .When(a => a is Clothing)

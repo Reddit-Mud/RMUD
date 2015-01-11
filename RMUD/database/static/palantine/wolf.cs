@@ -32,7 +32,7 @@
             .When((quest, item) => quest.Path == "palantine/entrail_quest")
             .Do((quest, item) => { IsFed = false; return RMUD.PerformResult.Stop; });
 
-        RMUD.GlobalRules.Perform("heartbeat").Do(() =>
+        RMUD.Core.GlobalRules.Perform("heartbeat").Do(() =>
         {
             if (!IsFed)
                 RMUD.MudObject.SendLocaleMessage(this, "The wolf whines for food.");

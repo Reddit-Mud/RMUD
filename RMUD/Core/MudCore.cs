@@ -25,6 +25,7 @@ namespace RMUD
         public static bool ShuttingDown { get; private set; }
         public static Settings SettingsObject;
         public static WorldDataService Database;
+        public static RuleEngine GlobalRules;
         public static Action OnShutDown = null;
 
         public static void TiePlayerToClient(Client Client, Actor Actor)
@@ -54,7 +55,7 @@ namespace RMUD
                 if (type.FullName.StartsWith(StartUp.BaseName))
                     foreach (var method in type.GetMethods())
                         if (method.IsStatic && method.Name == "AtStartup")
-                            method.Invoke(null, null);
+                            method.Invoke(null, new Object[]{GlobalRules});
         }
 
         public static bool Start(WorldDataService Database, params StartUpAssembly[] Assemblies)
@@ -63,6 +64,8 @@ namespace RMUD
 
             try
             {
+                GlobalRules = new RuleEngine();
+
                 InitializeCommandProcessor();
 
                 GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");

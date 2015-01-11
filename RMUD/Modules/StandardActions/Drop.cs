@@ -22,7 +22,7 @@ namespace RMUD.Modules.StandardActions
                 .AfterActing();
 		}
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can drop?", "[Actor, Item] : Determine if the item can be dropped.");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("drop", "[Actor, Item] : Handle an item being dropped.");

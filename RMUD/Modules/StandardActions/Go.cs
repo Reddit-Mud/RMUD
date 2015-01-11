@@ -36,7 +36,7 @@ namespace RMUD.Modules.StandardActions
                 }, "Mark both sides of link for update rule");
 		}
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, Link>("can go?", "[Actor, Link] : Can the actor go through that link?");
 

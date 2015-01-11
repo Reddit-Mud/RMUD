@@ -48,7 +48,7 @@ namespace RMUD
         {
             Object.Initialize();
             Object.State = ObjectState.Alive;
-            GlobalRules.ConsiderPerformRule("update", Object);
+            Core.GlobalRules.ConsiderPerformRule("update", Object);
         }
 
         public MudObject CreateInstance(String FullName)
@@ -83,7 +83,7 @@ namespace RMUD
 
                 newMudObject.Initialize(); //Initialize must call 'PersistInstance' to setup persistence.
                 newMudObject.State = ObjectState.Alive;
-                GlobalRules.ConsiderPerformRule("update", newMudObject);
+                Core.GlobalRules.ConsiderPerformRule("update", newMudObject);
                 return newMudObject;
             }
             else

@@ -7,7 +7,6 @@ namespace RMUD
 {
     public partial class CommandParser
     {
-
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
 
         public CommandEntry AddCommand(CommandTokenMatcher Matcher)

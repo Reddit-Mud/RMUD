@@ -9,7 +9,7 @@ namespace RMUD
 {
     public class HeartbeatRules 
     {
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclarePerformRuleBook("heartbeat", "[] : Considered every tick.");
         }

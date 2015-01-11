@@ -54,7 +54,7 @@ namespace RMUD.Modules.Network
             return ClientAcceptanceStatus.Accepted;
         }
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             ProscriptionList = new ProscriptionList("proscriptions.txt");
         }

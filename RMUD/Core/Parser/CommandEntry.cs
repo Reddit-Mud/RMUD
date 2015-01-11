@@ -7,7 +7,7 @@ namespace RMUD
 {
     public class StandardProceduralRules 
     {
-        public void Initialize()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("before acting", "[Match, Actor] : Considered before performing in world actions.");
 
@@ -27,7 +27,7 @@ namespace RMUD
         {
             ManPages.Pages.Add(this);
             GeneratedManual = new StringBuilder();
-            ProceduralRules = new PerformRuleBook
+            ProceduralRules = new PerformRuleBook(Core.GlobalRules.Rules)
             {
                 ArgumentTypes = new List<Type>(new Type[] { typeof(PossibleMatch), typeof(Actor) }),
             };
@@ -72,7 +72,7 @@ namespace RMUD
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    if (GlobalRules.ConsiderCheckRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray()) == CheckResult.Allow)
+                    if (Core.GlobalRules.ConsiderCheckRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray()) == CheckResult.Allow)
                         return PerformResult.Continue;
                     return PerformResult.Stop;
                 }),
@@ -91,7 +91,7 @@ namespace RMUD
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    GlobalRules.ConsiderPerformRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray());
+                    Core.GlobalRules.ConsiderPerformRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray());
                     return PerformResult.Continue;
                 }),
                 DescriptiveName = "Procedural rule to perform " + RuleName
@@ -108,7 +108,7 @@ namespace RMUD
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
-                    GlobalRules.ConsiderPerformRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray())
+                    Core.GlobalRules.ConsiderPerformRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray())
                     ),
                 DescriptiveName = "Procedural rule to abide by " + RuleName
             };
@@ -119,7 +119,7 @@ namespace RMUD
         public CommandEntry BeforeActing()
         {
             ProceduralRules.AddRule(new Rule<PerformResult>{
-                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => GlobalRules.ConsiderMatchBasedPerformRule("before acting", match, actor)),
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => Core.GlobalRules.ConsiderMatchBasedPerformRule("before acting", match, actor)),
                 DescriptiveName = "Before acting procedural rule."});
             return this;
         }
@@ -130,7 +130,7 @@ namespace RMUD
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => 
                 {
-                    GlobalRules.ConsiderMatchBasedPerformRule("after acting", match, actor);
+                    Core.GlobalRules.ConsiderMatchBasedPerformRule("after acting", match, actor);
                     return PerformResult.Continue;
                 }),
                 DescriptiveName = "After acting procedural rule."

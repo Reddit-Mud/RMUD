@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using RMUD;
 
-namespace CloakOfDarkness
+namespace Akkoteaque
 {
 	public class settings : RMUD.Settings
 	{
@@ -36,7 +36,7 @@ namespace CloakOfDarkness
 
         public settings()
         {
-            NewPlayerStartRoom = "Foyer";
+            NewPlayerStartRoom = "Start";
             PlayerBaseObject = "Player";
         }
 	}

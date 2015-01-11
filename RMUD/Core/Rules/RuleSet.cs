@@ -7,7 +7,13 @@ namespace RMUD
 {
     public partial class RuleSet
     {
+        public RuleEngine GlobalRules;
         public List<RuleBook> RuleBooks = new List<RuleBook>();
+
+        internal RuleSet(RuleEngine GlobalRules)
+        {
+            this.GlobalRules = GlobalRules;
+        }
 
         internal RuleBook FindRuleBook(String Name)
         {
@@ -23,11 +29,11 @@ namespace RMUD
                 if (GlobalRules.CheckGlobalRuleBookTypes(Name, typeof(RT), ArgumentTypes))
                 {
                     if (typeof(RT) == typeof(PerformResult))
-                        r = new PerformRuleBook { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
+                        r = new PerformRuleBook(this) { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
                     else if (typeof(RT) == typeof(CheckResult))
-                        r = new CheckRuleBook { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
+                        r = new CheckRuleBook(this) { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
                     else
-                        r = new ValueRuleBook<RT> { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
+                        r = new ValueRuleBook<RT>(this) { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
 
                     RuleBooks.Add(r);
                 }

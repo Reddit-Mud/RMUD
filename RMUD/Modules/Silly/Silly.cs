@@ -39,7 +39,7 @@ And we can dance")
                 .Perform("dance", "ACTOR");
         }
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("silly?", "[Thing -> bool] : Determine if an object is silly.");
             GlobalRules.Value<MudObject, bool>("silly?").Last.Do((thing) => false).Name("Things are serious by default rule.");

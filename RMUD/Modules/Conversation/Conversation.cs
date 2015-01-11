@@ -88,7 +88,7 @@ namespace RMUD.Modules.Conversation
                 .Perform("list topics", "ACTOR");
         }
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can converse?", "[Actor, Item] : Can the actor converse with the item?");
 

@@ -15,38 +15,38 @@ namespace RMUD
 	{	
 		public RuleBuilder<PerformResult> Perform(String Name)
 		{
-			if (Rules == null) Rules = new RuleSet();
+			if (Rules == null) Rules = new RuleSet(GlobalRules);
 			return Rules.AddRule<PerformResult>(Name);
 		}
 
 		public RuleBuilder<RT> Value<RT>(String Name)
 		{
-			if (Rules == null) Rules = new RuleSet();
+			if (Rules == null) Rules = new RuleSet(GlobalRules);
 			return Rules.AddRule<RT>(Name);
 		}
 
 		public RuleBuilder<CheckResult> Check(String Name)
 		{
-			if (Rules == null) Rules = new RuleSet();
+			if (Rules == null) Rules = new RuleSet(GlobalRules);
 			return Rules.AddRule<CheckResult>(Name);
 		}
 
 <#for (var i = 1; i < 5; ++i){#>
 		public RuleBuilder<<#Args(i);#>, PerformResult> Perform<<#Args(i);#>>(String Name)
 		{
-			if (Rules == null) Rules = new RuleSet();
+			if (Rules == null) Rules = new RuleSet(GlobalRules);
 			return Rules.AddRule<<#Args(i);#>, PerformResult>(Name);
 		}
 
 		public RuleBuilder<<#Args(i);#>, RT> Value<<#Args(i);#>, RT>(String Name)
 		{
-			if (Rules == null) Rules = new RuleSet();
+			if (Rules == null) Rules = new RuleSet(GlobalRules);
 			return Rules.AddRule<<#Args(i);#>, RT>(Name);
 		}
 
 		public RuleBuilder<<#Args(i);#>, CheckResult> Check<<#Args(i);#>>(String Name)
 		{
-			if (Rules == null) Rules = new RuleSet();
+			if (Rules == null) Rules = new RuleSet(GlobalRules);
 			return Rules.AddRule<<#Args(i);#>, CheckResult>(Name);
 		}
 <#}#>

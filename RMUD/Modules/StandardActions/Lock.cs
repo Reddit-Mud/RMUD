@@ -26,7 +26,7 @@ namespace RMUD.Modules.StandardActions
                 .AfterActing();
         }
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("lockable?", "[Item] : Can this item be locked?");
 

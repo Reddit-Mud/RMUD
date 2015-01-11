@@ -5,14 +5,19 @@ using System.Text;
 
 namespace RMUD
 {
-    public static partial class GlobalRules
+    public partial class RuleEngine
     {
-        internal static RuleSet Rules = new RuleSet();
-        internal static Actor LogTo = null;
+        internal RuleSet Rules;
+        internal Actor LogTo = null;
 
-        internal static void LogRules(Actor To) { LogTo = To; }
+        public RuleEngine()
+        {
+            Rules = new RuleSet(this);
+        }
 
-        internal static bool CheckGlobalRuleBookTypes(String Name, Type ResultType, params Type[] ArgumentTypes)
+        internal void LogRules(Actor To) { LogTo = To; }
+
+        internal bool CheckGlobalRuleBookTypes(String Name, Type ResultType, params Type[] ArgumentTypes)
         {
             if (Rules == null) return true; // This means that rules were declared before global rulebooks were discovered. The only object that does this in normal running is the settings object. So the settings object can potentially blow up everything.
 
@@ -23,12 +28,12 @@ namespace RMUD
             return book.CheckArgumentTypes(ResultType, ArgumentTypes);
         }
 
-        public static void DeleteRule(String RuleBookName, String RuleID)
+        public void DeleteRule(String RuleBookName, String RuleID)
         {
             Rules.DeleteRule(RuleBookName, RuleID);
         }
 
-        public static IEnumerable<RuleSet> EnumerateRuleSets(Object[] Arguments)
+        public IEnumerable<RuleSet> EnumerateRuleSets(Object[] Arguments)
         {
             var objectsExamined = new List<MudObject>();
 
@@ -52,7 +57,7 @@ namespace RMUD
                             }
         }
 
-        public static PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
+        public PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
         {
             foreach (var ruleset in EnumerateRuleSets(Arguments))
                 if (ruleset.ConsiderPerformRule(Name, Arguments) == PerformResult.Stop)
@@ -62,7 +67,7 @@ namespace RMUD
             return Rules.ConsiderPerformRule(Name, Arguments);
         }
 
-        public static PerformResult ConsiderMatchBasedPerformRule(String Name, PossibleMatch Match, Actor Actor)
+        public PerformResult ConsiderMatchBasedPerformRule(String Name, PossibleMatch Match, Actor Actor)
         {
             foreach (var arg in Match)
                 if (arg.Value is MudObject && (arg.Value as MudObject).Rules != null)
@@ -73,7 +78,7 @@ namespace RMUD
             return Rules.ConsiderPerformRule(Name, Match, Actor);
         }
 
-        public static CheckResult ConsiderCheckRule(String Name, params Object[] Arguments)
+        public CheckResult ConsiderCheckRule(String Name, params Object[] Arguments)
         {
             foreach (var ruleset in EnumerateRuleSets(Arguments))
             {
@@ -85,7 +90,7 @@ namespace RMUD
             return Rules.ConsiderCheckRule(Name, Arguments);
         }
 
-        public static RT ConsiderValueRule<RT>(String Name, params Object[] Arguments)
+        public RT ConsiderValueRule<RT>(String Name, params Object[] Arguments)
         {
             bool valueReturned = false;
 
@@ -99,7 +104,7 @@ namespace RMUD
             return Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
         }
 
-        public static CheckResult ConsiderCheckRuleSilently(String Name, params Object[] Arguments)
+        public CheckResult ConsiderCheckRuleSilently(String Name, params Object[] Arguments)
         {
             try
             {
@@ -117,6 +122,8 @@ namespace RMUD
 
     public partial class MudObject
     {
+        public static RuleEngine GlobalRules { get { return Core.GlobalRules; } }
+
         public static PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
         {
             return GlobalRules.ConsiderPerformRule(Name, Arguments);

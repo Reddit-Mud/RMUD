@@ -22,7 +22,7 @@ namespace RMUD.Modules._Clothing
                 .AfterActing();
         }
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("wearable?", "[Item => bool] : Can the item be worn?");
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can wear?", "[Actor, Item] : Can the actor wear the item?");

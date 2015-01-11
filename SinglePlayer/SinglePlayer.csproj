@@ -42,6 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Akkoteaque\Start.cs" />
+    <Compile Include="Minimum\Start.cs" />
+    <Compile Include="Minimum\Player.cs" />
+    <Compile Include="Minimum\Settings.cs" />
+    <Compile Include="Akkoteaque\Player.cs" />
+    <Compile Include="Akkoteaque\Settings.cs" />
     <Compile Include="CloakOfDarkness\Cloakroom.cs" />
     <Compile Include="CloakOfDarkness\Bar.cs" />
     <Compile Include="CloakOfDarkness\Outside.cs" />

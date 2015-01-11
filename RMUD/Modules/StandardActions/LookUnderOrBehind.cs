@@ -21,7 +21,7 @@ namespace RMUD.Modules.StandardActions
                 .Perform("look relloc", "ACTOR", "OBJECT", "RELLOC");
         }
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, RelativeLocations>("can look relloc?", "[Actor, Item, Relative Location] : Can the actor look in/on/under/behind the item?");
 

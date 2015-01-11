@@ -9,7 +9,7 @@ namespace RMUD.Modules.Quests
 {
     public class QuestProceduralRules 
     {
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.Perform<PossibleMatch, Actor>("after acting")
                 .Do((match, actor) =>

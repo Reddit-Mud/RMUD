@@ -11,8 +11,14 @@ namespace RMUD
         public String Description;
         public List<Type> ArgumentTypes = new List<Type>();
         public Type ResultType;
+        public RuleSet Owner;
         internal List<Rule> Rules = new List<Rule>();
         private bool NeedsSort = false;
+
+        public RuleBook(RuleSet Owner)
+        {
+            this.Owner = Owner;
+        }
 
         public bool CheckArgumentTypes(Type ResultType, params Type[] ArgTypes)
         {
@@ -59,7 +65,8 @@ namespace RMUD
 
     public class CheckRuleBook : RuleBook
     {
-        public CheckRuleBook()
+        public CheckRuleBook(RuleSet Owner)
+            : base(Owner)
         {
             ResultType = typeof(CheckResult);
         }
@@ -73,9 +80,9 @@ namespace RMUD
                 var rule = _rule as Rule<CheckResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
-                    if (GlobalRules.LogTo != null && GlobalRules.LogTo.ConnectedClient != null)
+                    if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
                     {
-                        GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                        Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
                     }
 
                     var r = rule.BodyClause == null ? CheckResult.Continue : rule.BodyClause.Invoke(Args);
@@ -93,7 +100,7 @@ namespace RMUD
 
     public class PerformRuleBook : RuleBook
     {
-        public PerformRuleBook()
+        public PerformRuleBook(RuleSet Owner) : base(Owner)
         {
             ResultType = typeof(PerformResult);
         }
@@ -107,9 +114,9 @@ namespace RMUD
                 var rule = _rule as Rule<PerformResult>;
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
-                    if (GlobalRules.LogTo != null && GlobalRules.LogTo.ConnectedClient != null)
+                    if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
                     {
-                        GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                        Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
                     }
 
                     var r = rule.BodyClause == null ? PerformResult.Continue : rule.BodyClause.Invoke(Args);
@@ -127,7 +134,8 @@ namespace RMUD
 
     public class ValueRuleBook<RT> : RuleBook
     {
-        public ValueRuleBook()
+        public ValueRuleBook(RuleSet Owner)
+            : base(Owner)
         {
             ResultType = typeof(RT);
         }
@@ -140,9 +148,9 @@ namespace RMUD
             foreach (var rule in Rules)
                 if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                 {
-                    if (GlobalRules.LogTo != null && GlobalRules.LogTo.ConnectedClient != null)
+                    if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
                     {
-                        GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                        Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
                     }
 
                     ValueReturned = true;

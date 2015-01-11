@@ -48,7 +48,7 @@ namespace RMUD
                 else if (Command.ToUpper().StartsWith("@RULES "))
                 {
                     Command = Command.Substring("@RULES ".Length);
-                    GlobalRules.LogRules(Actor);
+                    Core.GlobalRules.LogRules(Actor);
                 }
                 else
                 {
@@ -107,7 +107,7 @@ namespace RMUD
                     MudObject.SendMessage(Actor, "huh?");
             }
 
-            GlobalRules.LogRules(null);
+            Core.GlobalRules.LogRules(null);
 
             if (displayTime)
             {

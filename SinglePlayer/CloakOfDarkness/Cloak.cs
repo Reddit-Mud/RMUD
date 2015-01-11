@@ -6,7 +6,7 @@ namespace CloakOfDarkness
     {
         bool isHung = false;
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
 
         }

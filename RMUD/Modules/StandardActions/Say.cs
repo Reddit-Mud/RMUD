@@ -50,7 +50,7 @@ namespace RMUD.Modules.StandardActions
                 .Perform("emote", "ACTOR", "SPEECH");
 		}
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclarePerformRuleBook<MudObject, String>("speak", "[Actor, Text] : Handle the actor speaking the text.");
 

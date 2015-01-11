@@ -44,7 +44,7 @@ namespace RMUD.Modules.ActorIntroduction
                 .AfterActing();
         }
 
-        public static void AtStartup()
+        public static void AtStartup(RuleEngine GlobalRules)
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can introduce?", "[Actor A, Actor B] : Can A introduce B?");
 
