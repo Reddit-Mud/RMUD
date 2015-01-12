@@ -224,15 +224,15 @@
     <Compile Include="Core\Parser\Matchers\RelativeLocationMatcher.cs" />
     <Compile Include="Core\Parser\Matchers\FailIfNoMatches.cs" />
     <Compile Include="Modules\Admin\ReverseLineReader.cs" />
-    <Compile Include="Core\Rules\GlobalRules.cs" />
+    <Compile Include="Core\Rules\RuleEngine.cs" />
     <Compile Include="Core\Rules\RuleBook.cs" />
     <Compile Include="Core\Rules\RuleBuilderGen.cs">
       <DependentUpon>RuleBuilderGen.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Core\Rules\GlobalRulesAddRuleGen.cs">
-      <DependentUpon>GlobalRulesAddRuleGen.tt</DependentUpon>
+    <Compile Include="Core\Rules\RuleEngineAddRuleGen.cs">
+      <DependentUpon>RuleEngineAddRuleGen.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -309,9 +309,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RuleBuilderGen.cs</LastGenOutput>
     </None>
-    <None Include="Core\Rules\GlobalRulesAddRuleGen.tt">
+    <None Include="Core\Rules\RuleEngineAddRuleGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>GlobalRulesAddRuleGen.cs</LastGenOutput>
+      <LastGenOutput>RuleEngineAddRuleGen.cs</LastGenOutput>
     </None>
     <None Include="Core\Rules\MudObjectAddRuleGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
