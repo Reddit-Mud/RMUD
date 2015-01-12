@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Akkoteaque\Cipher.cs" />
     <Compile Include="Akkoteaque\Start.cs" />
     <Compile Include="Minimum\Start.cs" />
     <Compile Include="Minimum\Player.cs" />

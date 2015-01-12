@@ -71,7 +71,7 @@ namespace RMUD
 
                     foreach (var method in newObject.GetType().GetMethods())
                         if (method.IsStatic && method.Name == "AtStartup")
-                            method.Invoke(null, null);
+                            method.Invoke(null, new Object[]{Core.GlobalRules});
 
                     NamedObjects.Upsert(s, newObject);
                 }

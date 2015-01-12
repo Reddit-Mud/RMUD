@@ -17,7 +17,7 @@ namespace RMUD.Modules.Network
                 .Manual("If you got this far, you know how to register.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor != null)
+                    if (actor.ConnectedClient is NetworkClient && (actor.ConnectedClient as NetworkClient).IsLoggedOn)
                     {
                         MudObject.SendMessage(actor, "You are already logged in.");
                         return PerformResult.Stop;
