@@ -10,10 +10,10 @@ namespace Akkoteaque
 	{
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            
             GlobalRules.Perform<Actor>("player joined")
                 .Do((actor) =>
                 {
-                    SendMessage(actor, "Hurrying through the rainswept November night, you're glad to see the bright lights of the Opera House. It's surprising that there aren't more people about but, hey, what do you expect in a cheap demo game...?");
                     return PerformResult.Continue;
                 });
 
@@ -36,7 +36,7 @@ namespace Akkoteaque
 
         public settings()
         {
-            NewPlayerStartRoom = "Start";
+            NewPlayerStartRoom = "Jetty";
             PlayerBaseObject = "Player";
         }
 	}

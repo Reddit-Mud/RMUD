@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+namespace RMUD
+{
+    public partial class MudObject
+    {
+        public RuleBuilder<MudObject, MudObject, MudObject, RelativeLocations, PerformResult> Perform_Put()
+        {
+            return Perform<MudObject, MudObject, MudObject, RelativeLocations>("put");
+        }
+    }
+}
+
 namespace RMUD.Modules.StandardActions
 {
 	internal class Put : CommandFactory

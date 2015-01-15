@@ -43,14 +43,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Akkoteaque\Cipher.cs" />
-    <Compile Include="Akkoteaque\Start.cs" />
+    <Compile Include="Akkoteaque\Fishing\Worm.cs" />
+    <Compile Include="Akkoteaque\Fishing\Clam.cs" />
+    <Compile Include="Akkoteaque\Fishing\FishHead.cs" />
+    <Compile Include="Akkoteaque\Fishing\Bait.cs" />
+    <Compile Include="Akkoteaque\Fishing\SinkingLure.cs" />
+    <Compile Include="Akkoteaque\Fishing\ShinyHook.cs" />
+    <Compile Include="Akkoteaque\Fishing\RustyHook.cs" />
+    <Compile Include="Akkoteaque\Fishing\Hook.cs" />
+    <Compile Include="Akkoteaque\Fishing\Rod.cs" />
+    <Compile Include="Akkoteaque\Jetty.cs" />
     <Compile Include="Minimum\Start.cs" />
     <Compile Include="Minimum\Player.cs" />
     <Compile Include="Minimum\Settings.cs" />
-    <Compile Include="Akkoteaque\Player.cs" />
-    <Compile Include="Akkoteaque\Settings.cs" />
+    <Compile Include="Akkoteaque\Player.cs">
+      <LastGenOutput>Player.cs</LastGenOutput>
+    </Compile>
+    <Compile Include="Akkoteaque\Settings.cs">
+      <LastGenOutput>Settings.cs</LastGenOutput>
+    </Compile>
     <Compile Include="CloakOfDarkness\Cloakroom.cs" />
-    <Compile Include="CloakOfDarkness\Bar.cs" />
     <Compile Include="CloakOfDarkness\Outside.cs" />
     <Compile Include="CloakOfDarkness\Foyer.cs" />
     <Compile Include="CloakOfDarkness\Cloak.cs" />
@@ -58,6 +70,9 @@
     <Compile Include="CloakOfDarkness\settings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CloakOfDarkness\Bar.cs">
+      <LastGenOutput>Bar2.cs</LastGenOutput>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
