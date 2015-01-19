@@ -69,6 +69,7 @@
     <Compile Include="GithubDatabase\LoadSourceFile.cs" />
     <Compile Include="GithubDatabase\Preprocess.cs" />
     <Compile Include="GithubDatabase\EnumerateDatabase.cs" />
+    <Compile Include="Modules\Admin\DumpRuleDefs.cs" />
     <Compile Include="Modules\Chat\ChatChannel.cs" />
     <Compile Include="Modules\Chat\ChatChannelObjectSource.cs" />
     <Compile Include="Modules\Chat\MudObjectExtensions.cs" />

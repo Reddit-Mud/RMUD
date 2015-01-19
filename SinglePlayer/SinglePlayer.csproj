@@ -52,7 +52,15 @@
     <Compile Include="Akkoteaque\Fishing\RustyHook.cs" />
     <Compile Include="Akkoteaque\Fishing\Hook.cs" />
     <Compile Include="Akkoteaque\Fishing\Rod.cs" />
-    <Compile Include="Akkoteaque\Jetty.cs" />
+    <None Include="Akkoteaque\Jetty.mud">
+      <Generator>.mud</Generator>
+      <LastGenOutput>Jetty1.cs</LastGenOutput>
+    </None>
+    <Compile Include="Akkoteaque\Jetty1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Jetty.mud</DependentUpon>
+    </Compile>
     <Compile Include="Minimum\Start.cs" />
     <Compile Include="Minimum\Player.cs" />
     <Compile Include="Minimum\Settings.cs" />
