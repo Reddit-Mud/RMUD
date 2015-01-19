@@ -29,7 +29,9 @@ public class Jupiter : RMUD.Scenery
         Nouns.Add("jupiter");
         Long = "Jupiter holds in his left hand a gleaming thunderbolt. It glows bright enough to light the entire chamber. In his right, he holds a chisel.";
 
-        Value<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
+        //Testing preprocessing system.
+        Value emits-light do RMUD.LightingLevel.Bright;
+        //Value<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
     }
 
 }
@@ -50,6 +52,6 @@ public class Table : RMUD.Container
             return RMUD.CheckResult.Disallow;
         });
 
-        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed name").Do((viewer, thing, article) => "an ancient table");
+        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed name").When((viewer, thing, article) => thing == this).Do((viewer, thing, article) => "an ancient table");
     }
 }

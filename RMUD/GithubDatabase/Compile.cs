@@ -56,7 +56,7 @@ namespace RMUD
             Path = Path.Replace('\\', '/');
 
             var start = DateTime.Now;
-            var preprocessedFile = PreprocessSourceFile(Path, null);
+            var preprocessedFile = PreprocessSourceFile(Path);
             if (String.IsNullOrEmpty(preprocessedFile)) return null;
 
             var source = UsingDeclarations + preprocessedFile;

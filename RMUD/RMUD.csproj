@@ -218,9 +218,9 @@
     <None Include="database\static\palantine\dark_room.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="database\static\palantine\antechamber.cs">
+    <None Include="database\static\palantine\antechamber.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <Compile Include="WorldModel\EnumerateObjectTree.cs" />
     <Compile Include="WorldModel\Container.cs" />
     <Compile Include="WorldModel\NounList.cs" />

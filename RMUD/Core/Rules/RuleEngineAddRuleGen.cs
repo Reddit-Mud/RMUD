@@ -43,31 +43,25 @@ namespace RMUD
 		public void DeclarePerformRuleBook<T0>(String Name, String Description, params String[] ArgumentNames)
 		{
 			Rules.FindOrCreateRuleBook<PerformResult>(Name, typeof(T0)).Description = Description;
-			if (ArgumentNames.Length != 1)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 1)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0]);
-			}
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 		
 		public void DeclareValueRuleBook<T0, RT>(String Name, String Description, params String[] ArgumentNames)
         {
             Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0)).Description = Description;
-			if (ArgumentNames.Length != 1)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 1)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0],  typeof(RT).Name + " value");
-			}
-        }
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+		}
 
 		public void DeclareCheckRuleBook<T0>(String Name, String Description, params String[] ArgumentNames)
 		{
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0)).Description = Description;
-			if (ArgumentNames.Length != 1)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 1)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0]);
-			}
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 				
         public RuleBuilder<T0, PerformResult> Perform<T0>(String Name)
@@ -88,31 +82,25 @@ namespace RMUD
 		public void DeclarePerformRuleBook<T0, T1>(String Name, String Description, params String[] ArgumentNames)
 		{
 			Rules.FindOrCreateRuleBook<PerformResult>(Name, typeof(T0), typeof(T1)).Description = Description;
-			if (ArgumentNames.Length != 2)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 2)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0], typeof(T1).Name + " " + ArgumentNames[1]);
-			}
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 		
 		public void DeclareValueRuleBook<T0, T1, RT>(String Name, String Description, params String[] ArgumentNames)
         {
             Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1)).Description = Description;
-			if (ArgumentNames.Length != 2)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 2)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0], typeof(T1).Name + " " + ArgumentNames[1],  typeof(RT).Name + " value");
-			}
-        }
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+		}
 
 		public void DeclareCheckRuleBook<T0, T1>(String Name, String Description, params String[] ArgumentNames)
 		{
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0), typeof(T1)).Description = Description;
-			if (ArgumentNames.Length != 2)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 2)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0], typeof(T1).Name + " " + ArgumentNames[1]);
-			}
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 				
         public RuleBuilder<T0, T1, PerformResult> Perform<T0, T1>(String Name)
@@ -133,31 +121,25 @@ namespace RMUD
 		public void DeclarePerformRuleBook<T0, T1, T2>(String Name, String Description, params String[] ArgumentNames)
 		{
 			Rules.FindOrCreateRuleBook<PerformResult>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
-			if (ArgumentNames.Length != 3)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 3)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0], typeof(T1).Name + " " + ArgumentNames[1], typeof(T2).Name + " " + ArgumentNames[2]);
-			}
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 		
 		public void DeclareValueRuleBook<T0, T1, T2, RT>(String Name, String Description, params String[] ArgumentNames)
         {
             Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
-			if (ArgumentNames.Length != 3)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 3)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0], typeof(T1).Name + " " + ArgumentNames[1], typeof(T2).Name + " " + ArgumentNames[2],  typeof(RT).Name + " value");
-			}
-        }
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+		}
 
 		public void DeclareCheckRuleBook<T0, T1, T2>(String Name, String Description, params String[] ArgumentNames)
 		{
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0), typeof(T1), typeof(T2)).Description = Description;
-			if (ArgumentNames.Length != 3)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 3)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0], typeof(T1).Name + " " + ArgumentNames[1], typeof(T2).Name + " " + ArgumentNames[2]);
-			}
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 				
         public RuleBuilder<T0, T1, T2, PerformResult> Perform<T0, T1, T2>(String Name)
@@ -178,31 +160,25 @@ namespace RMUD
 		public void DeclarePerformRuleBook<T0, T1, T2, T3>(String Name, String Description, params String[] ArgumentNames)
 		{
 			Rules.FindOrCreateRuleBook<PerformResult>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).Description = Description;
-			if (ArgumentNames.Length != 4)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 4)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0], typeof(T1).Name + " " + ArgumentNames[1], typeof(T2).Name + " " + ArgumentNames[2], typeof(T3).Name + " " + ArgumentNames[3]);
-			}
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 		
 		public void DeclareValueRuleBook<T0, T1, T2, T3, RT>(String Name, String Description, params String[] ArgumentNames)
         {
             Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).Description = Description;
-			if (ArgumentNames.Length != 4)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 4)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0], typeof(T1).Name + " " + ArgumentNames[1], typeof(T2).Name + " " + ArgumentNames[2], typeof(T3).Name + " " + ArgumentNames[3],  typeof(RT).Name + " value");
-			}
-        }
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+		}
 
 		public void DeclareCheckRuleBook<T0, T1, T2, T3>(String Name, String Description, params String[] ArgumentNames)
 		{
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).Description = Description;
-			if (ArgumentNames.Length != 4)
-			{
-				if (ArgumentNames.Length != 0) throw new InvalidOperationException();
+			if (ArgumentNames.Length == 4)
 				MudObjectTransformTool.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(T0).Name + " " + ArgumentNames[0], typeof(T1).Name + " " + ArgumentNames[1], typeof(T2).Name + " " + ArgumentNames[2], typeof(T3).Name + " " + ArgumentNames[3]);
-			}
+			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 				
         public RuleBuilder<T0, T1, T2, T3, PerformResult> Perform<T0, T1, T2, T3>(String Name)

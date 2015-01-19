@@ -10,22 +10,20 @@ namespace RMUD
 {
     public partial class GithubDatabase : WorldDataService
     {
-        private String PreprocessSourceFile(String Path, List<String> FilesLoaded = null)
+        private String ResolveImports(String Path, List<String> FilesLoaded = null)
         {
             Path = Path.Replace('\\', '/');
+            if (FilesLoaded == null) FilesLoaded = new List<String>();
+            else if (FilesLoaded.Contains(Path))
+                return "";
+            FilesLoaded.Add(Path);
 
             var source = LoadSourceFile(Path);
             if (source.Item1 == false)
             {
                 Core.LogError(Path + " - " + source.Item2);
                 return "";
-            }
-
-            if (FilesLoaded == null) FilesLoaded = new List<String>();
-            else if (FilesLoaded.Contains(Path))
-                return "";
-
-            FilesLoaded.Add(Path);
+            }            
 
             var output = new StringBuilder();
             var stream = new System.IO.StringReader(source.Item2);
@@ -37,7 +35,7 @@ namespace RMUD
                 if (line.StartsWith("//import "))
                 {
                     var importedFilename = line.Substring("//import ".Length).Trim();
-                    output.Append(PreprocessSourceFile(importedFilename, FilesLoaded));
+                    output.Append(ResolveImports(importedFilename, FilesLoaded));
                     output.AppendLine();
                 }
                 else
@@ -45,6 +43,14 @@ namespace RMUD
             }
 
             return output.ToString();
+        }
+
+        private String PreprocessSourceFile(String Path)
+        {
+            Path = Path.Replace('\\', '/');
+            var source = ResolveImports(Path);
+            var processedSource = MudObjectTransformTool.Pattern.ProcessFile(source);
+            return processedSource;
         }
     }
 }
