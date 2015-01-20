@@ -52,7 +52,7 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclarePerformRuleBook<MudObject, String>("speak", "[Actor, Text] : Handle the actor speaking the text.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, String>("speak", "[Actor, Text] : Handle the actor speaking the text.", "actor", "text");
 
             GlobalRules.Perform<MudObject, String>("speak")
                 .Do((actor, text) =>
@@ -62,7 +62,7 @@ namespace RMUD.Modules.StandardActions
                 })
                 .Name("Default motormouth rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, String>("emote", "[Actor, Text] : Handle the actor emoting the text.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, String>("emote", "[Actor, Text] : Handle the actor emoting the text.", "actor", "text");
 
             GlobalRules.Perform<MudObject, String>("emote")
                 .Do((actor, text) =>

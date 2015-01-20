@@ -28,11 +28,11 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareValueRuleBook<MudObject, bool>("lockable?", "[Item] : Can this item be locked?");
+            GlobalRules.DeclareValueRuleBook<MudObject, bool>("lockable?", "[Item] : Can this item be locked?", "item");
 
             GlobalRules.Value<MudObject, bool>("lockable?").Do(item => false).Name("Things not lockable by default rule.");
 
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject>("can lock?", "[Actor, Item, Key] : Can the item be locked by the actor with the key?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject>("can lock?", "[Actor, Item, Key] : Can the item be locked by the actor with the key?", "actor", "item", "key");
             
             GlobalRules.Check<MudObject, MudObject, MudObject>("can lock?")
                 .Do((actor, item, key) => MudObject.CheckIsVisibleTo(actor, item))
@@ -55,7 +55,7 @@ namespace RMUD.Modules.StandardActions
                 .Do((a, b, c) => CheckResult.Allow)
                 .Name("Default allow locking rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("locked", "[Actor, Item, Key] : Handle the actor locking the item with the key.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("locked", "[Actor, Item, Key] : Handle the actor locking the item with the key.", "actor", "item", "key");
 
             GlobalRules.Perform<MudObject, MudObject, MudObject>("locked").Do((actor, target, key) =>
             {

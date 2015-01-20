@@ -9,7 +9,7 @@ namespace RMUD.Modules.Chat
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can access channel?", "[Client, Channel] : Can the client access the chat channel?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can access channel?", "[Client, Channel] : Can the client access the chat channel?", "actor", "channel");
 
             GlobalRules.Check<MudObject, MudObject>("can access channel?")
                 .Do((client, channel) => CheckResult.Allow)

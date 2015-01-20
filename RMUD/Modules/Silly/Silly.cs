@@ -41,10 +41,10 @@ And we can dance")
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareValueRuleBook<MudObject, bool>("silly?", "[Thing -> bool] : Determine if an object is silly.");
+            GlobalRules.DeclareValueRuleBook<MudObject, bool>("silly?", "[Thing -> bool] : Determine if an object is silly.", "item");
             GlobalRules.Value<MudObject, bool>("silly?").Last.Do((thing) => false).Name("Things are serious by default rule.");
 
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can silly?", "[Actor, Target] : Can the actor make the target silly?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can silly?", "[Actor, Target] : Can the actor make the target silly?", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can silly?").First
                 .When((actor, target) => !(target is Actor))
@@ -73,7 +73,7 @@ And we can dance")
                 .Do((actor, target) => CheckResult.Allow)
                 .Name("Let the silliness ensue rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("silly", "[Actor, Target] : Apply silly status to the target.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("silly", "[Actor, Target] : Apply silly status to the target.", "actor", "item");
 
             GlobalRules.Perform<MudObject, MudObject>("silly")
                 .Do((actor, target) =>
@@ -117,7 +117,7 @@ And we can dance")
                 })
                 .Name("Apply sillyness rule.");
 
-            GlobalRules.DeclareCheckRuleBook<MudObject>("can dance?", "[Actor] : Can the actor dance?");
+            GlobalRules.DeclareCheckRuleBook<MudObject>("can dance?", "[Actor] : Can the actor dance?", "actor");
 
             GlobalRules.Check<MudObject>("can dance?")
                 .When(actor => !GlobalRules.ConsiderValueRule<bool>("silly?", actor))
@@ -133,7 +133,7 @@ And we can dance")
                 .Do(actor => CheckResult.Allow)
                 .Name("You can dance if you want to rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject>("dance", "[Actor] : Perform a silly dance.");
+            GlobalRules.DeclarePerformRuleBook<MudObject>("dance", "[Actor] : Perform a silly dance.", "actor");
 
             GlobalRules.Perform<MudObject>("dance")
                 .Do(actor =>

@@ -90,7 +90,7 @@ namespace RMUD.Modules.Conversation
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can converse?", "[Actor, Item] : Can the actor converse with the item?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can converse?", "[Actor, Item] : Can the actor converse with the item?", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can converse?")
                 .When((actor, item) => !(item is NPC))
@@ -110,9 +110,9 @@ namespace RMUD.Modules.Conversation
                 .Do((actor, item) => CheckResult.Allow)
                 .Name("Let them chat rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("greet", "[Actor, NPC] : Handle an actor greeting an NPC.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("greet", "[Actor, NPC] : Handle an actor greeting an NPC.", "actor", "npc");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject>("list topics", "[Actor] : List conversation topics available to the actor.");
+            GlobalRules.DeclarePerformRuleBook<MudObject>("list topics", "[Actor] : List conversation topics available to the actor.", "actor");
 
             GlobalRules.Perform<MudObject>("list topics")
                 .When(actor => !(actor is Player) || ((actor as Player).CurrentInterlocutor == null))

@@ -24,8 +24,8 @@ namespace RMUD.Modules._Clothing
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can remove?", "[Actor, Item] : Can the actor remove the item?");
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("removed", "[Actor, Item] : Handle the actor removing the item.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can remove?", "[Actor, Item] : Can the actor remove the item?", "actor", "item");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("removed", "[Actor, Item] : Handle the actor removing the item.", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can remove?")
                 .When((a, b) => !(a is Actor) || !(a as Actor).Contains(b, RelativeLocations.Worn))

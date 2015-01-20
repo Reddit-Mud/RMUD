@@ -38,7 +38,7 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, Link>("can go?", "[Actor, Link] : Can the actor go through that link?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, Link>("can go?", "[Actor, Link] : Can the actor go through that link?", "actor", "link");
 
             GlobalRules.Check<MudObject, Link>("can go?")
                 .When((actor, link) => link == null)
@@ -62,7 +62,7 @@ namespace RMUD.Modules.StandardActions
                 .Do((actor, link) => CheckResult.Allow)
                 .Name("Default can go rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, Link>("go", "[Actor, Link] : Handle the actor going through the link.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, Link>("go", "[Actor, Link] : Handle the actor going through the link.", "actor", "link");
 
             GlobalRules.Perform<MudObject, Link>("go")
                 .Do((actor, link) =>
