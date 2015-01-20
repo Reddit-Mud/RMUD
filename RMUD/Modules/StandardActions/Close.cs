@@ -28,9 +28,9 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can close?", "[Actor, Item] : Determine if the item can be closed.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can close?", "[Actor, Item] : Determine if the item can be closed.", "actor", "item");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("closed", "[Actor, Item] : Handle the item being closed.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("closed", "[Actor, Item] : Handle the item being closed.", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can close?")
                 .When((actor, item) => !GlobalRules.ConsiderValueRule<bool>("openable?", item))

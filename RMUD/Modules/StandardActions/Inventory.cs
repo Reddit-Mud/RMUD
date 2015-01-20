@@ -20,7 +20,7 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclarePerformRuleBook<MudObject>("inventory", "[Actor] : Describes a player's inventory to themselves.");
+            GlobalRules.DeclarePerformRuleBook<MudObject>("inventory", "[Actor] : Describes a player's inventory to themselves.", "actor");
 
             GlobalRules.Perform<MudObject>("inventory")
                 .When(a => !(a is Actor))

@@ -28,7 +28,7 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("unlocked", "[Actor, Item, Key] : Handle the actor unlocking the item with the key.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("unlocked", "[Actor, Item, Key] : Handle the actor unlocking the item with the key.", "actor", "item", "key");
 
             GlobalRules.Perform<MudObject, MudObject, MudObject>("unlocked").Do((actor, target, key) =>
             {

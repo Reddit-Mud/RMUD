@@ -3,17 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD
-{
-    public partial class MudObject
-    {
-        public RuleBuilder<MudObject, MudObject, MudObject, RelativeLocations, PerformResult> Perform_Put()
-        {
-            return Perform<MudObject, MudObject, MudObject, RelativeLocations>("put");
-        }
-    }
-}
-
 namespace RMUD.Modules.StandardActions
 {
 	internal class Put : CommandFactory
@@ -58,8 +47,8 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("can put?", "[Actor, Item, Container, Location] : Determine if the actor can put the item in or on or under the container.");
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("put", "[Actor, Item, Container, Location] : Handle an actor putting the item in or on or under the container.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("can put?", "[Actor, Item, Container, Location] : Determine if the actor can put the item in or on or under the container.", "actor", "item", "container", "relloc");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("put", "[Actor, Item, Container, Location] : Handle an actor putting the item in or on or under the container.", "actor", "item", "container", "relloc");
 
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Last

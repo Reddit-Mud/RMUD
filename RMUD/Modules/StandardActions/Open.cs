@@ -28,11 +28,11 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can open?", "[Actor, Item] : Can the actor open the item?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can open?", "[Actor, Item] : Can the actor open the item?", "actor", "item");
 
-            GlobalRules.DeclareValueRuleBook<MudObject, bool>("openable?", "[Item -> bool] : Is the item openable?");
+            GlobalRules.DeclareValueRuleBook<MudObject, bool>("openable?", "[Item -> bool] : Is the item openable?", "item");
             
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("opened", "[Actor, Item] : Handle the actor opening the item.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("opened", "[Actor, Item] : Handle the actor opening the item.", "actor", "item");
 
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("open?", "[Item -> bool] : Is the item open?");
 

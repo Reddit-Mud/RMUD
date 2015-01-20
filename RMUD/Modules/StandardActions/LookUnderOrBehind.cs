@@ -23,7 +23,7 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, RelativeLocations>("can look relloc?", "[Actor, Item, Relative Location] : Can the actor look in/on/under/behind the item?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, RelativeLocations>("can look relloc?", "[Actor, Item, Relative Location] : Can the actor look in/on/under/behind the item?", "actor", "item", "relloc");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
                 .Do((actor, item, relloc) => MudObject.CheckIsVisibleTo(actor, item))
@@ -51,7 +51,7 @@ namespace RMUD.Modules.StandardActions
                 .Do((actor, item, relloc) => CheckResult.Allow)
                 .Name("Default allow looking relloc rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, RelativeLocations>("look relloc", "[Actor, Item, Relative Location] : Handle the actor looking on/under/in/behind the item.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, RelativeLocations>("look relloc", "[Actor, Item, Relative Location] : Handle the actor looking on/under/in/behind the item.", "actor", "item", "relloc");
 
             GlobalRules.Perform<MudObject, MudObject, RelativeLocations>("look relloc")
                 .Do((actor, item, relloc) =>

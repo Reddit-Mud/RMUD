@@ -38,7 +38,7 @@ namespace RMUD
                 fileTable.Add(new FileTableEntry { Path = s, FirstLine = lineCount });
                 lineCount += 4;
                 source.AppendFormat("namespace {0} {{\n", PathToNamespace(s));
-                var fileSource = PreprocessSourceFile(s, null);
+                var fileSource = PreprocessSourceFile(s);
                 lineCount += fileSource.Count(c => c == '\n');
                 source.Append(fileSource);
                 source.Append("\n}\n\n");

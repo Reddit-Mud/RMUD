@@ -46,7 +46,7 @@ namespace RMUD.Modules.ActorIntroduction
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can introduce?", "[Actor A, Actor B] : Can A introduce B?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can introduce?", "[Actor A, Actor B] : Can A introduce B?", "actor", "itroductee");
 
             GlobalRules.Check<MudObject, MudObject>("can introduce?")
                 .When((a, b) => !(b is Actor))
@@ -70,7 +70,7 @@ namespace RMUD.Modules.ActorIntroduction
                 })
                 .Name("Can't introduce who you don't know rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("introduce", "[Actor A, Actor B] : Handle A introducing B.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("introduce", "[Actor A, Actor B] : Handle A introducing B.", "actor", "introductee");
 
             GlobalRules.Perform<MudObject, MudObject>("introduce")
                 .Do((a, b) =>

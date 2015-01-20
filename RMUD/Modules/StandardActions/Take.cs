@@ -32,8 +32,8 @@ namespace RMUD.Modules.StandardActions
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can take?", "[Actor, Item] : Can the actor take the item?");
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("take", "[Actor, Item] : Handle the actor taking the item.");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can take?", "[Actor, Item] : Can the actor take the item?", "actor", "item");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("take", "[Actor, Item] : Handle the actor taking the item.", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .Do((actor, item) => MudObject.CheckIsVisibleTo(actor, item))
