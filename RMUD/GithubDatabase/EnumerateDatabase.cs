@@ -52,9 +52,8 @@ namespace RMUD
             }
             catch (Exception e)
             {
-                Console.WriteLine("Github filelist discovery failed. Only startup objects present in local database will be loaded.");
-                Console.WriteLine(e.GetType().FullName);
-                Console.WriteLine(e.Message);
+                Core.LogCriticalError(e);
+                Core.LogWarning("Github filelist discovery failed. Only startup objects present in local database will be loaded.");
                 return new List<string>();
             }
         }
