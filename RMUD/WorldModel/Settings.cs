@@ -48,6 +48,8 @@ namespace RMUD
             RankNames.Add(0, "proletarian");
             RankNames.Add(Int32.MinValue, "sentina");
 
+            ChatChannel.ChatChannels.Clear();
+
             ChatChannel.ChatChannels.Add(new ChatChannel("OOC"));
 
             var senate = new ChatChannel("SENATE");

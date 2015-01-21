@@ -26,7 +26,7 @@ namespace RMUD.Modules.Admin
                             MudObject.SendMessage(actor, line);
                     }
                     else
-                        MudObject.SendMessage(actor, "I could not find that log gile.");
+                        MudObject.SendMessage(actor, "I could not find that log file.");
                     return PerformResult.Continue;
                 });
         }
