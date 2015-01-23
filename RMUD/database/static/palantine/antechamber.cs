@@ -33,7 +33,6 @@ public class Jupiter : RMUD.Scenery
         Value emits-light do RMUD.LightingLevel.Bright;
         //Value<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
     }
-
 }
 
 public class Table : RMUD.Container
