@@ -49,8 +49,8 @@ namespace RMUD
         {
             Path = Path.Replace('\\', '/');
             var source = ResolveImports(Path);
-            var processedSource = MudObjectTransformer.Pattern.ProcessFile(source);
-            return processedSource;
+            //var processedSource = MudObjectTransformer.Pattern.ProcessFile(source);
+            return source;
         }
     }
 }

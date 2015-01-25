@@ -52,6 +52,13 @@
     <Compile Include="Akkoteaque\Fishing\RustyHook.cs" />
     <Compile Include="Akkoteaque\Fishing\Hook.cs" />
     <Compile Include="Akkoteaque\Fishing\Rod.cs" />
+    <Compile Include="Wells\Player.cs" />
+    <Compile Include="Wells\Settings.cs" />
+    <Compile Include="Wells\Thrad.cs">
+      <Generator>.mud</Generator>
+      <LastGenOutput>Thrad2.cs</LastGenOutput>
+    </Compile>
+    <Compile Include="Wells\Start.cs" />
     <None Include="Akkoteaque\Jetty.mud">
       <Generator>.mud</Generator>
       <LastGenOutput>Jetty1.cs</LastGenOutput>
