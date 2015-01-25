@@ -16,7 +16,7 @@ namespace RMUD.Modules.Admin
                 .Manual("Dumps all defined global rule books to a file.")
                 .ProceduralRule((match, actor) =>
                 {
-                    MudObjectTransformer.RulePattern.DumpStandardRuleArgumentTypes("ruledefs.txt");
+                    MudObjectTransformer.StandardRules.DumpStandardRuleArgumentTypes("ruledefs.txt");
                     return PerformResult.Continue;
                 });
         }

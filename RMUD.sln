@@ -5,11 +5,6 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMUD", "RMUD\RMUD.csproj", "{A0AF04AB-7049-44B0-9496-7B2297AEE262}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{44E7DE95-9112-4DBB-8831-42246DD97EEB}"
-	ProjectSection(SolutionItems) = preProject
-		RMUD\Ionic.Zip.dll = RMUD\Ionic.Zip.dll
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinglePlayer", "SinglePlayer\SinglePlayer.csproj", "{A8EA5CC5-9C0A-47E3-A68C-9E8367CEF1FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfConsole", "WpfConsole\WpfConsole.csproj", "{F430938B-D039-4B18-9D91-3A1819CA0CD5}"

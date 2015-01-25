@@ -16,19 +16,19 @@ namespace RMUD
 	{	
 		public void DeclarePerformRuleBook(String Name, String Description)
 		{
-		    MudObjectTransformer.RulePattern.AddStandardRuleArgumentTypes(Name);
+		    MudObjectTransformer.StandardRules.AddRule(Name, MudObjectTransformer.RuleBookType.Perform);
 			Rules.FindOrCreateRuleBook<PerformResult>(Name).Description = Description;
 		}
 		
 		public void DeclareValueRuleBook<RT>(String Name, String Description)
         {
-		    MudObjectTransformer.RulePattern.AddStandardRuleArgumentTypes(Name, typeof(RT).Name + " value");
+		    MudObjectTransformer.StandardRules.AddRule(Name, MudObjectTransformer.RuleBookType.Value, typeof(RT).Name + " value");
             Rules.FindOrCreateRuleBook<RT>(Name).Description = Description;
         }
 
 		public void DeclareCheckRuleBook(String Name, String Description)
 		{
-		    MudObjectTransformer.RulePattern.AddStandardRuleArgumentTypes(Name);
+		    MudObjectTransformer.StandardRules.AddRule(Name, MudObjectTransformer.RuleBookType.Check);
 			Rules.FindOrCreateRuleBook<CheckResult>(Name).Description = Description;
 		}
 				
@@ -52,7 +52,7 @@ namespace RMUD
 		{
 			Rules.FindOrCreateRuleBook<PerformResult>(Name, <#TypeOfs(i);#>).Description = Description;
 			if (ArgumentNames.Length == <#=i#>)
-				MudObjectTransformer.RulePattern.AddStandardRuleArgumentTypes(Name, <#for (int a = 0; a < i; ++a){#>typeof(T<#=a#>).Name + " " + ArgumentNames[<#=a#>]<#= (a == (i-1) ? "" : ", ")#><#}#>);
+				MudObjectTransformer.StandardRules.AddRule(Name, MudObjectTransformer.RuleBookType.Perform, <#for (int a = 0; a < i; ++a){#>typeof(T<#=a#>).Name + " " + ArgumentNames[<#=a#>]<#= (a == (i-1) ? "" : ", ")#><#}#>);
 			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 		
@@ -60,7 +60,7 @@ namespace RMUD
         {
             Rules.FindOrCreateRuleBook<RT>(Name, <#TypeOfs(i);#>).Description = Description;
 			if (ArgumentNames.Length == <#=i#>)
-				MudObjectTransformer.RulePattern.AddStandardRuleArgumentTypes(Name, <#for (int a = 0; a < i; ++a){#>typeof(T<#=a#>).Name + " " + ArgumentNames[<#=a#>], <#}#> typeof(RT).Name + " value");
+				MudObjectTransformer.StandardRules.AddRule(Name, MudObjectTransformer.RuleBookType.Value, <#for (int a = 0; a < i; ++a){#>typeof(T<#=a#>).Name + " " + ArgumentNames[<#=a#>], <#}#> typeof(RT).Name + " value");
 			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 
@@ -68,7 +68,7 @@ namespace RMUD
 		{
 			Rules.FindOrCreateRuleBook<CheckResult>(Name, <#TypeOfs(i);#>).Description = Description;
 			if (ArgumentNames.Length == <#=i#>)
-				MudObjectTransformer.RulePattern.AddStandardRuleArgumentTypes(Name, <#for (int a = 0; a < i; ++a){#>typeof(T<#=a#>).Name + " " + ArgumentNames[<#=a#>]<#= (a == (i-1) ? "" : ", ")#><#}#>);
+				MudObjectTransformer.StandardRules.AddRule(Name, MudObjectTransformer.RuleBookType.Check, <#for (int a = 0; a < i; ++a){#>typeof(T<#=a#>).Name + " " + ArgumentNames[<#=a#>]<#= (a == (i-1) ? "" : ", ")#><#}#>);
 			else if (ArgumentNames.Length != 0) throw new InvalidOperationException();
 		}
 				
