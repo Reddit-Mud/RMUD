@@ -34,6 +34,17 @@ namespace RMUD
             GlobalRules.DeclarePerformRuleBook<Actor>("player joined", "[Player] : Considered when a player enters the game.", "actor");
 
             GlobalRules.DeclarePerformRuleBook<Actor>("player left", "[Player] : Considered when a player leaves the game.", "actor");
+
+            GlobalRules.Perform<Actor>("player joined")
+                .Last
+                .Do((actor) =>
+                {
+                    MudObject.Move(actor, MudObject.GetObject(Core.SettingsObject.NewPlayerStartRoom));
+                    Core.EnqueuActorCommand(actor, "look");
+                    return PerformResult.Continue;
+                })
+                .Name("Move to start room and look rule.");
+
         }
     }
 }

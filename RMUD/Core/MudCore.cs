@@ -37,8 +37,6 @@ namespace RMUD
         public static void AddPlayer(Actor Actor)
         {
             Actor.Rank = 500;
-            MudObject.Move(Actor, MudObject.GetObject(Core.SettingsObject.NewPlayerStartRoom));
-            Core.EnqueuActorCommand(Actor, "look");
             GlobalRules.ConsiderPerformRule("player joined", Actor);
         }
 
