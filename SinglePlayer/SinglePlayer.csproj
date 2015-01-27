@@ -55,18 +55,11 @@
     <Compile Include="Wells\Player.cs" />
     <Compile Include="Wells\Settings.cs" />
     <Compile Include="Wells\Thrad.cs">
-      <Generator>.mud</Generator>
       <LastGenOutput>Thrad2.cs</LastGenOutput>
     </Compile>
     <Compile Include="Wells\Start.cs" />
-    <None Include="Akkoteaque\Jetty.mud">
-      <Generator>.mud</Generator>
-      <LastGenOutput>Jetty1.cs</LastGenOutput>
-    </None>
-    <Compile Include="Akkoteaque\Jetty1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Jetty.mud</DependentUpon>
+    <Compile Include="Akkoteaque\Jetty.cs">
+      <LastGenOutput>Jetty2.cs</LastGenOutput>
     </Compile>
     <Compile Include="Minimum\Start.cs" />
     <Compile Include="Minimum\Player.cs" />

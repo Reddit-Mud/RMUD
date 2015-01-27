@@ -43,6 +43,36 @@ namespace RMUD
             return GlobalRules.ConsiderValueRule<String>("printed name", RequestedBy, this, "the");
         }
 
+        #region Properties
+        
+        private Dictionary<String, Object> Properties = null;
+
+        public void SetProperty(String Name, Object Value)
+        {
+            if (Properties == null) Properties = new Dictionary<string, object>();
+            Properties.Upsert(Name, Value);
+        }
+
+        public T GetProperty<T>(String Name)
+        {
+            if (Properties == null) return default(T);
+            return (T)Properties.ValueOrDefault(Name);
+        }
+
+        public bool HasProperty(String Name)
+        {
+            if (Properties == null) return false;
+            return Properties.ContainsKey(Name);
+        }
+
+        public bool HasProperty<T>(String Name)
+        {
+            if (Properties == null) return false;
+            return Properties.ContainsKey(Name) && Properties[Name] is T;
+        }
+        
+        #endregion
+
 		public MudObject()
 		{
 			Nouns = new NounList();

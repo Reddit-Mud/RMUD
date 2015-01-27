@@ -39,9 +39,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MudObjectTransformer">
-      <HintPath>.\MudObjectTransformer.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -70,7 +67,6 @@
     <Compile Include="GithubDatabase\LoadSourceFile.cs" />
     <Compile Include="GithubDatabase\Preprocess.cs" />
     <Compile Include="GithubDatabase\EnumerateDatabase.cs" />
-    <Compile Include="Modules\Admin\DumpRuleDefs.cs" />
     <Compile Include="Modules\Chat\ChatChannel.cs" />
     <Compile Include="Modules\Chat\ChatChannelObjectSource.cs" />
     <Compile Include="Modules\Chat\MudObjectExtensions.cs" />
