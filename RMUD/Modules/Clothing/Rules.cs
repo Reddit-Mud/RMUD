@@ -45,15 +45,20 @@ namespace RMUD.Modules._Clothing
                 })
                 .Name("Can't remove items under other items rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe")
+            GlobalRules.Perform<MudObject, Actor>("describe")
                 .First
-                .When((viewer, item) => item is Actor)
-                .Do((viewer, item) =>
+                .When((viewer, actor) => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", viewer, actor))
+                .Do((viewer, actor) =>
                 {
-                    var actor = item as Actor;
-                    if (viewer is Actor && MudObject.ActorKnowsActor(viewer as Actor, actor))
-                        MudObject.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
+                    MudObject.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
+                    return PerformResult.Continue;
+                })
+                .Name("Report gender of known actors rule.");
 
+            GlobalRules.Perform<MudObject, Actor>("describe")
+                .First
+                .Do((viewer, actor) =>
+                {
                     var wornItems = new List<Clothing>(actor.EnumerateObjects<Clothing>(RelativeLocations.Worn));
                     if (wornItems.Count == 0)
                         MudObject.SendMessage(viewer, "^<the0> is naked.", actor);

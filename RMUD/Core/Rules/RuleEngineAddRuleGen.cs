@@ -27,17 +27,23 @@ namespace RMUD
 				
         public RuleBuilder<PerformResult> Perform(String Name)
         {
-            return Rules.AddRule<PerformResult>(Name);
+			var rule = new Rule<PerformResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<PerformResult>(Name).AddRule(rule); });
+			return new RuleBuilder<PerformResult> { Rule = rule };
         }
 		
         public RuleBuilder<RT> Value<RT>(String Name)
         {
-            return Rules.AddRule<RT>(Name);
+			var rule = new Rule<RT>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<RT>(Name).AddRule(rule); });
+			return new RuleBuilder<RT> { Rule = rule };
         }
 
 		public RuleBuilder<CheckResult> Check(String Name)
         {
-            return Rules.AddRule<CheckResult>(Name);
+			var rule = new Rule<CheckResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<CheckResult>(Name).AddRule(rule); });
+			return new RuleBuilder<CheckResult> { Rule = rule };
         }
 
 		public void DeclarePerformRuleBook<T0>(String Name, String Description, params String[] ArgumentNames)
@@ -66,17 +72,23 @@ namespace RMUD
 				
         public RuleBuilder<T0, PerformResult> Perform<T0>(String Name)
         {
-            return Rules.AddRule<T0, PerformResult>(Name);
+			var rule = new Rule<PerformResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<PerformResult>(Name, typeof(T0)).AddRule(rule); });
+			return new RuleBuilder<T0, PerformResult> { Rule = rule };
         }
 		
         public RuleBuilder<T0, RT> Value<T0, RT>(String Name)
         {
-            return Rules.AddRule<T0, RT>(Name);
+			var rule = new Rule<RT>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0)).AddRule(rule); });
+			return new RuleBuilder<T0, RT> { Rule = rule };
         }
 
 		public RuleBuilder<T0, CheckResult> Check<T0>(String Name)
         {
-            return Rules.AddRule<T0, CheckResult>(Name);
+			var rule = new Rule<CheckResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0)).AddRule(rule); });
+			return new RuleBuilder<T0, CheckResult> { Rule = rule };
         }
 
 		public void DeclarePerformRuleBook<T0, T1>(String Name, String Description, params String[] ArgumentNames)
@@ -105,17 +117,23 @@ namespace RMUD
 				
         public RuleBuilder<T0, T1, PerformResult> Perform<T0, T1>(String Name)
         {
-            return Rules.AddRule<T0, T1, PerformResult>(Name);
+			var rule = new Rule<PerformResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<PerformResult>(Name, typeof(T0), typeof(T1)).AddRule(rule); });
+			return new RuleBuilder<T0, T1, PerformResult> { Rule = rule };
         }
 		
         public RuleBuilder<T0, T1, RT> Value<T0, T1, RT>(String Name)
         {
-            return Rules.AddRule<T0, T1, RT>(Name);
+			var rule = new Rule<RT>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1)).AddRule(rule); });
+			return new RuleBuilder<T0, T1, RT> { Rule = rule };
         }
 
 		public RuleBuilder<T0, T1, CheckResult> Check<T0, T1>(String Name)
         {
-            return Rules.AddRule<T0, T1, CheckResult>(Name);
+			var rule = new Rule<CheckResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0), typeof(T1)).AddRule(rule); });
+			return new RuleBuilder<T0, T1, CheckResult> { Rule = rule };
         }
 
 		public void DeclarePerformRuleBook<T0, T1, T2>(String Name, String Description, params String[] ArgumentNames)
@@ -144,17 +162,23 @@ namespace RMUD
 				
         public RuleBuilder<T0, T1, T2, PerformResult> Perform<T0, T1, T2>(String Name)
         {
-            return Rules.AddRule<T0, T1, T2, PerformResult>(Name);
+			var rule = new Rule<PerformResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<PerformResult>(Name, typeof(T0), typeof(T1), typeof(T2)).AddRule(rule); });
+			return new RuleBuilder<T0, T1, T2, PerformResult> { Rule = rule };
         }
 		
         public RuleBuilder<T0, T1, T2, RT> Value<T0, T1, T2, RT>(String Name)
         {
-            return Rules.AddRule<T0, T1, T2, RT>(Name);
+			var rule = new Rule<RT>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2)).AddRule(rule); });
+			return new RuleBuilder<T0, T1, T2, RT> { Rule = rule };
         }
 
 		public RuleBuilder<T0, T1, T2, CheckResult> Check<T0, T1, T2>(String Name)
         {
-            return Rules.AddRule<T0, T1, T2, CheckResult>(Name);
+			var rule = new Rule<CheckResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0), typeof(T1), typeof(T2)).AddRule(rule); });
+			return new RuleBuilder<T0, T1, T2, CheckResult> { Rule = rule };
         }
 
 		public void DeclarePerformRuleBook<T0, T1, T2, T3>(String Name, String Description, params String[] ArgumentNames)
@@ -183,17 +207,23 @@ namespace RMUD
 				
         public RuleBuilder<T0, T1, T2, T3, PerformResult> Perform<T0, T1, T2, T3>(String Name)
         {
-            return Rules.AddRule<T0, T1, T2, T3, PerformResult>(Name);
+			var rule = new Rule<PerformResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<PerformResult>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).AddRule(rule); });
+			return new RuleBuilder<T0, T1, T2, T3, PerformResult> { Rule = rule };
         }
 		
         public RuleBuilder<T0, T1, T2, T3, RT> Value<T0, T1, T2, T3, RT>(String Name)
         {
-            return Rules.AddRule<T0, T1, T2, T3, RT>(Name);
+			var rule = new Rule<RT>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<RT>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).AddRule(rule); });
+			return new RuleBuilder<T0, T1, T2, T3, RT> { Rule = rule };
         }
 
 		public RuleBuilder<T0, T1, T2, T3, CheckResult> Check<T0, T1, T2, T3>(String Name)
         {
-            return Rules.AddRule<T0, T1, T2, T3, CheckResult>(Name);
+			var rule = new Rule<CheckResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<CheckResult>(Name, typeof(T0), typeof(T1), typeof(T2), typeof(T3)).AddRule(rule); });
+			return new RuleBuilder<T0, T1, T2, T3, CheckResult> { Rule = rule };
         }
 
 	}

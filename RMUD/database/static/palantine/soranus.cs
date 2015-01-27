@@ -5,7 +5,7 @@
         Response("who he is", (actor, npc, topic) =>
             {
                 SendLocaleMessage(actor, "\"I am Soranus,\" <the0> says.", this);
-                Introduce(this);
+                GlobalRules.ConsiderPerformRule("introduce self", this);
                 return RMUD.PerformResult.Stop;
             });
 
@@ -33,7 +33,7 @@
 
         Short = "Soranus";
 
-        Nouns.Add("soranus", a => ActorKnowsActor(a, this));
+        Nouns.Add("soranus", a => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", a, this));
 
         Wear("toga", RMUD.ClothingLayer.Outer, RMUD.ClothingBodyPart.Torso);
         Wear(GetObject("palantine/entrails"));

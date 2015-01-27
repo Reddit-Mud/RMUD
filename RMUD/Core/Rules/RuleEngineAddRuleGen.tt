@@ -34,17 +34,23 @@ namespace RMUD
 				
         public RuleBuilder<PerformResult> Perform(String Name)
         {
-            return Rules.AddRule<PerformResult>(Name);
+			var rule = new Rule<PerformResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<PerformResult>(Name).AddRule(rule); });
+			return new RuleBuilder<PerformResult> { Rule = rule };
         }
 		
         public RuleBuilder<RT> Value<RT>(String Name)
         {
-            return Rules.AddRule<RT>(Name);
+			var rule = new Rule<RT>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<RT>(Name).AddRule(rule); });
+			return new RuleBuilder<RT> { Rule = rule };
         }
 
 		public RuleBuilder<CheckResult> Check(String Name)
         {
-            return Rules.AddRule<CheckResult>(Name);
+			var rule = new Rule<CheckResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<CheckResult>(Name).AddRule(rule); });
+			return new RuleBuilder<CheckResult> { Rule = rule };
         }
 
 <#for (var i = 1; i < ac; ++i){#>
@@ -74,17 +80,23 @@ namespace RMUD
 				
         public RuleBuilder<<#Args(i);#>, PerformResult> Perform<<#Args(i);#>>(String Name)
         {
-            return Rules.AddRule<<#Args(i);#>, PerformResult>(Name);
+			var rule = new Rule<PerformResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<PerformResult>(Name, <#TypeOfs(i);#>).AddRule(rule); });
+			return new RuleBuilder<<#Args(i);#>, PerformResult> { Rule = rule };
         }
 		
         public RuleBuilder<<#Args(i);#>, RT> Value<<#Args(i);#>, RT>(String Name)
         {
-            return Rules.AddRule<<#Args(i);#>, RT>(Name);
+			var rule = new Rule<RT>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<RT>(Name, <#TypeOfs(i);#>).AddRule(rule); });
+			return new RuleBuilder<<#Args(i);#>, RT> { Rule = rule };
         }
 
 		public RuleBuilder<<#Args(i);#>, CheckResult> Check<<#Args(i);#>>(String Name)
         {
-            return Rules.AddRule<<#Args(i);#>, CheckResult>(Name);
+			var rule = new Rule<CheckResult>();
+			NewRule(() => { Rules.FindOrCreateRuleBook<CheckResult>(Name, <#TypeOfs(i);#>).AddRule(rule); });
+			return new RuleBuilder<<#Args(i);#>, CheckResult> { Rule = rule };
         }
 
 <#}#>

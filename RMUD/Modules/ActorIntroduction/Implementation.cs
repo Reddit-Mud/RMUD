@@ -18,13 +18,7 @@ namespace RMUD.Modules.ActorIntroduction
                         KeyWord("SELF"))))
                 .Manual("This is a specialized version of the commad to handle 'introduce me'.")
                 .BeforeActing()
-                .ProceduralRule((match, actor) =>
-                {
-                    MudObject.Introduce(actor);
-                    MudObject.SendExternalMessage(actor, "^<the0> introduces themselves.", actor);
-                    MudObject.SendMessage(actor, "You introduce yourself.");
-                    return PerformResult.Continue;
-                }, "Introduce yourself rule.")
+                .Perform("introduce self", "ACTOR")
                 .AfterActing();
 
 
@@ -62,7 +56,7 @@ namespace RMUD.Modules.ActorIntroduction
                 .Name("Introducee must be visible rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can introduce?")
-                .When((a, b) => !MudObject.ActorKnowsActor(a as Actor, b as Actor))
+                .When((a, b) => !GlobalRules.ConsiderValueRule<bool>("actor knows actor?", a, b))
                 .Do((a, b) =>
                 {
                     MudObject.SendMessage(a, "How can you introduce <the0> when you don't know them yourself?", b);
@@ -70,20 +64,47 @@ namespace RMUD.Modules.ActorIntroduction
                 })
                 .Name("Can't introduce who you don't know rule.");
 
+            #region Perform and report rules
+
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("introduce", "[Actor A, Actor B] : Handle A introducing B.", "actor", "introductee");
 
             GlobalRules.Perform<MudObject, MudObject>("introduce")
-                .Do((a, b) =>
+                .Do((actor, introductee) =>
                 {
-                    MudObject.Introduce(b as Actor);
-                    MudObject.SendExternalMessage(a, "^<the0> introduces <the1>.", a, b);
-                    MudObject.SendMessage(a, "You introduce <the0>.", b);
+                    var locale = MudObject.FindLocale(introductee);
+                    if (locale != null)
+                        foreach (var player in MudObject.EnumerateObjectTree(locale).Where(o => o is Player).Select(o => o as Player))
+                            GlobalRules.ConsiderPerformRule("introduce to", introductee, player);
+
+                    MudObject.SendExternalMessage(actor, "^<the0> introduces <the1>.", actor, introductee);
+                    MudObject.SendMessage(actor, "You introduce <the0>.", introductee);
                     return PerformResult.Continue;
                 })
                 .Name("Report introduction rule.");
 
-            GlobalRules.Value<MudObject, MudObject, String, String>("printed name")
-                .When((viewer, thing, article) => viewer is Actor && thing is Actor && MudObject.ActorKnowsActor(viewer as Actor, thing as Actor))
+            GlobalRules.DeclarePerformRuleBook<Actor>("introduce self", "[Introductee] : Introduce the introductee");
+
+            GlobalRules.Perform<Actor>("introduce self")
+                .Do((introductee) =>
+                {
+                    var locale = MudObject.FindLocale(introductee);
+                    if (locale != null)
+                        foreach (var player in MudObject.EnumerateObjectTree(locale).Where(o => o is Player).Select(o => o as Player))
+                            GlobalRules.ConsiderPerformRule("introduce to", introductee, player);
+
+                    MudObject.SendExternalMessage(introductee, "^<the0> introduces themselves.", introductee);
+                    MudObject.SendMessage(introductee, "You introduce yourself.");
+
+                    return PerformResult.Continue;
+                })
+                .Name("Introduce an actor to everyone present rule.");
+
+            #endregion
+
+            #region Printed name rules
+
+            GlobalRules.Value<Player, Actor, String, String>("printed name")
+                .When((viewer, thing, article) => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", viewer, thing))
                 .Do((viewer, actor, article) => actor.Short)
                 .Name("Name of introduced actor.");
 
@@ -96,6 +117,32 @@ namespace RMUD.Modules.ActorIntroduction
                 .When((viewer, thing, article) => thing is Actor && (thing as Actor).Gender == Gender.Female)
                 .Do((viewer, actor, article) => article + " woman")
                 .Name("Default name for unintroduced female actor.");
+
+            #endregion
+
+            #region Knowledge management rules
+
+            GlobalRules.DeclareValueRuleBook<Actor, Actor, bool>("actor knows actor?", "[Player, Whom] : Does the player know the actor?");
+
+            GlobalRules.Value<Player, Actor, bool>("actor knows actor?")
+                .Do((player, whom) => player.Recall<bool>(whom, "knows"))
+                .Name("Use player memory to recall actors rule.");
+
+            GlobalRules.Value<Actor, Actor, bool>("actor knows actor?")
+                .Do((player, whom) => false)
+                .Name("Actors that aren't players don't know anybody rule.");
+
+            GlobalRules.DeclarePerformRuleBook<Actor, Actor>("introduce to", "[Introductee, ToWhom] : Introduce the introductee to someone");
+
+            GlobalRules.Perform<Actor, Player>("introduce to")
+                .Do((introductee, player) =>
+                {
+                    player.Remember(introductee, "knows", true);
+                    return PerformResult.Continue;
+                })
+                .Name("Players remember actors rule.");
+                        
+            #endregion
         }
     }
 }

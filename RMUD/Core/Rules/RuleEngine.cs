@@ -9,10 +9,25 @@ namespace RMUD
     {
         internal RuleSet Rules;
         internal Actor LogTo = null;
+        internal bool QueueNewRules = true;
+        internal List<Action> NewRuleQueue = new List<Action>();
 
         public RuleEngine()
         {
             Rules = new RuleSet(this);
+        }
+
+        public void FinalizeNewRules()
+        {
+            QueueNewRules = false;
+            foreach (var act in NewRuleQueue) act();
+            NewRuleQueue.Clear();
+        }
+
+        private void NewRule(Action act)
+        {
+            if (QueueNewRules) NewRuleQueue.Add(act);
+            else act();
         }
 
         internal void LogRules(Actor To) { LogTo = To; }

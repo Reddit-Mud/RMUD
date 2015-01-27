@@ -86,7 +86,7 @@
     <Compile Include="Modules\Conversation\NPCExtension.cs" />
     <Compile Include="Modules\Conversation\TopicObjectSource.cs" />
     <Compile Include="Modules\Silly\Silly.cs" />
-    <Compile Include="Modules\ActorIntroduction\Command.cs" />
+    <Compile Include="Modules\ActorIntroduction\Implementation.cs" />
     <Compile Include="Modules\Admin\Rules.cs" />
     <Compile Include="Modules\Clothing\Remove.cs" />
     <Compile Include="Core\ManPages.cs" />
@@ -99,7 +99,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Modules\Clothing\Clothing.cs" />
-    <Compile Include="Modules\ActorIntroduction\MudObjectExtensions.cs" />
     <Compile Include="Modules\Admin\ReadLog.cs" />
     <Compile Include="Modules\Quests\AcceptQuest.cs" />
     <Compile Include="Modules\Clothing\Wear.cs" />

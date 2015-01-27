@@ -10,13 +10,13 @@ namespace Space
 	{
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.Perform<Actor>("player joined")
+            GlobalRules.Perform<Player>("player joined")
                 .Do((actor) =>
                 {
                     SendMessage(actor, "Sal? Sal? Can you hear me?");
                     (actor as Player).CurrentInterlocutor = GetObject("Dan") as NPC;
                     Core.EnqueuActorCommand(actor, "topics");
-                    return PerformResult.Continue;
+                    return PerformResult.Stop;
                 });
         }
 

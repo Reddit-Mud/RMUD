@@ -71,6 +71,7 @@ namespace RMUD
                 LoadStartupAssembly(new StartUpAssembly(Assembly.GetExecutingAssembly(), "RMUD"));
                 foreach (var startupAssembly in Assemblies)
                     LoadStartupAssembly(startupAssembly);
+                GlobalRules.FinalizeNewRules();
 
                 PersistentValueSerializer.AddGlobalSerializer(new BitArraySerializer());
 

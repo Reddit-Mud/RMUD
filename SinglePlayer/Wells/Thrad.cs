@@ -7,27 +7,27 @@ namespace Wells
     {
         public override void Initialize()
         {
-            Nouns.Add("THRAD", a => ActorKnowsActor(a, this));
+            Nouns.Add("THRAD", a => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", a, this));
             Nouns.Add("KNIGHT");
 
             Short = "Thrad";
 
-            Perform<MudObject, MudObject>("describe in locale")
-                .When((actor, item) => item == this && !ActorKnowsActor(actor as Actor, item as Actor))
+            Perform<MudObject, Thrad>("describe in locale")
+                .When((actor, thrad) => !GlobalRules.ConsiderValueRule<bool>("actor knows actor?", actor, thrad))
                 .Do((actor, item) =>
                 {
                     SendMessage(actor, "A massive knight stands in the middle of the little room.");
                     return PerformResult.Continue;
                 });
 
-            Value<MudObject, MudObject, String, String>("printed name")
-                .When((viewer, thing, article) => thing == this && !ActorKnowsActor(viewer as Actor, thing as Actor))
+            Value<Actor, Thrad, String, String>("printed name")
+                .When((viewer, thrad, article) => !GlobalRules.ConsiderValueRule<bool>("actor knows actor?", viewer, thrad))
                 .Do((viewer, actor, article) => article + " knight");
 
             Response("who he is", (actor, npc, topic) =>
                 {
                     SendMessage(actor, "<the0> peers at you from within his incredible helmet. \"Thrad\", he says.", this);
-                    Introduce(this);
+                    GlobalRules.ConsiderPerformRule("introduce self", this);
                     return PerformResult.Stop;
                 });
 
