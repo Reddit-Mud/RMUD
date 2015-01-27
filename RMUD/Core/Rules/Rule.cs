@@ -19,6 +19,12 @@ namespace RMUD
         public String ID;
         public RuleDelegateWrapper<bool> WhenClause;
         public RulePriority Priority = RulePriority.Neutral;
+
+        public bool CheckWhenClause(Object[] Arguments)
+        {
+            if (WhenClause == null) return true;
+            return WhenClause.Invoke(Arguments);
+        }
     }
 
     public class Rule<RT> : Rule

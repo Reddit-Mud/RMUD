@@ -61,6 +61,14 @@ namespace RMUD
                 if (rule.ID == ID) rule.Priority = RulePriority.Delete;
             NeedsSort = true;
         }
+
+        protected void LogRule(Rule Rule)
+        {
+            if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
+            {
+                Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(Rule.DescriptiveName) ? "NONAME" : Rule.DescriptiveName) + "\r\n");
+            }
+        }
     }
 
     public class CheckRuleBook : RuleBook
@@ -78,13 +86,9 @@ namespace RMUD
             foreach (var _rule in Rules)
             {
                 var rule = _rule as Rule<CheckResult>;
-                if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
+                if (rule.AreArgumentsCompatible(Args) && rule.CheckWhenClause(Args))
                 {
-                    if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
-                    {
-                        Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
-                    }
-
+                    LogRule(rule);
                     var r = rule.BodyClause == null ? CheckResult.Continue : rule.BodyClause.Invoke(Args);
                     if (r != CheckResult.Continue) return r;
                 }
@@ -112,18 +116,11 @@ namespace RMUD
             foreach (var _rule in Rules)
             {
                 var rule = _rule as Rule<PerformResult>;
-                if (rule.AreArgumentsCompatible(Args))
+                if (rule.AreArgumentsCompatible(Args) && rule.CheckWhenClause(Args))
                 {
-                    if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
-                    {
-                        if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
-                        {
-                            Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
-                        }
-
-                        var r = rule.BodyClause == null ? PerformResult.Continue : rule.BodyClause.Invoke(Args);
-                        if (r != PerformResult.Continue) return r;
-                    }
+                    LogRule(rule);
+                    var r = rule.BodyClause == null ? PerformResult.Continue : rule.BodyClause.Invoke(Args);
+                    if (r != PerformResult.Continue) return r;
                 }
             }
             return PerformResult.Continue;
@@ -148,17 +145,16 @@ namespace RMUD
             SortRules();
 
             ValueReturned = false;
-            foreach (var rule in Rules)
-                if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
+            foreach (var _rule in Rules)
+            {
+                var rule = _rule as Rule<RT>;
+                if (rule.AreArgumentsCompatible(Args) && rule.CheckWhenClause(Args))
                 {
-                    if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
-                    {
-                        Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
-                    }
-
+                    LogRule(rule);
                     ValueReturned = true;
-                    return (rule as Rule<RT>).BodyClause.Invoke(Args);
+                    return rule.BodyClause.Invoke(Args);
                 }
+            }
             return default(RT);
         }
 
