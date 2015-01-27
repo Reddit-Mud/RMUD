@@ -39,7 +39,7 @@ namespace WpfConsole
                 MessageBox.Show(e.Message);
             }
 
-            AfterNavigating = () => Driver.Start(typeof(CloakOfDarkness.Player).Assembly, "Wells", 
+            AfterNavigating = () => Driver.Start(typeof(CloakOfDarkness.Player).Assembly, "Space", 
                 s => 
                     Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, PrepareString(s)));
 

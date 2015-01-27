@@ -16,6 +16,11 @@ namespace RMUD
 			return new RuleDelegateWrapperImpl<TR> { Delegate = Delegate };
 		}
 
+		public virtual bool AreArgumentsCompatible(Object[] Arguments)
+		{
+			throw new NotImplementedException();
+		}
+
 		
 		public static RuleDelegateWrapper<TR> MakeWrapper<T0>(Func<T0, TR> Delegate)
 		{
@@ -46,6 +51,11 @@ namespace RMUD
 		{
 			return (TR)Delegate.DynamicInvoke(Arguments);
 		}
+
+		public override bool AreArgumentsCompatible(Object[] Arguments)
+		{
+			return Arguments.Length == 0;
+		}
 	}
 
 	
@@ -57,6 +67,15 @@ namespace RMUD
 		{
 			return (TR)Delegate.DynamicInvoke(Arguments);
 		}
+
+		public override bool AreArgumentsCompatible(Object[] Arguments)
+		{
+			if (Arguments.Length != 1) return false;
+
+			if (Arguments[0] != null && !typeof(T0).IsAssignableFrom(Arguments[0].GetType())) return false;
+
+			return true;
+		}
 	}
 	
 	public class RuleDelegateWrapperImpl<T0, T1, TR> : RuleDelegateWrapper<TR>
@@ -66,6 +85,16 @@ namespace RMUD
 		public override TR Invoke(Object[] Arguments)
 		{
 			return (TR)Delegate.DynamicInvoke(Arguments);
+		}
+
+		public override bool AreArgumentsCompatible(Object[] Arguments)
+		{
+			if (Arguments.Length != 2) return false;
+
+			if (Arguments[0] != null && !typeof(T0).IsAssignableFrom(Arguments[0].GetType())) return false;
+			if (Arguments[1] != null && !typeof(T1).IsAssignableFrom(Arguments[1].GetType())) return false;
+
+			return true;
 		}
 	}
 	
@@ -77,6 +106,17 @@ namespace RMUD
 		{
 			return (TR)Delegate.DynamicInvoke(Arguments);
 		}
+
+		public override bool AreArgumentsCompatible(Object[] Arguments)
+		{
+			if (Arguments.Length != 3) return false;
+
+			if (Arguments[0] != null && !typeof(T0).IsAssignableFrom(Arguments[0].GetType())) return false;
+			if (Arguments[1] != null && !typeof(T1).IsAssignableFrom(Arguments[1].GetType())) return false;
+			if (Arguments[2] != null && !typeof(T2).IsAssignableFrom(Arguments[2].GetType())) return false;
+
+			return true;
+		}
 	}
 	
 	public class RuleDelegateWrapperImpl<T0, T1, T2, T3, TR> : RuleDelegateWrapper<TR>
@@ -86,6 +126,18 @@ namespace RMUD
 		public override TR Invoke(Object[] Arguments)
 		{
 			return (TR)Delegate.DynamicInvoke(Arguments);
+		}
+
+		public override bool AreArgumentsCompatible(Object[] Arguments)
+		{
+			if (Arguments.Length != 4) return false;
+
+			if (Arguments[0] != null && !typeof(T0).IsAssignableFrom(Arguments[0].GetType())) return false;
+			if (Arguments[1] != null && !typeof(T1).IsAssignableFrom(Arguments[1].GetType())) return false;
+			if (Arguments[2] != null && !typeof(T2).IsAssignableFrom(Arguments[2].GetType())) return false;
+			if (Arguments[3] != null && !typeof(T3).IsAssignableFrom(Arguments[3].GetType())) return false;
+
+			return true;
 		}
 	}
 

@@ -24,5 +24,11 @@ namespace RMUD
     public class Rule<RT> : Rule
     {
         public RuleDelegateWrapper<RT> BodyClause;
+        
+        public bool AreArgumentsCompatible(Object[] Arguments)
+        {
+            if (BodyClause == null) return false;
+            return BodyClause.AreArgumentsCompatible(Arguments);
+        }
     }
 }

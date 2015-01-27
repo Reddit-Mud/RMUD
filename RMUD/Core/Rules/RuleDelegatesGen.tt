@@ -23,6 +23,11 @@ namespace RMUD
 			return new RuleDelegateWrapperImpl<TR> { Delegate = Delegate };
 		}
 
+		public virtual bool AreArgumentsCompatible(Object[] Arguments)
+		{
+			throw new NotImplementedException();
+		}
+
 <#for (var i = 1; i < 5; ++i){#>
 		
 		public static RuleDelegateWrapper<TR> MakeWrapper<<#Args(i);#>>(Func<<#Args(i);#>, TR> Delegate)
@@ -40,6 +45,11 @@ namespace RMUD
 		{
 			return (TR)Delegate.DynamicInvoke(Arguments);
 		}
+
+		public override bool AreArgumentsCompatible(Object[] Arguments)
+		{
+			return Arguments.Length == 0;
+		}
 	}
 
 <#for (var i = 1; i < 5; ++i){#>
@@ -51,6 +61,17 @@ namespace RMUD
 		public override TR Invoke(Object[] Arguments)
 		{
 			return (TR)Delegate.DynamicInvoke(Arguments);
+		}
+
+		public override bool AreArgumentsCompatible(Object[] Arguments)
+		{
+			if (Arguments.Length != <#=i#>) return false;
+
+<#for (var x = 0; x < i; ++x){#>
+			if (Arguments[<#=x#>] != null && !typeof(T<#=x#>).IsAssignableFrom(Arguments[<#=x#>].GetType())) return false;
+<#}#>
+
+			return true;
 		}
 	}
 <#}#>

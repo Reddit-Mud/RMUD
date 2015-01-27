@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinglePlayer", "SinglePlaye
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfConsole", "WpfConsole\WpfConsole.csproj", "{F430938B-D039-4B18-9D91-3A1819CA0CD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngineTestHarness", "RulesEngineTestHarness\RulesEngineTestHarness.csproj", "{1D09692B-8B04-4632-BDB1-EEB3883E492B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F430938B-D039-4B18-9D91-3A1819CA0CD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F430938B-D039-4B18-9D91-3A1819CA0CD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F430938B-D039-4B18-9D91-3A1819CA0CD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D09692B-8B04-4632-BDB1-EEB3883E492B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D09692B-8B04-4632-BDB1-EEB3883E492B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D09692B-8B04-4632-BDB1-EEB3883E492B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D09692B-8B04-4632-BDB1-EEB3883E492B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -112,15 +112,18 @@ namespace RMUD
             foreach (var _rule in Rules)
             {
                 var rule = _rule as Rule<PerformResult>;
-                if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
+                if (rule.AreArgumentsCompatible(Args))
                 {
-                    if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
+                    if (rule.WhenClause == null || rule.WhenClause.Invoke(Args))
                     {
-                        Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
-                    }
+                        if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
+                        {
+                            Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(rule.DescriptiveName) ? "NONAME" : rule.DescriptiveName) + "\r\n");
+                        }
 
-                    var r = rule.BodyClause == null ? PerformResult.Continue : rule.BodyClause.Invoke(Args);
-                    if (r != PerformResult.Continue) return r;
+                        var r = rule.BodyClause == null ? PerformResult.Continue : rule.BodyClause.Invoke(Args);
+                        if (r != PerformResult.Continue) return r;
+                    }
                 }
             }
             return PerformResult.Continue;
