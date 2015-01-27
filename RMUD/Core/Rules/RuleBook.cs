@@ -5,6 +5,27 @@ using System.Text;
 
 namespace RMUD
 {
+    public class RuleComparer : System.Collections.Generic.IComparer<Rule>
+    {
+        public int Compare(Rule x, Rule y)
+        {
+            var typesA = x.GetArgumentTypes();
+            var typesB = y.GetArgumentTypes();
+            if (typesA.Length != typesB.Length) return 0;
+
+            for (int i = 0; i < typesA.Length; ++i)
+            {
+                if (typesA[i] != typesB[i])
+                {
+                    if (typesA[i].IsSubclassOf(typesB[i])) return -1;
+                    else if (typesB[i].IsSubclassOf(typesA[i])) return 1;
+                }
+            }
+
+            return 0;
+        }
+    }
+
     public class RuleBook
     {
         public String Name;
@@ -50,7 +71,10 @@ namespace RMUD
 
             Rules.Clear();
             foreach (var sublist in newList)
+            {
+                sublist.Sort(new RuleComparer());
                 Rules.AddRange(sublist);
+            }
 
             NeedsSort = false;
         }

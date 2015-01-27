@@ -25,6 +25,11 @@ namespace RMUD
             if (WhenClause == null) return true;
             return WhenClause.Invoke(Arguments);
         }
+
+        public virtual Type[] GetArgumentTypes()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class Rule<RT> : Rule
@@ -35,6 +40,13 @@ namespace RMUD
         {
             if (BodyClause == null) return false;
             return BodyClause.AreArgumentsCompatible(Arguments);
+        }
+
+        public override Type[] GetArgumentTypes()
+        {
+            if (BodyClause == null) return new Type[]{};
+            var genericTypes = BodyClause.GetType().GetGenericArguments();
+            return genericTypes.Take(genericTypes.Length - 1).ToArray();
         }
     }
 }
