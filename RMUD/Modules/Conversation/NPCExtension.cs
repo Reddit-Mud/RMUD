@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD
+namespace RMUD.Modules.Conversation
 {
     public class Topic : MudObject
     {
@@ -14,23 +14,28 @@ namespace RMUD
         }
     }
 
-    public partial class NPC : Actor
+    public static class ResponseExtensionMethods
     {
-        public List<MudObject> ConversationTopics = new List<MudObject>();
-
-        public Topic Response(String Topic, String StringResponse)
+        public static Topic Response(this MudObject To, String Topic, String StringResponse)
         {
-            return Response(Topic, (actor, npc, topic) =>
+            return Response(To, Topic, (actor, npc, topic) =>
                 {
                     MudObject.SendMessage(actor, StringResponse, npc);
                     return PerformResult.Stop;
                 });
         }
 
-        public Topic Response(String Topic, Func<MudObject, MudObject, MudObject, PerformResult> FuncResponse)
+        public static Topic Response(this MudObject To, String Topic, Func<MudObject, MudObject, MudObject, PerformResult> FuncResponse)
         {
+            var topics = To.GetProperty<List<MudObject>>("conversation-topics");
+            if (topics == null)
+            {
+                topics = new List<MudObject>();
+                To.SetProperty("conversation-topics", topics);
+            }
+
             var response = new Topic();
-            ConversationTopics.Add(response);
+            topics.Add(response);
             response.SimpleName(Topic);
             response.Perform<MudObject, MudObject, MudObject>("topic response").Do(FuncResponse);
             return response;

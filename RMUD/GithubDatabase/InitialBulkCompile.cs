@@ -17,7 +17,7 @@ namespace RMUD
 
             var fileTable = new List<FileTableEntry>();
             var source = new StringBuilder();
-            source.Append(UsingDeclarations + "namespace database {\n");
+            source.Append(GetFileHeader() + "namespace database {\n");
             int lineCount = 5;
 
             List<String> fileList = null;

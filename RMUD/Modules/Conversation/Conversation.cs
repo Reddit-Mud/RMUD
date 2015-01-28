@@ -28,7 +28,7 @@ namespace RMUD.Modules.Conversation
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor is Player)
-                        (actor as Player).CurrentInterlocutor = match["LOCUTOR"] as NPC;
+                        actor.SetProperty("interlocutor", match["LOCUTOR"] as NPC);
                     return PerformResult.Continue;
                 }, "Set current interlocutor rule.")
                 .Perform("list topics", "ACTOR");
@@ -43,7 +43,7 @@ namespace RMUD.Modules.Conversation
                             Sequence(
                                 Object("NEW-LOCUTOR", InScope, (actor, thing) =>
                                 {
-                                    if (actor is Player && System.Object.ReferenceEquals(thing, (actor as Player).CurrentInterlocutor)) return MatchPreference.VeryLikely;
+                                    if (actor is Player && System.Object.ReferenceEquals(thing, actor.GetProperty<NPC>("interlocutor"))) return MatchPreference.VeryLikely;
                                     if (thing is NPC) return MatchPreference.Likely;
                                     return MatchPreference.VeryUnlikely;
                                 }),
@@ -60,18 +60,18 @@ namespace RMUD.Modules.Conversation
                     {
                         var newLocutor = match["NEW-LOCUTOR"] as MudObject;
                         if (GlobalRules.ConsiderCheckRule("can converse?", actor, newLocutor) == CheckResult.Disallow) return PerformResult.Stop;
-                        if (!System.Object.ReferenceEquals(newLocutor, (actor as Player).CurrentInterlocutor))
+                        if (!System.Object.ReferenceEquals(newLocutor, actor.GetProperty<NPC>("interlocutor")))
                         {
                             GlobalRules.ConsiderPerformRule("greet", actor, newLocutor);
-                            (actor as Player).CurrentInterlocutor = newLocutor as NPC;
+                            actor.SetProperty("interlocutor", newLocutor as NPC);
                         }
                     }
-                    match.Upsert("LOCUTOR", (actor as Player).CurrentInterlocutor);
+                    match.Upsert("LOCUTOR", actor.GetProperty<NPC>("interlocutor"));
                     return PerformResult.Continue;
                 }, "Implicitly greet new locutors rule.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if ((actor as Player).CurrentInterlocutor == null)
+                    if (actor.GetProperty<NPC>("interlocutor") == null)
                     {
                         MudObject.SendMessage(actor, "You aren't talking to anyone.");
                         return PerformResult.Stop;
@@ -115,7 +115,7 @@ namespace RMUD.Modules.Conversation
             GlobalRules.DeclarePerformRuleBook<MudObject>("list topics", "[Actor] : List conversation topics available to the actor.", "actor");
 
             GlobalRules.Perform<MudObject>("list topics")
-                .When(actor => !(actor is Player) || ((actor as Player).CurrentInterlocutor == null))
+                .When(actor => !(actor is Player) || actor.GetProperty<NPC>("interlocutor") == null)
                 .Do(actor =>
                 {
                     MudObject.SendMessage(actor, "You aren't talking to anyone.");
@@ -127,10 +127,12 @@ namespace RMUD.Modules.Conversation
                 .Do(actor =>
                 {
                     if (!(actor is Player)) return PerformResult.Stop;
-                    var npc = (actor as Player).CurrentInterlocutor;
-                    var suggestedTopics = npc.ConversationTopics.Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", actor, npc, topic));
+                    var npc = actor.GetProperty<NPC>("interlocutor");
+                    var suggestedTopics = npc.GetPropertyOrDefault<List<MudObject>>("conversation-topics", new List<MudObject>()).Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", actor, npc, topic));
+
                     if (suggestedTopics.Count() != 0)
                         MudObject.SendMessage(actor, "Suggested topics: " + String.Join(", ", suggestedTopics.Select(topic => topic.Short)) + ".");
+
                     return PerformResult.Continue;
                 })
                 .Name("List un-discussed available topics rule.");

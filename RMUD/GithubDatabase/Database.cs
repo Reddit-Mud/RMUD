@@ -12,7 +12,6 @@ namespace RMUD
     {
         public String StaticPath { get; private set; }
         public String DynamicPath { get; private set; }
-        private String UsingDeclarations = "using System;\nusing System.Collections.Generic;\nusing RMUD;\nusing System.Linq;\n";
         private System.Net.WebClient WebClient = new System.Net.WebClient();
 
         private class FileTableEntry

@@ -1,17 +1,19 @@
-﻿class soranus : RMUD.NPC
+﻿using RMUD.Modules.Conversation;
+
+class soranus : RMUD.NPC
 {
     public override void Initialize()
     {
-        Response("who he is", (actor, npc, topic) =>
+        this.Response("who he is", (actor, npc, topic) =>
             {
                 SendLocaleMessage(actor, "\"I am Soranus,\" <the0> says.", this);
                 GlobalRules.ConsiderPerformRule("introduce self", this);
                 return RMUD.PerformResult.Stop;
             });
 
-        Response("the entrails", "\"These things?\" <the0> asks. \"Nothing special. They're for the wolves.\"");
-        
-        Response("wolves", (actor, npc, topic) =>
+        this.Response("the entrails", "\"These things?\" <the0> asks. \"Nothing special. They're for the wolves.\"");
+
+        this.Response("wolves", (actor, npc, topic) =>
         {
             SendLocaleMessage(actor, "^<the0> grins, expossing a pair of wicked yellow canines. \"Oh don't worry, they aren't here now.\"", this);
             var quest = GetObject("palantine/entrail_quest");

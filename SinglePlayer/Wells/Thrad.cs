@@ -1,5 +1,6 @@
 ﻿using RMUD;
 using System;
+using RMUD.Modules.Conversation;
 
 namespace Wells
 {
@@ -24,7 +25,7 @@ namespace Wells
                 .When((viewer, thrad, article) => !GlobalRules.ConsiderValueRule<bool>("actor knows actor?", viewer, thrad))
                 .Do((viewer, actor, article) => article + " knight");
 
-            Response("who he is", (actor, npc, topic) =>
+            this.Response("who he is", (actor, npc, topic) =>
                 {
                     SendMessage(actor, "<the0> peers at you from within his incredible helmet. \"Thrad\", he says.", this);
                     GlobalRules.ConsiderPerformRule("introduce self", this);

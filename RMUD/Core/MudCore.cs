@@ -10,12 +10,21 @@ namespace RMUD
     public class StartUpAssembly
     {
         public Assembly Assembly;
-        public String BaseName;
+        public String BaseNameSpace;
+        public String FileName;
 
-        public StartUpAssembly(Assembly Assembly, String BaseName)
+        public StartUpAssembly(Assembly Assembly, String BaseNameSpace, String FileName = "")
         {
             this.Assembly = Assembly;
-            this.BaseName = BaseName;
+            this.BaseNameSpace = BaseNameSpace;
+            this.FileName = FileName;
+        }
+
+        public StartUpAssembly(String FileName, String BaseNameSpace)
+        {
+            this.FileName = FileName;
+            this.BaseNameSpace = BaseNameSpace;
+            Assembly = System.Reflection.Assembly.LoadFrom(FileName);
         }
     }
 
@@ -27,6 +36,7 @@ namespace RMUD
         public static WorldDataService Database;
         public static RuleEngine GlobalRules;
         public static Action OnShutDown = null;
+        public static List<StartUpAssembly> ModuleAssemblies = new List<StartUpAssembly>();
 
         public static void TiePlayerToClient(Client Client, Actor Actor)
         {
@@ -50,7 +60,7 @@ namespace RMUD
         private static void LoadStartupAssembly(StartUpAssembly StartUp)
         {
             foreach (var type in StartUp.Assembly.GetTypes())
-                if (type.FullName.StartsWith(StartUp.BaseName))
+                if (type.FullName.StartsWith(StartUp.BaseNameSpace))
                     foreach (var method in type.GetMethods())
                         if (method.IsStatic && method.Name == "AtStartup")
                             method.Invoke(null, new Object[]{GlobalRules});
@@ -64,16 +74,20 @@ namespace RMUD
             {
                 GlobalRules = new RuleEngine();
 
-                InitializeCommandProcessor();
 
                 GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");
 
-                LoadStartupAssembly(new StartUpAssembly(Assembly.GetExecutingAssembly(), "RMUD"));
-                foreach (var startupAssembly in Assemblies)
+                ModuleAssemblies.Add(new StartUpAssembly(Assembly.GetExecutingAssembly(), "RMUD", "RMUD.exe"));
+                ModuleAssemblies.AddRange(Assemblies);
+
+                foreach (var startupAssembly in ModuleAssemblies)
                     LoadStartupAssembly(startupAssembly);
-                GlobalRules.FinalizeNewRules();
 
                 PersistentValueSerializer.AddGlobalSerializer(new BitArraySerializer());
+
+                InitializeCommandProcessor();
+
+                GlobalRules.FinalizeNewRules();
 
                 Core.Database = Database;
                 Database.Initialize();

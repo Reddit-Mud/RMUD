@@ -7,8 +7,6 @@ namespace RMUD
 {
 	public partial class Player : Actor
 	{
-        public NPC CurrentInterlocutor = null;
-
         [Persist(typeof(DictionaryStringObjectSerializer))]
         public Dictionary<String, Object> Memory { get; set; }
 

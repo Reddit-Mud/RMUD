@@ -20,11 +20,13 @@ namespace RMUD.Modules.Conversation
             NPC source = null;
             if (!String.IsNullOrEmpty(LocutorArgument))
                 source = State[LocutorArgument] as NPC;
-            else if (Context.ExecutingActor is Player && (Context.ExecutingActor as Player).CurrentInterlocutor != null)
-                source = (Context.ExecutingActor as Player).CurrentInterlocutor;
+            else if (Context.ExecutingActor.HasProperty<NPC>("interlocutor"))
+                source = Context.ExecutingActor.GetProperty<NPC>("interlocutor");
 
             if (source != null)
-                return source.ConversationTopics;
+                if (source.HasProperty<List<MudObject>>("conversation-topics"))
+                    return source.GetProperty<List<MudObject>>("conversation-topics");
+
             return new List<MudObject>();
         }
     }

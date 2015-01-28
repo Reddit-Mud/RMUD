@@ -10,6 +10,17 @@ namespace RMUD
 {
     public partial class GithubDatabase : WorldDataService
     {
+        private String GetFileHeader()
+        {
+            var builder = new StringBuilder();
+            builder.Append("using System;\nusing System.Collections.Generic;\nusing System.Linq;\n");
+
+            foreach (var module in Core.ModuleAssemblies)
+                builder.AppendLine("using " + module.BaseNameSpace + ";\n");
+
+            return builder.ToString();
+        }
+
         private Assembly CompileCode(String Source, String ErrorPath, Func<int,String> TranslateBulkFilenames = null)
         {
             CodeDomProvider codeProvider = CodeDomProvider.CreateProvider("CSharp");
@@ -17,13 +28,15 @@ namespace RMUD
             var parameters = new CompilerParameters();
             parameters.GenerateInMemory = true;
             parameters.GenerateExecutable = false;
-            parameters.ReferencedAssemblies.Add("RMUD.exe");
 
             parameters.ReferencedAssemblies.Add("mscorlib.dll");
             parameters.ReferencedAssemblies.Add("System.dll");
             parameters.ReferencedAssemblies.Add("System.Core.dll");
             parameters.ReferencedAssemblies.Add("System.Data.Linq.dll");
-            //parameters.ReferencedAssemblies.Add("System.Data.Entity.dll");
+
+            foreach (var module in Core.ModuleAssemblies)
+                if (!String.IsNullOrEmpty(module.FileName))
+                    parameters.ReferencedAssemblies.Add(module.FileName);
 
             CompilerResults compilationResults = codeProvider.CompileAssemblyFromSource(parameters, Source);
             bool realError = false;
@@ -59,7 +72,7 @@ namespace RMUD
             var preprocessedFile = PreprocessSourceFile(Path);
             if (String.IsNullOrEmpty(preprocessedFile)) return null;
 
-            var source = UsingDeclarations + preprocessedFile;
+            var source = GetFileHeader() + preprocessedFile;
             var assembly = CompileCode(source, Path, i => Path);
 
             Core.LogError(String.Format("Compiled {0} in {1} milliseconds.", Path, (DateTime.Now - start).TotalMilliseconds));

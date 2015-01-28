@@ -59,6 +59,13 @@ namespace RMUD
             return (T)Properties.ValueOrDefault(Name);
         }
 
+        public T GetPropertyOrDefault<T>(String Name, T Default)
+        {
+            if (Properties == null) return Default;
+            if (Properties.ContainsKey(Name) && Properties[Name] is T) return (T)Properties[Name];
+            return Default;
+        }
+
         public bool HasProperty(String Name)
         {
             if (Properties == null) return false;
