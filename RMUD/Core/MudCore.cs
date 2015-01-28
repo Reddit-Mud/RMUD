@@ -25,6 +25,14 @@ namespace RMUD
             this.FileName = FileName;
             this.BaseNameSpace = BaseNameSpace;
             Assembly = System.Reflection.Assembly.LoadFrom(FileName);
+
+            var info = Assembly.CreateInstance("ModuleInfo");
+            if (info != null)
+            {
+                var baseNameSpaceField = info.GetType().GetField("BaseNameSpace");
+                if (baseNameSpaceField != null && baseNameSpaceField.FieldType == typeof(String))
+                    this.BaseNameSpace = baseNameSpaceField.GetValue(info) as String;
+            }
         }
     }
 
@@ -79,6 +87,21 @@ namespace RMUD
 
                 ModuleAssemblies.Add(new StartUpAssembly(Assembly.GetExecutingAssembly(), "RMUD", "RMUD.exe"));
                 ModuleAssemblies.AddRange(Assemblies);
+
+                if (System.IO.Directory.Exists("modules/"))
+                {
+                    foreach (var file in System.IO.Directory.EnumerateFiles("modules/").Where(p => System.IO.Path.GetExtension(p) == ".dll"))
+                    {
+                        var assembly = System.Reflection.Assembly.LoadFrom(file);
+
+                        var info = assembly.CreateInstance("ModuleInfo") as ModuleInfo;
+                        if (info != null)
+                        {
+                            ModuleAssemblies.Add(new StartUpAssembly(assembly, info.BaseNameSpace, file));
+                            Console.WriteLine("Discovered module: " + file + " : " + info.Description);
+                        }
+                    }
+                }
 
                 foreach (var startupAssembly in ModuleAssemblies)
                     LoadStartupAssembly(startupAssembly);

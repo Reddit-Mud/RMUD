@@ -1,5 +1,5 @@
 ﻿using RMUD;
-using RMUD.Modules.Conversation;
+using ConversationModule;
 
 namespace Space
 {

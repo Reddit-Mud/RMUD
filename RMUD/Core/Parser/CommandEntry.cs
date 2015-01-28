@@ -50,7 +50,7 @@ namespace RMUD
             return this;
         }
 
-        public CommandEntry ProceduralRule(Func<PossibleMatch, Actor, PerformResult> Rule, String Name = "an unamed proceddural rule")
+        public CommandEntry ProceduralRule(Func<PossibleMatch, Actor, PerformResult> Rule, String Name = "an unamed procedural rule")
         {
             GeneratedManual.AppendLine("Consider " + Name);
 
@@ -65,7 +65,7 @@ namespace RMUD
 
         public CommandEntry Check(String RuleName, params String[] RuleArguments)
         {
-            GeneratedManual.AppendLine("Consider the check rulebook '" + RuleName + " with arguments " + String.Join(", ", RuleArguments));
+            GeneratedManual.AppendLine("Consider the check rulebook '" + RuleName + "' with arguments " + String.Join(", ", RuleArguments));
 
             var rule = new Rule<PerformResult>
             {
@@ -84,7 +84,7 @@ namespace RMUD
 
         public CommandEntry Perform(String RuleName, params String[] RuleArguments)
         {
-            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + " with arguments " + String.Join(", ", RuleArguments) + " and discard the result.");
+            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + "' with arguments " + String.Join(", ", RuleArguments) + " and discard the result.");
 
             var rule = new Rule<PerformResult>
             {
@@ -102,7 +102,7 @@ namespace RMUD
 
         public CommandEntry AbideBy(String RuleName, params String[] RuleArguments)
         {
-            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + " with arguments " + String.Join(", ", RuleArguments) + " and abide by the result.");
+            GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + "' with arguments " + String.Join(", ", RuleArguments) + " and abide by the result.");
 
             var rule = new Rule<PerformResult>
             {

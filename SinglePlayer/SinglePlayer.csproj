@@ -90,6 +90,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConversationModule\ConversationModule.csproj">
+      <Project>{35448d1e-7997-4626-8d1f-4278659f60a0}</Project>
+      <Name>ConversationModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RMUD\RMUD.csproj">
       <Project>{a0af04ab-7049-44b0-9496-7b2297aee262}</Project>
       <Name>RMUD</Name>

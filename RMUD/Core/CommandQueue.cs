@@ -45,17 +45,19 @@ namespace RMUD
             PendingCommandLock.ReleaseMutex();
         }
 
-        internal static void DiscoverCommandFactories(Assembly In, CommandParser AddTo)
+        internal static void DiscoverCommandFactories(StartUpAssembly In, CommandParser AddTo)
         {
-            foreach (var type in In.GetTypes())
-                if (type.IsSubclassOf(typeof(CommandFactory)))
+            foreach (var type in In.Assembly.GetTypes())
+                if (type.FullName.StartsWith(In.BaseNameSpace) && type.IsSubclassOf(typeof(CommandFactory)))
                     CommandFactory.CreateCommandFactory(type).Create(AddTo);
         }
 
         private static void InitializeCommandProcessor()
         {
             DefaultParser = new CommandParser();
-            DiscoverCommandFactories(Assembly.GetExecutingAssembly(), DefaultParser);
+            foreach (var assembly in ModuleAssemblies)
+                DiscoverCommandFactories(assembly, DefaultParser);
+            //DiscoverCommandFactories(Assembly.GetExecutingAssembly(), DefaultParser);
 
             ParserCommandHandler = new ParserCommandHandler(DefaultParser);
         }

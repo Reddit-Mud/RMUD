@@ -1,6 +1,4 @@
-﻿using RMUD.Modules.Conversation;
-
-class soranus : RMUD.NPC
+﻿class soranus : RMUD.NPC
 {
     public override void Initialize()
     {

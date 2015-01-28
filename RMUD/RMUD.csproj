@@ -14,7 +14,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Out\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -67,6 +67,7 @@
     <Compile Include="GithubDatabase\LoadSourceFile.cs" />
     <Compile Include="GithubDatabase\Preprocess.cs" />
     <Compile Include="GithubDatabase\EnumerateDatabase.cs" />
+    <Compile Include="ModuleInfo.cs" />
     <Compile Include="Modules\Chat\ChatChannel.cs" />
     <Compile Include="Modules\Chat\ChatChannelObjectSource.cs" />
     <Compile Include="Modules\Chat\MudObjectExtensions.cs" />
@@ -83,8 +84,6 @@
     <Compile Include="Modules\Admin\Force.cs" />
     <Compile Include="Modules\Clothing\NPCExtension.cs" />
     <Compile Include="Modules\Clothing\Rules.cs" />
-    <Compile Include="Modules\Conversation\NPCExtension.cs" />
-    <Compile Include="Modules\Conversation\TopicObjectSource.cs" />
     <Compile Include="Modules\Silly\Silly.cs" />
     <Compile Include="Modules\ActorIntroduction\Implementation.cs" />
     <Compile Include="Modules\Admin\Rules.cs" />
@@ -107,7 +106,6 @@
     <Compile Include="Modules\Network\Login.cs" />
     <Compile Include="Modules\Network\Quit.cs" />
     <Compile Include="Modules\Network\Afk.cs" />
-    <Compile Include="Modules\Conversation\Conversation.cs" />
     <Compile Include="Modules\Admin\Stats.cs" />
     <Compile Include="Modules\Admin\Dump.cs" />
     <Compile Include="Modules\Admin\Instance.cs" />
@@ -146,9 +144,9 @@
     <Compile Include="database\static\palantine\wolf.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="database\static\palantine\soranus.cs">
+    <None Include="database\static\palantine\soranus.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    </None>
     <Compile Include="database\static\palantine\skull.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
@@ -167,7 +165,6 @@
     <Compile Include="WorldModel\RelativeLocations.cs" />
     <Compile Include="WorldModel\Gender.cs" />
     <Compile Include="WorldModel\Player.cs" />
-    <Compile Include="Modules\Conversation\Rules.cs" />
     <Compile Include="WorldModel\NPC.cs" />
     <Compile Include="WorldModel\Portal.cs" />
     <Compile Include="Core\ErrorLog.cs" />
@@ -333,6 +330,10 @@
     <Content Include="Documentation\RuleOrder.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

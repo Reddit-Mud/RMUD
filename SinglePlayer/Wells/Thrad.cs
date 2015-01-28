@@ -1,6 +1,6 @@
 ﻿using RMUD;
 using System;
-using RMUD.Modules.Conversation;
+using ConversationModule;
 
 namespace Wells
 {
