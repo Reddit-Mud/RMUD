@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfConsole", "WpfConsole\Wp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngineTestHarness", "RulesEngineTestHarness\RulesEngineTestHarness.csproj", "{1D09692B-8B04-4632-BDB1-EEB3883E492B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversationModule", "ConversationModule\ConversationModule.csproj", "{35448D1E-7997-4626-8D1F-4278659F60A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{1D09692B-8B04-4632-BDB1-EEB3883E492B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D09692B-8B04-4632-BDB1-EEB3883E492B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D09692B-8B04-4632-BDB1-EEB3883E492B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35448D1E-7997-4626-8D1F-4278659F60A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35448D1E-7997-4626-8D1F-4278659F60A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35448D1E-7997-4626-8D1F-4278659F60A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35448D1E-7997-4626-8D1F-4278659F60A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

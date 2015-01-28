@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Conversation
+namespace ConversationModule
 {
     internal class ConversationCommandFactory : CommandFactory
     {
@@ -59,10 +60,10 @@ namespace RMUD.Modules.Conversation
                     if (match.ContainsKey("NEW-LOCUTOR"))
                     {
                         var newLocutor = match["NEW-LOCUTOR"] as MudObject;
-                        if (GlobalRules.ConsiderCheckRule("can converse?", actor, newLocutor) == CheckResult.Disallow) return PerformResult.Stop;
+                        if (Core.GlobalRules.ConsiderCheckRule("can converse?", actor, newLocutor) == CheckResult.Disallow) return PerformResult.Stop;
                         if (!System.Object.ReferenceEquals(newLocutor, actor.GetProperty<NPC>("interlocutor")))
                         {
-                            GlobalRules.ConsiderPerformRule("greet", actor, newLocutor);
+                            Core.GlobalRules.ConsiderPerformRule("greet", actor, newLocutor);
                             actor.SetProperty("interlocutor", newLocutor as NPC);
                         }
                     }
