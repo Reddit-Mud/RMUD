@@ -90,6 +90,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AdminModule\AdminModule.csproj">
+      <Project>{adaf3782-88d1-4170-866a-9ef3479eae97}</Project>
+      <Name>AdminModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ClothingModule\ClothingModule.csproj">
       <Project>{8f1af0e1-c98d-466a-a712-621493453373}</Project>
       <Name>ClothingModule</Name>

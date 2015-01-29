@@ -25,7 +25,7 @@ namespace RMUD
         private static PendingCommand NextCommand;
 
         //The client command handler can set this flag when it wants the command timeout to be ignored.
-        internal static bool CommandTimeoutEnabled = true;
+        public static bool CommandTimeoutEnabled = true;
 
 
         public static ParserCommandHandler ParserCommandHandler;

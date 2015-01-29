@@ -15,7 +15,7 @@ namespace RMUD.Modules.Network
 
     public static class Clients
     {
-        internal static List<Client> ConnectedClients = new List<Client>();
+        public static List<Client> ConnectedClients = new List<Client>();
         internal static ProscriptionList ProscriptionList;
 
         internal static void ClientDisconnected(Client client)

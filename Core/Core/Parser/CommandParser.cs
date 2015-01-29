@@ -37,7 +37,7 @@ namespace RMUD
             public MatchAborted(String Message) : base(Message) { }
         }
 
-        internal MatchedCommand ParseCommand(String Command, Actor Actor)
+        public MatchedCommand ParseCommand(String Command, Actor Actor)
         {
 			var tokens = new LinkedList<String>(Command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
 			var rootMatch = new PossibleMatch(tokens.First);

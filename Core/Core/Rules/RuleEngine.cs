@@ -7,7 +7,7 @@ namespace RMUD
 {
     public partial class RuleEngine
     {
-        internal RuleSet Rules;
+        public RuleSet Rules;
         internal Actor LogTo = null;
         internal bool QueueNewRules = true;
         internal List<Action> NewRuleQueue = new List<Action>();

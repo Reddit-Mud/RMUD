@@ -15,7 +15,7 @@ namespace RMUD
             this.GlobalRules = GlobalRules;
         }
 
-        internal RuleBook FindRuleBook(String Name)
+        public RuleBook FindRuleBook(String Name)
         {
             return RuleBooks.FirstOrDefault(r => r.Name == Name);
         }

@@ -23,7 +23,7 @@ namespace RMUD
     {
 		internal static List<RawPendingMessage> PendingMessages = new List<RawPendingMessage>();
                 
-        internal static void SendPendingMessages()
+        public static void SendPendingMessages()
         {
 			foreach (var message in PendingMessages)
 				message.Destination.Send(message.Message + "\r\n");

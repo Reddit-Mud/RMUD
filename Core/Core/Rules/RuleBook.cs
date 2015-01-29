@@ -33,7 +33,7 @@ namespace RMUD
         public List<Type> ArgumentTypes = new List<Type>();
         public Type ResultType;
         public RuleSet Owner;
-        internal List<Rule> Rules = new List<Rule>();
+        public List<Rule> Rules = new List<Rule>();
         private bool NeedsSort = false;
 
         public RuleBook(RuleSet Owner)

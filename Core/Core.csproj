@@ -154,7 +154,7 @@
     <Compile Include="Modules\Admin\Move.cs" />
     <Compile Include="Modules\Admin\ReadLog.cs" />
     <Compile Include="Modules\Admin\Reload.cs" />
-    <Compile Include="Modules\Admin\ReverseLineReader.cs" />
+    <Compile Include="ReverseLineReader.cs" />
     <Compile Include="Modules\Admin\Rules.cs" />
     <Compile Include="Modules\Admin\Save.cs" />
     <Compile Include="Modules\Admin\Stats.cs" />

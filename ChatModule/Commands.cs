@@ -101,7 +101,7 @@ namespace ChatModule
 
                     var logFilename = ChatChannel.ChatLogsPath + channel.Short + ".txt";
                     if (System.IO.File.Exists(logFilename))
-                        foreach (var line in (new RMUD.Modules.Admin.ReverseLineReader(logFilename)).Take(count).Reverse())
+                        foreach (var line in (new RMUD.ReverseLineReader(logFilename)).Take(count).Reverse())
                             MudObject.SendMessage(actor, line);
                     return PerformResult.Continue;
                 });

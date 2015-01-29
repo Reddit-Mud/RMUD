@@ -8,7 +8,7 @@ namespace RMUD
 {
 	public class ParserCommandHandler : ClientCommandHandler
 	{
-		internal CommandParser Parser;
+		public CommandParser Parser;
 
 		public ParserCommandHandler(CommandParser Parser)
 		{
