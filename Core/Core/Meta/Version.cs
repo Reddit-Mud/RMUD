@@ -24,6 +24,10 @@ namespace RMUD.Modules.Meta
                         MudObject.SendMessage(actor, String.Format("Commit: {0}", System.IO.File.ReadAllText("version.txt")));
                     else
                         MudObject.SendMessage(actor, "Commit version not found.");
+
+                    foreach (var module in Core.ModuleAssemblies)
+                        MudObject.SendMessage(actor, module.Info.Description);
+
                     return PerformResult.Continue;
                 });
 		}

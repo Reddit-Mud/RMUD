@@ -1,4 +1,4 @@
-﻿class soranus : RMUD.NPC
+﻿class soranus : NPC
 {
     public override void Initialize()
     {
@@ -35,7 +35,7 @@
 
         Nouns.Add("soranus", a => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", a, this));
 
-        Wear("toga", RMUD.ClothingLayer.Outer, RMUD.ClothingBodyPart.Torso);
-        Wear(GetObject("palantine/entrails"));
+        this.Wear("toga", ClothingLayer.Outer, ClothingBodyPart.Torso);
+        this.Wear(GetObject("palantine/entrails"));
     }
 }

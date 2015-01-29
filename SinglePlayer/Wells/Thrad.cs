@@ -1,6 +1,7 @@
 ﻿using RMUD;
 using System;
 using ConversationModule;
+using ClothingModule;
 
 namespace Wells
 {
@@ -32,8 +33,8 @@ namespace Wells
                     return PerformResult.Stop;
                 });
 
-            Wear("helmet", ClothingLayer.Outer, ClothingBodyPart.Head);
-            Wear("pauldrons", ClothingLayer.Outer, ClothingBodyPart.Cloak);
+            this.Wear("helmet", ClothingLayer.Outer, ClothingBodyPart.Head);
+            this.Wear("pauldrons", ClothingLayer.Outer, ClothingBodyPart.Cloak);
 
         }
     }   

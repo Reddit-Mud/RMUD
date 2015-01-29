@@ -90,13 +90,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClothingModule\ClothingModule.csproj">
+      <Project>{8f1af0e1-c98d-466a-a712-621493453373}</Project>
+      <Name>ClothingModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConversationModule\ConversationModule.csproj">
       <Project>{35448d1e-7997-4626-8d1f-4278659f60a0}</Project>
       <Name>ConversationModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RMUD\RMUD.csproj">
-      <Project>{a0af04ab-7049-44b0-9496-7b2297aee262}</Project>
-      <Name>RMUD</Name>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{5c29e6ad-54e3-4105-a9f3-2aab48a17c41}</Project>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

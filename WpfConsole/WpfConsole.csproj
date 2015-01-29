@@ -107,9 +107,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RMUD\RMUD.csproj">
-      <Project>{a0af04ab-7049-44b0-9496-7b2297aee262}</Project>
-      <Name>RMUD</Name>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{5c29e6ad-54e3-4105-a9f3-2aab48a17c41}</Project>
+      <Name>Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\SinglePlayer\SinglePlayer.csproj">
       <Project>{a8ea5cc5-9c0a-47e3-a68c-9e8367cef1fc}</Project>

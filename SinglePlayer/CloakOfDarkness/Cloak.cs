@@ -2,7 +2,7 @@
 
 namespace CloakOfDarkness
 {
-    public class Cloak : RMUD.Clothing
+    public class Cloak : ClothingModule.Clothing
     {
         bool isHung = false;
 

@@ -48,7 +48,7 @@ namespace RMUD
         internal static void DiscoverCommandFactories(StartUpAssembly In, CommandParser AddTo)
         {
             foreach (var type in In.Assembly.GetTypes())
-                if (type.FullName.StartsWith(In.BaseNameSpace) && type.IsSubclassOf(typeof(CommandFactory)))
+                if (type.FullName.StartsWith(In.Info.BaseNameSpace) && type.IsSubclassOf(typeof(CommandFactory)))
                     CommandFactory.CreateCommandFactory(type).Create(AddTo);
         }
 

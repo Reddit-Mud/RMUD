@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules._Clothing
+namespace ClothingModule
 {
 	internal class Wear : CommandFactory
 	{

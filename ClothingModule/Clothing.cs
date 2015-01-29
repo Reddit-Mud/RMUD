@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace RMUD
+namespace ClothingModule
 {
     public enum ClothingLayer
     {
@@ -29,7 +28,7 @@ namespace RMUD
         Cloak,
     }
 
-    public class Clothing : MudObject
+    public class Clothing : RMUD.MudObject
     {
         public ClothingLayer Layer = ClothingLayer.Outer;
         public ClothingBodyPart BodyPart = ClothingBodyPart.Torso;

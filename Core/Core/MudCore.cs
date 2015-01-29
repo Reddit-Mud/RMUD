@@ -10,29 +10,14 @@ namespace RMUD
     public class StartUpAssembly
     {
         public Assembly Assembly;
-        public String BaseNameSpace;
         public String FileName;
+        public ModuleInfo Info;
 
-        public StartUpAssembly(Assembly Assembly, String BaseNameSpace, String FileName = "")
+        public StartUpAssembly(Assembly Assembly, ModuleInfo Info, String FileName = "")
         {
             this.Assembly = Assembly;
-            this.BaseNameSpace = BaseNameSpace;
+            this.Info = Info;
             this.FileName = FileName;
-        }
-
-        public StartUpAssembly(String FileName, String BaseNameSpace)
-        {
-            this.FileName = FileName;
-            this.BaseNameSpace = BaseNameSpace;
-            Assembly = System.Reflection.Assembly.LoadFrom(FileName);
-
-            var info = Assembly.CreateInstance("ModuleInfo");
-            if (info != null)
-            {
-                var baseNameSpaceField = info.GetType().GetField("BaseNameSpace");
-                if (baseNameSpaceField != null && baseNameSpaceField.FieldType == typeof(String))
-                    this.BaseNameSpace = baseNameSpaceField.GetValue(info) as String;
-            }
         }
     }
 
@@ -68,7 +53,7 @@ namespace RMUD
         private static void LoadStartupAssembly(StartUpAssembly StartUp)
         {
             foreach (var type in StartUp.Assembly.GetTypes())
-                if (type.FullName.StartsWith(StartUp.BaseNameSpace))
+                if (type.FullName.StartsWith(StartUp.Info.BaseNameSpace))
                     foreach (var method in type.GetMethods())
                         if (method.IsStatic && method.Name == "AtStartup")
                             method.Invoke(null, new Object[]{GlobalRules});
@@ -85,23 +70,20 @@ namespace RMUD
 
                 GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");
 
-                ModuleAssemblies.Add(new StartUpAssembly(Assembly.GetExecutingAssembly(), "RMUD", "RMUD.exe"));
+                ModuleAssemblies.Add(new StartUpAssembly(Assembly.GetExecutingAssembly(), new ModuleInfo { Author = "Blecki", Description = "RMUD Core", BaseNameSpace = "RMUD" }, "Core.dll"));
                 ModuleAssemblies.AddRange(Assemblies);
 
-                if (System.IO.Directory.Exists("modules/"))
-                {
-                    foreach (var file in System.IO.Directory.EnumerateFiles("modules/").Where(p => System.IO.Path.GetExtension(p) == ".dll"))
+                    foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Directory.GetCurrentDirectory()).Where(p => System.IO.Path.GetExtension(p) == ".dll"))
                     {
                         var assembly = System.Reflection.Assembly.LoadFrom(file);
 
                         var info = assembly.CreateInstance("ModuleInfo") as ModuleInfo;
                         if (info != null)
                         {
-                            ModuleAssemblies.Add(new StartUpAssembly(assembly, info.BaseNameSpace, file));
+                            ModuleAssemblies.Add(new StartUpAssembly(assembly, info, file));
                             Console.WriteLine("Discovered module: " + file + " : " + info.Description);
                         }
                     }
-                }
 
                 foreach (var startupAssembly in ModuleAssemblies)
                     LoadStartupAssembly(startupAssembly);

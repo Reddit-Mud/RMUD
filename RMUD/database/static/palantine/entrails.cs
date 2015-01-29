@@ -1,22 +1,22 @@
-﻿class entrails : RMUD.Clothing
+﻿class entrails : Clothing
 {
     public override void Initialize()
     {
         Short = "entrails";
         Nouns.Add("entrails");
-        Layer = RMUD.ClothingLayer.Over;
-        BodyPart = RMUD.ClothingBodyPart.Cloak;
+        Layer = ClothingLayer.Over;
+        BodyPart = ClothingBodyPart.Cloak;
         Article = "some";
 
-        Perform<RMUD.MudObject, RMUD.MudObject>("drop").Do((actor, item) =>
+        Perform<MudObject, MudObject>("drop").Do((actor, item) =>
             {
                 var wolf = GetObject("palantine/wolf");
                 if (wolf.Location == actor.Location)
                 {
                     ConsiderPerformRule("handle-entrail-drop", wolf, this);
-                    return RMUD.PerformResult.Stop;
+                    return PerformResult.Stop;
                 }
-                return RMUD.PerformResult.Continue;
+                return PerformResult.Continue;
             });
     }
 }

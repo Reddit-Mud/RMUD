@@ -39,14 +39,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Octokit, Version=0.6.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Octokit.0.6.2\lib\net45\Octokit.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -57,277 +49,78 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\MudCore.cs" />
-    <Compile Include="Core\ProcessPlayerCommand.cs" />
-    <Compile Include="GithubDatabase\Compile.cs" />
-    <Compile Include="GithubDatabase\GetObject.cs" />
-    <Compile Include="GithubDatabase\ReloadObject.cs" />
-    <Compile Include="GithubDatabase\Initialize.cs" />
-    <Compile Include="GithubDatabase\InitialBulkCompile.cs" />
-    <Compile Include="GithubDatabase\LoadSourceFile.cs" />
-    <Compile Include="GithubDatabase\Preprocess.cs" />
-    <Compile Include="GithubDatabase\EnumerateDatabase.cs" />
-    <Compile Include="ModuleInfo.cs" />
-    <Compile Include="Modules\Chat\ChatChannel.cs" />
-    <Compile Include="Modules\Chat\ChatChannelObjectSource.cs" />
-    <Compile Include="Modules\Chat\MudObjectExtensions.cs" />
-    <Compile Include="Modules\Network\Account.cs" />
-    <Compile Include="Modules\Network\NetworkClient.cs" />
-    <Compile Include="Core\Parser\ConfirmCommandHandler.cs" />
-    <Compile Include="Modules\Network\ClientExtensions.cs" />
-    <Compile Include="Modules\Network\PasswordCommandHandler.cs" />
-    <Compile Include="Core\Serialization\ObjectSerialization.cs" />
-    <Compile Include="Core\WorldDataService.cs" />
-    <Compile Include="database\static\player_base.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Modules\Admin\Force.cs" />
-    <Compile Include="Modules\Clothing\NPCExtension.cs" />
-    <Compile Include="Modules\Clothing\Rules.cs" />
-    <Compile Include="Modules\Silly\Silly.cs" />
-    <Compile Include="Modules\ActorIntroduction\Implementation.cs" />
-    <Compile Include="Modules\Admin\Rules.cs" />
-    <Compile Include="Modules\Clothing\Remove.cs" />
-    <Compile Include="Core\ManPages.cs" />
-    <Compile Include="Core\Serialization\PersistentValueSerializer.cs" />
-    <Compile Include="Core\Serialization\PersistAttribute.cs" />
-    <Compile Include="database\static\palantine\ball.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\platos_closet.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Modules\Clothing\Clothing.cs" />
-    <Compile Include="Modules\Admin\ReadLog.cs" />
-    <Compile Include="Modules\Quests\AcceptQuest.cs" />
-    <Compile Include="Modules\Clothing\Wear.cs" />
-    <Compile Include="Modules\Admin\Save.cs" />
-    <Compile Include="Modules\Network\Register.cs" />
-    <Compile Include="Modules\Network\Login.cs" />
-    <Compile Include="Modules\Network\Quit.cs" />
-    <Compile Include="Modules\Network\Afk.cs" />
-    <Compile Include="Modules\Admin\Stats.cs" />
-    <Compile Include="Modules\Admin\Dump.cs" />
-    <Compile Include="Modules\Admin\Instance.cs" />
-    <Compile Include="Modules\StandardActions\Unlock.cs" />
-    <Compile Include="Modules\StandardActions\LookUnderOrBehind.cs" />
-    <Compile Include="Modules\StandardActions\Close.cs" />
-    <Compile Include="Modules\Network\Accounts.cs" />
-    <Compile Include="Core\Move.cs" />
-    <Compile Include="Modules\Quests\TypeExtensions.cs" />
-    <Compile Include="Modules\Quests\QuestRules.cs" />
-    <Compile Include="Core\FindLocale.cs" />
-    <Compile Include="Core\Heartbeat.cs" />
-    <Compile Include="Core\MarkForUpdate.cs" />
-    <Compile Include="Core\CommandQueue.cs" />
-    <Compile Include="Core\ObjectContainsObject.cs" />
-    <Compile Include="Core\PendingMessages.cs" />
-    <Compile Include="GithubDatabase\Persistence.cs" />
-    <Compile Include="Core\Random.cs" />
-    <Compile Include="Core\Time.cs" />
     <None Include="app.config" />
-    <None Include="database\static\palantine\solar.cs">
+    <None Include="database\static\palantine\antechamber.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="database\static\palantine\entrail_quest.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\entrails.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <None Include="database\static\palantine\garden.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Compile Include="database\static\palantine\fedora.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\wolf.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <None Include="database\static\palantine\soranus.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Compile Include="database\static\palantine\skull.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <None Include="database\static\palantine\sonar.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Compile Include="Core\Serialization\BitArraySerializer.cs" />
-    <Compile Include="Core\Serialization\EnumSerializer.cs" />
-    <Compile Include="Core\Serialization\DictionaryStringObjectSerializer.cs" />
-    <Compile Include="Core\Serialization\ContainerSerializer.cs" />
-    <Compile Include="SinglePlayer\CompiledDatabase.cs" />
-    <Compile Include="SinglePlayer\Driver.cs" />
-    <Compile Include="SinglePlayer\DummyClient.cs" />
-    <Compile Include="WorldModel\ObjectState.cs" />
-    <Compile Include="WorldModel\MudObjectRules.cs" />
-    <Compile Include="WorldModel\RelativeLocations.cs" />
-    <Compile Include="WorldModel\Gender.cs" />
-    <Compile Include="WorldModel\Player.cs" />
-    <Compile Include="WorldModel\NPC.cs" />
-    <Compile Include="WorldModel\Portal.cs" />
-    <Compile Include="Core\ErrorLog.cs" />
-    <Compile Include="Core\Parser\AuthenticationCommandProcessor.cs" />
-    <Compile Include="Core\Parser\CommandEntry.cs" />
-    <Compile Include="Core\Parser\MatchContext.cs" />
-    <Compile Include="Core\Parser\Matchers\FailIf.cs" />
-    <Compile Include="Core\Parser\Matchers\NumberMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\GenericMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\ScoreGate.cs" />
-    <Compile Include="Modules\Chat\ChatChannelRules.cs" />
-    <Compile Include="Core\Client.cs" />
-    <Compile Include="Modules\Chat\Commands.cs" />
-    <Compile Include="Modules\StandardActions\Put.cs" />
-    <Compile Include="Modules\Network\Kick.cs" />
-    <Compile Include="Modules\Network\Ban.cs" />
-    <Compile Include="Modules\Network\Whisper.cs" />
-    <Compile Include="Core\Meta\Version.cs" />
-    <Compile Include="Modules\Network\Who.cs" />
-    <Compile Include="Modules\Admin\Reload.cs" />
-    <Compile Include="Modules\StandardActions\Lock.cs" />
-    <Compile Include="Modules\StandardActions\Open.cs" />
-    <Compile Include="Modules\StandardActions\Drop.cs" />
-    <Compile Include="Modules\StandardActions\Inventory.cs" />
-    <Compile Include="Core\Meta\Man.cs" />
-    <Compile Include="Modules\StandardActions\Say.cs" />
-    <Compile Include="Modules\StandardActions\Take.cs" />
-    <Compile Include="Modules\Admin\Move.cs" />
-    <Compile Include="Modules\Admin\Inspect.cs" />
-    <Compile Include="Modules\StandardActions\Go.cs" />
-    <Compile Include="Modules\StandardActions\Examine.cs" />
-    <Compile Include="Modules\StandardActions\Look.cs" />
-    <None Include="database\static\palantine\library_key.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="database\static\palantine\disambig_key.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="database\static\palantine\disambig_blue_door.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="database\static\palantine\disambig_red_door.cs">
+    <None Include="database\static\palantine\ball.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="database\static\palantine\dark_room.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="database\static\palantine\antechamber.cs">
+    <None Include="database\static\palantine\disambig.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="WorldModel\EnumerateObjectTree.cs" />
-    <Compile Include="WorldModel\Container.cs" />
-    <Compile Include="WorldModel\NounList.cs" />
-    <Compile Include="Core\Parser\Matchers\RelativeLocationMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\FailIfNoMatches.cs" />
-    <Compile Include="Modules\Admin\ReverseLineReader.cs" />
-    <Compile Include="Core\Rules\RuleEngine.cs" />
-    <Compile Include="Core\Rules\RuleBook.cs" />
-    <Compile Include="Core\Rules\RuleBuilderGen.cs">
-      <DependentUpon>RuleBuilderGen.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Core\Rules\RuleEngineAddRuleGen.cs">
-      <DependentUpon>RuleEngineAddRuleGen.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Core\Rules\MudObjectAddRuleGen.cs">
-      <DependentUpon>MudObjectAddRuleGen.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Core\Rules\RuleSetAddRuleGen.cs">
-      <DependentUpon>RuleSetAddRuleGen.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Core\Rules\RuleDelegatesGen.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuleDelegatesGen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Core\Rules\RuleSet.cs" />
-    <Compile Include="Core\Rules\RuleResult.cs" />
-    <Compile Include="Core\Rules\Rule.cs" />
-    <Compile Include="Core\SendMessage.cs" />
-    <Compile Include="Modules\Network\ConnectedPlayersObjectSource.cs" />
-    <Compile Include="Core\Parser\Matchers\OptionalMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\FirstOfMatcher.cs" />
-    <Compile Include="Modules\Network\ProscriptionList.cs" />
-    <Compile Include="Modules\Network\Telnet\TelnetClient.cs" />
-    <Compile Include="Modules\Network\Telnet\TelnetControlCodes.cs" />
-    <Compile Include="Core\IsVisibleTo.cs" />
-    <Compile Include="database\static\palantine\library.cs">
+    <None Include="database\static\palantine\disambig_blue_door.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="database\static\palantine\disambig.cs">
+    </None>
+    <None Include="database\static\palantine\disambig_key.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="WorldModel\BasicDoor.cs" />
-    <Compile Include="WorldModel\LockedDoor.cs" />
-    <Compile Include="Core\Parser\DisambigCommandHandler.cs" />
-    <Compile Include="Core\Parser\Matchers\InScopeObjectSource.cs" />
-    <Compile Include="WorldModel\RoomType.cs" />
-    <Compile Include="WorldModel\RoomLightingRules.cs" />
-    <Compile Include="WorldModel\Scenery.cs" />
-    <Compile Include="WorldModel\Settings.cs" />
-    <Compile Include="Modules\Network\LoginCommandHandler.cs" />
-    <Compile Include="Core\Parser\ClientCommandHandler.cs" />
-    <Compile Include="WorldModel\Actor.cs" />
-    <Compile Include="WorldModel\Links.cs" />
-    <Compile Include="Core\Parser\ParserCommandHandler.cs" />
-    <Compile Include="Core\Parser\CommandParser.cs" />
-    <Compile Include="Core\Parser\CommandFactory.cs" />
-    <Compile Include="Core\Parser\CommandProcessor.cs" />
-    <Compile Include="Core\Parser\CommandTokenMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\CardinalMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\RestMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\PathMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\RankGate.cs" />
-    <Compile Include="Core\Parser\Matchers\SingleWordMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\OrMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\ObjectMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\KeywordMatcher.cs" />
-    <Compile Include="Core\Parser\Matchers\SequenceMatcher.cs" />
-    <Compile Include="Core\Parser\PossibleMatch.cs" />
-    <Compile Include="WorldModel\Room.cs" />
-    <Compile Include="GithubDatabase\Database.cs" />
-    <Compile Include="Modules\Network\Clients.cs" />
-    <Compile Include="WorldModel\MudObject.cs" />
+    </None>
+    <None Include="database\static\palantine\disambig_red_door.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\entrails.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\entrail_quest.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\fedora.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\garden.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\library.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\library_key.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\platos_closet.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\skull.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\solar.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\sonar.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\soranus.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\palantine\wolf.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="database\static\player_base.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Modules\Network\Telnet\TelnetClientSource.cs" />
-    <Compile Include="HelperExtensions.cs" />
-    <None Include="packages.config" />
-    <None Include="Core\Rules\RuleGen.t4" />
-    <None Include="Core\Rules\RuleBuilderGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleBuilderGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleEngineAddRuleGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleEngineAddRuleGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\MudObjectAddRuleGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MudObjectAddRuleGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleSetAddRuleGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleSetAddRuleGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleDelegatesGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleDelegatesGen.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Documentation\RuleOrder.txt" />
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{5c29e6ad-54e3-4105-a9f3-2aab48a17c41}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

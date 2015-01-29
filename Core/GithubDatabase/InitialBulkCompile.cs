@@ -59,21 +59,27 @@ namespace RMUD
                 foreach (var s in fileList)
                 {
                     var qualifiedName = String.Format("database.{0}.{1}", PathToNamespace(s), System.IO.Path.GetFileNameWithoutExtension(s));
-                    var newObject = combinedAssembly.CreateInstance(qualifiedName) as MudObject;
+                    var newObject = combinedAssembly.CreateInstance(qualifiedName);
                     if (newObject == null)
                     {
                         ReportErrors(String.Format("Type {0} not found in combined assembly.", qualifiedName));
-                        return;
                     }
+                    else if (!(newObject is MudObject))
+                    {
+                        ReportErrors(String.Format("Type {0} was found, but was not a mud object.", qualifiedName));
+                    }
+                    else
+                    {
+                        var mudObject = newObject as MudObject;
+                        mudObject.Path = s;
+                        mudObject.State = ObjectState.Unitialized;
 
-                    newObject.Path = s;
-                    newObject.State = ObjectState.Unitialized;
+                        foreach (var method in newObject.GetType().GetMethods())
+                            if (method.IsStatic && method.Name == "AtStartup")
+                                method.Invoke(null, new Object[] { Core.GlobalRules });
 
-                    foreach (var method in newObject.GetType().GetMethods())
-                        if (method.IsStatic && method.Name == "AtStartup")
-                            method.Invoke(null, new Object[]{Core.GlobalRules});
-
-                    NamedObjects.Upsert(s, newObject);
+                        NamedObjects.Upsert(s, mudObject);
+                    }
                 }
             }
         }

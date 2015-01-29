@@ -16,7 +16,7 @@ namespace RMUD
             builder.Append("using System;\nusing System.Collections.Generic;\nusing System.Linq;\n");
 
             foreach (var module in Core.ModuleAssemblies)
-                builder.AppendLine("using " + module.BaseNameSpace + ";\n");
+                builder.AppendLine("using " + module.Info.BaseNameSpace + ";\n");
 
             return builder.ToString();
         }

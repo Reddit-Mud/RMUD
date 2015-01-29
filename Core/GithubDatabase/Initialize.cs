@@ -30,7 +30,7 @@ namespace RMUD
                 errorReported = true;
             });
 
-            if (errorReported) Console.WriteLine("Bulk compilation failed. Using ad-hoc compilation as fallback.");
+            if (errorReported) Console.WriteLine("Bulk compilation of one or more database objects failed. Using ad-hoc compilation as fallback.");
             else
                 Console.WriteLine("Total compilation in {0}.", DateTime.Now - start);
 
