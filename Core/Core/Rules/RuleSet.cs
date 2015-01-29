@@ -48,13 +48,13 @@ namespace RMUD
             return r;
         }
                 
-        internal void DeleteRule(String RuleBookName, String RuleID)
+        public void DeleteRule(String RuleBookName, String RuleID)
         {
             var book = FindRuleBook(RuleBookName);
             if (book != null) book.DeleteRule(RuleID);
         }
 
-        internal void DeleteAll(String RuleID)
+        public void DeleteAll(String RuleID)
         {
             foreach (var book in RuleBooks)
                 book.DeleteRule(RuleID);

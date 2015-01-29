@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RMUD.Modules.Chat;
 
 namespace RMUD
 {
@@ -47,20 +46,6 @@ namespace RMUD
             RankNames.Add(100, "equester");
             RankNames.Add(0, "proletarian");
             RankNames.Add(Int32.MinValue, "sentina");
-
-            ChatChannel.ChatChannels.Clear();
-
-            ChatChannel.ChatChannels.Add(new ChatChannel("OOC"));
-
-            var senate = new ChatChannel("SENATE");
-            senate.Check<MudObject, MudObject>("can access channel?")
-                .When((actor, channel) => !(actor is Actor) || (actor as Actor).Rank < 100)
-                .Do((actor, channel) =>
-                {
-                    SendMessage(actor, "You must have a rank of 100 or greater to access this channel.");
-                    return CheckResult.Disallow;
-                });
-            ChatChannel.ChatChannels.Add(senate);
         }
 
         public String GetNameForRank(int Rank)

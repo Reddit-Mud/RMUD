@@ -2,12 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RMUD.Modules.Chat;
+using RMUD;
 
-namespace RMUD
+namespace ChatModule
 {
-    public partial class MudObject
+    public class ChatChannel : MudObject
     {
+        public List<Actor> Subscribers = new List<Actor>();
+
+        public ChatChannel(String Short) : base(Short, "")
+        {
+            Article = "";
+        }
+
+        internal static List<ChatChannel> ChatChannels = new List<ChatChannel>();
+        internal static String ChatLogsPath = "database/chatlogs/";
+
+        internal static void RemoveFromAllChannels(MudObject Player)
+        {
+            foreach (var channel in ChatChannels)
+                channel.Subscribers.RemoveAll(c => Object.ReferenceEquals(c, Player));
+        }
+
         public static void SendChatMessage(ChatChannel Channel, String Message)
         {
             var realMessage = String.Format("{0} : {1}", DateTime.Now, Message);

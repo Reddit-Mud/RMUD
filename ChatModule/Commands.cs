@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Chat
+namespace ChatModule
 {
     internal class Commands : CommandFactory
     {
@@ -62,7 +63,7 @@ namespace RMUD.Modules.Chat
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
                     if (!channel.Subscribers.Contains(actor))
                     {
-                        if (GlobalRules.ConsiderCheckRule("can access channel?", actor, channel) != CheckResult.Allow)
+                        if (Core.GlobalRules.ConsiderCheckRule("can access channel?", actor, channel) != CheckResult.Allow)
                             return PerformResult.Stop;
 
                         channel.Subscribers.Add(actor);
@@ -74,7 +75,7 @@ namespace RMUD.Modules.Chat
                 {
                     var message = match["TEXT"].ToString();
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
-                    MudObject.SendChatMessage(channel, "[" + channel.Short + "] " + actor.Short +
+                    ChatChannel.SendChatMessage(channel, "[" + channel.Short + "] " + actor.Short +
                         (message.StartsWith("\"") ?
                             (" " + message.Substring(1).Trim())
                             : (": \"" + message + "\"")));
@@ -100,7 +101,7 @@ namespace RMUD.Modules.Chat
 
                     var logFilename = ChatChannel.ChatLogsPath + channel.Short + ".txt";
                     if (System.IO.File.Exists(logFilename))
-                        foreach (var line in (new Admin.ReverseLineReader(logFilename)).Take(count).Reverse())
+                        foreach (var line in (new RMUD.Modules.Admin.ReverseLineReader(logFilename)).Take(count).Reverse())
                             MudObject.SendMessage(actor, line);
                     return PerformResult.Continue;
                 });

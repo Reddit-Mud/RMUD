@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Chat
+namespace ChatModule
 {
     public class ChatChannelRules 
     {
@@ -31,6 +32,20 @@ namespace RMUD.Modules.Chat
                     return PerformResult.Continue;
                 })
                 .Name("Unsubscribe players from all channels when they leave rule.");
+
+
+            ChatChannel.ChatChannels.Clear();
+            ChatChannel.ChatChannels.Add(new ChatChannel("OOC"));
+
+            var senate = new ChatChannel("SENATE");
+            senate.Check<MudObject, MudObject>("can access channel?")
+                .When((actor, channel) => !(actor is Actor) || (actor as Actor).Rank < 100)
+                .Do((actor, channel) =>
+                {
+                    MudObject.SendMessage(actor, "You must have a rank of 100 or greater to access this channel.");
+                    return CheckResult.Disallow;
+                });
+            ChatChannel.ChatChannels.Add(senate);
         }
     }
 }
