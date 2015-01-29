@@ -77,6 +77,11 @@ namespace RMUD
             if (Properties == null) return false;
             return Properties.ContainsKey(Name) && Properties[Name] is T;
         }
+
+        public void RemoveProperty(String Name)
+        {
+            if (Properties != null) Properties.Remove(Name);
+        }
         
         #endregion
 

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Quests
+namespace QuestModule
 {
     internal class AcceptQuest : CommandFactory
     {
@@ -17,36 +18,35 @@ namespace RMUD.Modules.Quests
                 .Manual("When an NPC offers you a quest, you will be prompted to accept the quest. Accepting a quest abandons any quest you already have active.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (!(actor is Player) || (actor as Player).OfferedQuest == null)
+                    if (actor.GetProperty<MudObject>("offered-quest") == null)
                     {
                         MudObject.SendMessage(actor, "Nobody has offered you a quest.");
                         return PerformResult.Stop;
                     }
                     else
                     {
-                        match.Upsert("QUEST", (actor as Player).OfferedQuest);
+                        match.Upsert("QUEST", actor.GetProperty<MudObject>("offered-quest"));
                         return PerformResult.Continue;
                     }
                 }, "the must have been offered a quest, and bookeeping rule.")
                 .ProceduralRule((match, actor) =>
                 {
                     var player = actor as Player;
-                    if (!GlobalRules.ConsiderValueRule<bool>("quest available?", player, player.OfferedQuest))
+                    if (!Core.GlobalRules.ConsiderValueRule<bool>("quest available?", player, player.GetProperty<MudObject>("offered-quest")))
                     {
                         MudObject.SendMessage(actor, "The quest is no longer available.");
-                        player.OfferedQuest = null;
+                        player.RemoveProperty("offered-quest");
                         return PerformResult.Stop;
                     }
                     return PerformResult.Continue;
                 }, "the quest must be available rule.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var player = actor as Player;
-                    if (player.ActiveQuest != null)
-                        GlobalRules.ConsiderPerformRule("quest abandoned", player, player.ActiveQuest);
+                    if (actor.GetProperty<MudObject>("active-quest") != null)
+                        Core.GlobalRules.ConsiderPerformRule("quest abandoned", actor, actor.GetProperty<MudObject>("active-quest"));
 
-                    player.ActiveQuest = player.OfferedQuest;
-                    player.OfferedQuest = null;
+                    actor.SetProperty("active-quest", actor.GetProperty<MudObject>("offered-quest"));
+                    actor.RemoveProperty("offered-quest");
                     return PerformResult.Continue;
                 }, "the any active quest must be abandoned rule.")
                 .Perform("quest accepted", "ACTOR", "QUEST");

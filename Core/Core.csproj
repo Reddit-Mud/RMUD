@@ -184,9 +184,6 @@
     <Compile Include="Modules\Network\Telnet\TelnetControlCodes.cs" />
     <Compile Include="Modules\Network\Whisper.cs" />
     <Compile Include="Modules\Network\Who.cs" />
-    <Compile Include="Modules\Quests\AcceptQuest.cs" />
-    <Compile Include="Modules\Quests\QuestRules.cs" />
-    <Compile Include="Modules\Quests\TypeExtensions.cs" />
     <Compile Include="Modules\Silly\Silly.cs" />
     <Compile Include="Modules\StandardActions\Close.cs" />
     <Compile Include="Modules\StandardActions\Drop.cs" />

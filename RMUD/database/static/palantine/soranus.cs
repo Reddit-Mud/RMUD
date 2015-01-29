@@ -18,7 +18,7 @@
             if (GlobalRules.ConsiderValueRule<bool>("quest available?", actor, quest))
             {
                 SendMessage(actor, "\"Would you mind feeding them for me?\" <the0> asks.", this);
-                OfferQuest(actor as RMUD.Actor, quest);
+                this.OfferQuest(actor as RMUD.Actor, quest);
             }
             return RMUD.PerformResult.Stop;
         });

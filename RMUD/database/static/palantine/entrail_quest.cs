@@ -33,8 +33,8 @@
         Perform<RMUD.MudObject, RMUD.MudObject>("quest completed").Do((questor, quest) =>
             {
                 SendMessage(questor, "Entrail quest completed.");
-                ResetQuestObject(GetObject("palantine/wolf"));
-                ResetQuestObject(GetObject("palantine/soranus"));
+                this.ResetQuestObject(GetObject("palantine/wolf"));
+                this.ResetQuestObject(GetObject("palantine/soranus"));
                 Active = false;
                 return RMUD.PerformResult.Continue;
             });
@@ -42,8 +42,8 @@
         Perform<RMUD.MudObject, RMUD.MudObject>("quest failed").Do((questor, quest) =>
             {
                 SendMessage(questor, "Entrail quest failed.");
-                ResetQuestObject(GetObject("palantine/wolf"));
-                ResetQuestObject(GetObject("palantine/soranus"));
+                this.ResetQuestObject(GetObject("palantine/wolf"));
+                this.ResetQuestObject(GetObject("palantine/soranus"));
                 Move(GetObject("palantine/entrails"), GetObject("palantine/soranus"), RMUD.RelativeLocations.Worn);
                 Active = false;
                 return RMUD.PerformResult.Continue;

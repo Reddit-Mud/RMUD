@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Reflection;
+using RMUD;
 
-namespace RMUD.Modules.Quests
+namespace QuestModule
 {
     public class QuestProceduralRules 
     {
@@ -14,20 +15,19 @@ namespace RMUD.Modules.Quests
             GlobalRules.Perform<PossibleMatch, Actor>("after acting")
                 .Do((match, actor) =>
                 {
-                    var player = actor as Player;
-                    if (player != null && player.ActiveQuest != null)
+                    if (actor.GetProperty<MudObject>("active-quest") != null)
                     {
-                        var quest = player.ActiveQuest;
+                        var quest = actor.GetProperty<MudObject>("active-quest");
 
-                        if (GlobalRules.ConsiderValueRule<bool>("quest complete?", player, quest))
+                        if (GlobalRules.ConsiderValueRule<bool>("quest complete?", actor, quest))
                         {
-                            player.ActiveQuest = null;
-                            GlobalRules.ConsiderPerformRule("quest completed", player, quest);
+                            actor.RemoveProperty("active-quest");
+                            GlobalRules.ConsiderPerformRule("quest completed", actor, quest);
                         }
-                        else if (GlobalRules.ConsiderValueRule<bool>("quest failed?", player, quest))
+                        else if (GlobalRules.ConsiderValueRule<bool>("quest failed?", actor, quest))
                         {
-                            player.ActiveQuest = null;
-                            GlobalRules.ConsiderPerformRule("quest failed", player, quest);
+                            actor.RemoveProperty("active-quest");
+                            GlobalRules.ConsiderPerformRule("quest failed", actor, quest);
                         }
                     }
 
