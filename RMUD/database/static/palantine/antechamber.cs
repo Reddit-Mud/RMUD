@@ -1,5 +1,7 @@
 ﻿public class antechamber : RMUD.Room
 {
+    public bool SecretPassageOpen = false;
+
 	public override void Initialize()
 	{
         RoomType = RMUD.RoomType.Interior;
@@ -8,6 +10,22 @@
 
         AddScenery(new Jupiter());
         AddScenery("Minerva is turned to regard her father Jupiter, and poses with one hand on her hips and the other on the shaft of a massive hammer.", "minerva");
+        var hammer = AddScenery("It's really quite impressive. Despite the hammer's massive size, Minerva's grip is rather dainty. You could pull the hammer right out.", "hammer", "shaft");
+
+        hammer.Check<MudObject, MudObject>("can pull?").Do((actor, thing) => CheckResult.Allow);
+        hammer.Perform<MudObject, MudObject>("pull")
+            .Do((actor, thing) =>
+            {
+                if (SecretPassageOpen)
+                    SendMessage(actor, "The hammer doesn't budge.");
+                else
+                {
+                    SecretPassageOpen = true;
+                    OpenLink(Direction.SOUTH, "palantine/pit");
+                    SendMessage(actor, "The hammer slides up a few inches, then lodges firmly in place. With a rumble, a section of the south wall slides aside.");
+                }
+                return PerformResult.Stop;
+            });
 
         var table = new Table();
         Move(table, this);

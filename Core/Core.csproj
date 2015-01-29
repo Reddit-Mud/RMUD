@@ -189,6 +189,7 @@
     <Compile Include="Modules\StandardActions\Open.cs" />
     <Compile Include="Modules\StandardActions\Put.cs" />
     <Compile Include="Modules\StandardActions\Say.cs" />
+    <Compile Include="Modules\StandardActions\Pull.cs" />
     <Compile Include="Modules\StandardActions\Take.cs" />
     <Compile Include="Modules\StandardActions\Unlock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
