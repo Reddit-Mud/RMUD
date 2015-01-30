@@ -13,17 +13,17 @@ namespace RMUD
 
         internal static bool OutputQueryTriggered = false;
 
-        internal static void BeginOutputQuery()
+        public static void BeginOutputQuery()
         {
             OutputQueryTriggered = false;
         }
 
-        internal static bool CheckOutputQuery()
+        public static bool CheckOutputQuery()
         {
             return OutputQueryTriggered;
         }
 
-        internal static String UnformattedItemList(int StartIndex, int Count)
+        public static String UnformattedItemList(int StartIndex, int Count)
         {
             var builder = new StringBuilder();
             for (int i = StartIndex; i < StartIndex + Count; ++i)

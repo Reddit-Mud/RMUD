@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.StandardActions
+namespace StandardActionsModule
 {
 	internal class Put : CommandFactory
 	{

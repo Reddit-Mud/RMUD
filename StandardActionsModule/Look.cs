@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.StandardActions
+namespace StandardActionsModule
 {
     internal class Look : CommandFactory
     {
@@ -14,7 +15,7 @@ namespace RMUD.Modules.StandardActions
                     KeyWord("LOOK"),
                     KeyWord("L")))
                 .Manual("Displays a description of your location, and lists what else is present there.")
-                .ProceduralRule((match, actor) => GlobalRules.ConsiderPerformRule("describe locale", actor, actor.Location));
+                .ProceduralRule((match, actor) => Core.GlobalRules.ConsiderPerformRule("describe locale", actor, actor.Location));
         }
 
         public static void AtStartup(RuleEngine GlobalRules)

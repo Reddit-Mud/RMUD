@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminModule", "AdminModule\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkModule", "NetworkModule\NetworkModule.csproj", "{CCE2B1D9-E0E9-48E1-9ADA-49F36E6F15C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardActionsModule", "StandardActionsModule\StandardActionsModule.csproj", "{1A004032-0F05-4545-88F2-3F58EFA1CE1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{CCE2B1D9-E0E9-48E1-9ADA-49F36E6F15C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCE2B1D9-E0E9-48E1-9ADA-49F36E6F15C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCE2B1D9-E0E9-48E1-9ADA-49F36E6F15C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A004032-0F05-4545-88F2-3F58EFA1CE1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A004032-0F05-4545-88F2-3F58EFA1CE1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A004032-0F05-4545-88F2-3F58EFA1CE1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A004032-0F05-4545-88F2-3F58EFA1CE1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

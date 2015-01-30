@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.StandardActions
+namespace StandardActionsModule
 {
 	internal class Open : CommandFactory
 	{
@@ -16,7 +17,7 @@ namespace RMUD.Modules.StandardActions
                         MustMatch("I don't see that here.",
                             Object("SUBJECT", InScope, (actor, thing) =>
                             {
-                                if (GlobalRules.ConsiderCheckRuleSilently("can open?", actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
+                                if (Core.GlobalRules.ConsiderCheckRuleSilently("can open?", actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
                                 return MatchPreference.Unlikely;
                             })))))
                 .Manual("Opens an openable thing.")

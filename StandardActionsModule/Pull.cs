@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.StandardActions
+namespace StandardActionsModule
 {
 	internal class Pull : CommandFactory
 	{
@@ -16,7 +17,7 @@ namespace RMUD.Modules.StandardActions
                         MustMatch("I don't see that here.",
                             Object("SUBJECT", InScope, (actor, item) =>
                             {
-                                if (GlobalRules.ConsiderCheckRuleSilently("can pull?", actor, item) != CheckResult.Allow)
+                                if (Core.GlobalRules.ConsiderCheckRuleSilently("can pull?", actor, item) != CheckResult.Allow)
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             })))))

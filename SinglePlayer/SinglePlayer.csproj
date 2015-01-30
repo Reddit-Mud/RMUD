@@ -106,6 +106,10 @@
       <Project>{5c29e6ad-54e3-4105-a9f3-2aab48a17c41}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StandardActionsModule\StandardActionsModule.csproj">
+      <Project>{1a004032-0f05-4545-88f2-3f58efa1ce1d}</Project>
+      <Name>StandardActionsModule</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
