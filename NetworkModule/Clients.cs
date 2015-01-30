@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Reflection;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
     internal enum ClientAcceptanceStatus
     {
@@ -16,18 +17,19 @@ namespace RMUD.Modules.Network
     public static class Clients
     {
         public static List<Client> ConnectedClients = new List<Client>();
+        private static Mutex ClientLock = new Mutex();
         internal static ProscriptionList ProscriptionList;
 
         internal static void ClientDisconnected(Client client)
         {
-            Core.DatabaseLock.WaitOne();
+            ClientLock.WaitOne();
             ConnectedClients.Remove(client);
+            client.Player.GetProperty<Account>("account").LoggedInCharacter = null;
             Core.RemovePlayer(client.Player);
-            client.Account.LoggedInCharacter = null;
-            Core.DatabaseLock.ReleaseMutex();
+            ClientLock.ReleaseMutex();
         }
 
-        internal static ClientAcceptanceStatus ClientConnected(Modules.Network.NetworkClient Client)
+        internal static ClientAcceptanceStatus ClientConnected(NetworkClient Client)
         {
             var ban = ProscriptionList.IsBanned(Client.IPString);
             if (ban.Banned)
@@ -36,10 +38,10 @@ namespace RMUD.Modules.Network
                 return ClientAcceptanceStatus.Rejected;
             }
 
-            Core.DatabaseLock.WaitOne();
+            ClientLock.WaitOne();
 
             var Player = new Actor();
-            Player.CommandHandler = new Modules.Network.LoginCommandHandler();
+            Player.CommandHandler = new LoginCommandHandler();
             Core.TiePlayerToClient(Client, Player);
 
             MudObject.SendMessage(Client, Core.SettingsObject.Banner);
@@ -49,7 +51,7 @@ namespace RMUD.Modules.Network
 
             Core.SendPendingMessages();
 
-            Core.DatabaseLock.ReleaseMutex();
+            ClientLock.ReleaseMutex();
 
             return ClientAcceptanceStatus.Accepted;
         }
@@ -57,6 +59,14 @@ namespace RMUD.Modules.Network
         public static void AtStartup(RuleEngine GlobalRules)
         {
             ProscriptionList = new ProscriptionList("proscriptions.txt");
+        }
+
+        public static void SendGlobalMessage(String Message, params MudObject[] MentionedObjects)
+        {
+            if (String.IsNullOrEmpty(Message)) return;
+
+            foreach (var client in ConnectedClients)
+                RMUD.MudObject.SendMessage(client, Message, MentionedObjects);
         }
     }
 }

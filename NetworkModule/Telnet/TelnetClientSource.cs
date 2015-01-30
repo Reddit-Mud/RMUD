@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 
-namespace RMUD.Modules.Network.Telnet
+namespace NetworkModule.Telnet
 {
     public class TelnetClientSource
     {
@@ -71,8 +71,8 @@ namespace RMUD.Modules.Network.Telnet
             }
             catch (SocketException e)
             {
-                Core.LogCriticalError(e);
-                Core.LogError("Failed to set keep-alive: " + e.ErrorCode);
+                RMUD.Core.LogCriticalError(e);
+                RMUD.Core.LogError("Failed to set keep-alive: " + e.ErrorCode);
                 return false;
             }
 
@@ -87,7 +87,7 @@ namespace RMUD.Modules.Network.Telnet
             SetKeepAlive(ClientSocket, 1000 * 60, 1000);
 
             var NewClient = new TelnetClient { Socket = ClientSocket };
-            if (Modules.Network.Clients.ClientConnected(NewClient) == Modules.Network.ClientAcceptanceStatus.Rejected)
+            if (Clients.ClientConnected(NewClient) == ClientAcceptanceStatus.Rejected)
             {
                 NewClient.WasRejected = true;
                 ClientSocket.Close();
@@ -120,7 +120,7 @@ namespace RMUD.Modules.Network.Telnet
 
             if (Client.Socket == null)
             {
-                if (!Client.WasRejected) Modules.Network.Clients.ClientDisconnected(Client);
+                if (!Client.WasRejected) Clients.ClientDisconnected(Client);
                 return;
             }
 
@@ -130,7 +130,7 @@ namespace RMUD.Modules.Network.Telnet
             }
             catch (Exception) //Just shut this one up.
             {
-                if (!Client.WasRejected) Modules.Network.Clients.ClientDisconnected(Client);
+                if (!Client.WasRejected) Clients.ClientDisconnected(Client);
                 return;
             }
 
@@ -146,7 +146,7 @@ namespace RMUD.Modules.Network.Telnet
                     else
                         Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 
-                    if (!Client.WasRejected) Modules.Network.Clients.ClientDisconnected(Client);
+                    if (!Client.WasRejected) Clients.ClientDisconnected(Client);
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace RMUD.Modules.Network.Telnet
                             {
                                 String Command = Client.CommandQueue;
                                 Client.CommandQueue = "";
-                                Core.EnqueuActorCommand(Client.Player, Command);
+                                RMUD.Core.EnqueuActorCommand(Client.Player, Command);
                             }
                         }
                         else if (character == '\b')
@@ -203,7 +203,7 @@ namespace RMUD.Modules.Network.Telnet
                     Console.WriteLine("Lost telnet client: Unknown remote endpoint.");
 				Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
-                if (!Client.WasRejected) Modules.Network.Clients.ClientDisconnected(Client);
+                if (!Client.WasRejected) Clients.ClientDisconnected(Client);
             }
         }
     }

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Network.Telnet
+namespace NetworkModule.Telnet
 {
-    public class TelnetClient : Modules.Network.NetworkClient
+    public class TelnetClient : NetworkClient
     {
         public System.Net.Sockets.Socket Socket { get; set; }
         public String CommandQueue = "";
@@ -67,7 +68,7 @@ namespace RMUD.Modules.Network.Telnet
 				Console.WriteLine(e.Message);
 
 				this.Socket = null;
-                if (!WasRejected) Modules.Network.Clients.ClientDisconnected(this);
+                if (!WasRejected) Clients.ClientDisconnected(this);
 			}
         }
 

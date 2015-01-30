@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
 	internal class Whisper : CommandFactory
 	{
@@ -34,7 +35,7 @@ namespace RMUD.Modules.Network
                     MudObject.SendMessage(player, "[privately " + DateTime.Now + "] ^<the0> : \"" + match["SPEECH"].ToString() + "\"", actor);
                     MudObject.SendMessage(actor, "[privately to <the0>] ^<the1> : \"" + match["SPEECH"].ToString() + "\"", player, actor);
                     if (player.ConnectedClient is NetworkClient && (player.ConnectedClient as NetworkClient).IsAfk)
-                        MudObject.SendMessage(actor, "^<the0> is afk : " + player.ConnectedClient.Account.AFKMessage, player);
+                        MudObject.SendMessage(actor, "^<the0> is afk : " + player.ConnectedClient.Player.GetProperty<Account>("account").AFKMessage, player);
                     return PerformResult.Continue;
                 });
         }

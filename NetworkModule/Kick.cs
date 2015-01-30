@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
     internal class Kick : CommandFactory
     {
@@ -14,7 +15,7 @@ namespace RMUD.Modules.Network
                     RequiredRank(500),
                     KeyWord("KICK"),
                     Or(
-                        Object("PLAYER", new Network.ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),
+                        Object("PLAYER", new ConnectedPlayersObjectSource(), ObjectMatcherSettings.None),
                         SingleWord("MASK"))))
                 .Manual("Makes bad people go away.")
                 .ProceduralRule((match, actor) =>
@@ -29,7 +30,7 @@ namespace RMUD.Modules.Network
                         //Iterate over local copy because kicking modifies ConnectedClients.
                         foreach (var client in new List<Client>(Clients.ConnectedClients))
                         {
-                            var netClient = client as Modules.Network.NetworkClient;
+                            var netClient = client as NetworkClient;
                             if (netClient != null && netClient.IsLoggedOn && maskRegex.Matches(netClient.IPString).Count > 0)
                             {
                                 MudObject.MarkLocaleForUpdate(client.Player);
@@ -50,7 +51,7 @@ namespace RMUD.Modules.Network
 
                 MudObject.SendMessage(Player, Actor.Short + " has removed you from the server.");
                 Player.ConnectedClient.Disconnect();
-                MudObject.SendGlobalMessage(Actor.Short + " has removed " + Player.Short + " from the server.");
+                Clients.SendGlobalMessage(Actor.Short + " has removed " + Player.Short + " from the server.");
             }
         }
     }

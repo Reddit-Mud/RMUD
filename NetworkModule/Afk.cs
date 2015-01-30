@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
 	internal class AFK : CommandFactory
 	{
@@ -18,7 +19,7 @@ namespace RMUD.Modules.Network
                 .ProceduralRule((match, actor) =>
                 {
                     if (actor.ConnectedClient != null)
-                        actor.ConnectedClient.Account.AFKMessage = match["MESSAGE"].ToString();
+                        actor.ConnectedClient.Player.GetProperty<Account>("account").AFKMessage = match["MESSAGE"].ToString();
                     MudObject.SendMessage(actor, "AFK message set.");
                     return PerformResult.Continue;
                 });

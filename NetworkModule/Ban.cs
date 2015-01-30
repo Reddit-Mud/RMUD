@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
     internal class Ban : CommandFactory
     {
@@ -30,7 +31,7 @@ namespace RMUD.Modules.Network
                 .ProceduralRule((match, actor) =>
                 {
                     Clients.ProscriptionList.Ban(match["GLOB"].ToString(), match["REASON"].ToString());
-                    MudObject.SendGlobalMessage("^<the0> has banned " + match["GLOB"].ToString(), actor);
+                    Clients.SendGlobalMessage("^<the0> has banned " + match["GLOB"].ToString(), actor);
                     return PerformResult.Continue;
                 });
 
@@ -43,7 +44,7 @@ namespace RMUD.Modules.Network
                 .ProceduralRule((match, actor) =>
                 {
                     Clients.ProscriptionList.RemoveBan(match["GLOB"].ToString());
-                    MudObject.SendGlobalMessage("^<the0> removes the ban on " + match["GLOB"].ToString(), actor);
+                    Clients.SendGlobalMessage("^<the0> removes the ban on " + match["GLOB"].ToString(), actor);
                     return PerformResult.Continue;
                 });
         }

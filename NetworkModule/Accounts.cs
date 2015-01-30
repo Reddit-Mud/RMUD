@@ -5,8 +5,9 @@ using System.Text;
 using System.IO;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
     public static class Accounts
     {

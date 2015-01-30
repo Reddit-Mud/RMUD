@@ -124,6 +124,10 @@
       <Project>{5c29e6ad-54e3-4105-a9f3-2aab48a17c41}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetworkModule\NetworkModule.csproj">
+      <Project>{cce2b1d9-e0e9-48e1-9ada-49f36e6f15c5}</Project>
+      <Name>NetworkModule</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

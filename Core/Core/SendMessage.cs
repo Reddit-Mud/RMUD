@@ -126,15 +126,5 @@ namespace RMUD
 
             Core.PendingMessages.Add(new RawPendingMessage(Client, Core.FormatMessage(Client.Player, Message, MentionedObjects)));
         }
-
-        public static void SendGlobalMessage(String Message, params MudObject[] MentionedObjects)
-        {
-            if (String.IsNullOrEmpty(Message)) return;
-            if (Core.SilentFlag) return;
-            Core.OutputQueryTriggered = true;
-
-            foreach (var client in Modules.Network.Clients.ConnectedClients)
-                    SendMessage(client, Message, MentionedObjects);
-        }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.IO;
 using System.Net;
-using RMUD.Modules.Network.Telnet;
+using NetworkModule.Telnet;
 
 namespace RMUD
 {

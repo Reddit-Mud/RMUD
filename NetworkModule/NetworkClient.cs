@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
     public class NetworkClient : Client
     {

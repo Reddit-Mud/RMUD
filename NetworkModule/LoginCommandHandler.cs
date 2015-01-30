@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
 	public class LoginCommandHandler : ClientCommandHandler
 	{
@@ -12,7 +13,6 @@ namespace RMUD.Modules.Network
 
         public static void LogPlayerIn(NetworkClient Client, Account Account)
         {
-            Client.Account = Account;
             bool newSession = false;
 
             if (Account.LoggedInCharacter != null)
@@ -34,6 +34,7 @@ namespace RMUD.Modules.Network
                 newSession = true;
             }
 
+            Client.Player.SetProperty("account", Account);
             Client.IsLoggedOn = true;
             Client.Player.CommandHandler = Core.ParserCommandHandler;
             Account.LoggedInCharacter = Client.Player;
@@ -47,9 +48,9 @@ namespace RMUD.Modules.Network
 		{
 			Parser = new CommandParser();
 
-            CommandFactory.CreateCommandFactory(typeof(Modules.Network.Login)).Create(Parser);
-            CommandFactory.CreateCommandFactory(typeof(Modules.Network.Register)).Create(Parser);
-            CommandFactory.CreateCommandFactory(typeof(Modules.Network.Quit)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Login)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Register)).Create(Parser);
+            CommandFactory.CreateCommandFactory(typeof(Quit)).Create(Parser);
 
 		}
 

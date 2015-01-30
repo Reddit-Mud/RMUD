@@ -1,6 +1,7 @@
 ﻿using System;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
     public class Account
     {

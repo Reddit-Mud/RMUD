@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
 	internal class Who : CommandFactory
 	{
@@ -20,7 +21,7 @@ namespace RMUD.Modules.Network
                         MudObject.SendMessage(actor,
                             "[" + Core.SettingsObject.GetNameForRank(client.Player.Rank) + "] <a0> ["
                             + client.ConnectionDescription + "]"
-                            + (client.IsAfk ? (" afk: " + client.Account.AFKMessage) : "")
+                            + (client.IsAfk ? (" afk: " + client.Player.GetProperty<Account>("account").AFKMessage) : "")
                             + (client.Player.Location != null ? (" -- " + client.Player.Location.Path) : ""),
                             client.Player);
                     return PerformResult.Continue;

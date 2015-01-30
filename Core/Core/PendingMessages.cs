@@ -30,7 +30,7 @@ namespace RMUD
             PendingMessages.Clear();
         }
 
-		internal static void ClearPendingMessages()
+		public static void ClearPendingMessages()
 		{
 			PendingMessages.Clear();
 		}

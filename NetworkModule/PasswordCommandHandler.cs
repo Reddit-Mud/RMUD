@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using RMUD;
 
-namespace RMUD.Modules.Network
+namespace NetworkModule
 {
 	public class PasswordCommandHandler : ClientCommandHandler
 	{

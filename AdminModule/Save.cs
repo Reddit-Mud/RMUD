@@ -19,12 +19,12 @@ namespace AdminModule
                 {
                     Core.CommandTimeoutEnabled = false;
 
-                    MudObject.SendGlobalMessage("The database is being saved. There may be a brief delay.");
+                    //TODO MudObject.SendGlobalMessage("The database is being saved. There may be a brief delay.");
                     Core.SendPendingMessages();
 
                     var saved = Core.Database.Save();
 
-                    MudObject.SendGlobalMessage("The database has been saved.");
+                    //TODO MudObject.SendGlobalMessage("The database has been saved.");
                     MudObject.SendMessage(actor, String.Format("I saved {0} persistent objects.", saved));
                     return PerformResult.Continue;
                 });
