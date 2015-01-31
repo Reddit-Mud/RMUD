@@ -30,7 +30,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can examine?")
                 .First
-                .Do((viewer, item) => MudObject.CheckIsVisibleTo(viewer, item))
+                .Do((viewer, item) => MiscCustomization.CheckIsVisibleTo(viewer, item))
                 .Name("Can't examine what isn't here rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can examine?")
@@ -52,9 +52,9 @@ namespace StandardActionsModule
                 .Do((viewer, item) =>
                 {
                     if (GlobalRules.ConsiderValueRule<bool>("is-open", item))
-                        MudObject.SendMessage(viewer, "^<the0> is open.", item);
+                        MudObject.SendMessage(viewer, "It's open.", item);
                     else
-                        MudObject.SendMessage(viewer, "^<the0> is closed.", item);
+                        MudObject.SendMessage(viewer, "It's closed.", item);
                     return PerformResult.Continue;
                 })
                 .Name("Describe open or closed state rule.");
@@ -67,7 +67,7 @@ namespace StandardActionsModule
                     if (contents.Count() > 0)
                     {
                         contents.Insert(0, item);
-                        MudObject.SendMessage(viewer, "On <the0> is " + Core.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
+                        MudObject.SendMessage(viewer, "There's also " + Core.UnformattedItemList(1, contents.Count - 1) + " on it.", contents.ToArray());
                     }
                     return PerformResult.Continue;
                 })
@@ -87,7 +87,7 @@ namespace StandardActionsModule
                     if (contents.Count() > 0)
                     {
                         contents.Insert(0, item);
-                        MudObject.SendMessage(viewer, "In <the0> is " + Core.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
+                        MudObject.SendMessage(viewer, "Inside it there's " + Core.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
                     }
                     return PerformResult.Continue;
                 })

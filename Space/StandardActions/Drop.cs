@@ -33,7 +33,7 @@ namespace StandardActionsModule
                 .When((actor, item) => !MudObject.ObjectContainsObject(actor, item))
                 .Do((actor, item) =>
                 {
-                    MudObject.SendMessage(actor, "You aren't holding that.");
+                    MudObject.SendMessage(actor, "I don't have that.");
                     return CheckResult.Disallow;
                 })
                 .Name("Must be holding it to drop it rule.");
@@ -56,8 +56,7 @@ namespace StandardActionsModule
 
             GlobalRules.Perform<MudObject, MudObject>("drop").Do((actor, target) =>
             {
-                MudObject.SendMessage(actor, "You drop <a0>.", target);
-                MudObject.SendExternalMessage(actor, "<a0> drops <a1>.", actor, target);
+                MudObject.SendMessage(actor, "Okay, I dropped it.", target);
                 MudObject.Move(target, actor.Location);
                 return PerformResult.Continue;
             }).Name("Default drop handler rule.");

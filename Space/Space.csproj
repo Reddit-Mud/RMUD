@@ -55,6 +55,7 @@
     <Compile Include="StandardActions\Lock.cs" />
     <Compile Include="StandardActions\Look.cs" />
     <Compile Include="StandardActions\LookUnderOrBehind.cs" />
+    <Compile Include="StandardActions\MiscCustomization.cs" />
     <Compile Include="StandardActions\MiscRules.cs" />
     <Compile Include="StandardActions\Open.cs" />
     <Compile Include="StandardActions\Pull.cs" />

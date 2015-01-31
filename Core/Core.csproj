@@ -57,6 +57,7 @@
     <Compile Include="Core\IsVisibleTo.cs" />
     <Compile Include="Core\ManPages.cs" />
     <Compile Include="Core\MarkForUpdate.cs" />
+    <Compile Include="Core\MessageTable.cs" />
     <Compile Include="Core\Meta\Man.cs" />
     <Compile Include="Core\Meta\Version.cs" />
     <Compile Include="Core\Move.cs" />
