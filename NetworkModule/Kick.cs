@@ -33,7 +33,7 @@ namespace NetworkModule
                             var netClient = client as NetworkClient;
                             if (netClient != null && netClient.IsLoggedOn && maskRegex.Matches(netClient.IPString).Count > 0)
                             {
-                                MudObject.MarkLocaleForUpdate(client.Player);
+                                Core.MarkLocaleForUpdate(client.Player);
                                 KickPlayer(client.Player, actor);
                             }
                         }
@@ -47,7 +47,7 @@ namespace NetworkModule
         {
             if (Player.ConnectedClient != null)
             {
-                MudObject.MarkLocaleForUpdate(Player);
+                Core.MarkLocaleForUpdate(Player);
 
                 MudObject.SendMessage(Player, Actor.Short + " has removed you from the server.");
                 Player.ConnectedClient.Disconnect();

@@ -31,8 +31,8 @@ namespace StandardActionsModule
                 .AfterActing()
                 .ProceduralRule((match, actor) =>
                 {
-                    MudObject.MarkLocaleForUpdate(actor);
-                    MudObject.MarkLocaleForUpdate(match["LINK"] as MudObject);
+                    Core.MarkLocaleForUpdate(actor);
+                    Core.MarkLocaleForUpdate(match["LINK"] as MudObject);
                     return PerformResult.Continue;
                 }, "Mark both sides of link for update rule");
 		}

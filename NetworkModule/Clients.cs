@@ -16,7 +16,7 @@ namespace NetworkModule
 
     public static class Clients
     {
-        public static List<Client> ConnectedClients = new List<Client>();
+        internal static List<Client> ConnectedClients = new List<Client>();
         private static Mutex ClientLock = new Mutex();
         internal static ProscriptionList ProscriptionList;
 
@@ -40,9 +40,9 @@ namespace NetworkModule
 
             ClientLock.WaitOne();
 
-            var Player = new Actor();
-            Player.CommandHandler = new LoginCommandHandler();
-            Core.TiePlayerToClient(Client, Player);
+            var dummyPlayer = new Actor();
+            dummyPlayer.CommandHandler = new LoginCommandHandler();
+            Core.TiePlayerToClient(Client, dummyPlayer);
 
             MudObject.SendMessage(Client, Core.SettingsObject.Banner);
             MudObject.SendMessage(Client, Core.SettingsObject.MessageOfTheDay);

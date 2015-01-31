@@ -51,7 +51,7 @@ namespace RMUD
                 if (otherSide != null)
                 {
                     MudObject.SendLocaleMessage(otherSide as Room, "<a0> opens <the1>.", a, this);
-                    MudObject.MarkLocaleForUpdate(otherSide);
+                    Core.MarkLocaleForUpdate(otherSide);
                 }
 
                 return PerformResult.Continue;
@@ -66,7 +66,7 @@ namespace RMUD
                 if (otherSide != null)
                 {
                     MudObject.SendLocaleMessage(otherSide as Room, "<a0> closes <the1>.", a, this);
-                    MudObject.MarkLocaleForUpdate(otherSide);
+                    Core.MarkLocaleForUpdate(otherSide);
                 }
 
                 return PerformResult.Continue;

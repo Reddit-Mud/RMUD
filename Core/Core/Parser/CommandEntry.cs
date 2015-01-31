@@ -147,7 +147,7 @@ namespace RMUD
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
                 (match, actor) =>
                 {
-                    MudObject.MarkLocaleForUpdate(match["ACTOR"] as MudObject);
+                    Core.MarkLocaleForUpdate(match["ACTOR"] as MudObject);
                     return PerformResult.Continue;
                 }),
                 DescriptiveName = "Procedural rule to mark locale for update."

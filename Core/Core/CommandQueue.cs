@@ -55,9 +55,9 @@ namespace RMUD
         private static void InitializeCommandProcessor()
         {
             DefaultParser = new CommandParser();
+
             foreach (var assembly in ModuleAssemblies)
                 DiscoverCommandFactories(assembly, DefaultParser);
-            //DiscoverCommandFactories(Assembly.GetExecutingAssembly(), DefaultParser);
 
             ParserCommandHandler = new ParserCommandHandler(DefaultParser);
         }
@@ -158,7 +158,7 @@ namespace RMUD
                                 if (PendingCommand.Actor.ConnectedClient != null)
                                 {
                                     PendingCommand.Actor.ConnectedClient.Send("Command timeout.\r\n");
-                                    LogError(String.Format("Command timeout. {0} - {1}", /*PendingCommand.Actor.ConnectedClient.IPString*/"?", PendingCommand.RawCommand));
+                                    LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Actor.ConnectedClient.ConnectionDescription, PendingCommand.RawCommand));
                                 }
                                 else
                                     LogError(String.Format("Command timeout [No client] - {1}", PendingCommand.RawCommand));

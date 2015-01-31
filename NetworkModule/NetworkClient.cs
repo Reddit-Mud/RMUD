@@ -8,8 +8,10 @@ namespace NetworkModule
 {
     public class NetworkClient : Client
     {
-		public virtual String ConnectionDescription { get { throw new NotImplementedException(); } }
+		public override String ConnectionDescription { get { throw new NotImplementedException(); } }
         public virtual String IPString { get { throw new NotImplementedException(); } }
+
+        
 
         public bool IsLoggedOn { get; set; }
         public DateTime TimeOfLastCommand = DateTime.Now;

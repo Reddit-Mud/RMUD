@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public class UpdateRules 
+    public class UpdateRules
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
@@ -35,29 +35,29 @@ namespace RMUD
 
     public static partial class Core
     {
-       internal static List<MudObject> MarkedObjects = new List<MudObject>();
-		
-        internal static void MarkLocaleForUpdate(MudObject Object)
+        private static List<MudObject> MarkedObjects = new List<MudObject>();
+
+        /// <summary>
+        /// Find the locale of an object and mark it for update.
+        /// </summary>
+        /// <param name="Object">Reference point object</param>
+        public static void MarkLocaleForUpdate(MudObject Object)
         {
             MudObject locale = MudObject.FindLocale(Object);
             if (locale != null && !MarkedObjects.Contains(locale))
                 MarkedObjects.Add(locale);
         }
 
-        internal static void UpdateMarkedObjects()
+        /// <summary>
+        /// Run update rule on all objects that have been marked.
+        /// </summary>
+        public static void UpdateMarkedObjects()
         {
+            // Updating an object may mark further objects for update. Avoid an infinite loop.
             var startCount = MarkedObjects.Count;
             for (int i = 0; i < startCount; ++i)
                 GlobalRules.ConsiderPerformRule("update", MarkedObjects[i]);
             MarkedObjects.RemoveRange(0, startCount);
-        }
-    }
-
-    public partial class MudObject
-    {
-        public static void MarkLocaleForUpdate(MudObject Object)
-        {
-            Core.MarkLocaleForUpdate(Object);
         }
     }
 }

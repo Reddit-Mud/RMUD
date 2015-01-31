@@ -9,25 +9,25 @@ namespace RMUD
 {
     public partial class MudObject
     {
+        /// <summary>
+        /// Move Object to Destination.
+        /// </summary>
+        /// <param name="Object">Object to move.</param>
+        /// <param name="Destination">Destination to move too.</param>
+        /// <param name="Location"></param>
         public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
         {
             if (Object == null) return;
 
-            if (Object.Location != null)
-            {
-                var container = Object.Location as Container;
-                if (container != null)
-                    container.Remove(Object);
-                Object.Location = null;
-            }
+            if (Object.Location != null && Object.Location is Container) (Object.Location as Container).Remove(Object);
 
-            if (Destination != null)
+            if (Destination is Container) 
             {
-                var destinationContainer = Destination as Container;
-                if (destinationContainer != null)
-                    destinationContainer.Add(Object, Location);
+                (Destination as Container).Add(Object, Location);
                 Object.Location = Destination;
             }
+            else
+                Object.Location = null;
         }
     }
 }
