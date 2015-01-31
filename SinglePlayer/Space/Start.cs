@@ -2,12 +2,14 @@
 
 namespace Space
 {
-    public class Start : RMUD.Room
+    public class Start : Room
     {
         public override void Initialize()
         {
-            Short = "Start Room";
-            Long = "This is a game with the minimum possible objects.";
+            Long = "I think I'm in some kind of closet. It's not very big and there isn't much light.";
+            QuickDescription = "I'm in the closet again.";
+
+            OpenLink(Direction.WEST, "Cargo");
         }
     }   
 }

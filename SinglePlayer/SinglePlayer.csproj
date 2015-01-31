@@ -53,8 +53,11 @@
     <Compile Include="Akkoteaque\Fishing\Hook.cs" />
     <Compile Include="Akkoteaque\Fishing\Rod.cs" />
     <Compile Include="Space\Dan.cs" />
+    <Compile Include="Space\Game.cs" />
     <Compile Include="Space\Player.cs" />
     <Compile Include="Space\Settings.cs" />
+    <Compile Include="Space\Room.cs" />
+    <Compile Include="Space\Cargo.cs" />
     <Compile Include="Space\Start.cs" />
     <Compile Include="Wells\Player.cs" />
     <Compile Include="Wells\Settings.cs" />

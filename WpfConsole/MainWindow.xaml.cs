@@ -24,6 +24,7 @@ namespace WpfConsole
         public int MemoryScrollIndex = 0;
         private RMUD.SinglePlayer.Driver Driver = new RMUD.SinglePlayer.Driver();
         private Action AfterNavigating = null;
+        private bool ShuttingDown = false;
 
         public MainWindow()
         {
@@ -48,6 +49,7 @@ namespace WpfConsole
             Driver.BlockOnInput = false;
             RMUD.Core.OnShutDown += () =>
                 {
+                    if (ShuttingDown) return;
                     Dispatcher.Invoke(new Action(() => Close()));
                 };
         }
@@ -162,6 +164,7 @@ body
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            ShuttingDown = true;
             RMUD.Core.Shutdown();
         }
 
