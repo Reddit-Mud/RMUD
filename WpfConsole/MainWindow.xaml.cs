@@ -40,9 +40,10 @@ namespace WpfConsole
                 MessageBox.Show(e.Message);
             }
 
-            AfterNavigating = () => Driver.Start(typeof(CloakOfDarkness.Player).Assembly, "Space", 
-                s => 
-                    Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, PrepareString(s)));
+            AfterNavigating = () => Driver.Start(typeof(Space.Player).Assembly, "Space",
+                s =>
+                    Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, PrepareString(s)),
+                new RMUD.StartUpAssembly(typeof(StandardActionsModule.MiscRules).Assembly, new RMUD.ModuleInfo { BaseNameSpace = "StandardActionsModule" }));
 
             Clear();
 

@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkModule", "NetworkMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardActionsModule", "StandardActionsModule\StandardActionsModule.csproj", "{1A004032-0F05-4545-88F2-3F58EFA1CE1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space", "Space\Space.csproj", "{75D0C5C6-EFB9-4B45-86FF-F83ABC943D78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{1A004032-0F05-4545-88F2-3F58EFA1CE1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A004032-0F05-4545-88F2-3F58EFA1CE1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A004032-0F05-4545-88F2-3F58EFA1CE1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75D0C5C6-EFB9-4B45-86FF-F83ABC943D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75D0C5C6-EFB9-4B45-86FF-F83ABC943D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75D0C5C6-EFB9-4B45-86FF-F83ABC943D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75D0C5C6-EFB9-4B45-86FF-F83ABC943D78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

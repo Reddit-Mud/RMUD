@@ -28,11 +28,16 @@ namespace RMUD.SinglePlayer
         public bool Start(
             System.Reflection.Assembly DatabaseAssembly, 
             String ObjectNamespace,
-            Action<String> Output)
+            Action<String> Output,
+            params StartUpAssembly[] AdditionalAssemblies)
         {
+            var assemblies = new List<StartUpAssembly>();
+            assemblies.Add(new StartUpAssembly(DatabaseAssembly, new ModuleInfo { BaseNameSpace = ObjectNamespace }));
+            assemblies.AddRange(AdditionalAssemblies);
+
             if (RMUD.Core.Start(
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, ObjectNamespace),
-                new RMUD.StartUpAssembly(DatabaseAssembly, new ModuleInfo { BaseNameSpace = ObjectNamespace })))
+                assemblies.ToArray()))
             {
                 Player = RMUD.MudObject.GetObject<RMUD.Player>(RMUD.Core.SettingsObject.PlayerBaseObject);
                 Player.CommandHandler = RMUD.Core.ParserCommandHandler;
