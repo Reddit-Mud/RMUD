@@ -20,6 +20,14 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("nowhere", "You aren't anywhere.");
+            Core.StandardMessage("dark", "It's too dark to see.");
+            Core.StandardMessage("also here", "Also here: <l0>.");
+            Core.StandardMessage("on which", "(on which is <l0>)");
+            Core.StandardMessage("obvious exits", "Obvious exits:");
+            Core.StandardMessage("through", "through <the0>");
+            Core.StandardMessage("to", "to <the0>");
+
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe in locale", "[Actor, Item] : Generate a locale description for the item.", "actor", "item");
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe locale", "[Actor, Room] : Generates a description of the locale.", "actor", "room");
@@ -29,7 +37,7 @@ namespace StandardActionsModule
                 .When((viewer, room) => room == null || !(room is Room))
                 .Do((viewer, room) =>
                 {
-                    MudObject.SendMessage(viewer, "You aren't in any room.");
+                    MudObject.SendMessage(viewer, "@nowhere");
                     return PerformResult.Stop;
                 })
                 .Name("Can't describe the locale if there isn't one rule.");
@@ -57,7 +65,7 @@ namespace StandardActionsModule
                 .When((viewer, room) => (room as Room).Light == LightingLevel.Dark)
                 .Do((viewer, room) =>
                 {
-                    MudObject.SendMessage(viewer, "It is too dark to see.");
+                    MudObject.SendMessage(viewer, "@dark");
                     return PerformResult.Stop;
                 })
                 .Name("Can't see in darkness rule.");
@@ -69,6 +77,20 @@ namespace StandardActionsModule
                     return PerformResult.Continue;
                 })
                 .Name("Include describe rules in locale description rule.");
+
+            var describingLocale = false;
+
+            GlobalRules.Value<Actor, Container, String, String>("printed name")
+                .When((viewer, container, article) => describingLocale && (container.LocationsSupported & RelativeLocations.On) == RelativeLocations.On)
+                .Do((viewer, container, article) =>
+                    {
+                        var subObjects = new List<MudObject>(container.EnumerateObjects(RelativeLocations.On));
+
+                        if (subObjects.Count > 0)
+                            return container.Short + " " + Core.FormatMessage(viewer, Core.Message("on which"), subObjects);
+                        else
+                            return container.Short;
+                    });
 
             GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .Do((viewer, room) =>
@@ -85,45 +107,22 @@ namespace StandardActionsModule
 
                     if (normalContents.Count > 0)
                     {
-                        var builder = new StringBuilder();
-                        builder.Append("Also here: ");
-                        builder.Append(String.Join(", ", normalContents.Select(thing =>
-                        {
-                            var subBuilder = new StringBuilder();
-                            subBuilder.Append(thing.Indefinite(viewer));
-
-                            var container = thing as Container;
-                            if (container != null)
-                            {
-                                if ((container.LocationsSupported & RelativeLocations.On) == RelativeLocations.On)
-                                {
-                                    var subObjects = new List<MudObject>(container.EnumerateObjects(RelativeLocations.On));
-
-                                    if (subObjects.Count > 0)
-                                    {
-                                        subBuilder.Append(" (on which is ");
-                                        subBuilder.Append(String.Join(", ", subObjects.Select(o => o.Indefinite(viewer))));
-                                        subBuilder.Append(")");
-                                    }
-                                }
-                            }
-
-                            return subBuilder.ToString();
-                        })));
-
-                        MudObject.SendMessage(viewer, builder.ToString());
+                        describingLocale = true;
+                        MudObject.SendMessage(viewer, "@also here", normalContents);
+                        describingLocale = false;
                     }
 
                     return PerformResult.Continue;
                 })
                 .Name("List contents of room rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("describe locale")
+            GlobalRules.Perform<Actor, MudObject>("describe locale")
+                .Last
                 .Do((viewer, room) =>
                 {
                     if ((room as Room).EnumerateObjects(RelativeLocations.Links).Count() > 0)
                     {
-                        MudObject.SendMessage(viewer, "Obvious exits:");
+                        MudObject.SendMessage(viewer, "@obvious exits");
 
                         foreach (var link in (room as Room).EnumerateObjects<Link>(RelativeLocations.Links))
                         {
@@ -132,17 +131,11 @@ namespace StandardActionsModule
                             builder.Append(link.Direction.ToString());
 
                             if (link.Portal != null)
-                            {
-                                builder.Append(", through ");
-                                builder.Append(link.Portal.Definite(viewer));
-                            }
+                                builder.Append(" " + Core.FormatMessage(viewer, Core.Message("through"), link.Portal));
 
                             var destinationRoom = MudObject.GetObject(link.Destination) as Room;
                             if (destinationRoom != null)
-                            {
-                                builder.Append(", to ");
-                                builder.Append(destinationRoom.Short);
-                            }
+                                builder.Append(" " + Core.FormatMessage(viewer, Core.Message("to"), destinationRoom));
 
                             MudObject.SendMessage(viewer, builder.ToString());
                         }
@@ -150,7 +143,7 @@ namespace StandardActionsModule
 
                     return PerformResult.Continue;
                 })
-                .Name("List exists in locale description rule.");
+                .Name("List exits in locale description rule.");
         }
     }
 }

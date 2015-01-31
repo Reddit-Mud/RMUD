@@ -14,7 +14,7 @@ namespace StandardActionsModule
                 Sequence(
                     KeyWord("OPEN"),
                     BestScore("SUBJECT",
-                        MustMatch("I don't see that here.",
+                        MustMatch("@not here",
                             Object("SUBJECT", InScope, (actor, thing) =>
                             {
                                 if (Core.GlobalRules.ConsiderCheckRuleSilently("can open?", actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
@@ -29,6 +29,10 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("not openable", "I don't think the concept of 'open' applies to that.");
+            Core.StandardMessage("you open", "You open <the0>.");
+            Core.StandardMessage("they open", "^<the0> opens <the1>.");
+
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can open?", "[Actor, Item] : Can the actor open the item?", "actor", "item");
 
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("openable?", "[Item -> bool] : Is the item openable?", "item");
@@ -41,7 +45,7 @@ namespace StandardActionsModule
                 .When((actor, item) => !GlobalRules.ConsiderValueRule<bool>("openable?", item))
                 .Do((a, b) =>
                 {
-                    MudObject.SendMessage(a, "I don't think the concept of 'open' applies to that.");
+                    MudObject.SendMessage(a, "@not openable");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't open the unopenable rule.");
@@ -56,8 +60,8 @@ namespace StandardActionsModule
 
             GlobalRules.Perform<MudObject, MudObject>("opened").Do((actor, target) =>
             {
-                MudObject.SendMessage(actor, "You open <the0>.", target);
-                MudObject.SendExternalMessage(actor, "^<a0> opens <a1>.", actor, target);
+                MudObject.SendMessage(actor, "@you open", target);
+                MudObject.SendExternalMessage(actor, "@they open", actor, target);
                 return PerformResult.Continue;
             }).Name("Default report opening rule.");
 

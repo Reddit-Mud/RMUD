@@ -14,11 +14,11 @@ namespace StandardActionsModule
                 Sequence(
                     KeyWord("PUT"),
                     BestScore("SUBJECT",
-                        MustMatch("You don't seem to have that.",
+                        MustMatch("@dont have that",
                             Object("SUBJECT", InScope, PreferHeld))),
                     Optional(RelativeLocation("RELLOC")),
                     BestScore("OBJECT",
-                        MustMatch("I can't see that here.",
+                        MustMatch("@not here",
                             Object("OBJECT", InScope, (actor, thing) =>
                                 {
                                     //Prefer objects that are actually containers. No means curently to prefer
@@ -48,6 +48,10 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("cant put relloc", "You can't put things <s0> that.");
+            Core.StandardMessage("you put", "You put <the0> <s1> <the2>.");
+            Core.StandardMessage("they put", "^<the0> puts <the1> <s2> <the3>.");
+                
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("can put?", "[Actor, Item, Container, Location] : Determine if the actor can put the item in or on or under the container.", "actor", "item", "container", "relloc");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject, RelativeLocations>("put", "[Actor, Item, Container, Location] : Handle an actor putting the item in or on or under the container.", "actor", "item", "container", "relloc");
 
@@ -61,7 +65,7 @@ namespace StandardActionsModule
                 {
                     if (!(container is Container))
                     {
-                        MudObject.SendMessage(actor, "You can't put things " + Relloc.GetRelativeLocationName(relloc) + " that.");
+                        MudObject.SendMessage(actor, "@cant put relloc", Relloc.GetRelativeLocationName(relloc));
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Continue;
@@ -80,8 +84,8 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, MudObject, RelativeLocations>("put")
                 .Do((actor, item, container, relloc) =>
                 {
-                    MudObject.SendMessage(actor, String.Format("You put <the0> {0} <the1>.", Relloc.GetRelativeLocationName(relloc)), item, container);
-                    MudObject.SendExternalMessage(actor, String.Format("<a0> puts <a1> {0} <a2>.", Relloc.GetRelativeLocationName(relloc)), actor, item, container);
+                    MudObject.SendMessage(actor, "@you put", item, Relloc.GetRelativeLocationName(relloc), container);
+                    MudObject.SendExternalMessage(actor, "@they put", actor, item, Relloc.GetRelativeLocationName(relloc), container);
                     MudObject.Move(item, container, relloc);
                     return PerformResult.Continue;
                 })
@@ -93,7 +97,7 @@ namespace StandardActionsModule
                     var c = container as Container;
                     if (c == null || (c.LocationsSupported & relloc) != relloc)
                     {
-                        MudObject.SendMessage(actor, String.Format("You can't put something {0} that.", Relloc.GetRelativeLocationName(relloc)));
+                        MudObject.SendMessage(actor, "@cant put relloc", Relloc.GetRelativeLocationName(relloc));
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Continue;
@@ -105,7 +109,7 @@ namespace StandardActionsModule
                 {
                     if (relloc == RelativeLocations.In && !GlobalRules.ConsiderValueRule<bool>("open?", container))
                     {
-                        MudObject.SendMessage(actor, "It seems to be closed.");
+                        MudObject.SendMessage(actor, "@is closed error", container);
                         return CheckResult.Disallow;
                     }
 

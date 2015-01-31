@@ -15,10 +15,10 @@ namespace StandardActionsModule
                     BestScore("SUBJECT",
                         Sequence(
                             KeyWord("LOCK"),
-                            MustMatch("I couldn't figure out what you're trying to lock.",
+                            MustMatch("@not here",
                                 Object("SUBJECT", InScope)),
                             OptionalKeyWord("WITH"),
-                            MustMatch("I couldn't figure out what you're trying to lock that with.",
+                            MustMatch("@not here",
                                 Object("KEY", InScope, PreferHeld))))))
                 .Manual("Lock the subject with a key.")
                 .Check("can lock?", "ACTOR", "SUBJECT", "KEY")
@@ -29,6 +29,10 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("not lockable", "I don't think the concept of 'locked' applies to that.");
+            Core.StandardMessage("you lock", "You lock <the0>.");
+            Core.StandardMessage("they lock", "^<the0> locks <the1> with <the2>.");
+
             GlobalRules.DeclareValueRuleBook<MudObject, bool>("lockable?", "[Item] : Can this item be locked?", "item");
 
             GlobalRules.Value<MudObject, bool>("lockable?").Do(item => false).Name("Things not lockable by default rule.");
@@ -47,7 +51,7 @@ namespace StandardActionsModule
                 .When((actor, item, key) => !GlobalRules.ConsiderValueRule<bool>("lockable?", item))
                 .Do((a, b, c) =>
                 {
-                    MudObject.SendMessage(a, "I don't think the concept of 'locked' applies to that.");
+                    MudObject.SendMessage(a, "@not lockable");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't lock the unlockable rule.");
@@ -60,8 +64,8 @@ namespace StandardActionsModule
 
             GlobalRules.Perform<MudObject, MudObject, MudObject>("locked").Do((actor, target, key) =>
             {
-                MudObject.SendMessage(actor, "You lock <the0>.", target);
-                MudObject.SendExternalMessage(actor, "<a0> locks <a1> with <a2>.", actor, target, key);
+                MudObject.SendMessage(actor, "@you lock", target);
+                MudObject.SendExternalMessage(actor, "@they lock", actor, target, key);
                 return PerformResult.Continue;
             });
         }

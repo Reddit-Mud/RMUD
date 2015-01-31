@@ -14,7 +14,7 @@ namespace StandardActionsModule
                 Sequence(
                     KeyWord("CLOSE"),
                     BestScore("SUBJECT",
-                        MustMatch("I don't see that here.",
+                        MustMatch("@not here",
                             Object("SUBJECT", InScope, (actor, thing) =>
                                 {
                                     if (Core.GlobalRules.ConsiderCheckRuleSilently("can close?", actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
@@ -29,6 +29,9 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("you close", "You close <the0>.");
+            Core.StandardMessage("they close", "^<the0> closes <the1>.");
+
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can close?", "[Actor, Item] : Determine if the item can be closed.", "actor", "item");
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("closed", "[Actor, Item] : Handle the item being closed.", "actor", "item");
@@ -37,7 +40,7 @@ namespace StandardActionsModule
                 .When((actor, item) => !GlobalRules.ConsiderValueRule<bool>("openable?", item))
                 .Do((a, b) =>
                 {
-                    MudObject.SendMessage(a, "I don't think the concept of 'open' applies to that.");
+                    MudObject.SendMessage(a, "@not openable");
                     return CheckResult.Disallow;
                 })
                 .Name("Default can't close unopenable things rule.");
@@ -48,8 +51,8 @@ namespace StandardActionsModule
 
             GlobalRules.Perform<MudObject, MudObject>("closed").Do((actor, target) =>
             {
-                MudObject.SendMessage(actor, "You close <the0>.", target);
-                MudObject.SendExternalMessage(actor, "^<a0> closes <a1>.", actor, target);
+                MudObject.SendMessage(actor, "@you close", target);
+                MudObject.SendExternalMessage(actor, "@they close", actor, target);
                 return PerformResult.Continue;
             }).Name("Default close reporting rule.");
 

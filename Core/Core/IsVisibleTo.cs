@@ -55,7 +55,7 @@ namespace RMUD
         {
             if (!MudObject.IsVisibleTo(Actor, Item))
             {
-                MudObject.SendMessage(Actor, "That doesn't seem to be here any more.");
+                MudObject.SendMessage(Actor, "@gone");
                 return CheckResult.Disallow;
             }
             return CheckResult.Continue;
@@ -72,7 +72,7 @@ namespace RMUD
         {
             if (!MudObject.ObjectContainsObject(Actor, Item))
             {
-                MudObject.SendMessage(Actor, "You don't have that.");
+                MudObject.SendMessage(Actor, "@dont have that");
                 return CheckResult.Disallow;
             }
             return CheckResult.Continue;

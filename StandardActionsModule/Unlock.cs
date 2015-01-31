@@ -14,11 +14,11 @@ namespace StandardActionsModule
                 Sequence(
                     KeyWord("UNLOCK"),
                     BestScore("ITEM",
-                        MustMatch("I couldn't figure out what you're trying to unlock.",
+                        MustMatch("@not here",
                             Object("ITEM", InScope))),
                     OptionalKeyWord("WITH"),
                     BestScore("KEY",
-                        MustMatch("I couldn't figure out what you're trying to unlock that with.",
+                        MustMatch("@not here",
                             Object("KEY", InScope, PreferHeld)))))
                 .Manual("Use the KEY to unlock the ITEM.")
                 .Check("can lock?", "ACTOR", "ITEM", "KEY")
@@ -29,12 +29,15 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("you unlock", "You unlock <the0>.");
+            Core.StandardMessage("they unlock", "^<the0> unlocks <the1> with <a2>.");
+
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("unlocked", "[Actor, Item, Key] : Handle the actor unlocking the item with the key.", "actor", "item", "key");
 
             GlobalRules.Perform<MudObject, MudObject, MudObject>("unlocked").Do((actor, target, key) =>
             {
-                MudObject.SendMessage(actor, "You unlock <the0>.", target);
-                MudObject.SendExternalMessage(actor, "<a0> unlocks <a1> with <a2>.", actor, target, key);
+                MudObject.SendMessage(actor, "@you unlock", target);
+                MudObject.SendExternalMessage(actor, "@they unlock", actor, target, key);
                 return PerformResult.Continue;
             });
         }

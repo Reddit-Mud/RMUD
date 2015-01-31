@@ -16,7 +16,7 @@ namespace StandardActionsModule
                         Or(
                             KeyWord("SAY"),
                             KeyWord("'")),
-                        MustMatch("Say what?", Rest("SPEECH"))),
+                        MustMatch("@say what", Rest("SPEECH"))),
                     Generic((pm, context) =>
                     {
                         var r = new List<PossibleMatch>();
@@ -46,19 +46,24 @@ namespace StandardActionsModule
                     Or(
                         KeyWord("EMOTE"),
                         KeyWord("\"")),
-                    MustMatch("You exist. Actually this is an error message, but that's what you just told me to say.", Rest("SPEECH"))))
+                    MustMatch("@emote what", Rest("SPEECH"))))
                 .Manual("Perform an action, visible within your locale.")
                 .Perform("emote", "ACTOR", "SPEECH");
 		}
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("say what", "Say what?");
+            Core.StandardMessage("emote what", "You exist. Actually this is an error message, but that's what you just told me to say.");
+            Core.StandardMessage("speak", "^<the0> : \"<s1>\"");
+            Core.StandardMessage("emote", "^<the0> <s1>");
+
             GlobalRules.DeclarePerformRuleBook<MudObject, String>("speak", "[Actor, Text] : Handle the actor speaking the text.", "actor", "text");
 
             GlobalRules.Perform<MudObject, String>("speak")
                 .Do((actor, text) =>
                 {
-                    MudObject.SendLocaleMessage(actor, "^<the0> : \"" + text + "\"", actor);
+                    MudObject.SendLocaleMessage(actor, "@speak", actor, text);
                     return PerformResult.Continue;
                 })
                 .Name("Default motormouth rule.");
@@ -68,7 +73,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, String>("emote")
                 .Do((actor, text) =>
                 {
-                    MudObject.SendLocaleMessage(actor, "^<the0> " + text, actor);
+                    MudObject.SendLocaleMessage(actor, "@emote", actor, text);
                     return PerformResult.Continue;
                 })
                 .Name("Default exhibitionist rule.");

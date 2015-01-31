@@ -21,6 +21,11 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("nude", "You are naked.");
+            Core.StandardMessage("wearing", "You are wearing..");
+            Core.StandardMessage("empty handed", "You have nothing.");
+            Core.StandardMessage("carrying", "You are carrying..");
+
             GlobalRules.DeclarePerformRuleBook<MudObject>("inventory", "[Actor] : Describes a player's inventory to themselves.", "actor");
 
             GlobalRules.Perform<MudObject>("inventory")
@@ -32,10 +37,10 @@ namespace StandardActionsModule
                 .Do(a =>
                 {
                     var wornObjects = (a as Actor).GetContents(RelativeLocations.Worn);
-                    if (wornObjects.Count == 0) MudObject.SendMessage(a, "You are naked.");
+                    if (wornObjects.Count == 0) MudObject.SendMessage(a, "@nude");
                     else
                     {
-                        MudObject.SendMessage(a, "You are wearing..");
+                        MudObject.SendMessage(a, "@wearing");
                         foreach (var item in wornObjects)
                             MudObject.SendMessage(a, "  <a0>", item);
                     }
@@ -47,10 +52,10 @@ namespace StandardActionsModule
                 .Do(a =>
                 {
                     var heldObjects = (a as Actor).GetContents(RelativeLocations.Held);
-                    if (heldObjects.Count == 0) MudObject.SendMessage(a, "You have nothing.");
+                    if (heldObjects.Count == 0) MudObject.SendMessage(a, "@empty handed");
                     else
                     {
-                        MudObject.SendMessage(a, "You are carrying..");
+                        MudObject.SendMessage(a, "@carrying");
                         foreach (var item in heldObjects)
                             MudObject.SendMessage(a, "  <a0>", item);
                     }

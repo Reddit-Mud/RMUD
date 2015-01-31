@@ -34,7 +34,7 @@ namespace RMUD
             return builder.ToString();
         }
 
-        internal static String FormatMessage(Actor Recipient, String Message, params Object[] Objects)
+        public static String FormatMessage(Actor Recipient, String Message, params Object[] Objects)
         {
             if (Message[0] == '@') Message = Core.Message(Message.Substring(1));
 
@@ -44,6 +44,18 @@ namespace RMUD
                 {
                     Message = Message.Replace("<the" + i + ">", (Objects[i] as MudObject).Definite(Recipient));
                     Message = Message.Replace("<a" + i + ">", (Objects[i] as MudObject).Indefinite(Recipient));
+                }
+                else if (Objects[i] is List<MudObject>)
+                {
+                    if (Message.IndexOf("<l" + i + ">") < 0) continue;
+                    var l = Objects[i] as List<MudObject>;
+                    var expandedList = "";
+                    for (int x = 0; x < l.Count; ++x)
+                    {
+                        expandedList += l[x].Indefinite(Recipient);
+                        if (x != l.Count - 1) expandedList += ", ";
+                    }
+                    Message = Message.Replace("<l" + i + ">", expandedList);                    
                 }
                 else
                     Message = Message.Replace("<s" + i + ">", Objects[i].ToString());

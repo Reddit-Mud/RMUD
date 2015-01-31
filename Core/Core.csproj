@@ -54,6 +54,8 @@
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Core\FindLocale.cs" />
     <Compile Include="Core\Heartbeat.cs" />
+    <Compile Include="Core\Meta\DumpMessages.cs" />
+    <Compile Include="Core\StandardMessages.cs" />
     <Compile Include="Core\IsVisibleTo.cs" />
     <Compile Include="Core\ManPages.cs" />
     <Compile Include="Core\MarkForUpdate.cs" />

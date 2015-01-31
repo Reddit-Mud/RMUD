@@ -9,6 +9,9 @@ namespace RMUD.Modules.Meta
 	{
 		public override void Create(CommandParser Parser)
 		{
+            Core.StandardMessage("help topics", "Available help topics");
+            Core.StandardMessage("no help topic", "There is no help available for that topic.");
+
             Parser.AddCommand(
                 Sequence(
                     Or(
@@ -21,7 +24,7 @@ namespace RMUD.Modules.Meta
                 {
                     if (!match.ContainsKey("TOPIC"))
                     {
-                        MudObject.SendMessage(actor, "Available help topics");
+                        MudObject.SendMessage(actor, "@help topics");
                         var line = "";
                         foreach (var manPage in ManPages.Pages.Select(p => p.Name).Distinct().OrderBy(s => s))
                         {
@@ -43,7 +46,7 @@ namespace RMUD.Modules.Meta
                             foreach (var manPage in pages)
                                 manPage.SendManPage(actor);
                         else
-                            MudObject.SendMessage(actor, "No help for that topic.");
+                            MudObject.SendMessage(actor, "@no help topic");
 
                     }
                     return PerformResult.Continue;

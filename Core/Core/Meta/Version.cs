@@ -9,6 +9,10 @@ namespace RMUD.Modules.Meta
 	{
 		public override void Create(CommandParser Parser)
 		{
+            Core.StandardMessage("version", "Build: RMUD Hadad <s0>");
+            Core.StandardMessage("commit", "Commit: <s0>");
+            Core.StandardMessage("no commit", "Commit version not found.");
+
             Parser.AddCommand(
                 Or(
                     KeyWord("VERSION"),
@@ -18,12 +22,12 @@ namespace RMUD.Modules.Meta
                 {
                     var buildVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-                    MudObject.SendMessage(actor, String.Format("Build: RMUD Hadad {0}", buildVersion));
+                    MudObject.SendMessage(actor, "@version", buildVersion);
 
                     if (System.IO.File.Exists("version.txt"))
-                        MudObject.SendMessage(actor, String.Format("Commit: {0}", System.IO.File.ReadAllText("version.txt")));
+                        MudObject.SendMessage(actor, "@commit", System.IO.File.ReadAllText("version.txt"));
                     else
-                        MudObject.SendMessage(actor, "Commit version not found.");
+                        MudObject.SendMessage(actor, "@no commit");
 
                     foreach (var module in Core.ModuleAssemblies)
                         MudObject.SendMessage(actor, module.Info.Description);

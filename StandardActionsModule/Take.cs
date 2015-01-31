@@ -16,7 +16,7 @@ namespace StandardActionsModule
                         KeyWord("GET"),
                         KeyWord("TAKE")),
                     BestScore("SUBJECT",
-                        MustMatch("I don't see that here.",
+                        MustMatch("@not here",
                             Object("SUBJECT", InScope, (actor, item) =>
                             {
                                 if (Core.GlobalRules.ConsiderCheckRuleSilently("can take?", actor, item) != CheckResult.Allow)
@@ -33,6 +33,12 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("you take", "You take <the0>.");
+            Core.StandardMessage("they take", "^<the0> takes <the1>.");
+            Core.StandardMessage("cant take people", "You can't take people.");
+            Core.StandardMessage("cant take portals", "You can't take portals.");
+            Core.StandardMessage("cant take scenery", "That's a terrible idea.");
+
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can take?", "[Actor, Item] : Can the actor take the item?", "actor", "item");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("take", "[Actor, Item] : Handle the actor taking the item.", "actor", "item");
 
@@ -44,7 +50,7 @@ namespace StandardActionsModule
                 .When((actor, item) => actor is Container && (actor as Container).Contains(item, RelativeLocations.Held))
                 .Do((actor, item) =>
                 {
-                    MudObject.SendMessage(actor, "You are already holding that.");
+                    MudObject.SendMessage(actor, "@already have that");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't take what you're already holding rule.");
@@ -57,8 +63,8 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("take")
                 .Do((actor, target) =>
                 {
-                    MudObject.SendMessage(actor, "You take <a0>.", target);
-                    MudObject.SendExternalMessage(actor, "<a0> takes <a1>.", actor, target);
+                    MudObject.SendMessage(actor, "@you take", target);
+                    MudObject.SendExternalMessage(actor, "@they take", actor, target);
                     MudObject.Move(target, actor);
                     return PerformResult.Continue;
                 })
@@ -69,7 +75,7 @@ namespace StandardActionsModule
                 .When((actor, thing) => thing is Actor)
                 .Do((actor, thing) =>
                 {
-                    MudObject.SendMessage(actor, "You can't take people.");
+                    MudObject.SendMessage(actor, "@cant take people");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't take people rule.");
@@ -79,7 +85,7 @@ namespace StandardActionsModule
                 .When((actor, thing) => thing is Portal)
                 .Do((actor, thing) =>
                 {
-                    MudObject.SendMessage(actor, "Portals cannot be taken.");
+                    MudObject.SendMessage(actor, "@cant take people");
                     return CheckResult.Disallow;
                 });
 
@@ -88,7 +94,7 @@ namespace StandardActionsModule
                 .When((actor, thing) => thing is Scenery)
                 .Do((actor, thing) =>
                 {
-                    MudObject.SendMessage(actor, "That's a terrible idea.");
+                    MudObject.SendMessage(actor, "@cant take scenery");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't take scenery rule.");

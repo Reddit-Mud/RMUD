@@ -25,6 +25,11 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("is open", "^<the0> is open.");
+            Core.StandardMessage("is closed", "^<the0> is closed.");
+            Core.StandardMessage("describe on", "On <the0> is <l1>.");
+            Core.StandardMessage("describe in", "In <the0> is <l1>.");
+
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can examine?", "[Actor, Item] : Can the viewer examine the item?", "actor", "item");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe", "[Actor, Item] : Generates descriptions of the item.", "actor", "item");
 
@@ -52,9 +57,9 @@ namespace StandardActionsModule
                 .Do((viewer, item) =>
                 {
                     if (GlobalRules.ConsiderValueRule<bool>("is-open", item))
-                        MudObject.SendMessage(viewer, "^<the0> is open.", item);
+                        MudObject.SendMessage(viewer, "@is open", item);
                     else
-                        MudObject.SendMessage(viewer, "^<the0> is closed.", item);
+                        MudObject.SendMessage(viewer, "@is closed", item);
                     return PerformResult.Continue;
                 })
                 .Name("Describe open or closed state rule.");
@@ -65,10 +70,7 @@ namespace StandardActionsModule
                 {
                     var contents = (item as Container).GetContents(RelativeLocations.On);
                     if (contents.Count() > 0)
-                    {
-                        contents.Insert(0, item);
-                        MudObject.SendMessage(viewer, "On <the0> is " + Core.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
-                    }
+                        MudObject.SendMessage(viewer, "@describe on", item, contents);
                     return PerformResult.Continue;
                 })
                 .Name("List things on container in description rule.");
@@ -85,10 +87,7 @@ namespace StandardActionsModule
                 {
                     var contents = (item as Container).GetContents(RelativeLocations.In);
                     if (contents.Count() > 0)
-                    {
-                        contents.Insert(0, item);
-                        MudObject.SendMessage(viewer, "In <the0> is " + Core.UnformattedItemList(1, contents.Count - 1) + ".", contents.ToArray());
-                    }
+                        MudObject.SendMessage(viewer, "@describe in", item, contents);
                     return PerformResult.Continue;
                 })
                 .Name("List things in open container in description rule.");

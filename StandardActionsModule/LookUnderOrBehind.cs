@@ -24,6 +24,11 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("cant look relloc", "You can't look <s0> that.");
+            Core.StandardMessage("is closed error", "^<the0> is closed.");
+            Core.StandardMessage("relloc it is", "^<s0> <the1> is..");
+            Core.StandardMessage("nothing relloc it", "There is nothing <s0> <the1>.");
+
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, RelativeLocations>("can look relloc?", "[Actor, Item, Relative Location] : Can the actor look in/on/under/behind the item?", "actor", "item", "relloc");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
@@ -34,7 +39,7 @@ namespace StandardActionsModule
                 .When((actor, item, relloc) => !(item is Container) || (((item as Container).LocationsSupported & relloc) != relloc))
                 .Do((actor, item, relloc) =>
                 {
-                    MudObject.SendMessage(actor, "You can't look " + Relloc.GetRelativeLocationName(relloc) + " that.");
+                    MudObject.SendMessage(actor, "@cant look relloc", Relloc.GetRelativeLocationName(relloc));
                     return CheckResult.Disallow;
                 })
                 .Name("Container must support relloc rule.");
@@ -43,7 +48,7 @@ namespace StandardActionsModule
                 .When((actor, item, relloc) => (relloc == RelativeLocations.In) && !GlobalRules.ConsiderValueRule<bool>("open?", item))
                 .Do((actor, item, relloc) =>
                 {
-                        MudObject.SendMessage(actor, "^<the0> is closed.", item);
+                        MudObject.SendMessage(actor, "@is closed error", item);
                         return CheckResult.Disallow;
                 })
                 .Name("Container must be open to look in rule.");
@@ -60,12 +65,13 @@ namespace StandardActionsModule
                     var contents = (item as Container).GetContents(relloc);
                     if (contents.Count > 0)
                     {
-                        MudObject.SendMessage(actor, "^" + Relloc.GetRelativeLocationName(relloc) + " <the0> is ", item);
+                        MudObject.SendMessage(actor, "@relloc it is", Relloc.GetRelativeLocationName(relloc), item);
                         foreach (var thing in contents)
                             MudObject.SendMessage(actor, "  <a0>", thing);
                     }
                     else
-                        MudObject.SendMessage(actor, "There is nothing " + Relloc.GetRelativeLocationName(relloc) + " <the0>.", item);
+                        MudObject.SendMessage(actor, "@nothing relloc it", Relloc.GetRelativeLocationName(relloc), item);
+
                     return PerformResult.Continue;
                 })
                 .Name("List contents in relative location rule.");

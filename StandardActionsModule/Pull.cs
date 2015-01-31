@@ -14,7 +14,7 @@ namespace StandardActionsModule
                 Sequence(
                     KeyWord("PULL"),
                     BestScore("SUBJECT",
-                        MustMatch("I don't see that here.",
+                        MustMatch("@not here",
                             Object("SUBJECT", InScope, (actor, item) =>
                             {
                                 if (Core.GlobalRules.ConsiderCheckRuleSilently("can pull?", actor, item) != CheckResult.Allow)
@@ -31,6 +31,7 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can pull?", "[Actor, Item] : Can the actor pull the item?", "actor", "item");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("pull", "[Actor, Item] : Handle the actor pulling the item.", "actor", "item");
 
@@ -42,7 +43,7 @@ namespace StandardActionsModule
                 .Last
                 .Do((a, t) => 
                     {
-                        MudObject.SendMessage(a, "Pulling <the0> doesn't seem to do anything.", t);
+                        MudObject.SendMessage(a, "@does nothing");
                         return CheckResult.Disallow;
                     })
                 .Name("Default disallow pulling rule.");
@@ -50,7 +51,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("pull")
                 .Do((actor, target) =>
                 {
-                    MudObject.SendMessage(actor, "Nothing happens.");
+                    MudObject.SendMessage(actor, "@nothing happens");
                     return PerformResult.Continue;
                 })
                 .Name("Default handle pulling rule.");
@@ -59,7 +60,7 @@ namespace StandardActionsModule
                 .First
                 .Do((actor, thing) =>
                 {
-                    MudObject.SendMessage(actor, "I don't think <the0> would appreciate that.", thing);
+                    MudObject.SendMessage(actor, "@unappreciated", thing);
                     return CheckResult.Disallow;
                 })
                 .Name("Can't pull people rule.");
