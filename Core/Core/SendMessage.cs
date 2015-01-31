@@ -34,12 +34,19 @@ namespace RMUD
             return builder.ToString();
         }
 
-        internal static String FormatMessage(Actor Recipient, String Message, params MudObject[] Objects)
+        internal static String FormatMessage(Actor Recipient, String Message, params Object[] Objects)
         {
+            if (Message[0] == '@') Message = Core.Message(Message.Substring(1));
+
             for (int i = 0; i < Objects.Length; ++i)
             {
-                Message = Message.Replace("<the" + i + ">", Objects[i].Definite(Recipient));
-                Message = Message.Replace("<a" + i + ">", Objects[i].Indefinite(Recipient));                
+                if (Objects[i] is MudObject)
+                {
+                    Message = Message.Replace("<the" + i + ">", (Objects[i] as MudObject).Definite(Recipient));
+                    Message = Message.Replace("<a" + i + ">", (Objects[i] as MudObject).Indefinite(Recipient));
+                }
+                else
+                    Message = Message.Replace("<s" + i + ">", Objects[i].ToString());
             }
 
             var builder = new StringBuilder();
@@ -61,7 +68,7 @@ namespace RMUD
 
     public partial class MudObject
     {
-        public static void SendMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
+        public static void SendMessage(Actor Actor, String Message, params Object[] MentionedObjects)
         {
             if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
@@ -71,7 +78,7 @@ namespace RMUD
                 Core.PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, Core.FormatMessage(Actor, Message, MentionedObjects)));
         }
 
-        public static void SendMessage(MudObject MudObject, String Message, params MudObject[] MentionedObjects)
+        public static void SendMessage(MudObject MudObject, String Message, params Object[] MentionedObjects)
         {
             if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
@@ -81,7 +88,7 @@ namespace RMUD
                 SendMessage(MudObject as Actor, Message, MentionedObjects);
         }
 
-        public static void SendLocaleMessage(MudObject Object, String Message, params MudObject[] MentionedObjects)
+        public static void SendLocaleMessage(MudObject Object, String Message, params Object[] MentionedObjects)
         {
             if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
@@ -93,7 +100,7 @@ namespace RMUD
                     Core.PendingMessages.Add(new RawPendingMessage(actor.ConnectedClient, Core.FormatMessage(actor, Message, MentionedObjects)));
         }
 
-        public static void SendExternalMessage(Actor Actor, String Message, params MudObject[] MentionedObjects)
+        public static void SendExternalMessage(Actor Actor, String Message, params Object[] MentionedObjects)
         {
             if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
@@ -108,7 +115,7 @@ namespace RMUD
                 
         }
 
-        public static void SendExternalMessage(MudObject Actor, String Message, params MudObject[] MentionedObjects)
+        public static void SendExternalMessage(MudObject Actor, String Message, params Object[] MentionedObjects)
         {
             if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
@@ -118,7 +125,7 @@ namespace RMUD
         }
 
 
-        public static void SendMessage(Client Client, String Message, params MudObject[] MentionedObjects)
+        public static void SendMessage(Client Client, String Message, params Object[] MentionedObjects)
         {
             if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;

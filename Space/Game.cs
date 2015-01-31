@@ -13,6 +13,8 @@ namespace Space
 
         public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
+            RMUD.Core.OverrideMessage("you went", "Message customization works.");
+
             GlobalRules.Perform<RMUD.PossibleMatch, RMUD.Actor>("before command")
                 .When((m, a) => BlockingConversation == true)
                 .Do((match, actor) =>

@@ -107,6 +107,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AdminModule\AdminModule.csproj">
+      <Project>{adaf3782-88d1-4170-866a-9ef3479eae97}</Project>
+      <Name>AdminModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConversationModule\ConversationModule.csproj">
       <Project>{35448d1e-7997-4626-8d1f-4278659f60a0}</Project>
       <Name>ConversationModule</Name>
@@ -118,6 +122,10 @@
     <ProjectReference Include="..\Space\Space.csproj">
       <Project>{75d0c5c6-efb9-4b45-86ff-f83abc943d78}</Project>
       <Name>Space</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StandardActionsModule\StandardActionsModule.csproj">
+      <Project>{1a004032-0f05-4545-88f2-3f58efa1ce1d}</Project>
+      <Name>StandardActionsModule</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

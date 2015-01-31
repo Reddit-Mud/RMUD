@@ -47,22 +47,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="StandardActions\Close.cs" />
-    <Compile Include="StandardActions\Drop.cs" />
-    <Compile Include="StandardActions\Examine.cs" />
-    <Compile Include="StandardActions\Go.cs" />
-    <Compile Include="StandardActions\Inventory.cs" />
-    <Compile Include="StandardActions\Lock.cs" />
-    <Compile Include="StandardActions\Look.cs" />
-    <Compile Include="StandardActions\LookUnderOrBehind.cs" />
-    <Compile Include="StandardActions\MiscCustomization.cs" />
-    <Compile Include="StandardActions\MiscRules.cs" />
-    <Compile Include="StandardActions\Open.cs" />
-    <Compile Include="StandardActions\Pull.cs" />
-    <Compile Include="StandardActions\Put.cs" />
-    <Compile Include="StandardActions\Say.cs" />
-    <Compile Include="StandardActions\Take.cs" />
-    <Compile Include="StandardActions\Unlock.cs" />
     <Compile Include="Start.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +61,10 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{5c29e6ad-54e3-4105-a9f3-2aab48a17c41}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StandardActionsModule\StandardActionsModule.csproj">
+      <Project>{1a004032-0f05-4545-88f2-3f58efa1ce1d}</Project>
+      <Name>StandardActionsModule</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

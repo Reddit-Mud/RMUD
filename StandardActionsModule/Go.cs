@@ -14,7 +14,7 @@ namespace StandardActionsModule
                 FirstOf(
                     Sequence(
                         KeyWord("GO"),
-                        MustMatch("What way was that?", Cardinal("DIRECTION"))),
+                        MustMatch("@unmatched cardinal", Cardinal("DIRECTION"))),
                     Cardinal("DIRECTION")))
                 .Manual("Move between rooms. 'Go' is optional, a raw cardinal works just as well.")
                 .ProceduralRule((match, actor) =>
@@ -39,13 +39,21 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            Core.StandardMessage("unmatched cardinal", "What way was that?");
+            Core.StandardMessage("go to null link", "You can't go that way.");
+            Core.StandardMessage("go to closed door", "The door is closed.");
+            Core.StandardMessage("you went", "You went <s0>.");
+            Core.StandardMessage("they went", "^<the0> went <s1>.");
+            Core.StandardMessage("bad link", "Error - Link does not lead to a room.");
+            Core.StandardMessage("they arrive", "^<the0> arrives <s1>.");
+
             GlobalRules.DeclareCheckRuleBook<MudObject, Link>("can go?", "[Actor, Link] : Can the actor go through that link?", "actor", "link");
 
             GlobalRules.Check<MudObject, Link>("can go?")
                 .When((actor, link) => link == null)
                 .Do((actor, link) =>
                 {
-                    MudObject.SendMessage(actor, "You can't go that way.");
+                    MudObject.SendMessage(actor, "@go to null link");
                     return CheckResult.Disallow;
                 })
                 .Name("No link found rule.");
@@ -54,7 +62,7 @@ namespace StandardActionsModule
                 .When((actor, link) => (link.Portal != null) && !GlobalRules.ConsiderValueRule<bool>("open?", link.Portal))
                 .Do((actor, link) =>
                 {
-                    MudObject.SendMessage(actor, "The door is closed.");
+                    MudObject.SendMessage(actor, "@go to closed door");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't go through closed door rule.");
@@ -68,8 +76,8 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, Link>("go")
                 .Do((actor, link) =>
                 {
-                    MudObject.SendMessage(actor, "You went " + link.Direction.ToString().ToLower() + ".");
-                    MudObject.SendExternalMessage(actor, "^<the0> went " + link.Direction.ToString().ToLower() + ".", actor);
+                    MudObject.SendMessage(actor, "@you went", link.Direction.ToString().ToLower());
+                    MudObject.SendExternalMessage(actor, "@they went", actor, link.Direction.ToString().ToLower());
                     return PerformResult.Continue;
                 })
                 .Name("Report leaving rule.");
@@ -80,7 +88,7 @@ namespace StandardActionsModule
                     var destination = MudObject.GetObject(link.Destination) as Room;
                     if (destination == null)
                     {
-                        MudObject.SendMessage(actor, "Error - Link does not lead to a room.");
+                        MudObject.SendMessage(actor, "@bad link");
                         return PerformResult.Stop;
                     }
                     MudObject.Move(actor, destination);
@@ -92,7 +100,7 @@ namespace StandardActionsModule
                 .Do((actor, link) =>
                 {
                     var arriveMessage = Link.FromMessage(Link.Opposite(link.Direction));
-                    MudObject.SendExternalMessage(actor, "^<the0> arrives " + arriveMessage + ".", actor);
+                    MudObject.SendExternalMessage(actor, "@they arrive", actor, arriveMessage);
                     return PerformResult.Continue;
                 })
                 .Name("Report arrival rule.");

@@ -42,8 +42,7 @@ namespace WpfConsole
 
             AfterNavigating = () => Driver.Start(typeof(Space.Player).Assembly, "Space",
                 s =>
-                    Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, PrepareString(s)),
-                new RMUD.StartUpAssembly(typeof(StandardActionsModule.MiscRules).Assembly, new RMUD.ModuleInfo { BaseNameSpace = "StandardActionsModule" }));
+                    Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, PrepareString(s)));
 
             Clear();
 
