@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Cargo.cs" />
     <Compile Include="Dan.cs" />
+    <Compile Include="CustomMessages.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

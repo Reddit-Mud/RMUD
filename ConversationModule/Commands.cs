@@ -15,7 +15,7 @@ namespace ConversationModule
                     Or(
                         KeyWord("GREET"),
                         KeyWord("HELLO")),
-                    MustMatch("Whom do you want to greet?",
+                    MustMatch("@convo greet whom",
                         Object("LOCUTOR", InScope, (actor, thing) =>
                         {
                             if (thing is NPC) return MatchPreference.VeryLikely;
@@ -74,7 +74,7 @@ namespace ConversationModule
                 {
                     if (actor.GetProperty<NPC>("interlocutor") == null)
                     {
-                        MudObject.SendMessage(actor, "You aren't talking to anyone.");
+                        MudObject.SendMessage(actor, "@convo nobody");
                         return PerformResult.Stop;
                     }
                     return PerformResult.Continue;

@@ -21,6 +21,8 @@ namespace Space
         {
             Open = false;
             Nouns.Add("LOCKER");
+            Short = "locker";
+            var seen = false;
 
             Check<MudObject, Locker>("can take?")
                 .Do((actor, locker) =>
@@ -30,8 +32,10 @@ namespace Space
                    });
 
             Perform<Player, Locker>("describe in locale")
+                .When((player, locker) => seen == false)
                 .Do((player, locker) =>
                 {
+                    seen = true;
                     SendMessage(player, "There is a locker against the wall.");
                     return PerformResult.Stop;
                 });
