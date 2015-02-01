@@ -60,6 +60,7 @@ public class Table : RMUD.Container
         Short = "ancient table";
         Long = "As the years have worn long the wood of this table has dried and shrunk, and split, and what was once a finely crafted table is now pitted and gouged. The top is still mostly smooth, from use but not from care.";
         Nouns.Add("ancient", "table");
+        Article = "an";
 
         Move(new RMUD.MudObject("matchbook", "A small book of matches with a thunderbolt on the cover."), this, RMUD.RelativeLocations.Under);
 
@@ -69,6 +70,6 @@ public class Table : RMUD.Container
             return RMUD.CheckResult.Disallow;
         });
 
-        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed name").When((viewer, thing, article) => thing == this).Do((viewer, thing, article) => "an ancient table");
+        //Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed name").When((viewer, thing, article) => thing == this).Do((viewer, thing, article) => "an ancient table");
     }
 }

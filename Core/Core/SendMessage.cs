@@ -33,49 +33,6 @@ namespace RMUD
             }
             return builder.ToString();
         }
-
-        public static String FormatMessage(Actor Recipient, String Message, params Object[] Objects)
-        {
-            if (Message[0] == '@') Message = Core.Message(Message.Substring(1));
-
-            for (int i = 0; i < Objects.Length; ++i)
-            {
-                if (Objects[i] is MudObject)
-                {
-                    Message = Message.Replace("<the" + i + ">", (Objects[i] as MudObject).Definite(Recipient));
-                    Message = Message.Replace("<a" + i + ">", (Objects[i] as MudObject).Indefinite(Recipient));
-                }
-                else if (Objects[i] is List<MudObject>)
-                {
-                    if (Message.IndexOf("<l" + i + ">") < 0) continue;
-                    var l = Objects[i] as List<MudObject>;
-                    var expandedList = "";
-                    for (int x = 0; x < l.Count; ++x)
-                    {
-                        expandedList += l[x].Indefinite(Recipient);
-                        if (x != l.Count - 1) expandedList += ", ";
-                    }
-                    Message = Message.Replace("<l" + i + ">", expandedList);                    
-                }
-                else
-                    Message = Message.Replace("<s" + i + ">", Objects[i].ToString());
-            }
-
-            var builder = new StringBuilder();
-            var cap = false;
-            for (int i = 0; i < Message.Length; ++i)
-            {
-                if (Message[i] == '^') cap = true;
-                else
-                {
-                    if (cap) builder.Append(new String(Message[i], 1).ToUpper());
-                    else builder.Append(Message[i]);
-                    cap = false;
-                }
-            }
-
-            return builder.ToString();
-        }
     }
 
     public partial class MudObject

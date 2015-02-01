@@ -81,7 +81,10 @@ namespace StandardActionsModule
             var describingLocale = false;
 
             GlobalRules.Value<Actor, Container, String, String>("printed name")
-                .When((viewer, container, article) => describingLocale && (container.LocationsSupported & RelativeLocations.On) == RelativeLocations.On)
+                .When((viewer, container, article) =>
+                    {
+                        return describingLocale && (container.LocationsSupported & RelativeLocations.On) == RelativeLocations.On;
+                    })
                 .Do((viewer, container, article) =>
                     {
                         var subObjects = new List<MudObject>(container.EnumerateObjects(RelativeLocations.On));
@@ -90,7 +93,8 @@ namespace StandardActionsModule
                             return container.Short + " " + Core.FormatMessage(viewer, Core.Message("on which"), subObjects);
                         else
                             return container.Short;
-                    });
+                    })
+                    .Name("List contents of container after name when describing locale rule");
 
             GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .Do((viewer, room) =>
