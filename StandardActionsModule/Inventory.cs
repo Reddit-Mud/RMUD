@@ -21,34 +21,12 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            Core.StandardMessage("nude", "You are naked.");
-            Core.StandardMessage("wearing", "You are wearing..");
             Core.StandardMessage("empty handed", "You have nothing.");
             Core.StandardMessage("carrying", "You are carrying..");
 
             GlobalRules.DeclarePerformRuleBook<MudObject>("inventory", "[Actor] : Describes a player's inventory to themselves.", "actor");
 
-            GlobalRules.Perform<MudObject>("inventory")
-                .When(a => !(a is Actor))
-                .Do(a => PerformResult.Stop)
-                .Name("Don't try to list inventory for something that isn't an actor rule.");
-
-            GlobalRules.Perform<MudObject>("inventory")
-                .Do(a =>
-                {
-                    var wornObjects = (a as Actor).GetContents(RelativeLocations.Worn);
-                    if (wornObjects.Count == 0) MudObject.SendMessage(a, "@nude");
-                    else
-                    {
-                        MudObject.SendMessage(a, "@wearing");
-                        foreach (var item in wornObjects)
-                            MudObject.SendMessage(a, "  <a0>", item);
-                    }
-                    return PerformResult.Continue;
-                })
-                .Name("List worn items in inventory rule.");
-
-            GlobalRules.Perform<MudObject>("inventory")
+            GlobalRules.Perform<Actor>("inventory")
                 .Do(a =>
                 {
                     var heldObjects = (a as Actor).GetContents(RelativeLocations.Held);

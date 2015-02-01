@@ -14,7 +14,7 @@ namespace ClothingModule
                 Sequence(
                     KeyWord("WEAR"),
                     BestScore("OBJECT",
-                        MustMatch("I couldn't figure out what you're trying to wear.",
+                        MustMatch("@clothing wear what",
                             Object("OBJECT", InScope, PreferHeld)))))
                 .Manual("Cover your disgusting flesh.")
                 .Check("can wear?", "ACTOR", "OBJECT")
@@ -35,7 +35,7 @@ namespace ClothingModule
                 .When((a, b) => !MudObject.ObjectContainsObject(a, b))
                 .Do((actor, item) =>
                 {
-                    MudObject.SendMessage(actor, "You'd have to be holding that first.");
+                    MudObject.SendMessage(actor, "@dont have that");
                     return CheckResult.Disallow;
                 });
 
@@ -43,7 +43,7 @@ namespace ClothingModule
                 .When((a, b) => a is Actor && (a as Actor).RelativeLocationOf(b) == RelativeLocations.Worn)
                 .Do((a, b) =>
                 {
-                    MudObject.SendMessage(a, "You're already wearing that.");
+                    MudObject.SendMessage(a, "@clothing already wearing");
                     return CheckResult.Disallow;
                 });
 
@@ -51,7 +51,7 @@ namespace ClothingModule
                 .When((actor, item) => GlobalRules.ConsiderValueRule<bool>("wearable?", item) == false)
                 .Do((actor, item) =>
                 {
-                    MudObject.SendMessage(actor, "That isn't something that can be worn.");
+                    MudObject.SendMessage(actor, "@clothing cant wear");
                     return CheckResult.Disallow;
                 })
                 .Name("Can't wear unwearable things rule.");
@@ -60,8 +60,8 @@ namespace ClothingModule
 
             GlobalRules.Perform<MudObject, MudObject>("worn").Do((actor, target) =>
                 {
-                    MudObject.SendMessage(actor, "You wear <the0>.", target);
-                    MudObject.SendExternalMessage(actor, "<a0> wears <a1>.", actor, target);
+                    MudObject.SendMessage(actor, "@clothing you wear", target);
+                    MudObject.SendExternalMessage(actor, "@clothing they wear", actor, target);
                     MudObject.Move(target, actor, RelativeLocations.Worn);
                     return PerformResult.Continue;
                 });

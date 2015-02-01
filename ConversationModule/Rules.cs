@@ -15,6 +15,7 @@ namespace ConversationModule
             Core.StandardMessage("convo greet whom", "Whom did you want to greet?");
             Core.StandardMessage("convo nobody", "You aren't talking to anybody.");
             Core.StandardMessage("convo no response", "There doesn't seem to be a response defined for that topic.");
+            Core.StandardMessage("convo no topics", "There is nothing obvious to discuss.");
 
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can converse?", "[Actor, Item] : Can the actor converse with the item?", "actor", "item");
 
@@ -58,6 +59,9 @@ namespace ConversationModule
 
                     if (suggestedTopics.Count() != 0)
                         MudObject.SendMessage(actor, "@convo topic prompt", new List<MudObject>(suggestedTopics));
+                    else
+                        MudObject.SendMessage(actor, "@convo no topics");
+
                     return PerformResult.Continue;
                 })
                 .Name("List un-discussed available topics rule.");

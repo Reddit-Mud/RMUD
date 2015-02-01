@@ -11,6 +11,21 @@ namespace ClothingModule
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
+            GlobalRules.Perform<Actor>("inventory")
+                .Do(a =>
+                {
+                    var wornObjects = (a as Actor).GetContents(RelativeLocations.Worn);
+                    if (wornObjects.Count == 0) MudObject.SendMessage(a, "@nude");
+                    else
+                    {
+                        MudObject.SendMessage(a, "@clothing wearing");
+                        foreach (var item in wornObjects)
+                            MudObject.SendMessage(a, "  <a0>", item);
+                    }
+                    return PerformResult.Continue;
+                })
+                .Name("List worn items in inventory rule.");
+
             GlobalRules.Value<MudObject, bool>("wearable?")
                 .When(a => a is Clothing)
                 .Do(a => true)
@@ -24,7 +39,7 @@ namespace ClothingModule
                     foreach (var wornItem in (actor as Actor).EnumerateObjects<Clothing>(RelativeLocations.Worn))
                         if (wornItem.BodyPart == article.BodyPart && article.Layer <= wornItem.Layer)
                         {
-                            MudObject.SendMessage(actor, "You'll have to remove <the0> first.", wornItem);
+                            MudObject.SendMessage(actor, "@clothing remove first", wornItem);
                             return CheckResult.Disallow;
                         }
                     return CheckResult.Continue;
@@ -39,42 +54,26 @@ namespace ClothingModule
                     foreach (var wornItem in (actor as Actor).EnumerateObjects<Clothing>(RelativeLocations.Worn))
                         if (wornItem.BodyPart == article.BodyPart && article.Layer < wornItem.Layer)
                         {
-                            MudObject.SendMessage(actor, "You'll have to remove <the0> first.", wornItem);
+                            MudObject.SendMessage(actor, "@clothing remove first", wornItem);
                             return CheckResult.Disallow;
                         }
                     return CheckResult.Allow;
                 })
                 .Name("Can't remove items under other items rule.");
 
-            GlobalRules.Perform<MudObject, Actor>("describe")
-                .First
-                .When((viewer, actor) => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", viewer, actor))
-                .Do((viewer, actor) =>
-                {
-                    MudObject.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
-                    return PerformResult.Continue;
-                })
-                .Name("Report gender of known actors rule.");
-
+            
             GlobalRules.Perform<MudObject, Actor>("describe")
                 .First
                 .Do((viewer, actor) =>
                 {
                     var wornItems = new List<Clothing>(actor.EnumerateObjects<Clothing>(RelativeLocations.Worn));
                     if (wornItems.Count == 0)
-                        MudObject.SendMessage(viewer, "^<the0> is naked.", actor);
+                        MudObject.SendMessage(viewer, "@clothing they are naked", actor);
                     else
-                        MudObject.SendMessage(viewer, "^<the0> is wearing " + String.Join(", ", wornItems.Select(c => c.Indefinite(viewer))) + ".", actor);
-
-                    var heldItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Held));
-                    if (heldItems.Count == 0)
-                        MudObject.SendMessage(viewer, "^<the0> is empty handed.", actor);
-                    else
-                        MudObject.SendMessage(viewer, "^<the0> is holding " + String.Join(", ", heldItems.Select(i => i.Indefinite(viewer))) + ".", actor);
-
+                        MudObject.SendMessage(viewer, "@clothing they are wearing", actor, wornItems);
                     return PerformResult.Continue;
                 })
-                .Name("List worn and held items when describing an actor rule.");
+                .Name("List worn items when describing an actor rule.");
         }
     }
 }

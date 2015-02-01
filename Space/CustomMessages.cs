@@ -74,6 +74,9 @@ namespace Space
             RMUD.Core.OverrideMessage("they unlock", "^<the0> unlocks <the1> with <a2>.");
             RMUD.Core.OverrideMessage("help topics", "Available help topics");
             RMUD.Core.OverrideMessage("no help topic", "There is no help available for that topic.");
+
+            RMUD.Core.OverrideMessage("convo topic prompt", "You could ask Dan <l0>.");
+            RMUD.Core.OverrideMessage("convo no topics", "There's nothing urgent to speak with Dan about.");
         }
     }
 }

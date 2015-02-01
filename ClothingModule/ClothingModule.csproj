@@ -45,6 +45,7 @@
     <Compile Include="NPCExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remove.cs" />
+    <Compile Include="Messages.cs" />
     <Compile Include="Rules.cs" />
     <Compile Include="Wear.cs" />
   </ItemGroup>

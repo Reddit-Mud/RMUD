@@ -14,7 +14,7 @@ namespace ClothingModule
                 Sequence(
                     KeyWord("REMOVE"),
                     BestScore("OBJECT",
-                        MustMatch("I couldn't figure out what you're trying to remove.",
+                        MustMatch("@clothing remove what",
                             Object("OBJECT", InScope, PreferWorn)))))
                 .Manual("Expose your amazingly supple flesh.")
                 .Check("can remove?", "ACTOR", "OBJECT")
@@ -32,7 +32,7 @@ namespace ClothingModule
                 .When((a, b) => !(a is Actor) || !(a as Actor).Contains(b, RelativeLocations.Worn))
                 .Do((actor, item) =>
                 {
-                    MudObject.SendMessage(actor, "You'd have to be actually wearing that first.");
+                    MudObject.SendMessage(actor, "@clothing not wearing");
                     return CheckResult.Disallow;
                 });
            
@@ -40,8 +40,8 @@ namespace ClothingModule
 
             GlobalRules.Perform<MudObject, MudObject>("removed").Do((actor, target) =>
                 {
-                    MudObject.SendMessage(actor, "You remove <the0>.", target);
-                    MudObject.SendExternalMessage(actor, "<a0> removes <a1>.", actor, target);
+                    MudObject.SendMessage(actor, "@clothing you remove", target);
+                    MudObject.SendExternalMessage(actor, "@clothing they remove", actor, target);
                     MudObject.Move(target, actor, RelativeLocations.Held);
                     return PerformResult.Continue;
                 });

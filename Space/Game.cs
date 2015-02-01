@@ -27,28 +27,21 @@ namespace Space
                 .Name("Can only converse during a blocking conversation rule.");
 
             GlobalRules.Perform<Player>("list topics")
+                .When(player => SuppressTopics)
+                .Do(player => RMUD.PerformResult.Stop);
+
+            GlobalRules.Perform<Player>("list topics")
                 .Do(player =>
                 {
-                    if (SuppressTopics)
-                    {
-                        SuppressTopics = false;
-                        return RMUD.PerformResult.Stop;
-                    }
-
                     var npc = RMUD.MudObject.GetObject("Dan");
                     var availableTopics = npc.GetPropertyOrDefault<List<RMUD.MudObject>>("conversation-topics", new List<RMUD.MudObject>()).Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", player, npc, topic));
 
-                    if (availableTopics.Count() != 0)
-                        RMUD.MudObject.SendMessage(player, "You could ask Dan " + String.Join(", ", availableTopics.Select(topic => topic.Short)) + ".");
-                    else
-                    {
-                        RMUD.MudObject.SendMessage(player, "There's nothing else you can think of to discuss with Dan.");
-                        BlockingConversation = false; //Unblock the game if there are no more topics to discuss
-                    }
+                    if (availableTopics.Count() == 0)
+                        BlockingConversation = false;
 
-                    return RMUD.PerformResult.Stop;
+                    return RMUD.PerformResult.Continue;
                 })
-                .Name("Custom list topics rule.");
+                .Name("Unblock game if no available topics rule.");
 
             GlobalRules.Perform<Player>("player joined")
                 .First

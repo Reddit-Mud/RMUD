@@ -6,8 +6,8 @@ using RMUD;
 
 namespace StandardActionsModule
 {
-	internal class Examine : CommandFactory
-	{
+    internal class Examine : CommandFactory
+    {
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
@@ -76,7 +76,7 @@ namespace StandardActionsModule
                 .Name("List things on container in description rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => 
+                .When((viewer, item) =>
                     {
                         if (!(item is Container)) return false;
                         if (!GlobalRules.ConsiderValueRule<bool>("open?", item)) return false;
@@ -91,6 +91,21 @@ namespace StandardActionsModule
                     return PerformResult.Continue;
                 })
                 .Name("List things in open container in description rule.");
+
+
+            GlobalRules.Perform<MudObject, Actor>("describe")
+                .First
+                .Do((viewer, actor) =>
+                {
+                    var heldItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Held));
+                    if (heldItems.Count == 0)
+                        MudObject.SendMessage(viewer, "^<the0> is empty handed.", actor);
+                    else
+                        MudObject.SendMessage(viewer, "^<the0> is holding " + String.Join(", ", heldItems.Select(i => i.Indefinite(viewer))) + ".", actor);
+
+                    return PerformResult.Continue;
+                })
+                .Name("List held items when describing an actor rule.");
         }
     }
 }

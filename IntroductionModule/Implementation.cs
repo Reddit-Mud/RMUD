@@ -65,6 +65,16 @@ namespace IntroductionModule
                 })
                 .Name("Can't introduce who you don't know rule.");
 
+            GlobalRules.Perform<MudObject, Actor>("describe")
+                .First
+                .When((viewer, actor) => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", viewer, actor))
+                .Do((viewer, actor) =>
+                {
+                    MudObject.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
+                    return PerformResult.Continue;
+                })
+                .Name("Report gender of known actors rule.");
+
             #region Perform and report rules
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("introduce", "[Actor A, Actor B] : Handle A introducing B.", "actor", "introductee");
