@@ -40,8 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common.cs" />
+    <Compile Include="Hatch.cs" />
+    <Compile Include="Wrench.cs" />
+    <Compile Include="Locker.cs" />
     <Compile Include="Cargo.cs" />
-    <Compile Include="Dan.cs" />
+    <Compile Include="DanConversation0.cs" />
     <Compile Include="CustomMessages.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Player.cs" />

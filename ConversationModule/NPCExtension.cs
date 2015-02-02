@@ -8,6 +8,11 @@ namespace ConversationModule
 {
     public class Topic : MudObject
     {
+        public Topic()
+        {
+            Article = "";
+        }
+
         public Topic Available(Func<MudObject, MudObject, MudObject, bool> Func)
         {
             Value<MudObject, MudObject, MudObject, bool>("topic available?").Do(Func);

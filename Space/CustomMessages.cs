@@ -56,7 +56,7 @@ namespace Space
             RMUD.Core.OverrideMessage("relloc it is", "^<s0> <the1> is..");
             RMUD.Core.OverrideMessage("nothing relloc it", "I don't see anything <s0> <the1>.");
             RMUD.Core.OverrideMessage("not openable", "I don't know how I would open that.");
-            RMUD.Core.OverrideMessage("you open", "Okay, the <the0> is open.");
+            RMUD.Core.OverrideMessage("you open", "Okay, <the0> is open.");
             RMUD.Core.OverrideMessage("they open", "^<the0> opens <the1>.");
             RMUD.Core.OverrideMessage("cant put relloc", "I don't think I can put things <s0> that.");
             RMUD.Core.OverrideMessage("you put", "Okay, I put <the0> <s1> <the2>.");
@@ -75,7 +75,7 @@ namespace Space
             RMUD.Core.OverrideMessage("help topics", "Available help topics");
             RMUD.Core.OverrideMessage("no help topic", "There is no help available for that topic.");
 
-            RMUD.Core.OverrideMessage("convo topic prompt", "You could ask Dan <l0>.");
+            RMUD.Core.OverrideMessage("convo topic prompt", "You could <lor0>.");
             RMUD.Core.OverrideMessage("convo no topics", "There's nothing urgent to speak with Dan about.");
         }
     }

@@ -26,6 +26,14 @@ namespace Space
                 })
                 .Name("Can only converse during a blocking conversation rule.");
 
+            GlobalRules.Perform<Player, RMUD.MudObject, ConversationModule.Topic>("discuss topic")
+                .Do((actor, npc, topic) =>
+                {
+                    topic.SetProperty("discussed", true);
+                    return RMUD.PerformResult.Continue;
+                })
+                .Name("Mark topic discussed rule.");
+
             GlobalRules.Perform<Player>("list topics")
                 .When(player => SuppressTopics)
                 .Do(player => RMUD.PerformResult.Stop);
@@ -33,7 +41,7 @@ namespace Space
             GlobalRules.Perform<Player>("list topics")
                 .Do(player =>
                 {
-                    var npc = RMUD.MudObject.GetObject("Dan");
+                    var npc = player.GetProperty<RMUD.NPC>("interlocutor");
                     var availableTopics = npc.GetPropertyOrDefault<List<RMUD.MudObject>>("conversation-topics", new List<RMUD.MudObject>()).Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", player, npc, topic));
 
                     if (availableTopics.Count() == 0)
@@ -50,7 +58,7 @@ namespace Space
                     BlockingConversation = true;
 
                     RMUD.MudObject.SendMessage(actor, "Sal? Sal? Can you hear me?");
-                    actor.SetProperty("interlocutor", RMUD.MudObject.GetObject("Dan"));
+                    actor.SetProperty("interlocutor", RMUD.MudObject.GetObject("DanConversation0"));
                     RMUD.Core.EnqueuActorCommand(actor, "topics");
                     return RMUD.PerformResult.Stop;
                 });

@@ -74,26 +74,23 @@ namespace RMUD
                         }
                         else if (type == "a" && Objects[index] is MudObject)
                         {
-                            formattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, Objects[index], "a"));
+                            formattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, Objects[index], (Objects[index] as MudObject).Article));
                         }
                         else if (type == "l")
                         {
-                            List<MudObject> list = null;
-                            if (Objects[index] is MudObject)
-                            {
-                                list = new List<MudObject>();
-                                list.Add(Objects[index] as MudObject);
-                            }
-                            else
-                                list = Objects[index] as List<MudObject>;
-
-                            if (list == null) continue;
-
-                            for (int x = 0; x < list.Count; ++x)
-                            {
-                                formattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, list[x], "a"));
-                                if (x != list.Count - 1) formattedMessage.Append(", ");
-                            }
+                            FormatList(Recipient, Objects[index], formattedMessage, "");
+                        }
+                        else if (type == "lor")
+                        {
+                            FormatList(Recipient, Objects[index], formattedMessage, "or");
+                        }
+                        else if (type == "land")
+                        {
+                            FormatList(Recipient, Objects[index], formattedMessage, "and");
+                        }
+                        else if (type == "lnor")
+                        {
+                            FormatList(Recipient, Objects[index], formattedMessage, "nor");
                         }
                         else if (type == "s")
                         {
@@ -130,6 +127,31 @@ namespace RMUD
             }
             
             return formattedMessage.ToString();
+        }
+
+        private static void FormatList(
+            Actor Recipient, 
+            Object ListObject, 
+            StringBuilder FormattedMessage,
+            String CoordinatingConjunction)
+        {
+            List<MudObject> list = null;
+            if (ListObject is MudObject)
+            {
+                list = new List<MudObject>();
+                list.Add(ListObject as MudObject);
+            }
+            else
+                list = ListObject as List<MudObject>;
+
+            if (list == null) return;
+
+            for (int x = 0; x < list.Count; ++x)
+            {
+                FormattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, list[x], list[x].Article));
+                if (x != list.Count - 1) FormattedMessage.Append(", ");
+                if (x == list.Count - 2 && !String.IsNullOrEmpty(CoordinatingConjunction)) FormattedMessage.Append(CoordinatingConjunction + " ");
+            }
         }
     }
 }
