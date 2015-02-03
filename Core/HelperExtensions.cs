@@ -22,9 +22,25 @@ using System.Text;
             else return default(B);
         }
 
+        public static B ValueOrDefault<A,B>(this Dictionary<A, Object> Dict, A Key, B Default)
+        {
+            if (Dict.ContainsKey(Key)) return (B)Dict[Key];
+            else return Default;
+        }
+
         public static B TypedValue<B>(this Dictionary<String, Object> Dict, String Key) where B: class
         {
             if (Dict.ContainsKey(Key)) return Dict[Key] as B;
             else return default(B);
         }
+
+        public static Dictionary<String, Object> MakeDictionary(params Object[] Pairs)
+        {
+            var r = new Dictionary<String, Object>();
+            for (int i = 0; (i + 1) < Pairs.Length; ++i)
+                r.Upsert(Pairs[i].ToString().ToUpper(), Pairs[i + 1]);
+            return r;
+        }
     }
+
+

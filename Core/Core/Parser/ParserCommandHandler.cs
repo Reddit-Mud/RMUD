@@ -15,51 +15,51 @@ namespace RMUD
             this.Parser = Parser;
 		}
 
-        public void HandleCommand(Actor Actor, String Command)
+        public void HandleCommand(PendingCommand Command)
         {
-            if (String.IsNullOrEmpty(Command)) return;
+            if (String.IsNullOrEmpty(Command.RawCommand)) return;
 
             bool displayMatches = false;
             bool displayTime = false;
 
-            if (Command[0] == '@')
+            if (Command.RawCommand[0] == '@')
             {
-                if (Command.ToUpper().StartsWith("@MATCH "))
+                if (Command.RawCommand.ToUpper().StartsWith("@MATCH "))
                 {
-                    Command = Command.Substring("@MATCH ".Length);
+                    Command.RawCommand = Command.RawCommand.Substring("@MATCH ".Length);
                     displayMatches = true;
                 }
-                else if (Command.ToUpper().StartsWith("@TIME "))
+                else if (Command.RawCommand.ToUpper().StartsWith("@TIME "))
                 {
-                    Command = Command.Substring("@TIME ".Length);
+                    Command.RawCommand = Command.RawCommand.Substring("@TIME ".Length);
                     displayTime = true;
                 }
-                else if (Command.ToUpper().StartsWith("@DEBUG "))
+                else if (Command.RawCommand.ToUpper().StartsWith("@DEBUG "))
                 {
-                    Command = Command.Substring("@DEBUG ".Length);
-                    if (Actor.Rank < 500)
+                    Command.RawCommand = Command.RawCommand.Substring("@DEBUG ".Length);
+                    if (Command.Actor.Rank < 500)
                     {
-                        MudObject.SendMessage(Actor, "You do not have sufficient rank to use the debug command.");
+                        MudObject.SendMessage(Command.Actor, "You do not have sufficient rank to use the debug command.");
                         return;
                     }
 
                     Core.CommandTimeoutEnabled = false;
                 }
-                else if (Command.ToUpper().StartsWith("@RULES "))
+                else if (Command.RawCommand.ToUpper().StartsWith("@RULES "))
                 {
-                    Command = Command.Substring("@RULES ".Length);
-                    Core.GlobalRules.LogRules(Actor);
+                    Command.RawCommand = Command.RawCommand.Substring("@RULES ".Length);
+                    Core.GlobalRules.LogRules(Command.Actor);
                 }
                 else
                 {
-                    MudObject.SendMessage(Actor, "I don't recognize that debugging command.");
+                    MudObject.SendMessage(Command.Actor, "I don't recognize that debugging command.");
                     return;
                 }
             }
 
             var startTime = DateTime.Now;
 
-            var matchedCommand = Parser.ParseCommand(Command, Actor);
+            var matchedCommand = Parser.ParseCommand(Command);
 
             if (displayMatches)
             {
@@ -67,12 +67,12 @@ namespace RMUD
 
                 if (matchedCommand == null)
                 {
-                    MudObject.SendMessage(Actor, String.Format("Matched nothing in {0:n0} milliseconds.",
+                    MudObject.SendMessage(Command.Actor, String.Format("Matched nothing in {0:n0} milliseconds.",
                         (matchEndTime - startTime).TotalMilliseconds));
                 }
                 else
                 {
-                    MudObject.SendMessage(Actor, String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.",
+                    MudObject.SendMessage(Command.Actor, String.Format("Matched {0} in {1:n0} milliseconds. {2} unique matches.",
                         matchedCommand.Command.ManualName,
                         (matchEndTime - startTime).TotalMilliseconds,
                         matchedCommand.Matches.Count));
@@ -89,7 +89,7 @@ namespace RMUD
                             builder.Append("] ");
                         }
 
-                        MudObject.SendMessage(Actor, builder.ToString());
+                        MudObject.SendMessage(Command.Actor, builder.ToString());
                     }
                 }
             }
@@ -99,12 +99,12 @@ namespace RMUD
                 if (matchedCommand != null)
                 {
                     if (matchedCommand.Matches.Count > 1)
-                        Actor.CommandHandler = new DisambigCommandHandler(Actor, matchedCommand, this);
+                        Command.Actor.CommandHandler = new DisambigCommandHandler(Command.Actor, matchedCommand, this);
                     else
-                        Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Actor);
+                        Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Command.Actor);
                 }
                 else
-                    MudObject.SendMessage(Actor, "huh?");
+                    MudObject.SendMessage(Command.Actor, "huh?");
             }
 
             Core.GlobalRules.LogRules(null);
@@ -113,7 +113,7 @@ namespace RMUD
             {
                 var endTime = DateTime.Now;
 
-                MudObject.SendMessage(Actor, String.Format("Command completed in {0} milliseconds.", (endTime - startTime).TotalMilliseconds));
+                MudObject.SendMessage(Command.Actor, String.Format("Command completed in {0} milliseconds.", (endTime - startTime).TotalMilliseconds));
             }
         }
     }

@@ -7,15 +7,16 @@ using System.Reflection;
 
 namespace RMUD
 {
+    public class PendingCommand
+    {
+        public Actor Actor;
+        public String RawCommand;
+        internal Action ProcessingCompleteCallback;
+        internal Dictionary<String, Object> PreSettings;
+    }
+
     public static partial class Core
     {
-        private class PendingCommand
-        {
-            internal Actor Actor;
-            internal String RawCommand;
-            internal Action ProcessingCompleteCallback;
-        }
-
         private static Mutex PendingCommandLock = new Mutex();
         private static LinkedList<PendingCommand> PendingCommands = new LinkedList<PendingCommand>();
         private static Thread CommandExecutionThread;
@@ -31,10 +32,10 @@ namespace RMUD
         public static ParserCommandHandler ParserCommandHandler;
         public static CommandParser DefaultParser;
 
-        public static void EnqueuActorCommand(Actor Actor, String RawCommand)
+        public static void EnqueuActorCommand(Actor Actor, String RawCommand, Dictionary<String, Object> MatchPreSettings = null)
         {
             PendingCommandLock.WaitOne();
-            PendingCommands.AddLast(new PendingCommand { Actor = Actor, RawCommand = RawCommand });
+            PendingCommands.AddLast(new PendingCommand { Actor = Actor, RawCommand = RawCommand, PreSettings = MatchPreSettings });
             PendingCommandLock.ReleaseMutex();
         }
 
@@ -42,6 +43,13 @@ namespace RMUD
         {
             PendingCommandLock.WaitOne();
             PendingCommands.AddLast(new PendingCommand { Actor = Actor, RawCommand = RawCommand, ProcessingCompleteCallback = ProcessingCompleteCallback });
+            PendingCommandLock.ReleaseMutex();
+        }
+
+        public static void EnqueuActorCommand(PendingCommand Command)
+        {
+            PendingCommandLock.WaitOne();
+            PendingCommands.AddLast(Command);
             PendingCommandLock.ReleaseMutex();
         }
 
@@ -78,7 +86,7 @@ namespace RMUD
                 {
                     //if (NextCommand.Actor.ConnectedClient != null)
                     //    NextCommand.Actor.ConnectedClient.TimeOfLastCommand = DateTime.Now;
-                    NextCommand.Actor.CommandHandler.HandleCommand(NextCommand.Actor, NextCommand.RawCommand);
+                    NextCommand.Actor.CommandHandler.HandleCommand(NextCommand);
                 }
                 catch (System.Threading.ThreadAbortException)
                 {

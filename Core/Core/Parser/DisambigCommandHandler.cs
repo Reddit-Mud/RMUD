@@ -76,39 +76,39 @@ namespace RMUD
             }
 		}
 
-        public void HandleCommand(Actor Actor, String Command)
+        public void HandleCommand(PendingCommand Command)
         {
-            Actor.CommandHandler = ParentHandler;
+            Command.Actor.CommandHandler = ParentHandler;
             
             //Just retry if the attempt to help has failed.
             if (DisambigObjects == null)
             {
-                Core.EnqueuActorCommand(Actor, Command);
+                Core.EnqueuActorCommand(Command);
                 return;
             }
             
             int ordinal = 0;
-            if (Int32.TryParse(Command, out ordinal))
+            if (Int32.TryParse(Command.RawCommand, out ordinal))
             {
                 if (ordinal < 0 || ordinal >= DisambigObjects.Count)
-                    MudObject.SendMessage(Actor, "That wasn't a valid option. I'm aborting disambiguation.");
+                    MudObject.SendMessage(Command.Actor, "That wasn't a valid option. I'm aborting disambiguation.");
                 else
                 {
                     var choosenMatches = MatchedCommand.Matches.Where(m => Object.ReferenceEquals(m[DisambigArgument], DisambigObjects[ordinal]));
                     MatchedCommand.Matches = new List<PossibleMatch>(choosenMatches);
 
                     if (MatchedCommand.Matches.Count == 1)
-                        Core.ProcessPlayerCommand(MatchedCommand.Command, MatchedCommand.Matches[0], Actor);
+                        Core.ProcessPlayerCommand(MatchedCommand.Command, MatchedCommand.Matches[0], Command.Actor);
                     else
                     {
-                        MudObject.SendMessage(Actor, "That helped narrow it down, but I'm still not sure what you mean.");
-                        Actor.CommandHandler = new DisambigCommandHandler(Actor, MatchedCommand, ParentHandler);
+                        MudObject.SendMessage(Command.Actor, "That helped narrow it down, but I'm still not sure what you mean.");
+                        Command.Actor.CommandHandler = new DisambigCommandHandler(Command.Actor, MatchedCommand, ParentHandler);
                     }
                 }
             }
             else //Player didn't type an ordinal; retry.
             {
-                Core.EnqueuActorCommand(Actor, Command);
+                Core.EnqueuActorCommand(Command);
             }
         }
     }

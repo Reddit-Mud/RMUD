@@ -54,22 +54,22 @@ namespace NetworkModule
 
 		}
 
-		public void HandleCommand(Actor Actor, String Command)
+		public void HandleCommand(PendingCommand Command)
 		{
             try
 			{
-				var matchedCommand = Parser.ParseCommand(Command, null);
+				var matchedCommand = Parser.ParseCommand(Command);
                 if (matchedCommand != null)
                 {
-                    Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Actor);
+                    Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Command.Actor);
                 }
                 else
-                    MudObject.SendMessage(Actor, "I do not understand.");
+                    MudObject.SendMessage(Command.Actor, "I do not understand.");
 			}
 			catch (Exception e)
 			{
 				Core.ClearPendingMessages();
-                MudObject.SendMessage(Actor, e.Message);
+                MudObject.SendMessage(Command.Actor, e.Message);
 			}
 		}
 	}

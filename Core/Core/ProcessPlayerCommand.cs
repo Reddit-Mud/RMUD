@@ -9,15 +9,25 @@ namespace RMUD
 {
     public static partial class Core
     {
+        public static PossibleMatch ExecutingCommand { get; private set; }
+
         public static void ProcessPlayerCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
         {
-            Match.Upsert("COMMAND", Command);
-            if (GlobalRules.ConsiderMatchBasedPerformRule("before command", Match, Actor) == PerformResult.Continue)
+            ExecutingCommand = Match;
+            try
             {
-                Command.ProceduralRules.Consider(Match, Actor);
-                GlobalRules.ConsiderMatchBasedPerformRule("after command", Match, Actor);
+                Match.Upsert("COMMAND", Command);
+                if (GlobalRules.ConsiderMatchBasedPerformRule("before command", Match, Actor) == PerformResult.Continue)
+                {
+                    Command.ProceduralRules.Consider(Match, Actor);
+                    GlobalRules.ConsiderMatchBasedPerformRule("after command", Match, Actor);
+                }
+                GlobalRules.ConsiderPerformRule("after every command", Actor);
             }
-            GlobalRules.ConsiderPerformRule("after every command", Actor);
+            finally
+            {
+                ExecutingCommand = null;
+            }
         }
     }
 

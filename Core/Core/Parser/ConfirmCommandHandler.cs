@@ -22,15 +22,15 @@ namespace RMUD
             MudObject.SendMessage(Actor, "Are you sure you want to do that? (Y/N)");
 		}
 
-        public void HandleCommand(Actor Actor, String Command)
+        public void HandleCommand(PendingCommand Command)
         {
             //Whatever the outcome of the confirmation, command handling should continue as normal afterwards.
-            Actor.CommandHandler = ParentHandler;
+            Command.Actor.CommandHandler = ParentHandler;
 
-            if (Command.ToUpper() == "YES" || Command.ToUpper() == "Y")
-                Core.ProcessPlayerCommand(CheckedCommand.Command, CheckedCommand.Matches[0], Actor);
+            if (Command.RawCommand.ToUpper() == "YES" || Command.RawCommand.ToUpper() == "Y")
+                Core.ProcessPlayerCommand(CheckedCommand.Command, CheckedCommand.Matches[0], Command.Actor);
             else
-                MudObject.SendMessage(Actor, "Okay, aborted.");            
+                MudObject.SendMessage(Command.Actor, "Okay, aborted.");            
         }
     }
 }

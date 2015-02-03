@@ -1,0 +1,46 @@
+﻿Commands invoke a specific sequence of rule books.
+
+First invoked is the rulebook 'before command', taking a PossibleMatch and an Actor. This is a match based perform rulebook, meaning it behaves like a perform rulebook, but instead of searching the arguments to the rulebook for applicable rules, it instead searches the contents of the possible match. The actor has already been added to the match at this point, so it will be searched for rules as well. This means that an object can hook this rulebook if it's mentioned in the command in any way. Unlike other perform rulebooks, the location of objects are not searched. This rulebook should be used sparingly when higher level rulebooks can't achieve the desired effect.
+
+Next, only if the before command rulebook results in 'PerformResult.Continue', the procedural rules defined for the command and the rulebook 'after command' are considered. The procedural rules for a command are always considered in order and have no when clause. They also cannot be hooked by any objects. There is no public mechanism to modify these rules at runtime. The 'after command' rulebook takes a PossibleMatch and an Actor. Like 'before command', it is a matched based perform rulebook.
+
+Finally, the rulebook 'after every command' is considered. This rulebook takes a single Actor argument. It will be considered regardless of the result of 'before command'. This is an ordinary perform rulebook.
+
+
+While a command is executing, the property 'Core.ExecutingCommand' will hold the PossibleMatch for the command currently being executed. This property will be null when a command is not executing. Match based perform rulebooks don't need to use this property, as it will be equal to the PossibleMatch that is passed to them as an argument.
+
+An example of the use of this property is to distinquish between the player typing 'look' and a look command automatically generated as the result of moving between rooms. The 'go' command in the StandardActionsModule generates a 'look' command and sets the 'AUTO' property of it's PossibleMatch to true. An implementation of look can then detect this property to modify the description given.
+
+'Go' uses the pre-settings mechanism exposed through EnqueuActorCommand to set the 'AUTO' property.
+>   Core.EnqueuActorCommand(actor, "look", MakeDictionary("AUTO", true));
+
+See how this example uses the 'AUTO' property to choose between a brief or long description of the room.
+
+public class BriefRoom : RMUD.Room
+    {
+        public int TimesViewed = 0;
+        public string BriefDescription;
+
+        public override void Initialize()
+        {
+        }
+
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
+        {
+            GlobalRules.Perform<RMUD.MudObject, BriefRoom>("describe")
+                .Do((viewer, item) =>
+                {
+                    var auto = RMUD.Core.ExecutingCommand.ValueOrDefault("AUTO", false);
+
+                    if (item.TimesViewed > 0 && auto)
+                        RMUD.MudObject.SendMessage(viewer, item.BriefDescription);
+                    else
+                        RMUD.MudObject.SendMessage(viewer, item.Long);
+
+                    item.TimesViewed += 1;
+                    return RMUD.PerformResult.Stop;
+                }).Name("Choose brief or long description rule.");
+
+        }
+    }   
+

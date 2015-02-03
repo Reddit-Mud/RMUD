@@ -203,6 +203,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Documentation\CommandProcessing.txt" />
     <Content Include="Documentation\RuleOrder.txt" />
   </ItemGroup>
   <ItemGroup>

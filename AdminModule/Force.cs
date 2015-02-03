@@ -46,7 +46,7 @@ namespace AdminModule
                     }
 
                     var command = match["RAW-COMMAND"].ToString();
-                    var matchedCommand = Core.ParserCommandHandler.Parser.ParseCommand(command, targetActor);
+                    var matchedCommand = Core.ParserCommandHandler.Parser.ParseCommand(new PendingCommand { RawCommand = command, Actor = targetActor });
 
                     if (matchedCommand != null)
                     {

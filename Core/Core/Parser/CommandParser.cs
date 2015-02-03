@@ -37,14 +37,18 @@ namespace RMUD
             public MatchAborted(String Message) : base(Message) { }
         }
 
-        public MatchedCommand ParseCommand(String Command, Actor Actor)
+        public MatchedCommand ParseCommand(PendingCommand Command)
         {
-			var tokens = new LinkedList<String>(Command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
-			var rootMatch = new PossibleMatch(tokens.First);
-            rootMatch.Upsert("ACTOR", Actor);
-            rootMatch.Upsert("LOCATION", Actor == null ? null : Actor.Location);
+            var tokens = new LinkedList<String>(Command.RawCommand.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
 
-			var matchContext = new MatchContext { ExecutingActor = Actor };
+			var rootMatch = new PossibleMatch(tokens.First);
+            rootMatch.Upsert("ACTOR", Command.Actor);
+            rootMatch.Upsert("LOCATION", Command.Actor == null ? null : Command.Actor.Location);
+            if (Command.PreSettings != null)
+                foreach (var setting in Command.PreSettings)
+                    rootMatch.Upsert(setting.Key.ToUpper(), setting.Value);
+
+			var matchContext = new MatchContext { ExecutingActor = Command.Actor };
 
             foreach (var command in Commands)
             {

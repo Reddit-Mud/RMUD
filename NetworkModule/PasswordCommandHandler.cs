@@ -22,10 +22,10 @@ namespace NetworkModule
             MudObject.SendMessage(Actor, "Password: ");
 		}
 
-        public void HandleCommand(Actor Actor, String Password)
+        public void HandleCommand(PendingCommand Command)
         {
-            Actor.CommandHandler = ParentHandler;
-            AuthenticatingCommand(Actor, UserName, Password);
+            Command.Actor.CommandHandler = ParentHandler;
+            AuthenticatingCommand(Command.Actor, UserName, Command.RawCommand);
         }
     }
 }
