@@ -33,6 +33,13 @@ namespace RMUD
             return r;
         }
 
+        public PossibleMatch With(Dictionary<String, Object> Arguments)
+        {
+            var r = Clone();
+            foreach (var arg in Arguments) r.Upsert(arg.Key, arg.Value);
+            return r;
+        }
+
         public PossibleMatch Advance()
         {
             return new PossibleMatch(this, Next.Next);

@@ -20,6 +20,7 @@ namespace StandardActionsModule
                                 if (Core.GlobalRules.ConsiderCheckRuleSilently("can open?", actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
                                 return MatchPreference.Unlikely;
                             })))))
+                .ID("StandardActions:Open")
                 .Manual("Opens an openable thing.")
                 .Check("can open?", "ACTOR", "SUBJECT")
                 .BeforeActing()

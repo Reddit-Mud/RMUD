@@ -46,6 +46,7 @@ namespace StandardActionsModule
             Core.StandardMessage("they went", "^<the0> went <s1>.");
             Core.StandardMessage("bad link", "Error - Link does not lead to a room.");
             Core.StandardMessage("they arrive", "^<the0> arrives <s1>.");
+            Core.StandardMessage("first opening", "[first opening <the0>]");
 
             GlobalRules.DeclareCheckRuleBook<MudObject, Link>("can go?", "[Actor, Link] : Can the actor go through that link?", "actor", "link");
 
@@ -58,12 +59,18 @@ namespace StandardActionsModule
                 })
                 .Name("No link found rule.");
 
-            GlobalRules.Check<MudObject, Link>("can go?")
+            GlobalRules.Check<Actor, Link>("can go?")
                 .When((actor, link) => (link.Portal != null) && !GlobalRules.ConsiderValueRule<bool>("open?", link.Portal))
                 .Do((actor, link) =>
                 {
-                    MudObject.SendMessage(actor, "@go to closed door");
-                    return CheckResult.Disallow;
+                    MudObject.SendMessage(actor, "@first opening", link.Portal);
+                    var tryOpen = Core.Try("StandardActions:Open", Core.ExecutingCommand.With("SUBJECT", link.Portal), actor);
+                    if (tryOpen == PerformResult.Stop)
+                    {
+                        //MudObject.SendMessage(actor, "@go to closed door");
+                        return CheckResult.Disallow;
+                    }
+                    return CheckResult.Continue;
                 })
                 .Name("Can't go through closed door rule.");
 

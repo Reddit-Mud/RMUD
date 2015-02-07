@@ -17,6 +17,11 @@ namespace RMUD
             return Entry;
         }
 
+        public CommandEntry FindCommandWithID(String ID)
+        {
+            return Commands.FirstOrDefault(c => c._ID == ID);
+        }
+
 		public class MatchedCommand
 		{
 			public CommandEntry Command;

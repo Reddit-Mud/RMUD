@@ -11,22 +11,44 @@ namespace RMUD
     {
         public static PossibleMatch ExecutingCommand { get; private set; }
 
+        private static PerformResult ExecuteCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
+        {
+            var result = PerformResult.Stop;
+            Match.Upsert("COMMAND", Command);
+            if (GlobalRules.ConsiderMatchBasedPerformRule("before command", Match, Actor) == PerformResult.Continue)
+            {
+                result = Command.ProceduralRules.Consider(Match, Actor);
+                GlobalRules.ConsiderMatchBasedPerformRule("after command", Match, Actor);
+            }
+            GlobalRules.ConsiderPerformRule("after every command", Actor);
+            return result;
+        }
+
         public static void ProcessPlayerCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
         {
             ExecutingCommand = Match;
             try
             {
-                Match.Upsert("COMMAND", Command);
-                if (GlobalRules.ConsiderMatchBasedPerformRule("before command", Match, Actor) == PerformResult.Continue)
-                {
-                    Command.ProceduralRules.Consider(Match, Actor);
-                    GlobalRules.ConsiderMatchBasedPerformRule("after command", Match, Actor);
-                }
-                GlobalRules.ConsiderPerformRule("after every command", Actor);
+                ExecuteCommand(Command, Match, Actor);
             }
             finally
             {
                 ExecutingCommand = null;
+            }
+        }
+
+        public static PerformResult Try(String CommandID, PossibleMatch Match, Actor Actor)
+        {
+            var parentCommand = ExecutingCommand;
+            try
+            {
+                var command = Core.DefaultParser.FindCommandWithID(CommandID);
+                if (command == null) return PerformResult.Stop;
+                return ExecuteCommand(command, Match, Actor);
+            }
+            finally
+            {
+                ExecutingCommand = parentCommand;
             }
         }
     }

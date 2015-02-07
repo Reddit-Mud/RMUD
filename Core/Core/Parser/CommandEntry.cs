@@ -22,7 +22,8 @@ namespace RMUD
         internal String ManualPage = "";
         internal StringBuilder GeneratedManual = null;
         internal PerformRuleBook ProceduralRules;
-
+        internal String _ID = "";
+        
         public CommandEntry()
         {
             ManPages.Pages.Add(this);
@@ -31,6 +32,12 @@ namespace RMUD
             {
                 ArgumentTypes = new List<Type>(new Type[] { typeof(PossibleMatch), typeof(Actor) }),
             };
+        }
+
+        public CommandEntry ID(String _ID)
+        {
+            this._ID = _ID;
+            return this;
         }
 
         public bool IsNamed(String Name)
