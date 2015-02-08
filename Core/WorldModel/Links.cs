@@ -7,6 +7,7 @@ namespace RMUD
 {
 	public enum Direction
 	{
+        NOWHERE,
 		NORTH,
 		NORTHEAST,
 		EAST,
@@ -25,13 +26,9 @@ namespace RMUD
         AFT,
 	}
 
-	public class Link: MudObject
+	public static class Link
 	{
-		public Direction Direction;
-		public String Destination;
-		public Portal Portal;
-
-        public struct DirectionVector
+		public struct DirectionVector
         {
             public int X;
             public int Y;
@@ -39,13 +36,9 @@ namespace RMUD
             public DirectionVector(int X, int Y) { this.X = X; this.Y = Y; }
         }
 
-        public override string ToString()
-        {
-            return Direction + " to " + Destination + (Portal == null ? "" : (" through " + Portal));
-        }
-
-		private static List<String> Names = new List<String>
+        private static List<String> Names = new List<String>
         { 
+            "NOWHERE", "NULL",
             "NORTH", "N",
             "NORTHEAST", "NE",
             "EAST", "E",
@@ -83,6 +76,7 @@ namespace RMUD
         {
             switch (D)
             {
+                case Direction.NOWHERE: return new DirectionVector(0, 0);
                 case Direction.NORTH: return new DirectionVector(0, -1);
                 case Direction.NORTHEAST: return new DirectionVector(1, -1);
                 case Direction.EAST: return new DirectionVector(1,0);
@@ -107,6 +101,7 @@ namespace RMUD
 		{
 			switch (Of)
 			{
+                case Direction.NOWHERE: return Direction.NOWHERE;
 				case Direction.NORTH: return Direction.SOUTH;
 				case Direction.NORTHEAST: return Direction.SOUTHWEST;
 				case Direction.EAST: return Direction.WEST;
@@ -131,6 +126,7 @@ namespace RMUD
         {
             switch (Of)
             {
+                case Direction.NOWHERE: return "from nowhere";
                 case Direction.NORTH: return "from the north";
                 case Direction.NORTHEAST: return "from the northeast";
                 case Direction.EAST: return "from the east";

@@ -24,9 +24,9 @@ the weather outside seems to be getting worse."
             OpenLink(Direction.SOUTH, "Bar");
             OpenLink(Direction.WEST, "Cloakroom");
 
-            Check<MudObject, Link>("can go?")
+            Check<MudObject, MudObject>("can go?")
                .First
-               .When((actor, link) => link != null && link.Location is Foyer && link.Direction == Direction.NORTH)
+               .When((actor, link) => link != null && link.Location is Foyer && link.GetProperty<Direction>("link direction") == Direction.NORTH)
                .Do((actor, link) =>
                {
                    MudObject.SendMessage(actor, "You've only just arrived, and besides, the weather outside seems to be getting worse.");

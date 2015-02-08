@@ -128,16 +128,16 @@ namespace StandardActionsModule
                     {
                         MudObject.SendMessage(viewer, "@obvious exits");
 
-                        foreach (var link in (room as Room).EnumerateObjects<Link>(RelativeLocations.Links))
+                        foreach (var link in (room as Room).EnumerateObjects<MudObject>(RelativeLocations.Links))
                         {
                             var builder = new StringBuilder();
                             builder.Append("  ^");
-                            builder.Append(link.Direction.ToString());
+                            builder.Append(link.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE).ToString());
 
-                            if (link.Portal != null)
-                                builder.Append(" " + Core.FormatMessage(viewer, Core.Message("through"), link.Portal));
+                            if (!link.GetPropertyOrDefault<bool>("link anonymous?", false))
+                                builder.Append(" " + Core.FormatMessage(viewer, Core.Message("through"), link));
 
-                            var destinationRoom = MudObject.GetObject(link.Destination) as Room;
+                            var destinationRoom = MudObject.GetObject(link.GetProperty<String>("link destination")) as Room;
                             if (destinationRoom != null)
                                 builder.Append(" " + Core.FormatMessage(viewer, Core.Message("to"), destinationRoom));
 

@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Dump.cs" />
     <Compile Include="Force.cs" />
+    <Compile Include="Scope.cs" />
     <Compile Include="Inspect.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="ModuleInfo.cs" />

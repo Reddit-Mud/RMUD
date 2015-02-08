@@ -12,18 +12,23 @@ namespace RMUD
         public Room() : base(RelativeLocations.Contents | RelativeLocations.Links | RelativeLocations.Scenery, RelativeLocations.Contents)
         { }
 
-		public void OpenLink(Direction Direction, String Destination, MudObject Portal = null)
-		{
-            if (Portal != null && !(Portal is Portal)) 
-                Core.LogWarning("Object passed to OpenLink in " + Path + " is not a portal.");
-            if (RemoveAll(thing => thing is Link && (thing as Link).Direction == Direction) > 0)
+        public void OpenLink(Direction Direction, String Destination, MudObject Portal = null)
+        {
+            if (RemoveAll(thing => thing.GetPropertyOrDefault<Direction>("link direction", RMUD.Direction.NOWHERE) == Direction && thing.GetPropertyOrDefault<bool>("portal?", false)) > 0)
                 Core.LogWarning("Opened duplicate link in " + Path);
 
-            var link = new Link { Direction = Direction, Destination = Destination, Portal = Portal as Portal };
-            if (Portal is Portal) (Portal as Portal).AddSide(this);
-            link.Location = this;
-            Add(link, RelativeLocations.Links);
-		}
+            if (Portal == null)
+            {
+                Portal = new MudObject();
+                Portal.SetProperty("link anonymous?", true);
+            }
+
+            Portal.SetProperty("portal?", true);
+            Portal.SetProperty("link direction", Direction);
+            Portal.SetProperty("link destination", Destination);
+            Portal.Location = this;
+            Add(Portal, RelativeLocations.Links);
+        }
 
         #region Scenery 
 

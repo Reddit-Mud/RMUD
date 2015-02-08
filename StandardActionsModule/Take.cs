@@ -82,10 +82,10 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
-                .When((actor, thing) => thing is Portal)
+                .When((actor, thing) => thing.GetPropertyOrDefault<bool>("portal?", false))
                 .Do((actor, thing) =>
                 {
-                    MudObject.SendMessage(actor, "@cant take people");
+                    MudObject.SendMessage(actor, "@cant take portal");
                     return CheckResult.Disallow;
                 });
 

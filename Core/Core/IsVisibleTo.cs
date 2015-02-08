@@ -15,7 +15,6 @@ namespace RMUD
         ///  locale of the two objects. However, some special cases must be accounted for.
         ///  a) A closed container is visible to it's contents, despite having different locales, 
         ///     and the reverse.
-        ///  b) Portals have two sides and are visible on both. Portals also have no locale.
         /// </summary>
         /// <param name="Actor">The reference point object</param>
         /// <param name="Object">The object to be tested</param>
@@ -24,25 +23,11 @@ namespace RMUD
         {
             var actorLocale = MudObject.FindLocale(Actor);
             if (actorLocale == null) return false;
-
-            if (Object is Portal)
-            {
-                var frontLocale = MudObject.FindLocale((Object as Portal).FrontSide);
-                var backLocale = MudObject.FindLocale((Object as Portal).BackSide);
-
-                return
-                    System.Object.ReferenceEquals(actorLocale, frontLocale)
-                    || System.Object.ReferenceEquals(actorLocale, backLocale)
-                    || System.Object.ReferenceEquals(Actor, frontLocale)
-                    || System.Object.ReferenceEquals(Actor, backLocale);
-            }
-            else
-            {
-                var objectLocale = MudObject.FindLocale(Object);
-                return System.Object.ReferenceEquals(actorLocale, objectLocale)
-                    || System.Object.ReferenceEquals(actorLocale, Object)
-                    || System.Object.ReferenceEquals(objectLocale, Actor);
-            }
+            
+            var objectLocale = MudObject.FindLocale(Object);
+            return System.Object.ReferenceEquals(actorLocale, objectLocale)
+                || System.Object.ReferenceEquals(actorLocale, Object)
+                || System.Object.ReferenceEquals(objectLocale, Actor);
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace StandardActionsModule
                 {
                     var direction = match["DIRECTION"] as Direction?;
                     var location = actor.Location as Room;
-                    var link = location.EnumerateObjects().FirstOrDefault(thing => thing is Link && (thing as Link).Direction == direction.Value);
+                    var link = location.EnumerateObjects().FirstOrDefault(thing => thing.GetPropertyOrDefault<bool>("portal?", false) && thing.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == direction.Value);
                     match.Upsert("LINK", link);
                     return PerformResult.Continue;
                 }, "lookup link rule")
@@ -48,9 +48,9 @@ namespace StandardActionsModule
             Core.StandardMessage("they arrive", "^<the0> arrives <s1>.");
             Core.StandardMessage("first opening", "[first opening <the0>]");
 
-            GlobalRules.DeclareCheckRuleBook<MudObject, Link>("can go?", "[Actor, Link] : Can the actor go through that link?", "actor", "link");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can go?", "[Actor, Link] : Can the actor go through that link?", "actor", "link");
 
-            GlobalRules.Check<MudObject, Link>("can go?")
+            GlobalRules.Check<MudObject, MudObject>("can go?")
                 .When((actor, link) => link == null)
                 .Do((actor, link) =>
                 {
@@ -59,40 +59,38 @@ namespace StandardActionsModule
                 })
                 .Name("No link found rule.");
 
-            GlobalRules.Check<Actor, Link>("can go?")
-                .When((actor, link) => (link.Portal != null) && !GlobalRules.ConsiderValueRule<bool>("open?", link.Portal))
+            GlobalRules.Check<Actor, MudObject>("can go?")
+                .When((actor, link) => !GlobalRules.ConsiderValueRule<bool>("open?", link))
                 .Do((actor, link) =>
                 {
-                    MudObject.SendMessage(actor, "@first opening", link.Portal);
-                    var tryOpen = Core.Try("StandardActions:Open", Core.ExecutingCommand.With("SUBJECT", link.Portal), actor);
+                    MudObject.SendMessage(actor, "@first opening", link);
+                    var tryOpen = Core.Try("StandardActions:Open", Core.ExecutingCommand.With("SUBJECT", link), actor);
                     if (tryOpen == PerformResult.Stop)
-                    {
-                        //MudObject.SendMessage(actor, "@go to closed door");
                         return CheckResult.Disallow;
-                    }
                     return CheckResult.Continue;
                 })
-                .Name("Can't go through closed door rule.");
+                .Name("Try opening a closed door first rule.");
 
-            GlobalRules.Check<MudObject, Link>("can go?")
+            GlobalRules.Check<MudObject, MudObject>("can go?")
                 .Do((actor, link) => CheckResult.Allow)
                 .Name("Default can go rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, Link>("go", "[Actor, Link] : Handle the actor going through the link.", "actor", "link");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("go", "[Actor, Link] : Handle the actor going through the link.", "actor", "link");
 
-            GlobalRules.Perform<MudObject, Link>("go")
+            GlobalRules.Perform<MudObject, MudObject>("go")
                 .Do((actor, link) =>
                 {
-                    MudObject.SendMessage(actor, "@you went", link.Direction.ToString().ToLower());
-                    MudObject.SendExternalMessage(actor, "@they went", actor, link.Direction.ToString().ToLower());
+                    var direction = link.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE);
+                    MudObject.SendMessage(actor, "@you went", direction.ToString().ToLower());
+                    MudObject.SendExternalMessage(actor, "@they went", actor, direction.ToString().ToLower());
                     return PerformResult.Continue;
                 })
                 .Name("Report leaving rule.");
 
-            GlobalRules.Perform<MudObject, Link>("go")
+            GlobalRules.Perform<MudObject, MudObject>("go")
                 .Do((actor, link) =>
                 {
-                    var destination = MudObject.GetObject(link.Destination) as Room;
+                    var destination = MudObject.GetObject(link.GetProperty<String>("link destination")) as Room;
                     if (destination == null)
                     {
                         MudObject.SendMessage(actor, "@bad link");
@@ -103,16 +101,17 @@ namespace StandardActionsModule
                 })
                 .Name("Move through the link rule.");
 
-            GlobalRules.Perform<MudObject, Link>("go")
+            GlobalRules.Perform<MudObject, MudObject>("go")
                 .Do((actor, link) =>
                 {
-                    var arriveMessage = Link.FromMessage(Link.Opposite(link.Direction));
+                    var direction = link.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE);
+                    var arriveMessage = Link.FromMessage(Link.Opposite(direction));
                     MudObject.SendExternalMessage(actor, "@they arrive", actor, arriveMessage);
                     return PerformResult.Continue;
                 })
                 .Name("Report arrival rule.");
 
-            GlobalRules.Perform<MudObject, Link>("go")
+            GlobalRules.Perform<MudObject, MudObject>("go")
                 .When((actor, link) => actor is Player && (actor as Player).ConnectedClient != null)
                 .Do((actor, link) =>
                 {

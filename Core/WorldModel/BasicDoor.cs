@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public class BasicDoor : Portal
+    public class BasicDoor : MudObject
     {
         public BasicDoor()
         {
@@ -46,11 +46,11 @@ namespace RMUD
             {
                 Open = true;
 
-                var location = a.Location as Room;
-                var otherSide = this.OppositeSide(location);
+                var otherSide = Portal.FindOppositeSide(this);
                 if (otherSide != null)
                 {
-                    MudObject.SendLocaleMessage(otherSide as Room, "@they open", a, this);
+                    if (otherSide is BasicDoor) (otherSide as BasicDoor).Open = true;
+                    MudObject.SendLocaleMessage(otherSide, "@they open", a, this);
                     Core.MarkLocaleForUpdate(otherSide);
                 }
 
@@ -61,11 +61,11 @@ namespace RMUD
             {
                 Open = false;
 
-                var location = a.Location as Room;
-                var otherSide = this.OppositeSide(location);
+                var otherSide = Portal.FindOppositeSide(this);
                 if (otherSide != null)
                 {
-                    MudObject.SendLocaleMessage(otherSide as Room, "@they close", a, this);
+                    if (otherSide is BasicDoor) (otherSide as BasicDoor).Open = false;
+                    MudObject.SendLocaleMessage(otherSide, "@they close", a, this);
                     Core.MarkLocaleForUpdate(otherSide);
                 }
 

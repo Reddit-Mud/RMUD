@@ -55,11 +55,14 @@ namespace Space
                 .First
                 .Do((actor) =>
                 {
-                    BlockingConversation = true;
+                    //BlockingConversation = true;
 
-                    RMUD.MudObject.SendMessage(actor, "Sal? Sal? Can you hear me?");
-                    actor.SetProperty("interlocutor", RMUD.MudObject.GetObject("DanConversation0"));
-                    RMUD.Core.EnqueuActorCommand(actor, "topics");
+                    //RMUD.MudObject.SendMessage(actor, "Sal? Sal? Can you hear me?");
+                    //actor.SetProperty("interlocutor", RMUD.MudObject.GetObject("DanConversation0"));
+                    //RMUD.Core.EnqueuActorCommand(actor, "topics");
+                    
+                    RMUD.MudObject.Move(actor, RMUD.MudObject.GetObject("Start"));
+                    RMUD.Core.EnqueuActorCommand(actor, "look");
                     return RMUD.PerformResult.Stop;
                 });
         }

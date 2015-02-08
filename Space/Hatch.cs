@@ -2,16 +2,16 @@
 
 namespace Space
 {
-    public class Hatch : Portal
+    public class Hatch : Container
     {
-        public Hatch()
+        public Hatch() : base(RelativeLocations.On, RelativeLocations.On)
         {
             Short = "hatch";
             Long = "It looks just like every other hatch.";
 
             this.Nouns.Add("HATCH");
-            this.Nouns.Add("CLOSED", actor => !Open);
-            this.Nouns.Add("OPEN", actor => Open);
+            this.Nouns.Add("CLOSED", h => !Open);
+            this.Nouns.Add("OPEN", h => Open);
             Open = false;
 
             Value<MudObject, bool>("openable?").Do(a => true);
@@ -45,18 +45,20 @@ namespace Space
             Perform<MudObject, MudObject>("opened").Do((a, b) =>
             {
                 Open = true;
+                var otherSide = Portal.FindOppositeSide(this);
+                if (otherSide is Hatch) (otherSide as Hatch).Open = true;
                 return PerformResult.Continue;
             });
 
             Perform<MudObject, MudObject>("closed").Do((a, b) =>
             {
                 Open = false;
+                var otherSide = Portal.FindOppositeSide(this);
+                if (otherSide is Hatch) (otherSide as Hatch).Open = false;
                 return PerformResult.Continue;
             });
         }
 
         public bool Open { get; set; }
     }
-
-    public class CommonCargoHatch : Hatch { }
 }

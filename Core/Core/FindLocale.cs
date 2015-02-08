@@ -19,7 +19,7 @@ namespace RMUD
         /// <returns>The locale of the object.</returns>
         public static MudObject FindLocale(MudObject Of)
         {
-            if (Of.Location == null) return Of;
+            if (Of == null || Of.Location == null) return Of;
 
             //If the object is in a container, check to see if that container is open.
             var container = Of.Location as Container;

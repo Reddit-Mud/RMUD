@@ -11,13 +11,7 @@ namespace RMUD
         {
             if (C != null)
             {
-                if (C is Link)
-                {
-                    if ((C as Link).Portal != null)
-                        yield return (C as Link).Portal;
-                }
-                else
-                    yield return C;
+                yield return C;
 
                 if (C is Container)
                     foreach (var item in (C as Container).EnumerateObjects())
@@ -36,13 +30,7 @@ namespace RMUD
         {
             if (C != null)
             {
-                if (C is Link)
-                {
-                    if ((C as Link).Portal != null)
-                        yield return (C as Link).Portal;
-                }
-                else
-                    yield return C;
+                yield return C;
 
                 if (C is Container)
                     foreach (var list in (C as Container).Lists)
