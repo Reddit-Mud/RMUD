@@ -55,21 +55,37 @@ namespace AdminModule
                 }, "List all the damn things rule.");
         }
 
-        private static String WriteValue(Object Value)
+        private static String WriteValue(Object Value, int indent = 1)
         {
             if (Value == null)
                 return "NULL";
             else if (Value is String)
                 return "\"" + Value + "\"";
             else if (Value is MudObject)
-                return Value.ToString();
+            {
+                return (Value as MudObject).GetFullName();
+            }
+            else if (Value is KeyValuePair<String, Object>)
+            {
+                var v = (Value as KeyValuePair<String, Object>?).Value;
+                return v.Key + ": " + WriteValue(v.Value, indent + 1);
+            }
+            else if (Value is KeyValuePair<RelativeLocations, List<MudObject>>) //Containers..
+            {
+                var v = (Value as KeyValuePair<RelativeLocations, List<MudObject>>?).Value;
+                return v.Key + ": " + WriteValue(v.Value, indent + 1);
+            }
             else if (Value is System.Collections.IEnumerable)
             {
                 var r = "[ ";
+                bool first = true;
                 foreach (var sub in (Value as System.Collections.IEnumerable))
-                    r += WriteValue(sub + ", ");
-                if (r.Length > 2) r = r.Remove(r.Length - 2, 2);
-                r += " ]";
+                {
+                    if (!first) r += "\n" + new String(' ', indent * 2);
+                    first = false;
+                    r += WriteValue(sub, indent + 1);
+                }
+                r += " ] ";
                 return r;
             }
             else return Value.ToString();

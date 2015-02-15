@@ -10,18 +10,17 @@ namespace RMUD
         public BasicDoor()
         {
             this.Nouns.Add("DOOR");
-            this.Nouns.Add("CLOSED", actor => !Open);
-            this.Nouns.Add("OPEN", actor => Open);
-            Open = false;
+            this.Nouns.Add("CLOSED", actor => !GetBooleanProperty("open?"));
+            this.Nouns.Add("OPEN", actor => GetBooleanProperty("open?"));
 
-            Value<MudObject, bool>("openable?").Do(a => true);
-            Value<MudObject, bool>("open?").Do(a => Open);
+            SetProperty("open?", false);
+            SetProperty("openable?", true);
 
             Check<MudObject, MudObject>("can open?")
                 .Last
                 .Do((a, b) =>
                 {
-                    if (Open)
+                    if (GetBooleanProperty("open?"))
                     {
                         MudObject.SendMessage(a, "@already open");
                         return CheckResult.Disallow;
@@ -34,7 +33,7 @@ namespace RMUD
                 .Last
                 .Do((a, b) =>
                 {
-                    if (!Open)
+                    if (!GetBooleanProperty("open?"))
                     {
                         MudObject.SendMessage(a, "@already closed");
                         return CheckResult.Disallow;
@@ -44,12 +43,12 @@ namespace RMUD
             
             Perform<MudObject, MudObject>("opened").Do((a, b) =>
             {
-                Open = true;
+                SetProperty("open?", true);
 
                 var otherSide = Portal.FindOppositeSide(this);
                 if (otherSide != null)
                 {
-                    if (otherSide is BasicDoor) (otherSide as BasicDoor).Open = true;
+                    otherSide.SetProperty("open?", true);
                     MudObject.SendLocaleMessage(otherSide, "@they open", a, this);
                     Core.MarkLocaleForUpdate(otherSide);
                 }
@@ -59,12 +58,12 @@ namespace RMUD
 
             Perform<MudObject, MudObject>("closed").Do((a, b) =>
             {
-                Open = false;
+                SetProperty("open?", false);
 
                 var otherSide = Portal.FindOppositeSide(this);
                 if (otherSide != null)
                 {
-                    if (otherSide is BasicDoor) (otherSide as BasicDoor).Open = false;
+                    otherSide.SetProperty("open?", false);
                     MudObject.SendLocaleMessage(otherSide, "@they close", a, this);
                     Core.MarkLocaleForUpdate(otherSide);
                 }
@@ -72,8 +71,5 @@ namespace RMUD
                 return PerformResult.Continue;
             });
         }
-
-        public bool Open { get; set; }
-
     }
 }

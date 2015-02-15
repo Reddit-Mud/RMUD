@@ -13,18 +13,17 @@ namespace Space
             Long = "It looks just like every other hatch.";
 
             this.Nouns.Add("HATCH");
-            this.Nouns.Add("CLOSED", h => !Open);
-            this.Nouns.Add("OPEN", h => Open);
-            Open = false;
+            this.Nouns.Add("CLOSED", h => !GetBooleanProperty("open?"));
+            this.Nouns.Add("OPEN", h => GetBooleanProperty("open?"));
 
-            Value<Hatch, bool>("openable?").Do(a => true);
-            Value<Hatch, bool>("open?").Do(a => a.Open);
+            SetProperty("open?", false);
+            SetProperty("openable?", true);
 
             Check<MudObject, Hatch>("can open?")
                 .Last
                 .Do((a, b) =>
                 {
-                    if (Open)
+                    if (GetBooleanProperty("open?"))
                     {
                         MudObject.SendMessage(a, "@already open");
                         return CheckResult.Disallow;
@@ -37,7 +36,7 @@ namespace Space
                 .Last
                 .Do((a, b) =>
                 {
-                    if (!Open)
+                    if (!GetBooleanProperty("open?"))
                     {
                         MudObject.SendMessage(a, "@already closed");
                         return CheckResult.Disallow;
@@ -47,17 +46,17 @@ namespace Space
 
             Perform<MudObject, Hatch>("opened").Do((a, b) =>
             {
-                Open = true;
+                SetProperty("open?", true);
                 var otherSide = Portal.FindOppositeSide(this);
-                if (otherSide is Hatch) (otherSide as Hatch).Open = true;
+                otherSide.SetProperty("open?", true);
                 return PerformResult.Continue;
             });
 
             Perform<MudObject, Hatch>("closed").Do((a, b) =>
             {
-                Open = false;
+                SetProperty("open?", false);
                 var otherSide = Portal.FindOppositeSide(this);
-                if (otherSide is Hatch) (otherSide as Hatch).Open = false;
+                otherSide.SetProperty("open?", false);
                 return PerformResult.Continue;
             });
 
@@ -90,7 +89,5 @@ namespace Space
                     return CheckResult.Continue;
                 });
         }
-
-        public bool Open { get; set; }
     }
 }

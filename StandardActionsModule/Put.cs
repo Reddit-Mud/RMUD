@@ -107,7 +107,7 @@ namespace StandardActionsModule
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
-                    if (relloc == RelativeLocations.In && !GlobalRules.ConsiderValueRule<bool>("open?", container))
+                    if (relloc == RelativeLocations.In && !container.GetBooleanProperty("open?"))
                     {
                         MudObject.SendMessage(actor, "@is closed error", container);
                         return CheckResult.Disallow;

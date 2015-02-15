@@ -56,7 +56,7 @@ namespace StandardActionsModule
                 .When((viewer, item) => GlobalRules.ConsiderValueRule<bool>("openable", item))
                 .Do((viewer, item) =>
                 {
-                    if (GlobalRules.ConsiderValueRule<bool>("is-open", item))
+                    if (item.GetBooleanProperty("open?"))
                         MudObject.SendMessage(viewer, "@is open", item);
                     else
                         MudObject.SendMessage(viewer, "@is closed", item);
@@ -79,7 +79,7 @@ namespace StandardActionsModule
                 .When((viewer, item) =>
                     {
                         if (!(item is Container)) return false;
-                        if (!GlobalRules.ConsiderValueRule<bool>("open?", item)) return false;
+                        if (!item.GetBooleanProperty("open?")) return false;
                         if ((item as Container).EnumerateObjects(RelativeLocations.In).Count() == 0) return false;
                         return true;
                     })

@@ -18,7 +18,7 @@ namespace Space
 
             var locker = new Locker();
             Move(locker, this);
-            Move(new Wrench(), locker);
+            Move(GetObject("Wrench"), locker);
             Move(GetObject("DuctTape"), locker);
         }
     }   

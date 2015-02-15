@@ -37,7 +37,7 @@ namespace StandardActionsModule
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("closed", "[Actor, Item] : Handle the item being closed.", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can close?")
-                .When((actor, item) => !GlobalRules.ConsiderValueRule<bool>("openable?", item))
+                .When((actor, item) => !item.GetBooleanProperty("openable?"))
                 .Do((a, b) =>
                 {
                     MudObject.SendMessage(a, "@not openable");

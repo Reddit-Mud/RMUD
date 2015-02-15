@@ -27,7 +27,7 @@ namespace RMUD
             {
                 if (container.RelativeLocationOf(Of) == RelativeLocations.In)
                 {
-                    if (GlobalRules.ConsiderValueRule<bool>("open?", Of.Location))
+                    if (Of.Location.GetPropertyOrDefault<bool>("open?", false))
                         return FindLocale(Of.Location);
                     else 
                         return Of.Location;

@@ -65,6 +65,11 @@ namespace RMUD
             if (Properties.ContainsKey(Name) && Properties[Name] is T) return (T)Properties[Name];
             return Default;
         }
+        
+        public bool GetBooleanProperty(String Name)
+        {
+            return GetPropertyOrDefault<bool>(Name, false);
+        }
 
         public bool HasProperty(String Name)
         {

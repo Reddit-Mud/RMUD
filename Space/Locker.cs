@@ -6,10 +6,11 @@ namespace Space
     {
         public Locker() : base(RelativeLocations.In, RelativeLocations.In)
         {
-            Open = false;
             Nouns.Add("LOCKER");
             Short = "locker";
             var seen = false;
+
+            SetProperty("open?", false);
 
             Check<MudObject, Locker>("can take?")
                 .Do((actor, locker) =>
@@ -27,14 +28,13 @@ namespace Space
                     return PerformResult.Stop;
                 });
 
-            Value<MudObject, bool>("openable?").Do(a => true);
-            Value<MudObject, bool>("open?").Do(a => Open);
+            SetProperty("openable?", true);
 
             Check<MudObject, MudObject>("can open?")
                 .Last
                 .Do((a, b) =>
                 {
-                    if (Open)
+                    if (GetBooleanProperty("open?"))
                     {
                         MudObject.SendMessage(a, "It's already open.");
                         return CheckResult.Disallow;
@@ -47,7 +47,7 @@ namespace Space
                 .Last
                 .Do((a, b) =>
                 {
-                    if (!Open)
+                    if (!GetBooleanProperty("open?"))
                     {
                         MudObject.SendMessage(a, "It's already closed.");
                         return CheckResult.Disallow;
@@ -57,17 +57,15 @@ namespace Space
             
             Perform<MudObject, MudObject>("opened").Do((a, b) =>
             {
-                Open = true;
+                SetProperty("open?", true);
                 return PerformResult.Continue;
             });
 
             Perform<MudObject, MudObject>("closed").Do((a, b) =>
             {
-                Open = false;
+                SetProperty("open?", false);
                 return PerformResult.Continue;
             });
         }
-
-        public bool Open { get; set; }
     }
 }

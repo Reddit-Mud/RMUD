@@ -74,6 +74,7 @@ namespace Space
             GlobalRules.Perform<MudObject, MudObject, MudObject>("taped to").Do((actor, subject, @object) =>
             {
                 MudObject.SendMessage(actor, "Okay, I taped <the0> onto <the1>.", subject, @object);
+                MudObject.Move(subject, @object, RelativeLocations.On);
                 return PerformResult.Continue;
             });
         }

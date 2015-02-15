@@ -60,7 +60,7 @@ namespace StandardActionsModule
                 .Name("No link found rule.");
 
             GlobalRules.Check<Actor, MudObject>("can go?")
-                .When((actor, link) => !GlobalRules.ConsiderValueRule<bool>("open?", link))
+                .When((actor, link) => link.GetBooleanProperty("openable?") && !link.GetBooleanProperty("open?"))
                 .Do((actor, link) =>
                 {
                     MudObject.SendMessage(actor, "@first opening", link);
