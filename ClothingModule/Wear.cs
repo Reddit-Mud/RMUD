@@ -25,11 +25,8 @@ namespace ClothingModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclareValueRuleBook<MudObject, bool>("wearable?", "[Item => bool] : Can the item be worn?", "item");
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can wear?", "[Actor, Item] : Can the actor wear the item?", "actor", "item");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("worn", "[Actor, Item] : Handle the actor wearing the item.", "actor", "item");
-
-            GlobalRules.Value<MudObject, bool>("wearable?").Do(a => false).Name("Things unwearable by default rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
                 .When((a, b) => !MudObject.ObjectContainsObject(a, b))
@@ -48,7 +45,7 @@ namespace ClothingModule
                 });
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((actor, item) => GlobalRules.ConsiderValueRule<bool>("wearable?", item) == false)
+                .When((actor, item) => !item.GetPropertyOrDefault<bool>("wearable?", false))
                 .Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "@clothing cant wear");

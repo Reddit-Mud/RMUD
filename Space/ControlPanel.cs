@@ -54,7 +54,7 @@ namespace Space
                 });
 
             GlobalRules.Perform<Player, Space.ControlPanel, MudObject>("hit with")
-                .When((player, panel, wrench) => wrench.GetPropertyOrDefault<bool>("heavy", false))
+                .When((player, panel, wrench) => wrench.GetPropertyOrDefault<Weight>("weight", Weight.Normal) == Weight.Heavy)
                 .Do((player, panel, wrench) =>
                 {
                     SendMessage(player, "The panel smashed up good.");

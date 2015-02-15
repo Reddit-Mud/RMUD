@@ -26,18 +26,13 @@ namespace ClothingModule
                 })
                 .Name("List worn items in inventory rule.");
 
-            GlobalRules.Value<MudObject, bool>("wearable?")
-                .When(a => a is Clothing)
-                .Do(a => true)
-                .Name("Clothing is wearable rule.");
-
-            GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((actor, item) => item is Clothing && actor is Actor)
+            GlobalRules.Check<Actor, MudObject>("can wear?")
                 .Do((actor, item) =>
                 {
-                    var article = item as Clothing;
-                    foreach (var wornItem in (actor as Actor).EnumerateObjects<Clothing>(RelativeLocations.Worn))
-                        if (wornItem.BodyPart == article.BodyPart && article.Layer <= wornItem.Layer)
+                    var layer = item.GetPropertyOrDefault<ClothingLayer>("clothing layer", ClothingLayer.Assecories);
+                    var part = item.GetPropertyOrDefault<ClothingBodyPart>("clothing part", ClothingBodyPart.Cloak);
+                    foreach (var wornItem in actor.EnumerateObjects(RelativeLocations.Worn))
+                        if (wornItem.GetPropertyOrDefault<ClothingLayer>("clothing layer", ClothingLayer.Assecories) == layer && wornItem.GetPropertyOrDefault<ClothingBodyPart>("clothing part", ClothingBodyPart.Cloak) == part)
                         {
                             MudObject.SendMessage(actor, "@clothing remove first", wornItem);
                             return CheckResult.Disallow;
@@ -46,13 +41,13 @@ namespace ClothingModule
                 })
                 .Name("Check clothing layering before wearing rule.");
 
-            GlobalRules.Check<MudObject, MudObject>("can remove?")
-                .When((actor, item) => actor is Actor && item is Clothing)
+            GlobalRules.Check<Actor, MudObject>("can remove?")
                 .Do((actor, item) =>
                 {
-                    var article = item as Clothing;
-                    foreach (var wornItem in (actor as Actor).EnumerateObjects<Clothing>(RelativeLocations.Worn))
-                        if (wornItem.BodyPart == article.BodyPart && article.Layer < wornItem.Layer)
+                    var layer = item.GetPropertyOrDefault<ClothingLayer>("clothing layer", ClothingLayer.Assecories);
+                    var part = item.GetPropertyOrDefault<ClothingBodyPart>("clothing part", ClothingBodyPart.Cloak);
+                    foreach (var wornItem in actor.EnumerateObjects(RelativeLocations.Worn))
+                        if (wornItem.GetPropertyOrDefault<ClothingLayer>("clothing layer", ClothingLayer.Assecories) < layer && wornItem.GetPropertyOrDefault<ClothingBodyPart>("clothing part", ClothingBodyPart.Cloak) == part)
                         {
                             MudObject.SendMessage(actor, "@clothing remove first", wornItem);
                             return CheckResult.Disallow;
@@ -66,7 +61,7 @@ namespace ClothingModule
                 .First
                 .Do((viewer, actor) =>
                 {
-                    var wornItems = new List<Clothing>(actor.EnumerateObjects<Clothing>(RelativeLocations.Worn));
+                    var wornItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Worn));
                     if (wornItems.Count == 0)
                         MudObject.SendMessage(viewer, "@clothing they are naked", actor);
                     else

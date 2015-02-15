@@ -8,7 +8,7 @@ namespace Space
         {
             Long = "It's a big heavy red fire extinquisher.";
             SimpleName("fire extinquisher");
-            SetProperty("heavy", true);
+            SetProperty("weight", Weight.Heavy);
         }
     }   
 }

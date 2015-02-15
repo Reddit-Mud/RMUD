@@ -7,6 +7,7 @@ namespace Space
         public DuctTape()
         {
             SimpleName("duct tape", "duck", "ducttape", "ducktape");
+            SetProperty("weight", Weight.Light);
         }
     }   
 }

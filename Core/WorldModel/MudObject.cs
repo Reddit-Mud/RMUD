@@ -45,7 +45,7 @@ namespace RMUD
 
         #region Properties
         
-        private Dictionary<String, Object> Properties = null;
+        public Dictionary<String, Object> Properties = null;
 
         public void SetProperty(String Name, Object Value)
         {

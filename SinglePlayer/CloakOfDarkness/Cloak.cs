@@ -2,7 +2,7 @@
 
 namespace CloakOfDarkness
 {
-    public class Cloak : ClothingModule.Clothing
+    public class Cloak : RMUD.MudObject
     {
         bool isHung = false;
 
@@ -20,6 +20,9 @@ The description of the cloak is "A handsome cloak,
 of velvet trimmed with satin, and slightly splattered with raindrops.
 Its blackness is so deep that it almost seems to suck light from the room."
 */
+            SetProperty("clothing layer", ClothingModule.ClothingLayer.Outer);
+            SetProperty("clothing part", ClothingModule.ClothingBodyPart.Cloak);
+            SetProperty("wearable?", true);
 
             Short = "velvet cloak";
             Nouns.Add("dark", "black", "satin", "velvet", "cloak");

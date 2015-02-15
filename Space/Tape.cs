@@ -19,10 +19,10 @@ namespace Space
                         OptionalKeyWord("TO"),
                         MustMatch("@not here",
                             Object("OBJECT", InScope)))))
-                .Manual("Lock the subject with a key.")
-                .Check("can lock?", "ACTOR", "SUBJECT", "KEY")
+                .Manual("Tape one thing to another")
+                .Check("can tape to?", "ACTOR", "SUBJECT", "OBJECT")
                 .BeforeActing()
-                .Perform("locked", "ACTOR", "SUBJECT", "KEY")
+                .Perform("taped to", "ACTOR", "SUBJECT", "OBJECT")
                 .AfterActing();
         }
 
@@ -39,7 +39,7 @@ namespace Space
                 .Name("Subject must be held to tape it to something rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can tape to?")
-                .When((actor, subject, @object) => MudObject.ObjectContainsObject(actor, MudObject.GetObject("DuctTape")))
+                .When((actor, subject, @object) => !MudObject.ObjectContainsObject(actor, MudObject.GetObject("DuctTape")))
                 .Do((actor, subject, @object) =>
                 {
                     MudObject.SendMessage(actor, "You don't have any tape.");
@@ -48,15 +48,32 @@ namespace Space
                 .Name("Need tape to tape rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can tape to?")
+                .When((actor, subject, @object) => subject.GetPropertyOrDefault<Weight>("weight", Weight.Normal) != Weight.Light)
+                .Do((actor, subject, @object) =>
+                {
+                    MudObject.SendMessage(actor, "^<the0> is too heavy to tape to things.", subject);
+                    return CheckResult.Disallow;
+                })
+                .Name("Can only tape light things rule.");
+
+            GlobalRules.Check<MudObject, MudObject, MudObject>("can tape to?")
+               .When((actor, subject, @object) => !(@object is Container) || ((@object as Container).Supported & RelativeLocations.On) != RelativeLocations.On)
+               .Do((actor, subject, @object) =>
+               {
+                   MudObject.SendMessage(actor, "I can't tape things to <the0>.", @object);
+                   return CheckResult.Disallow;
+               })
+               .Name("Can only tape things to containers that support 'on' rule");
+
+            GlobalRules.Check<MudObject, MudObject, MudObject>("can tape to?")
                 .Do((a, b, c) => CheckResult.Allow)
                 .Name("Default allow taping things to things rule.");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("locked", "[Actor, Item, Key] : Handle the actor locking the item with the key.", "actor", "item", "key");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("taped to", "[Actor, Subject, Object] : Handle the actor taping the subject to the object.");
 
-            GlobalRules.Perform<MudObject, MudObject, MudObject>("locked").Do((actor, target, key) =>
+            GlobalRules.Perform<MudObject, MudObject, MudObject>("taped to").Do((actor, subject, @object) =>
             {
-                MudObject.SendMessage(actor, "@you lock", target);
-                MudObject.SendExternalMessage(actor, "@they lock", actor, target, key);
+                MudObject.SendMessage(actor, "Okay, I taped <the0> onto <the1>.", subject, @object);
                 return PerformResult.Continue;
             });
         }

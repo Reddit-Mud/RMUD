@@ -47,6 +47,9 @@
     <Compile Include="Hit.cs" />
     <Compile Include="Tape.cs" />
     <Compile Include="Extinquisher.cs" />
+    <Compile Include="DuctTape.cs" />
+    <Compile Include="Weight.cs" />
+    <Compile Include="Suit.cs" />
     <Compile Include="Wrench.cs" />
     <Compile Include="Locker.cs" />
     <Compile Include="Cargo.cs" />
