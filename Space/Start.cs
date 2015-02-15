@@ -11,6 +11,8 @@ namespace Space
             Short = "utility closet";
 
             OpenLink(Direction.WEST, "Cargo");
+
+            Move(GetObject("Extinquisher"), this);
         }
     }   
 }

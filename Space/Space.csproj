@@ -40,12 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CargoBayHatch.cs" />
+    <Compile Include="CargoBayHallway.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="ControlPanel.cs" />
     <Compile Include="Hatch.cs" />
     <Compile Include="Hit.cs" />
     <Compile Include="Tape.cs" />
+    <Compile Include="Extinquisher.cs" />
     <Compile Include="Wrench.cs" />
     <Compile Include="Locker.cs" />
     <Compile Include="Cargo.cs" />

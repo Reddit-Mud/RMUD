@@ -4,7 +4,10 @@ namespace Space
 {
     public class Hatch : Container
     {
-        public Hatch() : base(RelativeLocations.On, RelativeLocations.On)
+        ControlPanel ControlPanel;
+
+        public Hatch()
+            : base(RelativeLocations.On, RelativeLocations.On)
         {
             Short = "hatch";
             Long = "It looks just like every other hatch.";
@@ -14,10 +17,10 @@ namespace Space
             this.Nouns.Add("OPEN", h => Open);
             Open = false;
 
-            Value<MudObject, bool>("openable?").Do(a => true);
-            Value<MudObject, bool>("open?").Do(a => Open);
+            Value<Hatch, bool>("openable?").Do(a => true);
+            Value<Hatch, bool>("open?").Do(a => a.Open);
 
-            Check<MudObject, MudObject>("can open?")
+            Check<MudObject, Hatch>("can open?")
                 .Last
                 .Do((a, b) =>
                 {
@@ -30,7 +33,7 @@ namespace Space
                 })
                 .Name("Can open doors rule.");
 
-            Check<MudObject, MudObject>("can close?")
+            Check<MudObject, Hatch>("can close?")
                 .Last
                 .Do((a, b) =>
                 {
@@ -42,7 +45,7 @@ namespace Space
                     return CheckResult.Allow;
                 });
 
-            Perform<MudObject, MudObject>("opened").Do((a, b) =>
+            Perform<MudObject, Hatch>("opened").Do((a, b) =>
             {
                 Open = true;
                 var otherSide = Portal.FindOppositeSide(this);
@@ -50,13 +53,42 @@ namespace Space
                 return PerformResult.Continue;
             });
 
-            Perform<MudObject, MudObject>("closed").Do((a, b) =>
+            Perform<MudObject, Hatch>("closed").Do((a, b) =>
             {
                 Open = false;
                 var otherSide = Portal.FindOppositeSide(this);
                 if (otherSide is Hatch) (otherSide as Hatch).Open = false;
                 return PerformResult.Continue;
             });
+
+            ControlPanel = new Space.ControlPanel();
+            Move(ControlPanel, this);
+
+            Check<Player, Hatch>("can open?")
+                .Do((player, hatch) =>
+                {
+                    var thisSide = hatch.Location as Room;
+                    var otherSide = Portal.FindOppositeSide(this).Location as Room;
+
+                    if (!Game.SuitRepaired)
+                    {
+                        if (thisSide.AirLevel == AirLevel.Vacuum || otherSide.AirLevel == AirLevel.Vacuum)
+                        {
+                            SendMessage(player, "That would let all the air out. That's not a good idea with this hole in my suit.");
+                            return CheckResult.Disallow;
+                        }
+                    }
+
+                    if (ControlPanel.Broken) return CheckResult.Continue;
+
+                    if (thisSide.AirLevel != otherSide.AirLevel)
+                    {
+                        SendMessage(player, "It won't open.");
+                        return CheckResult.Disallow;
+                    }
+
+                    return CheckResult.Continue;
+                });
         }
 
         public bool Open { get; set; }

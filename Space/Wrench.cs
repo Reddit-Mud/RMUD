@@ -8,6 +8,7 @@ namespace Space
         {
             Long = "It's a big heavy orange wrench.";
             SimpleName("wrench", "spanner");
+            SetProperty("heavy", true);
         }
     }   
 }

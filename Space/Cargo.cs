@@ -14,7 +14,7 @@ namespace Space
             Move(GetObject("CargoRoomBoxes"), this);
 
             OpenLink(Direction.EAST, "Start");
-            OpenLink(Direction.SOUTH, "Common", GetObject("CargoBayHatch@north"));
+            OpenLink(Direction.SOUTH, "CargoBayHallway", GetObject("Hatch@CargoSouth"));
 
             var locker = new Locker();
             Move(locker, this);

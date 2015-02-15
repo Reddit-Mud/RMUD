@@ -50,7 +50,7 @@ namespace Space
 
             GlobalRules.Perform<MudObject, MudObject, MudObject>("hit with").Do((actor, subject, @object) =>
             {
-                MudObject.SendMessage(actor, "I smasked <the0> with <the1>. I don't think it did anything.", subject, @object);
+                MudObject.SendMessage(actor, "I smacked <the0> with <the1>. I don't think it did anything.", subject, @object);
                 return PerformResult.Stop;
             });
         }

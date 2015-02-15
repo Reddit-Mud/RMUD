@@ -10,6 +10,7 @@ namespace Space
     {
         internal static bool BlockingConversation = false;
         internal static bool SuppressTopics = false;
+        internal static bool SuitRepaired = false;
 
         public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
