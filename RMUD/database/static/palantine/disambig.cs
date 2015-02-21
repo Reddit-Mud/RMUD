@@ -8,8 +8,8 @@ public class disambig : RMUD.Room
 
         AddScenery("Which do you mean?", "MIRROR", "MIRRORS");
 
-        OpenLink(RMUD.Direction.WEST, "palantine\\library", GetObject("palantine\\disambig_blue_door"));
-        OpenLink(RMUD.Direction.EAST, "palantine\\dark_room", GetObject("palantine\\disambig_red_door"));
+        OpenLink(RMUD.Direction.WEST, "palantine\\library", GetObject("palantine\\disambig_blue_door@inside"));
+        OpenLink(RMUD.Direction.EAST, "palantine\\dark_room", GetObject("palantine\\disambig_red_door@inside"));
         OpenLink(RMUD.Direction.SOUTH, "palantine\\antechamber");
 
         Move(GetObject("palantine\\disambig_key"), this);

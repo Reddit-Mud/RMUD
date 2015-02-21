@@ -1,11 +1,13 @@
-﻿class entrails : Clothing
+﻿class entrails : MudObject
 {
     public override void Initialize()
     {
         Short = "entrails";
         Nouns.Add("entrails");
-        Layer = ClothingLayer.Over;
-        BodyPart = ClothingBodyPart.Cloak;
+
+        SetProperty("clothing layer", ClothingLayer.Over);
+        SetProperty("clothing part", ClothingBodyPart.Cloak);
+        SetProperty("wearable?", true);
         Article = "some";
 
         Perform<MudObject, MudObject>("drop").Do((actor, item) =>

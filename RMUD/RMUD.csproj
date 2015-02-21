@@ -98,9 +98,9 @@
     <None Include="database\static\palantine\solar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="database\static\palantine\sonar.cs">
+    <Compile Include="database\static\palantine\sonar.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Compile>
     <None Include="database\static\palantine\soranus.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

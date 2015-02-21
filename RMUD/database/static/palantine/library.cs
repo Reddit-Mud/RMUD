@@ -5,7 +5,7 @@
 		Short = "Palantine Villa - The Ancient Library of Kuz";
         Move(new kuz_shelf(), this);
 
-        OpenLink(RMUD.Direction.EAST, "palantine/disambig", GetObject("palantine/disambig_blue_door"));
+        OpenLink(RMUD.Direction.EAST, "palantine/disambig", GetObject("palantine/disambig_blue_door@outside"));
 	}
 }
 
