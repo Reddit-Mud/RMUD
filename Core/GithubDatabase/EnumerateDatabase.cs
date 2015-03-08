@@ -26,6 +26,7 @@ namespace RMUD
         {
             try
             {
+                Console.WriteLine("Reading object list from github repo " + Core.SettingsObject.GithubRepo);
                 var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("Reddit-Mud"));
                 if (!String.IsNullOrEmpty(Core.SettingsObject.GithubAuthToken))
                     githubClient.Credentials = new Octokit.Credentials(Core.SettingsObject.GithubAuthToken);
@@ -45,6 +46,7 @@ namespace RMUD
                     codeSearch.Page += 1;
                     fileCount += codeResult.Items.Count;
                 } while (fileCount < codeResult.TotalCount);
+                Console.WriteLine("Read " + fileList.Count + " filenames.");
                 return new List<string>(fileList.Distinct());
             }
             catch (Exception e)

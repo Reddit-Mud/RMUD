@@ -2,7 +2,7 @@
 
 using System;
 
-namespace RMUD
+namespace SharpRuleEngine
 {
 	public partial class RuleSet
 	{	

@@ -35,6 +35,7 @@ namespace RMUD
 
             foreach (var s in fileList)
             {
+                Console.WriteLine(s);
                 fileTable.Add(new FileTableEntry { Path = s, FirstLine = lineCount });
                 lineCount += 4;
                 source.AppendFormat("namespace {0} {{\n", PathToNamespace(s));
@@ -42,7 +43,6 @@ namespace RMUD
                 lineCount += fileSource.Count(c => c == '\n');
                 source.Append(fileSource);
                 source.Append("\n}\n\n");
-
             }
 
             source.Append("}\n");

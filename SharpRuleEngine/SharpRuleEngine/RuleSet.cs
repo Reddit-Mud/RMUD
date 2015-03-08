@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RMUD
+namespace SharpRuleEngine
 {
     public partial class RuleSet
     {
         public RuleEngine GlobalRules;
         public List<RuleBook> RuleBooks = new List<RuleBook>();
 
-        internal RuleSet(RuleEngine GlobalRules)
+        public RuleSet(RuleEngine GlobalRules)
         {
             this.GlobalRules = GlobalRules;
         }
@@ -60,7 +60,7 @@ namespace RMUD
                 book.DeleteRule(RuleID);
         }
 
-        internal RT ConsiderValueRule<RT>(String Name, out bool ValueReturned, params Object[] Args)
+        public RT ConsiderValueRule<RT>(String Name, out bool ValueReturned, params Object[] Args)
         {
             ValueReturned = false;
             var book = FindRuleBook(Name);
@@ -75,7 +75,7 @@ namespace RMUD
             return default(RT);
         }
 
-        internal PerformResult ConsiderPerformRule(String Name, params Object[] Args)
+        public PerformResult ConsiderPerformRule(String Name, params Object[] Args)
         {
             var book = FindRuleBook(Name);
             if (book != null)
@@ -89,7 +89,7 @@ namespace RMUD
             return PerformResult.Continue;
         }
 
-        internal CheckResult ConsiderCheckRule(String Name, params Object[] Args)
+        public CheckResult ConsiderCheckRule(String Name, params Object[] Args)
         {
             var book = FindRuleBook(Name);
             if (book != null)

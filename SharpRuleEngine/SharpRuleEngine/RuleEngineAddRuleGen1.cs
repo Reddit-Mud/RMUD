@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RMUD
+namespace SharpRuleEngine
 {
 	public partial class RuleEngine
 	{	

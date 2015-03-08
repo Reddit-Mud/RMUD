@@ -31,7 +31,7 @@ namespace RMUD
         public String Article = "a";
 		public NounList Nouns { get; set; }
         public MudObject Location { get; set; }
-        public RuleSet Rules { get; set; }
+        public SharpRuleEngine.RuleSet Rules { get; set; }
         
         public String Indefinite(MudObject RequestedBy) 
         {

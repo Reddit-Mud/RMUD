@@ -1,6 +1,7 @@
 ﻿//This is generated code. Do not modify this file; modify the template that produces it.
 
 using System;
+using SharpRuleEngine;
 
 namespace RMUD
 {

@@ -9,7 +9,7 @@
 
 using System;
 
-namespace RMUD
+namespace SharpRuleEngine
 {
 	public class RuleDelegateWrapper<TR>
 	{

@@ -49,7 +49,7 @@ namespace RMUD.Modules.Meta
                             MudObject.SendMessage(actor, "@no help topic");
 
                     }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
                
 		}
