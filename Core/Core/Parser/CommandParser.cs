@@ -69,7 +69,7 @@ namespace RMUD
                         new CommandEntry().ProceduralRule((match, actor) => 
                         {
                             MudObject.SendMessage(actor, ma.Message);
-                            return SharpRuleEngine.PerformResult.Continue;
+                            return PerformResult.Continue;
                         }), 
                         new PossibleMatch[] { new PossibleMatch(null) });
                 }

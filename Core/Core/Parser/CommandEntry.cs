@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SharpRuleEngine;
 
 namespace RMUD
 {
@@ -22,14 +21,14 @@ namespace RMUD
         internal String ManualName = "";
         internal String ManualPage = "";
         internal StringBuilder GeneratedManual = null;
-        internal SharpRuleEngine.PerformRuleBook ProceduralRules;
+        internal PerformRuleBook ProceduralRules;
         internal String _ID = "";
         
         public CommandEntry()
         {
             ManPages.Pages.Add(this);
             GeneratedManual = new StringBuilder();
-            ProceduralRules = new SharpRuleEngine.PerformRuleBook(Core.GlobalRules.Rules)
+            ProceduralRules = new PerformRuleBook(Core.GlobalRules.Rules)
             {
                 ArgumentTypes = new List<Type>(new Type[] { typeof(PossibleMatch), typeof(Actor) }),
             };

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-	public partial class MudObject
+	public partial class MudObject : RuleSource
     {
         public ObjectState State = ObjectState.Unitialized; 
 		public String Path { get; set; }
@@ -31,7 +31,9 @@ namespace RMUD
         public String Article = "a";
 		public NounList Nouns { get; set; }
         public MudObject Location { get; set; }
-        public SharpRuleEngine.RuleSet Rules { get; set; }
+
+        public RuleSet Rules { get; private set; }
+        public RuleSource LinkedRuleSource { get { return Location; } }
         
         public String Indefinite(MudObject RequestedBy) 
         {

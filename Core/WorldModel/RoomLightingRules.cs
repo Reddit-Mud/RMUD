@@ -17,7 +17,7 @@ namespace RMUD
                 .Do(thing =>
                 {
                     (thing as Room).UpdateLighting();
-                    return SharpRuleEngine.PerformResult.Continue;
+                    return PerformResult.Continue;
                 })
                 .Name("Update room lighting rule.");
         }

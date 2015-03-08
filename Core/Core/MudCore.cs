@@ -65,7 +65,7 @@ namespace RMUD
 
             try
             {
-                GlobalRules = new RuleEngine();
+                GlobalRules = new RuleEngine(NewRuleQueueingMode.QueueNewRules);
 
 
                 GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");

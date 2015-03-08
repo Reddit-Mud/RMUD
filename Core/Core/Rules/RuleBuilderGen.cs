@@ -2,7 +2,7 @@
 
 using System;
 
-namespace SharpRuleEngine
+namespace RMUD
 {
 
 	public class RuleBuilder<TR>

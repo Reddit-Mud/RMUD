@@ -16,7 +16,7 @@ namespace RulesEngineTestHarness
             try
             {
 
-                var engine = new RMUD.RuleEngine();
+                var engine = new RMUD.RuleEngine(RMUD.NewRuleQueueingMode.ImmediatelyAddNewRules);
 
                 engine.DeclarePerformRuleBook<TestBase>("test", "");
 
