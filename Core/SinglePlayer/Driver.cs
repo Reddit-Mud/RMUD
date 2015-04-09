@@ -35,7 +35,7 @@ namespace RMUD.SinglePlayer
             assemblies.Add(new StartUpAssembly(DatabaseAssembly, new ModuleInfo { BaseNameSpace = ObjectNamespace }));
             assemblies.AddRange(AdditionalAssemblies);
 
-            if (RMUD.Core.Start(
+            if (RMUD.Core.Start(true,
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, ObjectNamespace),
                 assemblies.ToArray()))
             {

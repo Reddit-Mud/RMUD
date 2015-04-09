@@ -20,7 +20,7 @@ namespace SinglePlayer
 
 
             var driver = new RMUD.SinglePlayer.Driver();
-            driver.Start(System.Reflection.Assembly.GetExecutingAssembly(), "Akkoteaque", Console.Write);
+            driver.Start(System.Reflection.Assembly.GetExecutingAssembly(), "Wells", Console.Write);
             while (driver.IsRunning)
                 driver.Input(Console.ReadLine());
 

@@ -18,6 +18,17 @@ namespace ConversationModule
             Value<MudObject, MudObject, MudObject, bool>("topic available?").Do(Func);
             return this;
         }
+
+        public Topic Available(Func<bool> Func)
+        {
+            Value<MudObject, MudObject, MudObject, bool>("topic available?").Do((a, b, c) => Func());
+            return this;
+        }
+
+        public bool Discussed
+        {
+            get { return this.GetBooleanProperty("topic-discussed"); }
+        }
     }
 
     public static class ResponseExtensionMethods

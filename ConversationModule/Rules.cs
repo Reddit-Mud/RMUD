@@ -56,6 +56,8 @@ namespace ConversationModule
                     if (!(actor is Player)) return PerformResult.Stop;
                     var npc = actor.GetProperty<NPC>("interlocutor");
                     var suggestedTopics = npc.GetPropertyOrDefault<List<MudObject>>("conversation-topics", new List<MudObject>()).Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", actor, npc, topic));
+                    if (!Settings.ListDiscussedTopics)
+                        suggestedTopics = suggestedTopics.Where(obj => !obj.GetBooleanProperty("topic-discussed"));
 
                     if (suggestedTopics.Count() != 0)
                         MudObject.SendMessage(actor, "@convo topic prompt", new List<MudObject>(suggestedTopics));
@@ -72,6 +74,7 @@ namespace ConversationModule
                 .Do((actor, npc, topic) =>
                 {
                     GlobalRules.ConsiderPerformRule("topic response", actor, npc, topic);
+                    topic.SetProperty("topic-discussed", true);
                     return PerformResult.Continue;
                 })
                 .Name("Show topic response when discussing topic rule.");

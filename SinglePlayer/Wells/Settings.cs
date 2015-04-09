@@ -12,6 +12,8 @@ namespace Wells
         {
             NewPlayerStartRoom = "Start";
             PlayerBaseObject = "Player";
+
+            ConversationModule.Settings.ListDiscussedTopics = false;
         }
 	}
 }

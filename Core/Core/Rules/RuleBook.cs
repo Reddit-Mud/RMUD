@@ -88,10 +88,10 @@ namespace RMUD
 
         protected void LogRule(Rule Rule)
         {
-            //if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
-            //{
-            //    Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(Rule.DescriptiveName) ? "NONAME" : Rule.DescriptiveName) + "\r\n");
-            //}
+            if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
+            {
+                Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(Rule.DescriptiveName) ? "NONAME" : Rule.DescriptiveName) + "\r\n");
+            }
         }
     }
 

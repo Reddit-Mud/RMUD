@@ -59,7 +59,7 @@ namespace RMUD
                             method.Invoke(null, new Object[]{GlobalRules});
         }
 
-        public static bool Start(WorldDataService Database, params StartUpAssembly[] Assemblies)
+        public static bool Start(bool Silent, WorldDataService Database, params StartUpAssembly[] Assemblies)
         {
             ShuttingDown = false;
 
@@ -81,7 +81,8 @@ namespace RMUD
                         if (info != null)
                         {
                             ModuleAssemblies.Add(new StartUpAssembly(assembly, info, file));
-                            Console.WriteLine("Discovered module: " + file + " : " + info.Description);
+                            if (!Silent) 
+                                Console.WriteLine("Discovered module: " + file + " : " + info.Description);
                         }
                     }
 
