@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{ADAF3782-88D1-4170-866A-9EF3479EAE97}</ProjectGuid>
+    <ProjectGuid>{68D0E431-5DCA-4A25-A1B2-2F5B857821B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AdminModule</RootNamespace>
-    <AssemblyName>AdminModule</AssemblyName>
+    <RootNamespace>SinglePlayerMinimumGame</RootNamespace>
+    <AssemblyName>SinglePlayerMinimumGame</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -40,22 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dump.cs" />
-    <Compile Include="Force.cs" />
-    <Compile Include="Scope.cs" />
-    <Compile Include="Inspect.cs" />
-    <Compile Include="Instance.cs" />
-    <Compile Include="ModuleInfo.cs" />
-    <Compile Include="Move.cs" />
+    <Compile Include="GameInfo.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadLog.cs" />
-    <Compile Include="Reload.cs" />
-    <Compile Include="Rules.cs" />
-    <Compile Include="Save.cs" />
-    <Compile Include="Sonar.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Stats.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Start.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -64,9 +53,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Out\$(TargetFileName)"</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

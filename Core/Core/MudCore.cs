@@ -19,6 +19,18 @@ namespace RMUD
             this.Info = Info;
             this.FileName = FileName;
         }
+
+        public StartUpAssembly(String FileName)
+        {
+            FileName = System.IO.Path.GetFullPath(FileName);
+            this.FileName = FileName;
+
+            Assembly = System.Reflection.Assembly.LoadFrom(FileName);
+            if (Assembly == null) throw new InvalidOperationException("Could not load assembly " + FileName);
+
+            Info = Assembly.CreateInstance("ModuleInfo") as ModuleInfo;
+            if (Info == null) throw new InvalidOperationException("Specified assembly is not a module.");
+        }
     }
 
     public static partial class Core
@@ -52,6 +64,10 @@ namespace RMUD
 
         private static void LoadStartupAssembly(StartUpAssembly StartUp)
         {
+            if (StartUp == null) throw new InvalidOperationException("Tried to load null startup assembly");
+            if (StartUp.Assembly == null) throw new InvalidOperationException("Tried to load invalid startup assembly - " + StartUp.FileName);
+            if (StartUp.Info == null) throw new InvalidOperationException("Tried to load invalid startup assembly - " + StartUp.FileName);
+
             foreach (var type in StartUp.Assembly.GetTypes())
                 if (type.FullName.StartsWith(StartUp.Info.BaseNameSpace))
                     foreach (var method in type.GetMethods())
@@ -59,7 +75,7 @@ namespace RMUD
                             method.Invoke(null, new Object[]{GlobalRules});
         }
 
-        public static bool Start(bool Silent, WorldDataService Database, params StartUpAssembly[] Assemblies)
+        public static bool Start(bool Silent, bool SearchDirectory, WorldDataService Database, params StartUpAssembly[] Assemblies)
         {
             ShuttingDown = false;
 
@@ -73,6 +89,8 @@ namespace RMUD
                 ModuleAssemblies.Add(new StartUpAssembly(Assembly.GetExecutingAssembly(), new ModuleInfo { Author = "Blecki", Description = "RMUD Core", BaseNameSpace = "RMUD" }, "Core.dll"));
                 ModuleAssemblies.AddRange(Assemblies);
 
+                if (SearchDirectory)
+                {
                     foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Directory.GetCurrentDirectory()).Where(p => System.IO.Path.GetExtension(p) == ".dll"))
                     {
                         var assembly = System.Reflection.Assembly.LoadFrom(file);
@@ -81,10 +99,11 @@ namespace RMUD
                         if (info != null)
                         {
                             ModuleAssemblies.Add(new StartUpAssembly(assembly, info, file));
-                            if (!Silent) 
+                            if (!Silent)
                                 Console.WriteLine("Discovered module: " + file + " : " + info.Description);
                         }
                     }
+                }
 
                 foreach (var startupAssembly in ModuleAssemblies)
                     LoadStartupAssembly(startupAssembly);

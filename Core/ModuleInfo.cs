@@ -9,7 +9,7 @@ namespace RMUD
     public class ModuleInfo
     {
         public String BaseNameSpace = "Don't load me.";
-        public String Author = "Blecki";
+        public String Author = "RMUD";
         public String Description = "Undescribed Module";
     }
 }

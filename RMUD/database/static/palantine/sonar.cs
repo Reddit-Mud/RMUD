@@ -67,11 +67,11 @@ public class sonar : RMUD.MudObject
         }
         MapGrid[X, Y] = Symbol;
 
-        foreach (var _link in Location.EnumerateObjects(RMUD.RelativeLocations.Links).Where(t => t.HasProperty("direction")))
+        foreach (var link in Location.EnumerateObjects(RMUD.RelativeLocations.Links).Where(t => t.HasProperty("direction")))
         {
-            var destinationName = _link.GetProperty<string>("destination");
+            var destinationName = link.GetProperty<string>("destination");
             var destination = GetObject(destinationName) as RMUD.Room;
-            var direction = _link.GetPropertyOrDefault<RMUD.Direction>("direction", RMUD.Direction.NORTH);
+            var direction = link.GetPropertyOrDefault<RMUD.Direction>("direction", RMUD.Direction.NORTH);
             var directionVector = RMUD.Link.GetAsVector(direction);
             PlaceEdge(MapGrid, X + directionVector.X, Y + directionVector.Y, direction);
 

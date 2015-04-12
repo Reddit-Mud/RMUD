@@ -35,8 +35,40 @@ namespace RMUD.SinglePlayer
             assemblies.Add(new StartUpAssembly(DatabaseAssembly, new ModuleInfo { BaseNameSpace = ObjectNamespace }));
             assemblies.AddRange(AdditionalAssemblies);
 
-            if (RMUD.Core.Start(true,
+            if (RMUD.Core.Start(true, true,
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, ObjectNamespace),
+                assemblies.ToArray()))
+            {
+                Player = RMUD.MudObject.GetObject<RMUD.Player>(RMUD.Core.SettingsObject.PlayerBaseObject);
+                Player.CommandHandler = RMUD.Core.ParserCommandHandler;
+                Client = new DummyClient(Output);
+                RMUD.Core.TiePlayerToClient(Client, Player);
+                RMUD.Core.AddPlayer(Player);
+
+                return true;
+            }
+
+            return false;
+        }
+
+
+        public bool Start(
+            String AssemblyFile,
+            Action<String> Output)
+        {
+            var assembly = System.Reflection.Assembly.LoadFile(System.IO.Path.GetFullPath(AssemblyFile));
+            if (assembly == null) throw new InvalidOperationException("Game assembly could not be loaded.");
+
+            var gameInfo = assembly.CreateInstance("GameInfo") as RMUD.SinglePlayer.GameInfo;
+            if (gameInfo == null) throw new InvalidOperationException("No GameInfo defined in game assembly.");
+
+            var assemblies = new List<StartUpAssembly>();
+            assemblies.Add(new StartUpAssembly(assembly, new ModuleInfo { BaseNameSpace = gameInfo.DatabaseNameSpace }, AssemblyFile));
+            foreach (var module in gameInfo.Modules)
+                assemblies.Add(new StartUpAssembly(module));
+
+            if (RMUD.Core.Start(true, false,
+                new RMUD.SinglePlayer.CompiledDatabase(assembly, gameInfo.DatabaseNameSpace),
                 assemblies.ToArray()))
             {
                 Player = RMUD.MudObject.GetObject<RMUD.Player>(RMUD.Core.SettingsObject.PlayerBaseObject);
