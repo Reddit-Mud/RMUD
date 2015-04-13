@@ -29,6 +29,11 @@ namespace ConversationModule
         {
             get { return this.GetBooleanProperty("topic-discussed"); }
         }
+
+        public Topic Follows(Topic Previous)
+        {
+            return this.Available(() => Previous.Discussed);
+        }
     }
 
     public static class ResponseExtensionMethods
@@ -56,6 +61,20 @@ namespace ConversationModule
             response.SimpleName(Topic);
             response.Perform<MudObject, MudObject, MudObject>("topic response").Do(FuncResponse);
             return response;
+        }
+
+        public static void DefaultResponse(this MudObject To, Func<MudObject, MudObject, MudObject, PerformResult> FuncResponse)
+        {
+            To.Perform<MudObject, MudObject, MudObject>("topic response").When((actor, npc, topic) => topic == null).Do(FuncResponse);
+        }
+
+        public static void DefaultResponse(this MudObject To, String StringResponse)
+        {
+            DefaultResponse(To, (actor, npc, topic) =>
+            {
+                MudObject.SendMessage(actor, StringResponse);
+                return PerformResult.Stop;
+            });
         }
     }
 }

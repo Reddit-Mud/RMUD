@@ -85,6 +85,7 @@ namespace RMUD
 
 
                 GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");
+                GlobalRules.DeclarePerformRuleBook<MudObject>("singleplayer game started", "Considered when a single player game is begun");
 
                 ModuleAssemblies.Add(new StartUpAssembly(Assembly.GetExecutingAssembly(), new ModuleInfo { Author = "Blecki", Description = "RMUD Core", BaseNameSpace = "RMUD" }, "Core.dll"));
                 ModuleAssemblies.AddRange(Assemblies);

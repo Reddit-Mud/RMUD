@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="ModuleInfo.cs" />
     <Compile Include="NPCExtension.cs" />
     <Compile Include="Rules.cs" />

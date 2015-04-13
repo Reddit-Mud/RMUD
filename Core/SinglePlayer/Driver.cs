@@ -43,7 +43,8 @@ namespace RMUD.SinglePlayer
                 Player.CommandHandler = RMUD.Core.ParserCommandHandler;
                 Client = new DummyClient(Output);
                 RMUD.Core.TiePlayerToClient(Client, Player);
-                RMUD.Core.AddPlayer(Player);
+                Player.Rank = 500;
+                Core.GlobalRules.ConsiderPerformRule("singleplayer game started", Player);
 
                 return true;
             }
@@ -75,7 +76,8 @@ namespace RMUD.SinglePlayer
                 Player.CommandHandler = RMUD.Core.ParserCommandHandler;
                 Client = new DummyClient(Output);
                 RMUD.Core.TiePlayerToClient(Client, Player);
-                RMUD.Core.AddPlayer(Player);
+                Player.Rank = 500;
+                Core.GlobalRules.ConsiderPerformRule("singleplayer game started", Player);
 
                 return true;
             }

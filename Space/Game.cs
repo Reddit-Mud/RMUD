@@ -52,7 +52,7 @@ namespace Space
                 })
                 .Name("Unblock game if no available topics rule.");
 
-            GlobalRules.Perform<Player>("player joined")
+            GlobalRules.Perform<Player>("singleplayer game started")
                 .First
                 .Do((actor) =>
                 {

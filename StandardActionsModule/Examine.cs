@@ -29,6 +29,8 @@ namespace StandardActionsModule
             Core.StandardMessage("is closed", "^<the0> is closed.");
             Core.StandardMessage("describe on", "On <the0> is <l1>.");
             Core.StandardMessage("describe in", "In <the0> is <l1>.");
+            Core.StandardMessage("empty handed", "^<the0> is empty handed.");
+            Core.StandardMessage("holding", "^<the0> is holding <l1>.");
 
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can examine?", "[Actor, Item] : Can the viewer examine the item?", "actor", "item");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe", "[Actor, Item] : Generates descriptions of the item.", "actor", "item");
@@ -99,9 +101,9 @@ namespace StandardActionsModule
                 {
                     var heldItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Held));
                     if (heldItems.Count == 0)
-                        MudObject.SendMessage(viewer, "^<the0> is empty handed.", actor);
+                        MudObject.SendMessage(viewer, "@empty handed", actor);
                     else
-                        MudObject.SendMessage(viewer, "^<the0> is holding " + String.Join(", ", heldItems.Select(i => i.Indefinite(viewer))) + ".", actor);
+                        MudObject.SendMessage(viewer, "@holding", actor, heldItems);
 
                     return PerformResult.Continue;
                 })

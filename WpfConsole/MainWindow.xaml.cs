@@ -23,7 +23,7 @@ namespace WpfConsole
         public List<String> CommandMemory = new List<string>();
         public int MemoryScrollIndex = 0;
         private RMUD.SinglePlayer.Driver Driver = new RMUD.SinglePlayer.Driver();
-        private Action AfterNavigating = null;
+        private Action AfterNavigating;
         private bool ShuttingDown = false;
 
         public MainWindow()
@@ -40,9 +40,15 @@ namespace WpfConsole
                 MessageBox.Show(e.Message);
             }
 
-            AfterNavigating = () => Driver.Start(typeof(Space.Player).Assembly, "Space",
-                s =>
-                    Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, PrepareString(s)));
+            AfterNavigating = () =>
+                {
+                    Action<String> output = s => Dispatcher.Invoke(new Action<String>(Output), System.Windows.Threading.DispatcherPriority.Normal, PrepareString(s));
+                    var args = Environment.GetCommandLineArgs();
+                    if (args.Length == 2)
+                        Driver.Start(args[1], output);
+                    else
+                        MessageBox.Show("I don't know what game to play.");
+                };
 
             Clear();
 
@@ -171,7 +177,9 @@ body
         private void OutputBox_LoadCompleted(object sender, NavigationEventArgs e)
         {
             if (AfterNavigating != null)
+            {
                 AfterNavigating();
+            }
             AfterNavigating = null;
         }
     }

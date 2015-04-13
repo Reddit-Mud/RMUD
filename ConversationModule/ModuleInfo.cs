@@ -13,11 +13,3 @@ public class ModuleInfo : RMUD.ModuleInfo
         Description = "A conversation system for NPCs.";
     }
 }
-
-namespace ConversationModule
-{
-    public class Settings
-    {
-        public static bool ListDiscussedTopics = true;
-    }
-}

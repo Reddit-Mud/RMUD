@@ -55,9 +55,12 @@ namespace ConversationModule
                 {
                     if (!(actor is Player)) return PerformResult.Stop;
                     var npc = actor.GetProperty<NPC>("interlocutor");
-                    var suggestedTopics = npc.GetPropertyOrDefault<List<MudObject>>("conversation-topics", new List<MudObject>()).Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", actor, npc, topic));
+                    var suggestedTopics = npc.GetPropertyOrDefault<List<MudObject>>("conversation-topics", new List<MudObject>()).AsEnumerable();
+
                     if (!Settings.ListDiscussedTopics)
                         suggestedTopics = suggestedTopics.Where(obj => !obj.GetBooleanProperty("topic-discussed"));
+                    
+                    suggestedTopics = suggestedTopics.Where(topic => GlobalRules.ConsiderValueRule<bool>("topic available?", actor, npc, topic));
 
                     if (suggestedTopics.Count() != 0)
                         MudObject.SendMessage(actor, "@convo topic prompt", new List<MudObject>(suggestedTopics));
@@ -74,7 +77,7 @@ namespace ConversationModule
                 .Do((actor, npc, topic) =>
                 {
                     GlobalRules.ConsiderPerformRule("topic response", actor, npc, topic);
-                    topic.SetProperty("topic-discussed", true);
+                    if (topic != null) topic.SetProperty("topic-discussed", true);
                     return PerformResult.Continue;
                 })
                 .Name("Show topic response when discussing topic rule.");
@@ -92,6 +95,12 @@ namespace ConversationModule
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("topic response", "[Actor, NPC, Topic] : Display the response of the topic.", "actor", "npc", "topic");
 
             GlobalRules.Value<MudObject, MudObject, MudObject, bool>("topic available?")
+                .When((actor, npc, topic) => topic != null && Settings.AllowRepeats == false && topic.GetBooleanProperty("topic-discussed"))
+                .Do((actor, npc, topic) => false)
+                .Name("Already discussed topics unavailable when repeats disabled rule.");
+
+            GlobalRules.Value<MudObject, MudObject, MudObject, bool>("topic available?")
+                .Last
                 .Do((actor, npc, topic) => true)
                 .Name("Topics available by default rule.");
         }

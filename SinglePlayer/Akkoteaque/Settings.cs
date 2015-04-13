@@ -11,7 +11,7 @@ namespace Akkoteaque
         public static void AtStartup(RuleEngine GlobalRules)
         {
             
-            GlobalRules.Perform<Actor>("player joined")
+            GlobalRules.Perform<Actor>("singleplayer game started")
                 .Do((actor) =>
                 {
                     return PerformResult.Continue;
