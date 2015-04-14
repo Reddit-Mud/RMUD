@@ -80,7 +80,7 @@ namespace RMUD
 			if (assembly == null) return null;
 
 			var objectLeafName = System.IO.Path.GetFileNameWithoutExtension(Path);
-			var newMudObject = assembly.CreateInstance(objectLeafName) as MudObject;
+			var newMudObject = Activator.CreateInstance(assembly.GetType(objectLeafName)) as MudObject;
 			if (newMudObject != null)
 			{
 				newMudObject.Path = Path;

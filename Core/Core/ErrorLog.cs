@@ -13,55 +13,67 @@ namespace RMUD
 
         public static void LogCommandError(Exception e)
         {
-            var logfile = new System.IO.StreamWriter(CriticalLog, true);
-            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- Error while handling client command.", DateTime.Now);
-            logfile.WriteLine(e.Message);
-            logfile.WriteLine(e.StackTrace);
-            logfile.Close();
-
-            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- Error while handling client command.", DateTime.Now);
-            Console.WriteLine(e.Message);
-            Console.WriteLine(e.StackTrace);
+            if (!Core.NoLog)
+            {
+                var logfile = new System.IO.StreamWriter(CriticalLog, true);
+                logfile.WriteLine("{0:MM/dd/yy HH:mm:ss} -- Error while handling client command.", DateTime.Now);
+                logfile.WriteLine(e.Message);
+                logfile.WriteLine(e.StackTrace);
+                logfile.Close();
+                
+                Console.WriteLine("{0:MM/dd/yy HH:mm:ss} -- Error while handling client command.", DateTime.Now);
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
         }
 
         public static void LogCriticalError(Exception e)
         {
-            var logfile = new System.IO.StreamWriter(CriticalLog, true);
-            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- Critical error.", DateTime.Now);
-            logfile.WriteLine(e.GetType().Name);
-            logfile.WriteLine(e.Message);
-            logfile.WriteLine(e.StackTrace);
-            logfile.Close();
-
-            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- Critical error.", DateTime.Now);
-            Console.WriteLine(e.GetType().Name);
-            Console.WriteLine(e.Message);
-            Console.WriteLine(e.StackTrace);
-
-            if (e is AggregateException)
+            if (!Core.NoLog)
             {
-                var ag = e as AggregateException;
-                foreach (var _e in ag.InnerExceptions)
-                    LogCriticalError(_e);
+                var logfile = new System.IO.StreamWriter(CriticalLog, true);
+                logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- Critical error.", DateTime.Now);
+                logfile.WriteLine(e.GetType().Name);
+                logfile.WriteLine(e.Message);
+                logfile.WriteLine(e.StackTrace);
+                logfile.Close();
+
+                Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- Critical error.", DateTime.Now);
+                Console.WriteLine(e.GetType().Name);
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+
+                if (e is AggregateException)
+                {
+                    var ag = e as AggregateException;
+                    foreach (var _e in ag.InnerExceptions)
+                        LogCriticalError(_e);
+                }
             }
         }
 
         public static void LogError(String ErrorString)
         {
-            var logfile = new System.IO.StreamWriter(CriticalLog, true);
-            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}\n", DateTime.Now, ErrorString);
-            logfile.Close();
+            if (!Core.NoLog)
+            {
+                var logfile = new System.IO.StreamWriter(CriticalLog, true);
+                logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}\n", DateTime.Now, ErrorString);
+                logfile.Close();
 
-            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}\n", DateTime.Now, ErrorString);
+                Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}\n", DateTime.Now, ErrorString);
+            }
         }
 
         public static void LogWarning(String Warning)
         {
-            var logfile = new System.IO.StreamWriter(CriticalLog, true);
-            logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- WARNING: {1}", DateTime.Now, Warning);
-            logfile.Close();
+            if (!Core.NoLog)
+            {
+                var logfile = new System.IO.StreamWriter(CriticalLog, true);
+                logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- WARNING: {1}", DateTime.Now, Warning);
+                logfile.Close();
 
-            Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- WARNING: {1}", DateTime.Now, Warning);
+                Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- WARNING: {1}", DateTime.Now, Warning);
+            }
         }
     }
 }

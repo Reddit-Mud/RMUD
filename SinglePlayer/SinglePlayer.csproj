@@ -52,6 +52,7 @@
     <Compile Include="Akkoteaque\Fishing\RustyHook.cs" />
     <Compile Include="Akkoteaque\Fishing\Hook.cs" />
     <Compile Include="Akkoteaque\Fishing\Rod.cs" />
+    <Compile Include="Minimum\GameInfo.cs" />
     <Compile Include="Wells\Player.cs" />
     <Compile Include="Wells\Settings.cs" />
     <Compile Include="Wells\Thrad.cs">

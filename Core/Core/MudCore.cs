@@ -11,7 +11,8 @@ namespace RMUD
     {
         Silent = 1,
         SearchDirectory = 2,
-        SingleThreaded = 4
+        SingleThreaded = 4,
+        NoLog = 8
     }
 
     public class StartUpAssembly
@@ -30,7 +31,9 @@ namespace RMUD
         public StartUpAssembly(Assembly Assembly)
         {
             this.Assembly = Assembly;
-            Info = Assembly.CreateInstance("ModuleInfo") as ModuleInfo;
+            var InfoType = Assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(typeof(ModuleInfo)));
+            Info = Activator.CreateInstance(InfoType) as ModuleInfo;
+            //Info = Assembly.CreateInstance("ModuleInfo") as ModuleInfo;
             if (Info == null) throw new InvalidOperationException("Specified assembly is not a module.");
         }
 
@@ -42,7 +45,7 @@ namespace RMUD
             Assembly = System.Reflection.Assembly.LoadFrom(FileName);
             if (Assembly == null) throw new InvalidOperationException("Could not load assembly " + FileName);
 
-            Info = Assembly.CreateInstance("ModuleInfo") as ModuleInfo;
+            Info = Activator.CreateInstance(Assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(typeof(ModuleInfo)))) as ModuleInfo;
             if (Info == null) throw new InvalidOperationException("Specified assembly is not a module.");
         }
     }
@@ -56,6 +59,10 @@ namespace RMUD
         public static RuleEngine GlobalRules;
         public static Action OnShutDown = null;
         public static List<StartUpAssembly> ModuleAssemblies = new List<StartUpAssembly>();
+        private static StartupFlags Flags;
+
+        public static bool Silent { get { return (Flags & StartupFlags.Silent) == StartupFlags.Silent; } }
+        public static bool NoLog { get { return (Flags & StartupFlags.NoLog) == StartupFlags.NoLog; } }
 
         public static void TiePlayerToClient(Client Client, Actor Actor)
         {
@@ -92,6 +99,7 @@ namespace RMUD
         public static bool Start(StartupFlags Flags, WorldDataService Database, params StartUpAssembly[] Assemblies)
         {
             ShuttingDown = false;
+            Core.Flags = Flags;
 
             try
             {
@@ -110,12 +118,12 @@ namespace RMUD
                     {
                         var assembly = System.Reflection.Assembly.LoadFrom(file);
 
-                        var info = assembly.CreateInstance("ModuleInfo") as ModuleInfo;
-                        if (info != null)
+                        var infoType = assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(typeof(ModuleInfo)));
+                        if (infoType != null)
                         {
-                            ModuleAssemblies.Add(new StartUpAssembly(assembly, info, file));
+                            ModuleAssemblies.Add(new StartUpAssembly(assembly));
                             if ((Flags & StartupFlags.Silent) == 0)
-                                Console.WriteLine("Discovered module: " + file + " : " + info.Description);
+                                Console.WriteLine("Discovered module: " + file);
                         }
                     }
                 }

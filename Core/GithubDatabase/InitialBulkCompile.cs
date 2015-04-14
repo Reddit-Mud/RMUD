@@ -59,7 +59,7 @@ namespace RMUD
                 foreach (var s in fileList)
                 {
                     var qualifiedName = String.Format("database.{0}.{1}", PathToNamespace(s), System.IO.Path.GetFileNameWithoutExtension(s));
-                    var newObject = combinedAssembly.CreateInstance(qualifiedName);
+                    var newObject = Activator.CreateInstance(combinedAssembly.GetType(qualifiedName));
                     if (newObject == null)
                     {
                         ReportErrors(String.Format("Type {0} not found in combined assembly.", qualifiedName));

@@ -22,7 +22,7 @@ namespace SinglePlayer
 
 
                 var driver = new RMUD.SinglePlayer.Driver();
-                driver.Start(System.Reflection.Assembly.GetExecutingAssembly(), "Wells", Console.Write);
+                driver.Start(System.Reflection.Assembly.GetExecutingAssembly(), Console.Write);
                 while (driver.IsRunning)
                     driver.Input(Console.ReadLine());
             }
