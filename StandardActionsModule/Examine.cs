@@ -17,7 +17,7 @@ namespace StandardActionsModule
                         Sequence(
                             Or(KeyWord("LOOK"), KeyWord("L")),
                             KeyWord("AT"))),
-                    Object("OBJECT", InScope)))
+                    MustMatch("@dont see that", Object("OBJECT", InScope))))
                 .Manual("Take a close look at an object.")
                 .Check("can examine?", "ACTOR", "OBJECT")
                 .Perform("describe", "ACTOR", "OBJECT");
@@ -31,6 +31,7 @@ namespace StandardActionsModule
             Core.StandardMessage("describe in", "In <the0> is <l1>.");
             Core.StandardMessage("empty handed", "^<the0> is empty handed.");
             Core.StandardMessage("holding", "^<the0> is holding <l1>.");
+            Core.StandardMessage("dont see that", "I don't see that here.");
 
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can examine?", "[Actor, Item] : Can the viewer examine the item?", "actor", "item");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe", "[Actor, Item] : Generates descriptions of the item.", "actor", "item");

@@ -35,7 +35,7 @@ namespace RMUD.SinglePlayer
             assemblies.Add(new StartUpAssembly(DatabaseAssembly, new ModuleInfo { BaseNameSpace = ObjectNamespace }));
             assemblies.AddRange(AdditionalAssemblies);
 
-            if (RMUD.Core.Start(true, true,
+            if (RMUD.Core.Start(StartupFlags.Silent | StartupFlags.SearchDirectory,
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, ObjectNamespace),
                 assemblies.ToArray()))
             {
@@ -68,7 +68,7 @@ namespace RMUD.SinglePlayer
             foreach (var module in gameInfo.Modules)
                 assemblies.Add(new StartUpAssembly(module));
 
-            if (RMUD.Core.Start(true, false,
+            if (RMUD.Core.Start(StartupFlags.Silent,
                 new RMUD.SinglePlayer.CompiledDatabase(assembly, gameInfo.DatabaseNameSpace),
                 assemblies.ToArray()))
             {

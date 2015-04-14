@@ -70,9 +70,9 @@ namespace RMUD
             ParserCommandHandler = new ParserCommandHandler(DefaultParser);
         }
 
-        private static void StartCommandProcesor()
+        private static void StartThreadedCommandProcesor()
         {
-            CommandExecutionThread = new Thread(ProcessCommands);
+            CommandExecutionThread = new Thread(ProcessThreadedCommands);
             CommandExecutionThread.Start();
         }
 
@@ -104,8 +104,8 @@ namespace RMUD
                 CommandFinishedHandle.Set();
             }
         }
-                
-        private static void ProcessCommands()
+
+        private static void ProcessThreadedCommands()
         {
             IndividualCommandThread = new Thread(ProcessCommandsWorkerThread);
             IndividualCommandThread.Start();
@@ -152,7 +152,7 @@ namespace RMUD
                         CommandTimeoutEnabled = true;
                         SilentFlag = false;
                         GlobalRules.LogRules(null);
-                        
+
                         CommandReadyHandle.Set(); //Signal worker thread to proceed.
                         if (!CommandFinishedHandle.WaitOne(SettingsObject.CommandTimeOut))
                         {
@@ -177,7 +177,7 @@ namespace RMUD
 
                         if (PendingCommand.ProcessingCompleteCallback != null)
                             PendingCommand.ProcessingCompleteCallback();
-                                                
+
                         DatabaseLock.ReleaseMutex();
                     }
                 }
@@ -185,6 +185,57 @@ namespace RMUD
 
             IndividualCommandThread.Abort();
             if (Core.OnShutDown != null) Core.OnShutDown();
+        }
+
+        /// <summary>
+        /// Process commands in a single thread, until there are no more queued commands.
+        /// Heartbeat is called between every command.
+        /// </summary>
+        public static void ProcessCommands()
+        {
+            while (PendingCommands.Count > 0 && !ShuttingDown)
+            {
+                GlobalRules.ConsiderPerformRule("heartbeat");
+
+                Core.SendPendingMessages();
+               
+                PendingCommand PendingCommand = null;
+
+                try
+                {
+                    PendingCommand = PendingCommands.FirstOrDefault();
+                    if (PendingCommand != null)
+                        PendingCommands.Remove(PendingCommand);
+                }
+                catch (Exception e)
+                {
+                    LogCommandError(e);
+                    PendingCommand = null;
+                }
+
+                if (PendingCommand != null)
+                {
+                    NextCommand = PendingCommand;
+
+                    //Reset flags that the last command may have changed
+                    CommandTimeoutEnabled = true;
+                    SilentFlag = false;
+                    GlobalRules.LogRules(null);
+
+                    try
+                    {
+                        NextCommand.Actor.CommandHandler.HandleCommand(NextCommand);
+                    }
+                    catch (Exception e)
+                    {
+                        LogCommandError(e);
+                        Core.ClearPendingMessages();
+                    }
+                    if (PendingCommand.ProcessingCompleteCallback != null)
+                        PendingCommand.ProcessingCompleteCallback();
+
+                }
+            }
         }
     }
 }

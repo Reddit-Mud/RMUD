@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RMUD.SinglePlayer
 {
-    class DummyClient : RMUD.Client
+    public class DummyClient : RMUD.Client
     {
         public Action<String> Output;
 

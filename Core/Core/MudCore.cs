@@ -7,6 +7,13 @@ using System.Reflection;
 
 namespace RMUD
 {
+    public enum StartupFlags
+    {
+        Silent = 1,
+        SearchDirectory = 2,
+        SingleThreaded = 4
+    }
+
     public class StartUpAssembly
     {
         public Assembly Assembly;
@@ -18,6 +25,13 @@ namespace RMUD
             this.Assembly = Assembly;
             this.Info = Info;
             this.FileName = FileName;
+        }
+
+        public StartUpAssembly(Assembly Assembly)
+        {
+            this.Assembly = Assembly;
+            Info = Assembly.CreateInstance("ModuleInfo") as ModuleInfo;
+            if (Info == null) throw new InvalidOperationException("Specified assembly is not a module.");
         }
 
         public StartUpAssembly(String FileName)
@@ -75,7 +89,7 @@ namespace RMUD
                             method.Invoke(null, new Object[]{GlobalRules});
         }
 
-        public static bool Start(bool Silent, bool SearchDirectory, WorldDataService Database, params StartUpAssembly[] Assemblies)
+        public static bool Start(StartupFlags Flags, WorldDataService Database, params StartUpAssembly[] Assemblies)
         {
             ShuttingDown = false;
 
@@ -90,7 +104,7 @@ namespace RMUD
                 ModuleAssemblies.Add(new StartUpAssembly(Assembly.GetExecutingAssembly(), new ModuleInfo { Author = "Blecki", Description = "RMUD Core", BaseNameSpace = "RMUD" }, "Core.dll"));
                 ModuleAssemblies.AddRange(Assemblies);
 
-                if (SearchDirectory)
+                if ((Flags & StartupFlags.SearchDirectory) == StartupFlags.SearchDirectory)
                 {
                     foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Directory.GetCurrentDirectory()).Where(p => System.IO.Path.GetExtension(p) == ".dll"))
                     {
@@ -100,7 +114,7 @@ namespace RMUD
                         if (info != null)
                         {
                             ModuleAssemblies.Add(new StartUpAssembly(assembly, info, file));
-                            if (!Silent)
+                            if ((Flags & StartupFlags.Silent) == 0)
                                 Console.WriteLine("Discovered module: " + file + " : " + info.Description);
                         }
                     }
@@ -119,7 +133,8 @@ namespace RMUD
                 Database.Initialize();
 
                 GlobalRules.ConsiderPerformRule("at startup");
-                StartCommandProcesor();
+                if ((Flags & StartupFlags.SingleThreaded) == 0)
+                    StartThreadedCommandProcesor();
             }
             catch (Exception e)
             {
