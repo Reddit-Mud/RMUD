@@ -18,7 +18,17 @@ namespace RMUD
 
         public RuleBuilder<TR> When(Func<bool> Clause)
         {
-            Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
+			if (Rule.WhenClause != null) 
+			{
+				var oldClause = Rule.WhenClause;
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(
+					new Func<bool>(() => { 
+						return Clause() && oldClause.Invoke(null);
+					})
+				);
+			}
+            else
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
             return this;
         }
 
@@ -60,7 +70,17 @@ namespace RMUD
 
         public RuleBuilder<<#Args(i);#>, TR> When(Func<<#Args(i);#>, bool> Clause)
         {
-            Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
+			if (Rule.WhenClause != null) 
+			{
+				var oldClause = Rule.WhenClause;
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(
+					new Func<<#Args(i);#>, bool>((<#Parms(i);#>) => { 
+						return Clause(<#Parms(i);#>) && oldClause.Invoke(new Object[]{<#Parms(i);#>});
+					})
+				);
+			}
+            else
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
             return this;
         }
 

@@ -159,6 +159,7 @@
     <Compile Include="SinglePlayer\Driver.cs" />
     <Compile Include="SinglePlayer\DummyClient.cs" />
     <Compile Include="SinglePlayer\GameInfo.cs" />
+    <Compile Include="WhenHelper.cs" />
     <Compile Include="WorldModel\Actor.cs" />
     <Compile Include="WorldModel\BasicDoor.cs" />
     <Compile Include="WorldModel\Container.cs" />

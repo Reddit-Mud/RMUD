@@ -11,7 +11,17 @@ namespace RMUD
 
         public RuleBuilder<TR> When(Func<bool> Clause)
         {
-            Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
+			if (Rule.WhenClause != null) 
+			{
+				var oldClause = Rule.WhenClause;
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(
+					new Func<bool>(() => { 
+						return Clause() && oldClause.Invoke(null);
+					})
+				);
+			}
+            else
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
             return this;
         }
 
@@ -52,7 +62,17 @@ namespace RMUD
 
         public RuleBuilder<T0, TR> When(Func<T0, bool> Clause)
         {
-            Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
+			if (Rule.WhenClause != null) 
+			{
+				var oldClause = Rule.WhenClause;
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(
+					new Func<T0, bool>((P0) => { 
+						return Clause(P0) && oldClause.Invoke(new Object[]{P0});
+					})
+				);
+			}
+            else
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
             return this;
         }
 
@@ -93,7 +113,17 @@ namespace RMUD
 
         public RuleBuilder<T0, T1, TR> When(Func<T0, T1, bool> Clause)
         {
-            Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
+			if (Rule.WhenClause != null) 
+			{
+				var oldClause = Rule.WhenClause;
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(
+					new Func<T0, T1, bool>((P0, P1) => { 
+						return Clause(P0, P1) && oldClause.Invoke(new Object[]{P0, P1});
+					})
+				);
+			}
+            else
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
             return this;
         }
 
@@ -134,7 +164,17 @@ namespace RMUD
 
         public RuleBuilder<T0, T1, T2, TR> When(Func<T0, T1, T2, bool> Clause)
         {
-            Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
+			if (Rule.WhenClause != null) 
+			{
+				var oldClause = Rule.WhenClause;
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(
+					new Func<T0, T1, T2, bool>((P0, P1, P2) => { 
+						return Clause(P0, P1, P2) && oldClause.Invoke(new Object[]{P0, P1, P2});
+					})
+				);
+			}
+            else
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
             return this;
         }
 
@@ -175,7 +215,17 @@ namespace RMUD
 
         public RuleBuilder<T0, T1, T2, T3, TR> When(Func<T0, T1, T2, T3, bool> Clause)
         {
-            Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
+			if (Rule.WhenClause != null) 
+			{
+				var oldClause = Rule.WhenClause;
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(
+					new Func<T0, T1, T2, T3, bool>((P0, P1, P2, P3) => { 
+						return Clause(P0, P1, P2, P3) && oldClause.Invoke(new Object[]{P0, P1, P2, P3});
+					})
+				);
+			}
+            else
+				Rule.WhenClause = RuleDelegateWrapper<bool>.MakeWrapper(Clause);
             return this;
         }
 
