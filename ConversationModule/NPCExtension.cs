@@ -13,15 +13,19 @@ namespace ConversationModule
             Article = "";
         }
 
-        public Topic Available(Func<MudObject, MudObject, MudObject, bool> Func)
+        public Topic Available(Func<MudObject, MudObject, MudObject, CheckResult> Func, String Name = "")
         {
-            Value<MudObject, MudObject, MudObject, bool>("topic available?").Do(Func);
+            Check<MudObject, MudObject, MudObject>("topic available?").Do(Func).Name(Name);
             return this;
         }
 
-        public Topic Available(Func<bool> Func)
+        public Topic Available(Func<bool> Func, String Name = "")
         {
-            Value<MudObject, MudObject, MudObject, bool>("topic available?").Do((a, b, c) => Func());
+            Check<MudObject, MudObject, MudObject>("topic available?").Do((a, b, c) =>
+                {
+                    if (!Func()) return CheckResult.Disallow;
+                    return CheckResult.Continue;
+                }).Name(Name);
             return this;
         }
 
@@ -32,7 +36,7 @@ namespace ConversationModule
 
         public Topic Follows(Topic Previous)
         {
-            return this.Available(() => Previous.Discussed);
+            return this.Available(() => Previous.Discussed, "B follows A topic ordering rule");
         }
     }
 

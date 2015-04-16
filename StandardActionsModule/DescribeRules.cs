@@ -93,7 +93,7 @@ namespace StandardActionsModule
         /// </summary>
         /// <param name="Object"></param>
         /// <returns></returns>
-        public static RuleBuilder<MudObject, MudObject, PerformResult> Describe(this MudObject Object)
+        public static RuleBuilder<MudObject, MudObject, PerformResult> PerformDescribe(this MudObject Object)
         {
             return Object.Perform<MudObject, MudObject>("describe").ThisOnly(1);
         }
@@ -104,7 +104,7 @@ namespace StandardActionsModule
         /// <param name="RuleBuilder"></param>
         /// <param name="Str"></param>
         /// <returns></returns>
-        public static RuleBuilder<MudObject, MudObject, PerformResult> SimpleDescription(this RuleBuilder<MudObject, MudObject, PerformResult> RuleBuilder, String Str)
+        public static RuleBuilder<MudObject, MudObject, PerformResult> DoSimpleDescription(this RuleBuilder<MudObject, MudObject, PerformResult> RuleBuilder, String Str)
         {
             return RuleBuilder.Do((viewer, thing) =>
             {

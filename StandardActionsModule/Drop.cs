@@ -66,4 +66,17 @@ namespace StandardActionsModule
             }).Name("Default drop handler rule.");
         }
     }
+
+    public static class DropExtensions
+    {
+        public static RuleBuilder<MudObject, MudObject, PerformResult> PerformDrop(this MudObject Object)
+        {
+            return Object.Perform<MudObject, MudObject>("drop").ThisOnly(1);
+        }
+
+        public static RuleBuilder<MudObject, MudObject, CheckResult> CheckCanDrop(this MudObject Object)
+        {
+            return Object.Check<MudObject, MudObject>("can drop?").ThisOnly(1);
+        }
+    }
 }

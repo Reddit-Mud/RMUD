@@ -8,7 +8,7 @@ namespace ConversationModule
 {
     public class Settings
     {
-        public static bool ListDiscussedTopics = true;
-        public static bool AllowRepeats = true;
+        public static bool ListDiscussedTopics;// = true;
+        public static bool AllowRepeats;// = true;
     }
 }

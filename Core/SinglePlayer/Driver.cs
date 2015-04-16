@@ -27,6 +27,7 @@ namespace RMUD.SinglePlayer
 
         public void SwitchPlayerCharacter(RMUD.Player NewCharacter)
         {
+            NewCharacter.Rank = 500;
             NewCharacter.CommandHandler = RMUD.Core.ParserCommandHandler;
             var client = Player.ConnectedClient;
             RMUD.Core.TiePlayerToClient(client, NewCharacter);
