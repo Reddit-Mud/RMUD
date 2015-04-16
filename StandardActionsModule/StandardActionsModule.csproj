@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Close.cs" />
     <Compile Include="Drop.cs" />
+    <Compile Include="DescribeRules.cs" />
     <Compile Include="Examine.cs" />
     <Compile Include="Go.cs" />
     <Compile Include="Inventory.cs" />
