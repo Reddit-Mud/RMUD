@@ -59,10 +59,10 @@ namespace RMUD.SinglePlayer
 
             if (gameInfo == null) throw new InvalidOperationException("No GameInfo defined in game assembly.");
 
-            var assemblies = new List<StartUpAssembly>();
-            assemblies.Add(new StartUpAssembly(DatabaseAssembly, new ModuleInfo { BaseNameSpace = gameInfo.DatabaseNameSpace }));
+            var assemblies = new List<ModuleAssembly>();
+            assemblies.Add(new ModuleAssembly(DatabaseAssembly, new ModuleInfo { BaseNameSpace = gameInfo.DatabaseNameSpace }));
             foreach (var module in gameInfo.Modules)
-                assemblies.Add(new StartUpAssembly(module));
+                assemblies.Add(new ModuleAssembly(module));
 
             if (RMUD.Core.Start(StartupFlags.Silent,
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, gameInfo.DatabaseNameSpace),
@@ -98,10 +98,10 @@ namespace RMUD.SinglePlayer
 
             if (gameInfo == null) throw new InvalidOperationException("No GameInfo defined in game assembly.");
 
-            var assemblies = new List<StartUpAssembly>();
-            assemblies.Add(new StartUpAssembly(assembly, new ModuleInfo { BaseNameSpace = gameInfo.DatabaseNameSpace }, AssemblyFile));
+            var assemblies = new List<ModuleAssembly>();
+            assemblies.Add(new ModuleAssembly(assembly, new ModuleInfo { BaseNameSpace = gameInfo.DatabaseNameSpace }, AssemblyFile));
             foreach (var module in gameInfo.Modules)
-                assemblies.Add(new StartUpAssembly(module));
+                assemblies.Add(new ModuleAssembly(module));
 
             if (RMUD.Core.Start(StartupFlags.Silent,
                 new RMUD.SinglePlayer.CompiledDatabase(assembly, gameInfo.DatabaseNameSpace),

@@ -53,7 +53,7 @@ namespace RMUD
             PendingCommandLock.ReleaseMutex();
         }
 
-        internal static void DiscoverCommandFactories(StartUpAssembly In, CommandParser AddTo)
+        internal static void DiscoverCommandFactories(ModuleAssembly In, CommandParser AddTo)
         {
             foreach (var type in In.Assembly.GetTypes())
                 if (type.FullName.StartsWith(In.Info.BaseNameSpace) && type.IsSubclassOf(typeof(CommandFactory)))
