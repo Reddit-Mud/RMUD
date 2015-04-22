@@ -64,7 +64,7 @@ namespace RMUD
         {
             DefaultParser = new CommandParser();
 
-            foreach (var assembly in ModuleAssemblies)
+            foreach (var assembly in IntegratedModules)
                 DiscoverCommandFactories(assembly, DefaultParser);
 
             ParserCommandHandler = new ParserCommandHandler(DefaultParser);
@@ -107,6 +107,9 @@ namespace RMUD
 
         private static void ProcessThreadedCommands()
         {
+            if ((Core.Flags & StartupFlags.SingleThreaded) == StartupFlags.SingleThreaded)
+                throw new InvalidOperationException("ProcessThreadedCommands should never be called in single threaded mode.");
+
             IndividualCommandThread = new Thread(ProcessCommandsWorkerThread);
             IndividualCommandThread.Start();
 
@@ -193,6 +196,9 @@ namespace RMUD
         /// </summary>
         public static void ProcessCommands()
         {
+            if ((Core.Flags & StartupFlags.SingleThreaded) != StartupFlags.SingleThreaded)
+                throw new InvalidOperationException("ProcessCommands should only be called in single threaded mode.");
+
             while (PendingCommands.Count > 0 && !ShuttingDown)
             {
                 GlobalRules.ConsiderPerformRule("heartbeat");

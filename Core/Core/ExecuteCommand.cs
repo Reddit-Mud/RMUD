@@ -9,8 +9,19 @@ namespace RMUD
 {
     public static partial class Core
     {
+        /// <summary>
+        /// The command that is currently executing. Rules can use this property to figure out what command they have
+        /// been invoked by.
+        /// </summary>
         public static PossibleMatch ExecutingCommand { get; private set; }
 
+        /// <summary>
+        /// Actually carryout the command, following all of it's rules, including the before and after command rules.
+        /// </summary>
+        /// <param name="Command"></param>
+        /// <param name="Match"></param>
+        /// <param name="Actor"></param>
+        /// <returns>The result of the command's procedural rules.</returns>
         private static PerformResult ExecuteCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
         {
             var result = PerformResult.Stop;
@@ -37,6 +48,16 @@ namespace RMUD
             }
         }
 
+        /// <summary>
+        /// Try to execute a command immediately. This does not bypass the before and after command rules. This is intended
+        /// to be used by rules to implement implicit actions. For example, the 'go' command will attempt to open closed
+        /// doors by calling
+        ///     Core.Try("StandardActions:Open", Core.ExecutingCommand.With("SUBJECT", link), actor);
+        /// </summary>
+        /// <param name="CommandID">The ID of the command to try, assigned when the command is created.</param>
+        /// <param name="Match"></param>
+        /// <param name="Actor"></param>
+        /// <returns>The result of the command's proceedural rules.</returns>
         public static PerformResult Try(String CommandID, PossibleMatch Match, Actor Actor)
         {
             var parentCommand = ExecutingCommand;
@@ -62,20 +83,6 @@ namespace RMUD
             GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("after command", "[Match, Actor] : Considered after every command's procedural rules are run, unless the before command rules stopped the command.", "match", "actor");
 
             GlobalRules.DeclarePerformRuleBook<Actor>("after every command", "[Actor] : Considered after every command, even if earlier rules stopped the command.", "actor");
-
-            GlobalRules.DeclarePerformRuleBook<Actor>("player joined", "[Player] : Considered when a player enters the game.", "actor");
-
-            GlobalRules.DeclarePerformRuleBook<Actor>("player left", "[Player] : Considered when a player leaves the game.", "actor");
-
-            GlobalRules.Perform<Actor>("player joined")
-                .First
-                .Do((actor) =>
-                {
-                    MudObject.Move(actor, MudObject.GetObject(Core.SettingsObject.NewPlayerStartRoom));
-                    return PerformResult.Continue;
-                })
-                .Name("Move to start room rule.");
-
         }
     }
 }

@@ -124,7 +124,7 @@
     <Compile Include="Core\Parser\ParserCommandHandler.cs" />
     <Compile Include="Core\Parser\PossibleMatch.cs" />
     <Compile Include="Core\PendingMessages.cs" />
-    <Compile Include="Core\ProcessPlayerCommand.cs" />
+    <Compile Include="Core\ExecuteCommand.cs" />
     <Compile Include="Core\Random.cs" />
     <Compile Include="Core\Rules\MudObjectAddRuleGen.cs">
       <DependentUpon>MudObjectAddRuleGen.tt</DependentUpon>

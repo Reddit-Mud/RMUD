@@ -29,7 +29,7 @@ namespace RMUD.Modules.Meta
                     else
                         MudObject.SendMessage(actor, "@no commit");
 
-                    foreach (var module in Core.ModuleAssemblies)
+                    foreach (var module in Core.IntegratedModules)
                         MudObject.SendMessage(actor, module.Info.Description);
 
                     return PerformResult.Continue;

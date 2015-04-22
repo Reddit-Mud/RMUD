@@ -15,7 +15,7 @@ namespace RMUD
             var builder = new StringBuilder();
             builder.Append("using System;\nusing System.Collections.Generic;\nusing System.Linq;\n");
 
-            foreach (var module in Core.ModuleAssemblies)
+            foreach (var module in Core.IntegratedModules)
                 builder.AppendLine("using " + module.Info.BaseNameSpace + ";\n");
 
             return builder.ToString();
@@ -34,7 +34,7 @@ namespace RMUD
             parameters.ReferencedAssemblies.Add("System.Core.dll");
             parameters.ReferencedAssemblies.Add("System.Data.Linq.dll");
 
-            foreach (var module in Core.ModuleAssemblies)
+            foreach (var module in Core.IntegratedModules)
                 if (!String.IsNullOrEmpty(module.FileName))
                     parameters.ReferencedAssemblies.Add(module.FileName);
 
