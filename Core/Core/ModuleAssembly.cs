@@ -36,12 +36,14 @@ namespace RMUD
         /// for the module assembly.
         /// </summary>
         /// <param name="Assembly"></param>
-        public ModuleAssembly(Assembly Assembly)
+        /// <param name="FileName"></param>
+        public ModuleAssembly(Assembly Assembly, String FileName)
         {
             this.Assembly = Assembly;
             var InfoType = Assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(typeof(ModuleInfo)));
             Info = Activator.CreateInstance(InfoType) as ModuleInfo;
             if (Info == null) throw new InvalidOperationException("Specified assembly is not a module.");
+            this.FileName = FileName;
         }
 
         /// <summary>

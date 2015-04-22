@@ -14,7 +14,7 @@ namespace RMUD
 
         public String NewPlayerStartRoom = "palantine/antechamber";
         public String PlayerBaseObject = "player_base";
-        public bool UseGithubDatabase = true;
+        public bool UseGithubDatabase = false;
         public String GithubAuthToken = "";
         public String GithubRawURL = "https://raw.githubusercontent.com/Reddit-Mud/RMUD-DB/master/static/";
         public String GithubRepo = "Reddit-Mud/RMUD-DB";

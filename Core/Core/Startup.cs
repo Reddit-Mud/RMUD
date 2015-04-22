@@ -74,7 +74,7 @@ namespace RMUD
                         var infoType = assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(typeof(ModuleInfo)));
                         if (infoType != null)
                         {
-                            IntegratedModules.Add(new ModuleAssembly(assembly));
+                            IntegratedModules.Add(new ModuleAssembly(assembly, file));
                             if ((Flags & StartupFlags.Silent) == 0)
                                 Console.WriteLine("Discovered module: " + file);
                         }
