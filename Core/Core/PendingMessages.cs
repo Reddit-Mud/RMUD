@@ -7,12 +7,12 @@ using System.Reflection;
 
 namespace RMUD
 {
-    internal struct RawPendingMessage
+    internal struct PendingMessage
     {
         public Client Destination;
         public String Message;
 
-        public RawPendingMessage(Client Destination, String Message)
+        public PendingMessage(Client Destination, String Message)
         {
             this.Destination = Destination;
             this.Message = Message;
@@ -21,8 +21,11 @@ namespace RMUD
 
     public static partial class Core
     {
-		internal static List<RawPendingMessage> PendingMessages = new List<RawPendingMessage>();
+		internal static List<PendingMessage> PendingMessages = new List<PendingMessage>();
                 
+        /// <summary>
+        /// Send all messages currently in the pending message queue to their intended ricipients.
+        /// </summary>
         public static void SendPendingMessages()
         {
 			foreach (var message in PendingMessages)
@@ -30,6 +33,9 @@ namespace RMUD
             PendingMessages.Clear();
         }
 
+        /// <summary>
+        /// Clear the pending message queue, discarding any pending messaged.
+        /// </summary>
 		public static void ClearPendingMessages()
 		{
 			PendingMessages.Clear();

@@ -90,7 +90,7 @@ namespace StandardActionsModule
                         var subObjects = new List<MudObject>(container.EnumerateObjects(RelativeLocations.On));
 
                         if (subObjects.Count > 0)
-                            return container.Short + " " + Core.FormatMessage(viewer, Core.Message("on which"), subObjects);
+                            return container.Short + " " + Core.FormatMessage(viewer, Core.GetMessage("on which"), subObjects);
                         else
                             return container.Short;
                     })
@@ -135,11 +135,11 @@ namespace StandardActionsModule
                             builder.Append(link.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE).ToString());
 
                             if (!link.GetPropertyOrDefault<bool>("link anonymous?", false))
-                                builder.Append(" " + Core.FormatMessage(viewer, Core.Message("through"), link));
+                                builder.Append(" " + Core.FormatMessage(viewer, Core.GetMessage("through"), link));
 
                             var destinationRoom = MudObject.GetObject(link.GetProperty<String>("link destination")) as Room;
                             if (destinationRoom != null)
-                                builder.Append(" " + Core.FormatMessage(viewer, Core.Message("to"), destinationRoom));
+                                builder.Append(" " + Core.FormatMessage(viewer, Core.GetMessage("to"), destinationRoom));
 
                             MudObject.SendMessage(viewer, builder.ToString());
                         }

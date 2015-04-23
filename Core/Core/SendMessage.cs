@@ -44,7 +44,7 @@ namespace RMUD
             Core.OutputQueryTriggered = true;
 
             if (Actor != null && Actor.ConnectedClient != null)
-                Core.PendingMessages.Add(new RawPendingMessage(Actor.ConnectedClient, Core.FormatMessage(Actor, Message, MentionedObjects)));
+                Core.PendingMessages.Add(new PendingMessage(Actor.ConnectedClient, Core.FormatMessage(Actor, Message, MentionedObjects)));
         }
 
         public static void SendMessage(MudObject MudObject, String Message, params Object[] MentionedObjects)
@@ -66,7 +66,7 @@ namespace RMUD
             var container = MudObject.FindLocale(Object) as Container;
             if (container != null)
                 foreach (var actor in container.EnumerateObjects<Actor>().Where(a => a.ConnectedClient != null))
-                    Core.PendingMessages.Add(new RawPendingMessage(actor.ConnectedClient, Core.FormatMessage(actor, Message, MentionedObjects)));
+                    Core.PendingMessages.Add(new PendingMessage(actor.ConnectedClient, Core.FormatMessage(actor, Message, MentionedObjects)));
         }
 
         public static void SendExternalMessage(Actor Actor, String Message, params Object[] MentionedObjects)
@@ -80,7 +80,7 @@ namespace RMUD
             if (location == null) return;
 
             foreach (var other in location.EnumerateObjects<Actor>().Where(a => !Object.ReferenceEquals(a, Actor) && (a.ConnectedClient != null)))
-                Core.PendingMessages.Add(new RawPendingMessage(other.ConnectedClient, Core.FormatMessage(other, Message, MentionedObjects)));
+                Core.PendingMessages.Add(new PendingMessage(other.ConnectedClient, Core.FormatMessage(other, Message, MentionedObjects)));
                 
         }
 
@@ -100,7 +100,7 @@ namespace RMUD
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
-            Core.PendingMessages.Add(new RawPendingMessage(Client, Core.FormatMessage(Client.Player, Message, MentionedObjects)));
+            Core.PendingMessages.Add(new PendingMessage(Client, Core.FormatMessage(Client.Player, Message, MentionedObjects)));
         }
     }
 }

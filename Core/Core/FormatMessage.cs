@@ -83,7 +83,7 @@ namespace RMUD
         public static String FormatMessage(Actor Recipient, String Message, params Object[] Objects)
         {
             //A leading @ indicates that the message should be interpretted as an entry in the global message table.
-            if (Message[0] == '@') Message = Core.Message(Message.Substring(1));
+            if (Message[0] == '@') Message = Core.GetMessage(Message.Substring(1));
 
             var formattedMessage = new StringBuilder();
             var iterator = new StringIterator(Message);

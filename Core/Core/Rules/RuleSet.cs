@@ -26,7 +26,7 @@ namespace RMUD
 
             if (r == null)
             {
-                if (GlobalRules.CheckGlobalRuleBookTypes(Name, typeof(RT), ArgumentTypes))
+                if (GlobalRules.TypesAgreeWithDeclaredGlobalRuleBook(Name, typeof(RT), ArgumentTypes))
                 {
                     if (typeof(RT) == typeof(PerformResult))
                         r = new PerformRuleBook(this) { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
