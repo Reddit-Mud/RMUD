@@ -67,7 +67,7 @@ namespace RMUD
             foreach (var assembly in IntegratedModules)
                 DiscoverCommandFactories(assembly, DefaultParser);
 
-            ParserCommandHandler = new ParserCommandHandler(DefaultParser);
+            ParserCommandHandler = new ParserCommandHandler();
         }
 
         private static void StartThreadedCommandProcesor()

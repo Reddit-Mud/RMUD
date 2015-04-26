@@ -14,7 +14,7 @@ namespace RMUD
         /// </summary>
         /// <param name="Object">Object to move.</param>
         /// <param name="Destination">Destination to move too.</param>
-        /// <param name="Location"></param>
+        /// <param name="Location">The relative location within destination to move too.</param>
         public static void Move(MudObject Object, MudObject Destination, RelativeLocations Location = RelativeLocations.Default)
         {
             if (Object == null) return;

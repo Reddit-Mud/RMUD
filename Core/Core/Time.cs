@@ -15,10 +15,14 @@ namespace RMUD
     public partial class MudObject
     {
         /// <summary>
-        /// This should factor in the time of day, and the phase of the moon if at night, to determine if there is adequate lighting for exterior rooms to be visible.
+        /// This should factor in the time of day, and the phase of the moon if at night, to determine if there
+        /// is adequate lighting for exterior rooms to be visible.
         /// </summary>
         public static LightingLevel AmbientExteriorLightingLevel { get { return LightingLevel.Bright; } }
 
+        /// <summary>
+        /// Sophisticated celestial calculations. Results guaranteed to be accurate approximately 50% of the time.
+        /// </summary>
         public static bool IsDay { get { return true; } }
         public static bool IsNight { get { return false; } }
 

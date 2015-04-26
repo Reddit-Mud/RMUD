@@ -122,6 +122,11 @@ namespace RMUD
 			}
 		}
 
+        /// <summary>
+        /// Get a string suitable to be used in the 'arrives' message, as in 'X arrives from the west'.
+        /// </summary>
+        /// <param name="Of"></param>
+        /// <returns></returns>
         public static String FromMessage(Direction Of)
         {
             switch (Of)

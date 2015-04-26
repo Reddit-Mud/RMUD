@@ -9,6 +9,11 @@ namespace RMUD
 {
     public static partial class Core
     {
+        /// <summary>
+        /// Flatten and serialize a MudObject into a string.
+        /// </summary>
+        /// <param name="Object"></param>
+        /// <returns></returns>
         internal static String SerializeObject(MudObject Object)
         {
             var dest = new System.IO.StringWriter();
@@ -24,6 +29,11 @@ namespace RMUD
             return dest.ToString();
         }
 
+        /// <summary>
+        /// Parse a string, and deserialize it into the supplied object.
+        /// </summary>
+        /// <param name="Object">The MudObject to write deserialized data to</param>
+        /// <param name="Data"></param>
         internal static void DeserializeObject(MudObject Object, String Data)
         {
             var persistentProperties = new List<Tuple<System.Reflection.PropertyInfo, PersistAttribute>>(EnumeratePersistentProperties(Object));

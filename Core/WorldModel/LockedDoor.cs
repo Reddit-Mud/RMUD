@@ -5,6 +5,13 @@ using System.Text;
 
 namespace RMUD
 {
+    /// <summary>
+    /// This is a fancy door - it can be locked!
+    /// 
+    /// TODO: "IsMatchingKey" should be replaced with a rule.
+    /// TODO: "Locked" should be a property.
+    /// TODO: Sync locked state with opposite side of portal
+    /// </summary>
 	public class LockedDoor : BasicDoor
 	{
         public Func<MudObject, bool> IsMatchingKey;

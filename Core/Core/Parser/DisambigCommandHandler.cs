@@ -6,6 +6,9 @@ using System.Reflection;
 
 namespace RMUD
 {
+    /// <summary>
+    /// A client command handler that allows the player to disambiquate between multiple choices.
+    /// </summary>
 	public class DisambigCommandHandler : ClientCommandHandler
 	{
 		public ParserCommandHandler ParentHandler;
@@ -21,14 +24,18 @@ namespace RMUD
             this.ParentHandler = ParentHandler;
             this.MatchedCommand = MatchedCommand;
 
-            //Find an object parameter such that 
+            // Find an object parameter such that 
             //  a) each match has a parameter with that name 
-            //  b) at least one match has value different from the others
+            //  b) at least one match has a value different from the others
 
             var foundAmbiguousArgument = false;
 
+            // Note that we iterate only over the arguments in the first match. If the first match doesn't have the
+            // argument, that argument can't satisfy condition a above.
             foreach (var argument in MatchedCommand.Matches[0])
             {
+                // It's only possible to disambiguate on MudObjects. If any match - including the first one - has 
+                // a value for that argument that is not a MudObject, disambiguation will fail.
                 if (argument.Value is MudObject)
                 {
                     var uniqueMatchables = new List<MudObject>();
@@ -52,7 +59,7 @@ namespace RMUD
 
                     if (!rejected && uniqueMatchables.Count > 1)
                     {
-                        //Disambiguate on this object.
+                        // Disambiguate on this object.
                         DisambigArgument = argument.Key;
                         DisambigObjects = uniqueMatchables;
 
@@ -67,7 +74,7 @@ namespace RMUD
                 var response = new StringBuilder();
                 response.Append("Which did you mean?\r\n");
                 for (var i = 0; i < DisambigObjects.Count; ++i)
-                    response.Append(String.Format("{0}: {1}\r\n", i, DisambigObjects[i].Definite(Actor)));
+                    response.Append(String.Format("{0}: {1}\r\n", i, Core.GlobalRules.ConsiderValueRule<String>("printed name", Actor, DisambigObjects[i], "the")));
                 MudObject.SendMessage(Actor, response.ToString());
             }
             else
@@ -101,13 +108,16 @@ namespace RMUD
                         Core.ProcessPlayerCommand(MatchedCommand.Command, MatchedCommand.Matches[0], Command.Actor);
                     else
                     {
+                        // WHat? There are still multiple options?
                         MudObject.SendMessage(Command.Actor, "That helped narrow it down, but I'm still not sure what you mean.");
                         Command.Actor.CommandHandler = new DisambigCommandHandler(Command.Actor, MatchedCommand, ParentHandler);
                     }
                 }
             }
-            else //Player didn't type an ordinal; retry.
+            else 
             {
+                // The input was nor an ordial. Go ahead and requeue the command so the normal command handler
+                // can take care of it.
                 Core.EnqueuActorCommand(Command);
             }
         }

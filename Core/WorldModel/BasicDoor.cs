@@ -5,11 +5,17 @@ using System.Text;
 
 namespace RMUD
 {
+    /// <summary>
+    /// A basic door object. Doors are openable. When used as a portal, a door will automatically sync it's open state
+    /// with the opposite side of the portal.
+    /// </summary>
     public class BasicDoor : MudObject
     {
         public BasicDoor()
         {
             this.Nouns.Add("DOOR");
+
+            // Doors can be referred to as 'the open door' or 'the closed door' as appropriate.
             this.Nouns.Add("CLOSED", actor => !GetBooleanProperty("open?"));
             this.Nouns.Add("OPEN", actor => GetBooleanProperty("open?"));
 
@@ -39,27 +45,35 @@ namespace RMUD
                         return CheckResult.Disallow;
                     }
                     return CheckResult.Allow;
-                });
-            
+                })
+                .Name("Can close doors rule.");
+
             Perform<MudObject, MudObject>("opened").Do((a, b) =>
             {
                 SetProperty("open?", true);
 
+                // Doors are usually two-sided. If there is an opposite side, we need to open it and emit appropriate
+                // messages.
                 var otherSide = Portal.FindOppositeSide(this);
                 if (otherSide != null)
                 {
                     otherSide.SetProperty("open?", true);
+                    
+                    // This message is defined in the standard actions module. It is perhaps a bit coupled?
                     MudObject.SendLocaleMessage(otherSide, "@they open", a, this);
                     Core.MarkLocaleForUpdate(otherSide);
                 }
 
                 return PerformResult.Continue;
-            });
+            })
+            .Name("Open a door rule");
 
             Perform<MudObject, MudObject>("closed").Do((a, b) =>
             {
                 SetProperty("open?", false);
 
+                // Doors are usually two-sided. If there is an opposite side, we need to close it and emit
+                // appropriate messages.
                 var otherSide = Portal.FindOppositeSide(this);
                 if (otherSide != null)
                 {
@@ -69,7 +83,8 @@ namespace RMUD
                 }
 
                 return PerformResult.Continue;
-            });
+            })
+            .Name("Close a door rule");
         }
     }
 }

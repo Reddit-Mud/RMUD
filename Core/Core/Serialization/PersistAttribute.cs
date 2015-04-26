@@ -7,6 +7,9 @@ using Newtonsoft.Json;
 
 namespace RMUD
 {
+    /// <summary>
+    /// Apply this attribute to the members of a MudObject to mark them as persistent.
+    /// </summary>
     public class PersistAttribute : Attribute
     {
         internal PersistentValueSerializer Serializer = null;

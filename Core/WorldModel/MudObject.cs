@@ -35,17 +35,9 @@ namespace RMUD
         public RuleSet Rules { get; private set; }
         public RuleSource LinkedRuleSource { get { return Location; } }
         
-        public String Indefinite(MudObject RequestedBy) 
-        {
-            return GlobalRules.ConsiderValueRule<String>("printed name", RequestedBy, this, Article);
-        }
-
-        public String Definite(MudObject RequestedBy)
-        {
-            return GlobalRules.ConsiderValueRule<String>("printed name", RequestedBy, this, "the");
-        }
-
         #region Properties
+
+        // Every MudObject has a set of generic properties. Modules use these properties to store values on MudObjects.
         
         public Dictionary<String, Object> Properties = null;
 
@@ -124,6 +116,12 @@ namespace RMUD
             Nouns.Add(Synonyms);
         }
 
+        /// <summary>
+        /// Destroy this object. Optionally, destroy it's children. If destroying children, destroy the
+        /// children's children, etc. The most important aspect of this function is that when destroyed,
+        /// persistent objects are forgotten. Destroying non-persistent objects is not necessary.
+        /// </summary>
+        /// <param name="DestroyChildren"></param>
         public void Destroy(bool DestroyChildren)
         {
             State = ObjectState.Destroyed;

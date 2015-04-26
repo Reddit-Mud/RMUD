@@ -93,14 +93,11 @@
     <Compile Include="Core\Move.cs" />
     <Compile Include="Core\MudCore.cs" />
     <Compile Include="Core\ObjectContainsObject.cs" />
-    <Compile Include="Core\Parser\AuthenticationCommandProcessor.cs" />
     <Compile Include="Core\Parser\ClientCommandHandler.cs" />
     <Compile Include="Core\Parser\CommandEntry.cs" />
     <Compile Include="Core\Parser\CommandFactory.cs" />
     <Compile Include="Core\Parser\CommandParser.cs" />
-    <Compile Include="Core\Parser\CommandProcessor.cs" />
     <Compile Include="Core\Parser\CommandTokenMatcher.cs" />
-    <Compile Include="Core\Parser\ConfirmCommandHandler.cs" />
     <Compile Include="Core\Parser\DisambigCommandHandler.cs" />
     <Compile Include="Core\Parser\MatchContext.cs" />
     <Compile Include="Core\Parser\Matchers\CardinalMatcher.cs" />
@@ -166,7 +163,7 @@
     <Compile Include="WorldModel\Container.cs" />
     <Compile Include="WorldModel\EnumerateObjectTree.cs" />
     <Compile Include="WorldModel\Gender.cs" />
-    <Compile Include="WorldModel\Links.cs" />
+    <Compile Include="WorldModel\Directions.cs" />
     <Compile Include="WorldModel\LockedDoor.cs" />
     <Compile Include="WorldModel\MudObject.cs" />
     <Compile Include="WorldModel\MudObjectRules.cs" />

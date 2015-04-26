@@ -26,6 +26,12 @@ namespace RMUD
             return new PossibleMatch(this, Next);
         }
 
+        /// <summary>
+        /// Clone this match, but give the clone an additional argument.
+        /// </summary>
+        /// <param name="ArgumentName"></param>
+        /// <param name="Value"></param>
+        /// <returns></returns>
         public PossibleMatch With(String ArgumentName, Object Value)
         {
             var r = new PossibleMatch(this, Next);
@@ -33,6 +39,11 @@ namespace RMUD
             return r;
         }
 
+        /// <summary>
+        /// Clone this match, but give the clone many additional arguments.
+        /// </summary>
+        /// <param name="Arguments"></param>
+        /// <returns></returns>
         public PossibleMatch With(Dictionary<String, Object> Arguments)
         {
             var r = Clone();
@@ -40,11 +51,21 @@ namespace RMUD
             return r;
         }
 
+        /// <summary>
+        /// Clone this match, but advance the clone to the next token.
+        /// </summary>
+        /// <returns></returns>
         public PossibleMatch Advance()
         {
             return new PossibleMatch(this, Next.Next);
         }
 
+        /// <summary>
+        /// Clone this match, but advance the clone to the next token and give it an additional property.
+        /// </summary>
+        /// <param name="ArgumentName"></param>
+        /// <param name="Value"></param>
+        /// <returns></returns>
         public PossibleMatch AdvanceWith(String ArgumentName, Object Value)
         {
             var r = new PossibleMatch(this, Next.Next);
@@ -52,6 +73,12 @@ namespace RMUD
             return r;
         }
 
+        /// <summary>
+        /// Clone this match, but advance the clone to the end of input and give it an additional property.
+        /// </summary>
+        /// <param name="ArgumentName"></param>
+        /// <param name="Value"></param>
+        /// <returns></returns>
         public PossibleMatch EndWith(String ArgumentName, Object Value)
         {
             var r = new PossibleMatch(this, null);

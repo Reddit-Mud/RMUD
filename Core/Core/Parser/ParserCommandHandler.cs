@@ -6,15 +6,11 @@ using System.Reflection;
 
 namespace RMUD
 {
+    /// <summary>
+    /// A ClientCommandHandler that uses the parser defined in Core to process player input.
+    /// </summary>
 	public class ParserCommandHandler : ClientCommandHandler
 	{
-		public CommandParser Parser;
-
-		public ParserCommandHandler(CommandParser Parser)
-		{
-            this.Parser = Parser;
-		}
-
         public void HandleCommand(PendingCommand Command)
         {
             if (String.IsNullOrEmpty(Command.RawCommand)) return;
@@ -22,20 +18,26 @@ namespace RMUD
             bool displayMatches = false;
             bool displayTime = false;
 
+            // Debug commands always start with '@'.
             if (Command.RawCommand[0] == '@')
             {
                 if (Command.RawCommand.ToUpper().StartsWith("@MATCH "))
                 {
+                    // Display all matches of the player's input. Do not actually execute the command.
                     Command.RawCommand = Command.RawCommand.Substring("@MATCH ".Length);
                     displayMatches = true;
                 }
                 else if (Command.RawCommand.ToUpper().StartsWith("@TIME "))
                 {
+                    // Time how long the command takes to match and execute.
                     Command.RawCommand = Command.RawCommand.Substring("@TIME ".Length);
                     displayTime = true;
                 }
                 else if (Command.RawCommand.ToUpper().StartsWith("@DEBUG "))
                 {
+                    // Turn off the automatic command execution timeout while executing the command. 
+                    // Use this when testing a command in the debugger. Otherwise, the command processing thread might
+                    // be aborted while you are debugging it.
                     Command.RawCommand = Command.RawCommand.Substring("@DEBUG ".Length);
                     if (Command.Actor.Rank < 500)
                     {
@@ -43,10 +45,12 @@ namespace RMUD
                         return;
                     }
 
+                    // This will be reset by the command queue before the next command is parsed.
                     Core.CommandTimeoutEnabled = false;
                 }
                 else if (Command.RawCommand.ToUpper().StartsWith("@RULES "))
                 {
+                    // Display all the rules invoked while executing this command.
                     Command.RawCommand = Command.RawCommand.Substring("@RULES ".Length);
                     Core.GlobalRules.LogRules(Command.Actor);
                 }
@@ -59,7 +63,7 @@ namespace RMUD
 
             var startTime = DateTime.Now;
 
-            var matchedCommand = Parser.ParseCommand(Command);
+            var matchedCommand = Core.DefaultParser.ParseCommand(Command);
 
             if (displayMatches)
             {
@@ -98,6 +102,7 @@ namespace RMUD
 
                 if (matchedCommand != null)
                 {
+                    // If there are multiple matches, replace this handler with a disambiguation handler.
                     if (matchedCommand.Matches.Count > 1)
                         Command.Actor.CommandHandler = new DisambigCommandHandler(Command.Actor, matchedCommand, this);
                     else

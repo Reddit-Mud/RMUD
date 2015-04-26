@@ -15,6 +15,10 @@ namespace RMUD
         }
     }
 
+    /// <summary>
+    /// Represents a single possible command. CommandEntry provides a fluent interface for creating commands.
+    /// Most methods return the instance they were invoked on to allow methods to be chained.
+    /// </summary>
     public sealed class CommandEntry : ManPage
     {
         internal CommandTokenMatcher Matcher;
@@ -34,6 +38,11 @@ namespace RMUD
             };
         }
 
+        /// <summary>
+        /// Set this command's ID string.
+        /// </summary>
+        /// <param name="_ID"></param>
+        /// <returns>This command</returns>
         public CommandEntry ID(String _ID)
         {
             this._ID = _ID;
@@ -45,18 +54,34 @@ namespace RMUD
             return ManualName == Name;
         }
 
+        /// <summary>
+        /// Set this command's Name.
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <returns>This command</returns>
         public CommandEntry Name(String Name)
         {
             this.ManualName = Name.ToUpper();
             return this;
         }
 
+        /// <summary>
+        /// Set manual text for this command.
+        /// </summary>
+        /// <param name="Manual"></param>
+        /// <returns>This command</returns>
         public CommandEntry Manual(String Manual)
         {
             this.ManualPage = Manual;
             return this;
         }
 
+        /// <summary>
+        /// Add a procedural rule to this command.
+        /// </summary>
+        /// <param name="Rule"></param>
+        /// <param name="Name"></param>
+        /// <returns>This command</returns>
         public CommandEntry ProceduralRule(Func<PossibleMatch, Actor, PerformResult> Rule, String Name = "an unamed procedural rule")
         {
             GeneratedManual.AppendLine("Consider " + Name);
@@ -70,6 +95,13 @@ namespace RMUD
             return this;
         }
 
+        /// <summary>
+        /// Add a new procedural rule to this command that invokes a check rule. If the checkrule fails, 
+        /// processing of the proceedural rules is stopped.
+        /// </summary>
+        /// <param name="RuleName"></param>
+        /// <param name="RuleArguments"></param>
+        /// <returns>This command</returns>
         public CommandEntry Check(String RuleName, params String[] RuleArguments)
         {
             GeneratedManual.AppendLine("Consider the check rulebook '" + RuleName + "' with arguments " + String.Join(", ", RuleArguments));
@@ -85,10 +117,17 @@ namespace RMUD
                 }),
                 DescriptiveName = "Procedural rule to check " + RuleName
             };
+
             ProceduralRules.AddRule(rule);
             return this;
         }
 
+        /// <summary>
+        /// Add a proceedural rule to this command that considers the specified perform rule.
+        /// </summary>
+        /// <param name="RuleName"></param>
+        /// <param name="RuleArguments"></param>
+        /// <returns>This command</returns>
         public CommandEntry Perform(String RuleName, params String[] RuleArguments)
         {
             GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + "' with arguments " + String.Join(", ", RuleArguments) + " and discard the result.");
@@ -107,6 +146,13 @@ namespace RMUD
             return this;
         }
 
+        /// <summary>
+        /// Add a proceedural rule to this command that considers the specified perform rule. Unlike Perform above,
+        /// if the perform rule returns stop, the proceedural rules will also be stopped.
+        /// </summary>
+        /// <param name="RuleName"></param>
+        /// <param name="RuleArguments"></param>
+        /// <returns>This command</returns>
         public CommandEntry AbideBy(String RuleName, params String[] RuleArguments)
         {
             GeneratedManual.AppendLine("Consider the perform rulebook '" + RuleName + "' with arguments " + String.Join(", ", RuleArguments) + " and abide by the result.");
@@ -123,6 +169,10 @@ namespace RMUD
             return this;
         }
 
+        /// <summary>
+        /// Add a proceedural rule to this command that invokes the before acting rulebook.
+        /// </summary>
+        /// <returns>This command</returns>
         public CommandEntry BeforeActing()
         {
             ProceduralRules.AddRule(new Rule<PerformResult>{
@@ -131,6 +181,10 @@ namespace RMUD
             return this;
         }
 
+        /// <summary>
+        /// Add a proceedural rule to this command that invokes the after acting rulebook.
+        /// </summary>
+        /// <returns>This command</returns>
         public CommandEntry AfterActing()
         {
             ProceduralRules.AddRule(new Rule<PerformResult>
@@ -145,6 +199,11 @@ namespace RMUD
             return this;
         }
 
+        /// <summary>
+        /// Add a procedural rule to this command that marks the locale of the actor that entered the command
+        /// for update.
+        /// </summary>
+        /// <returns>This command</returns>
         public CommandEntry MarkLocaleForUpdate()
         {
             GeneratedManual.AppendLine("Consider the mark locale for update rule");

@@ -10,28 +10,23 @@ namespace RMUD
     public static partial class Core
     {
         internal static bool SilentFlag = false;
-
         internal static bool OutputQueryTriggered = false;
 
+        /// <summary>
+        /// Begin watching for output.
+        /// </summary>
         public static void BeginOutputQuery()
         {
             OutputQueryTriggered = false;
         }
 
+        /// <summary>
+        /// Has there been any output since the last time BeginOutputQuery was called?
+        /// </summary>
+        /// <returns></returns>
         public static bool CheckOutputQuery()
         {
             return OutputQueryTriggered;
-        }
-
-        public static String UnformattedItemList(int StartIndex, int Count)
-        {
-            var builder = new StringBuilder();
-            for (int i = StartIndex; i < StartIndex + Count; ++i)
-            {
-                builder.Append("<a" + i + ">");
-                if (i != (StartIndex + Count - 1)) builder.Append(", ");
-            }
-            return builder.ToString();
         }
     }
 

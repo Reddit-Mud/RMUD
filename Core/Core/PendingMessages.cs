@@ -34,7 +34,7 @@ namespace RMUD
         }
 
         /// <summary>
-        /// Clear the pending message queue, discarding any pending messaged.
+        /// Clear the pending message queue, discarding any pending messages.
         /// </summary>
 		public static void ClearPendingMessages()
 		{

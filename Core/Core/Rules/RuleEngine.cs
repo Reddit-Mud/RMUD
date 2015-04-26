@@ -103,6 +103,13 @@ namespace RMUD
             }
         }
 
+        /// <summary>
+        /// Consider a perform rulebook. First, check every argument for matching rules. Finally, check global rules.
+        /// A perform rulebook continues execution until a rule returns PerformResult.Stop.
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Arguments"></param>
+        /// <returns></returns>
         public PerformResult ConsiderPerformRule(String Name, params Object[] Arguments)
         {
             //A single null value passed to a params argument is interpretted by C# as a null Object[]
@@ -117,6 +124,13 @@ namespace RMUD
             return Rules.ConsiderPerformRule(Name, Arguments);
         }
 
+        /// <summary>
+        /// Consider a check rulebook. First check each argument for applicable rules, then check for global rules.
+        /// A check rulebook continues until a rule returns CheckResult.Allow or CheckResult.Disallow.
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Arguments"></param>
+        /// <returns></returns>
         public CheckResult ConsiderCheckRule(String Name, params Object[] Arguments)
         {
             if (Arguments == null) Arguments = new Object[] { null };
@@ -147,6 +161,14 @@ namespace RMUD
             return Rules.ConsiderValueRule<RT>(Name, out valueReturned, Arguments);
         }
 
+        /// <summary>
+        /// Consider a perform rule, but check the values of the possible match for applicable rules. This can apply
+        /// only to perform rules with the argument pattern <PossibleMatch, Actor>.
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Match"></param>
+        /// <param name="Actor"></param>
+        /// <returns></returns>
         public PerformResult ConsiderMatchBasedPerformRule(String Name, PossibleMatch Match, Actor Actor)
         {
             foreach (var arg in Match)
@@ -158,13 +180,21 @@ namespace RMUD
             return Rules.ConsiderPerformRule(Name, Match, Actor);
         }
 
+        /// <summary>
+        /// A wrapper around ConsiderCheckRule that maintains flags to suppress output from the mud.
+        /// This is useful for when we want to check if an action would succeed (the rulebook returns 
+        /// CheckResult.Allow) or fail (the rulebook returns CheckResult.Disallow) but we don't actually
+        /// want to emit the failure messages these rules might normally generate.
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Arguments"></param>
+        /// <returns></returns>
         public CheckResult ConsiderCheckRuleSilently(String Name, params Object[] Arguments)
         {
             try
             {
                 Core.SilentFlag = true;
                 var r = ConsiderCheckRule(Name, Arguments);
-                Core.SilentFlag = false;
                 return r;
             }
             finally
