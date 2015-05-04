@@ -44,6 +44,7 @@
     <Compile Include="Drop.cs" />
     <Compile Include="DescribeRules.cs" />
     <Compile Include="Examine.cs" />
+    <Compile Include="PushBetweenRooms.cs" />
     <Compile Include="Go.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Lock.cs" />

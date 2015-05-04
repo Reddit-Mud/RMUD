@@ -70,6 +70,8 @@ public class Table : RMUD.Container
             return RMUD.CheckResult.Disallow;
         });
 
+        this.CheckCanPushDirection().Do((actor, subject, link) => RMUD.CheckResult.Allow);
+
         //Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed name").When((viewer, thing, article) => thing == this).Do((viewer, thing, article) => "an ancient table");
     }
 }

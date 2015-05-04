@@ -100,4 +100,17 @@ namespace StandardActionsModule
                 .Name("Can't take scenery rule.");
         }
     }
+
+    public static class TakeRuleFactoryExtensions
+    {
+        public static RuleBuilder<MudObject, MudObject, CheckResult> CheckCanTake(this MudObject ThisObject)
+        {
+            return ThisObject.Check<MudObject, MudObject>("can take?").When((taker, obj) => System.Object.ReferenceEquals(obj, ThisObject));
+        }
+
+        public static RuleBuilder<MudObject, MudObject, PerformResult> PerformTake(this MudObject ThisObject)
+        {
+            return ThisObject.Perform<MudObject, MudObject>("take").When((taker, obj) => System.Object.ReferenceEquals(obj, ThisObject));
+        }
+    }
 }
