@@ -8,5 +8,6 @@
         Move(GetObject("palantine/wolf"), this);
 
         OpenLink(RMUD.Direction.EAST, "palantine\\antechamber");
-	}
+        OpenLink(RMUD.Direction.DOWN, "palantine\\cave");
+    }
 }

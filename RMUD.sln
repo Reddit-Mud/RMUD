@@ -42,6 +42,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AliasModule", "AliasModule\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinglePlayerMinimumGame", "SinglePlayerMinimumGame\SinglePlayerMinimumGame.csproj", "{68D0E431-5DCA-4A25-A1B2-2F5B857821B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkoteaque", "Akkoteaque\Akkoteaque.csproj", "{F463DF29-1E1D-4715-85FC-6A177742AD0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play", "Play\Play.csproj", "{660E7522-3209-426D-9009-ABC4F8E881B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +116,14 @@ Global
 		{68D0E431-5DCA-4A25-A1B2-2F5B857821B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68D0E431-5DCA-4A25-A1B2-2F5B857821B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68D0E431-5DCA-4A25-A1B2-2F5B857821B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F463DF29-1E1D-4715-85FC-6A177742AD0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F463DF29-1E1D-4715-85FC-6A177742AD0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F463DF29-1E1D-4715-85FC-6A177742AD0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F463DF29-1E1D-4715-85FC-6A177742AD0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{660E7522-3209-426D-9009-ABC4F8E881B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{660E7522-3209-426D-9009-ABC4F8E881B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{660E7522-3209-426D-9009-ABC4F8E881B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{660E7522-3209-426D-9009-ABC4F8E881B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

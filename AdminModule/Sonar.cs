@@ -60,33 +60,71 @@ namespace AdminModule
                 }, "Implement sonar device rule.");
         }
 
+        private static void PlaceSymbol(int[,] MapGrid, int X, int Y, int Symbol)
+        {
+            if (X < 1 || X >= MapWidth - 1 || Y < 1 || Y >= MapHeight - 1) return;
+            MapGrid[X, Y] = Symbol;
+        }
+
+        private static int FindSymbol(RMUD.Room Location)
+        {
+            var spacer = Location.Short.LastIndexOf('-');
+            if (spacer > 0 && spacer < Location.Short.Length - 2)
+                return Location.Short.ToUpper()[spacer + 2];
+            else
+                return Location.Short.ToUpper()[0];
+        }
+
         private static void MapLocation(int[,] MapGrid, Dictionary<int, String> RoomLegend, int X, int Y, RMUD.Room Location, int Symbol)
         {
             if (X < 1 || X >= MapWidth - 1 || Y < 1 || Y >= MapHeight - 1) return;
 
             if (MapGrid[X, Y] != ' ') return;
-            if (Symbol == ' ')
-            {
-                var spacer = Location.Short.LastIndexOf('-');
-                if (spacer > 0 && spacer < Location.Short.Length - 2)
-                    Symbol = Location.Short.ToUpper()[spacer + 2];
-                else
-                    Symbol = Location.Short.ToUpper()[0];
-            }
+
+            if (Symbol == ' ') Symbol = FindSymbol(Location);
 
             RoomLegend.Upsert(Symbol, Location.Short);
-            MapGrid[X, Y] = Symbol;
+            
+            PlaceSymbol(MapGrid, X, Y, Symbol);
+            PlaceSymbol(MapGrid, X - 2, Y - 1, '+');
+            PlaceSymbol(MapGrid, X - 1, Y - 1, '-');
+            PlaceSymbol(MapGrid, X - 0, Y - 1, '-');
+            PlaceSymbol(MapGrid, X + 1, Y - 1, '-');
+            PlaceSymbol(MapGrid, X + 2, Y - 1, '+');
 
-            foreach (var link in Location.EnumerateObjects(RMUD.RelativeLocations.Links).Where(t => t.HasProperty("direction")))
+            PlaceSymbol(MapGrid, X + 2, Y, '|');
+            PlaceSymbol(MapGrid, X - 2, Y, '|');
+
+            PlaceSymbol(MapGrid, X - 2, Y + 1, '+');
+            PlaceSymbol(MapGrid, X - 1, Y + 1, '-');
+            PlaceSymbol(MapGrid, X - 0, Y + 1, '-');
+            PlaceSymbol(MapGrid, X + 1, Y + 1, '-');
+            PlaceSymbol(MapGrid, X + 2, Y + 1, '+');
+                        
+            foreach (var link in Location.EnumerateObjects(RMUD.RelativeLocations.Links).Where(t => t.HasProperty("link direction")))
             {
-                var destinationName = link.GetProperty<string>("destination");
+                var destinationName = link.GetProperty<string>("link destination");
                 var destination = MudObject.GetObject(destinationName) as RMUD.Room;
-                var direction = link.GetPropertyOrDefault<RMUD.Direction>("direction", RMUD.Direction.NORTH);
-                var directionVector = RMUD.Link.GetAsVector(direction);
-                PlaceEdge(MapGrid, X + directionVector.X, Y + directionVector.Y, direction);
+                var direction = link.GetPropertyOrDefault<RMUD.Direction>("link direction", RMUD.Direction.NORTH);
 
-                if (destination.RoomType == Location.RoomType)
-                    MapLocation(MapGrid, RoomLegend, X + (directionVector.X * 3), Y + (directionVector.Y * 3), destination, ' ');
+                if (direction == Direction.UP)
+                {
+                    PlaceSymbol(MapGrid, X + 1, Y - 2, ':');
+                    PlaceSymbol(MapGrid, X + 1, Y - 3, FindSymbol(destination));
+                }
+                else if (direction == Direction.DOWN)
+                {
+                    PlaceSymbol(MapGrid, X - 1, Y + 2, ':');
+                    PlaceSymbol(MapGrid, X - 1, Y + 3, FindSymbol(destination));
+                }
+                else
+                {
+                    var directionVector = RMUD.Link.GetAsVector(direction);
+                    PlaceEdge(MapGrid, X + directionVector.X * 3, Y + directionVector.Y * 2, direction);
+
+                    //if (destination.RoomType == Location.RoomType)
+                    MapLocation(MapGrid, RoomLegend, X + (directionVector.X * 7), Y + (directionVector.Y * 5), destination, ' ');
+                }
             }
         }
 
