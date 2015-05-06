@@ -44,7 +44,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinglePlayerMinimumGame", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkoteaque", "Akkoteaque\Akkoteaque.csproj", "{F463DF29-1E1D-4715-85FC-6A177742AD0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play", "Play\Play.csproj", "{660E7522-3209-426D-9009-ABC4F8E881B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayAkko", "Play\PlayAkko.csproj", "{660E7522-3209-426D-9009-ABC4F8E881B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
