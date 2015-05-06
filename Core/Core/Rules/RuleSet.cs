@@ -20,29 +20,20 @@ namespace RMUD
             return RuleBooks.FirstOrDefault(r => r.Name == Name);
         }
 
-        internal RuleBook FindOrCreateRuleBook<RT>(String Name, params Type[] ArgumentTypes)
+        internal RuleBook FindOrCreateRuleBook<RT>(String Name, int ArgCount)
         {
             var r = FindRuleBook(Name);
 
             if (r == null)
             {
-                if (GlobalRules.TypesAgreeWithDeclaredGlobalRuleBook(Name, typeof(RT), ArgumentTypes))
-                {
-                    if (typeof(RT) == typeof(PerformResult))
-                        r = new PerformRuleBook(this) { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
-                    else if (typeof(RT) == typeof(CheckResult))
-                        r = new CheckRuleBook(this) { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
-                    else
-                        r = new ValueRuleBook<RT>(this) { Name = Name, ArgumentTypes = new List<Type>(ArgumentTypes) };
-
-                    RuleBooks.Add(r);
-                }
+                if (typeof(RT) == typeof(PerformResult))
+                    r = new PerformRuleBook(this) { Name = Name, ArgumentCount = ArgCount };
+                else if (typeof(RT) == typeof(CheckResult))
+                    r = new CheckRuleBook(this) { Name = Name, ArgumentCount = ArgCount };
                 else
-                    throw new InvalidOperationException("Local rulebook definition does not match global rulebook");
-            }
-            else if (!r.CheckArgumentTypes(typeof(RT), ArgumentTypes))
-            {
-                throw new InvalidOperationException("Rule inconsistent with existing rulebook");
+                    r = new ValueRuleBook<RT>(this) { Name = Name, ArgumentCount = ArgCount };
+
+                RuleBooks.Add(r);
             }
 
             return r;

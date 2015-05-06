@@ -49,7 +49,7 @@ namespace AdminModule
 
         private static void DisplayBookHeader(Actor Actor, RuleBook Book)
         {
-            MudObject.SendMessage(Actor, Book.Name + " [" + String.Join(", ", Book.ArgumentTypes.Select(t => t.Name)) + " -> " + Book.ResultType.Name + "] : " + Book.Description);
+            MudObject.SendMessage(Actor, Book.Name + " -> " + Book.ResultType.Name + " : " + Book.Description);
         }
 
         private static void DisplayBookList(Actor Actor, RuleSet Rules)

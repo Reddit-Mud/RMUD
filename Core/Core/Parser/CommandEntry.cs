@@ -34,7 +34,8 @@ namespace RMUD
             GeneratedManual = new StringBuilder();
             ProceduralRules = new PerformRuleBook(Core.GlobalRules.Rules)
             {
-                ArgumentTypes = new List<Type>(new Type[] { typeof(PossibleMatch), typeof(Actor) }),
+                ArgumentCount = 2
+                /*ArgumentTypes = new List<Type>(new Type[] { typeof(PossibleMatch), typeof(Actor) }),*/
             };
         }
 

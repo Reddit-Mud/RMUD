@@ -60,7 +60,7 @@ namespace RMUD
             if (book == null) return true;
 
             if (book.ResultType != ResultType) return false;
-            return book.CheckArgumentTypes(ResultType, ArgumentTypes);
+            return book.CheckArgumentTypes(ResultType, ArgumentTypes.Length);
         }
 
         public void DeleteRule(String RuleBookName, String RuleID)

@@ -30,7 +30,8 @@ namespace RMUD
     {
         public String Name;
         public String Description;
-        public List<Type> ArgumentTypes = new List<Type>();
+        public int ArgumentCount = 0;
+        //public List<Type> ArgumentTypes = new List<Type>();
         public Type ResultType;
         public RuleSet Owner;
         public List<Rule> Rules = new List<Rule>();
@@ -41,13 +42,14 @@ namespace RMUD
             this.Owner = Owner;
         }
 
-        public bool CheckArgumentTypes(Type ResultType, params Type[] ArgTypes)
+        public bool CheckArgumentTypes(Type ResultType, int ArgCount)
         {
             if (this.ResultType != ResultType) return false;
-            if (ArgTypes.Length != ArgumentTypes.Count) return false;
-            for (int i = 0; i < ArgTypes.Length; ++i)
-                if (!ArgumentTypes[i].IsAssignableFrom(ArgTypes[i]))
-                    return false;
+            if (ArgCount != ArgumentCount) return false;
+            //if (ArgTypes.Length != ArgumentTypes.Count) return false;
+            //for (int i = 0; i < ArgTypes.Length; ++i)
+            //    if (!ArgumentTypes[i].IsAssignableFrom(ArgTypes[i]))
+            //        return false;
             return true;
         }
 
@@ -90,7 +92,7 @@ namespace RMUD
         {
             if (Owner.GlobalRules.LogTo != null && Owner.GlobalRules.LogTo.ConnectedClient != null)
             {
-                Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", ArgumentTypes.Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(Rule.DescriptiveName) ? "NONAME" : Rule.DescriptiveName) + "\r\n");
+                Owner.GlobalRules.LogTo.ConnectedClient.Send(Name + "<" + String.Join(", ", Rule.GetArgumentTypes().Select(t => t.Name)) + "> -> " + ResultType.Name + " : " + (String.IsNullOrEmpty(Rule.DescriptiveName) ? "NONAME" : Rule.DescriptiveName) + "\r\n");
             }
         }
     }

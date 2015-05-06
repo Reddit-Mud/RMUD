@@ -16,7 +16,7 @@ namespace RMUD
 		public RuleBuilder<RT> AddRule<RT>(String Name)
 		{
 			var rule = new Rule<RT>();
-			FindOrCreateRuleBook<RT>(Name).AddRule(rule);
+			FindOrCreateRuleBook<RT>(Name, 0).AddRule(rule);
 			return new RuleBuilder<RT> { Rule = rule };
 		}
 
@@ -24,8 +24,7 @@ namespace RMUD
 		public RuleBuilder<<#Args(i);#>, RT> AddRule<<#Args(i);#>, RT>(String Name)
 		{
 			var rule = new Rule<RT>();
-			FindOrCreateRuleBook<RT>(Name, <#for (var x = 0; x < i; ++x){#>typeof(T<#=x#>)<#= x == i - 1 ? "" : ", "#><#}#>)
-				.AddRule(rule);
+			FindOrCreateRuleBook<RT>(Name, <#=i#>).AddRule(rule);
 			return new RuleBuilder<<#Args(i);#>, RT> { Rule = rule };
 		}
 
