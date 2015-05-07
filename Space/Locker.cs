@@ -61,7 +61,7 @@ namespace Space
                 return PerformResult.Continue;
             });
 
-            Perform<MudObject, MudObject>("closed").Do((a, b) =>
+            Perform<MudObject, MudObject>("close").Do((a, b) =>
             {
                 SetProperty("open?", false);
                 return PerformResult.Continue;

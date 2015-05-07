@@ -31,7 +31,6 @@ namespace RMUD
         public String Name;
         public String Description;
         public int ArgumentCount = 0;
-        //public List<Type> ArgumentTypes = new List<Type>();
         public Type ResultType;
         public RuleSet Owner;
         public List<Rule> Rules = new List<Rule>();
@@ -40,17 +39,6 @@ namespace RMUD
         public RuleBook(RuleSet Owner)
         {
             this.Owner = Owner;
-        }
-
-        public bool CheckArgumentTypes(Type ResultType, int ArgCount)
-        {
-            if (this.ResultType != ResultType) return false;
-            if (ArgCount != ArgumentCount) return false;
-            //if (ArgTypes.Length != ArgumentTypes.Count) return false;
-            //for (int i = 0; i < ArgTypes.Length; ++i)
-            //    if (!ArgumentTypes[i].IsAssignableFrom(ArgTypes[i]))
-            //        return false;
-            return true;
         }
 
         public virtual void CheckRule(Rule Rule) { throw new NotImplementedException(); }

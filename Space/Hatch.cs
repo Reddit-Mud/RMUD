@@ -52,7 +52,7 @@ namespace Space
                 return PerformResult.Continue;
             });
 
-            Perform<MudObject, Hatch>("closed").Do((a, b) =>
+            Perform<MudObject, Hatch>("close").Do((a, b) =>
             {
                 SetProperty("open?", false);
                 var otherSide = Portal.FindOppositeSide(this);

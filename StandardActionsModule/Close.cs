@@ -23,7 +23,7 @@ namespace StandardActionsModule
                 .Manual("Closes a thing.")
                 .Check("can close?", "ACTOR", "SUBJECT")
                 .BeforeActing()
-                .Perform("closed", "ACTOR", "SUBJECT")
+                .Perform("close", "ACTOR", "SUBJECT")
                 .AfterActing();
 		}
 
@@ -34,7 +34,7 @@ namespace StandardActionsModule
 
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can close?", "[Actor, Item] : Determine if the item can be closed.", "actor", "item");
 
-            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("closed", "[Actor, Item] : Handle the item being closed.", "actor", "item");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("close", "[Actor, Item] : Handle the item being closed.", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can close?")
                 .When((actor, item) => !item.GetBooleanProperty("openable?"))
@@ -49,7 +49,7 @@ namespace StandardActionsModule
                 .Do((actor, item) => CheckResult.Allow)
                 .Name("Default close things rule.");
 
-            GlobalRules.Perform<MudObject, MudObject>("closed").Do((actor, target) =>
+            GlobalRules.Perform<MudObject, MudObject>("close").Do((actor, target) =>
             {
                 MudObject.SendMessage(actor, "@you close", target);
                 MudObject.SendExternalMessage(actor, "@they close", actor, target);
@@ -57,6 +57,19 @@ namespace StandardActionsModule
             }).Name("Default close reporting rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can close?").First.Do((actor, item) => MudObject.CheckIsVisibleTo(actor, item)).Name("Item must be visible rule.");
+        }
+    }
+
+    public static class CloseRuleFactoryExtensions
+    {
+        public static RuleBuilder<MudObject, MudObject, CheckResult> CheckCanClose(this MudObject ThisObject)
+        {
+            return ThisObject.Check<MudObject, MudObject>("can close?").ThisOnly(1);
+        }
+
+        public static RuleBuilder<MudObject, MudObject, PerformResult> PerformClose(this MudObject ThisObject)
+        {
+            return ThisObject.Perform<MudObject, MudObject>("close").ThisOnly(1);
         }
     }
 }

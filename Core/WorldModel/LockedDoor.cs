@@ -62,7 +62,7 @@ namespace RMUD
                  })
                  .Name("Can't open locked door rule.");
 
-             Perform<MudObject, MudObject>("closed")
+             Perform<MudObject, MudObject>("close")
                  .Do((a, b) => { Locked = false; return PerformResult.Continue; });
         }
         

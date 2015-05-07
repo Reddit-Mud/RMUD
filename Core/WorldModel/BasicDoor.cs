@@ -68,7 +68,7 @@ namespace RMUD
             })
             .Name("Open a door rule");
 
-            Perform<MudObject, MudObject>("closed").Do((a, b) =>
+            Perform<MudObject, MudObject>("close").Do((a, b) =>
             {
                 SetProperty("open?", false);
 

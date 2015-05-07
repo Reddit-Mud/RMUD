@@ -50,9 +50,9 @@ namespace RMUD
         /// </summary>
         /// <param name="Name"></param>
         /// <param name="ResultType"></param>
-        /// <param name="ArgumentTypes"></param>
+        /// <param name="ArgumentCount"></param>
         /// <returns></returns>
-        internal bool TypesAgreeWithDeclaredGlobalRuleBook(String Name, Type ResultType, params Type[] ArgumentTypes)
+        internal bool TypesAgreeWithDeclaredGlobalRuleBook(String Name, Type ResultType, int ArgumentCount)
         {
             if (Rules == null) return true; // This means that rules were declared before global rulebooks were discovered. Queueing prevents this from happening.
 
@@ -60,7 +60,9 @@ namespace RMUD
             if (book == null) return true;
 
             if (book.ResultType != ResultType) return false;
-            return book.CheckArgumentTypes(ResultType, ArgumentTypes.Length);
+            if (book.ArgumentCount != ArgumentCount) return false;
+
+            return true;
         }
 
         public void DeleteRule(String RuleBookName, String RuleID)
