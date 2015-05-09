@@ -10,7 +10,7 @@ namespace Akko
 	{
         public settings()
         {
-            NewPlayerStartRoom = "Areas.Prologue.Car";
+            NewPlayerStartRoom = "Areas.Lighthouse.Base";
             PlayerBaseObject = "Player";
         }
 	}

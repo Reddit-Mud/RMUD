@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Lighthouse\Rooms.cs" />
     <Compile Include="Areas\Prologue\Henrico.cs" />
     <Compile Include="Areas\Prologue\Car.cs" />
     <Compile Include="Areas\Prologue\Watch.cs" />

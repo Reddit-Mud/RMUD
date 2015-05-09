@@ -43,7 +43,7 @@ namespace Akko
                     //RMUD.Core.EnqueuActorCommand(actor, "topics");
 
                     SwitchPlayerCharacter(RMUD.MudObject.GetObject("Areas.Prologue.Player") as RMUD.Player);
-                    RMUD.MudObject.Move(Player, RMUD.MudObject.GetObject("Areas.Prologue.Car"));
+                    RMUD.MudObject.Move(Player, RMUD.MudObject.GetObject("Areas.Lighthouse.Base"));
                     RMUD.Core.EnqueuActorCommand(Player, "look");
                     
                     //Player.SetProperty("interlocutor", RMUD.MudObject.GetObject("Areas.Prologue.Henrico"));
