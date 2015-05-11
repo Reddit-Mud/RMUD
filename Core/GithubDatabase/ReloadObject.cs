@@ -22,7 +22,7 @@ namespace RMUD
 
                 existing.State = ObjectState.Destroyed;
 				NamedObjects.Upsert(Path, newObject);
-                InitializeMudObject(newObject);
+                MudObject.InitializeObject(newObject);
 
 				//Preserve contents
 				if (existing is Container && newObject is Container)

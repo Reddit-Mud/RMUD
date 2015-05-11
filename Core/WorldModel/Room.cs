@@ -42,7 +42,7 @@ namespace RMUD
             return scenery;
 		}
 
-        public void AddScenery(Scenery Scenery)
+        public void AddScenery(MudObject Scenery)
         {
             Add(Scenery, RelativeLocations.Scenery);
             Scenery.Location = this;
@@ -64,7 +64,7 @@ namespace RMUD
 
             foreach (var item in MudObject.EnumerateVisibleTree(this))
             {
-                var lightingLevel = GlobalRules.ConsiderValueRule<LightingLevel>("emits-light", item);
+                var lightingLevel = GlobalRules.ConsiderValueRule<LightingLevel>("light level", item);
                 if (lightingLevel > Light) Light = lightingLevel;
             }
 

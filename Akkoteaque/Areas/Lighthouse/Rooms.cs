@@ -2,16 +2,33 @@
 
 namespace Akko.Areas.Lighthouse
 {
+    public static class LighthouseVar
+    {
+        public static bool Powered = true;
+    }
+
+    public class Lamp : RMUD.Scenery
+    {
+        public override void Initialize()
+        {
+            SimpleName("lamp");
+
+            this.ValueLightingLevel().Do((o) => LighthouseVar.Powered ? LightingLevel.Bright : LightingLevel.Dark);
+        }
+    }
 
     public class Base : RMUD.Room
     {
         public override void Initialize()
         {
+            RoomType = RMUD.RoomType.Interior;
             Short = "Base of the Lighthouse";
 
             OpenLink(Direction.EAST, "LH-CON-INN");
             OpenLink(Direction.NORTH, "Areas.Lighthouse.StorageRoom", GetObject("Areas.Lighthouse.StorageRoomDoor@A"));
             OpenLink(Direction.UP, "Areas.Lighthouse.LowerStair");
+
+            AddScenery(InitializeObject(new Lamp()));
         }
     }
 
@@ -82,6 +99,7 @@ namespace Akko.Areas.Lighthouse
         public override void Initialize()
         {
             Short = "hatch";
+            Nouns.Add("hatch");
         }
     }
 

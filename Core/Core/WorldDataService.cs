@@ -44,13 +44,6 @@ namespace RMUD
             }
         }
 
-        protected static void InitializeMudObject(MudObject Object)
-        {
-            Object.Initialize();
-            Object.State = ObjectState.Alive;
-            Core.GlobalRules.ConsiderPerformRule("update", Object);
-        }
-
         public MudObject CreateInstance(String FullName)
         {
             FullName = FullName.Replace('\\', '/');
@@ -103,7 +96,7 @@ namespace RMUD
 
                 var newObject = Activator.CreateInstance(existing.GetType()) as MudObject;
                 NamedObjects.Upsert(Path, newObject);
-                InitializeMudObject(newObject);
+                MudObject.InitializeObject(newObject);
 
                 //Preserve the location of actors, and actors only.
                 if (existing is Container)

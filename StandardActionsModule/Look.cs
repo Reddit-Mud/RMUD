@@ -87,7 +87,8 @@ namespace StandardActionsModule
                     })
                 .Do((viewer, container, article) =>
                     {
-                        var subObjects = new List<MudObject>(container.EnumerateObjects(RelativeLocations.On));
+                        var subObjects = new List<MudObject>(container.EnumerateObjects(RelativeLocations.On)
+                        .Where(t => GlobalRules.ConsiderCheckRule("should be listed?", viewer, t) == CheckResult.Allow));
 
                         if (subObjects.Count > 0)
                             return container.Short + " " + Core.FormatMessage(viewer, Core.GetMessage("on which"), subObjects);
@@ -96,10 +97,28 @@ namespace StandardActionsModule
                     })
                     .Name("List contents of container after name when describing locale rule");
 
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("should be listed?", "[Viewer, Item] : When describing a room, or the contents of a container, should this item be listed?");
+
+            GlobalRules.Check<MudObject, MudObject>("should be listed?")
+                .When((viewer, item) => System.Object.ReferenceEquals(viewer, item))
+                .Do((viewer, item) => CheckResult.Disallow)
+                .Name("Don't list yourself rule.");
+
+            GlobalRules.Check<MudObject, MudObject>("should be listed?")
+               .When((viewer, item) => item.GetBooleanProperty("minor?"))
+               .Do((viewer, item) => CheckResult.Disallow)
+               .Name("Don't list minor objects rule.");
+
+            GlobalRules.Check<MudObject, MudObject>("should be listed?")
+               .Do((viewer, item) => CheckResult.Allow)
+               .Name("List objects by default rule.");
+
             GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .Do((viewer, room) =>
                 {
-                    var visibleThings = (room as Room).EnumerateObjects(RelativeLocations.Contents).Where(t => !System.Object.ReferenceEquals(t, viewer));
+                    var visibleThings = (room as Room).EnumerateObjects(RelativeLocations.Contents)
+                        .Where(t => GlobalRules.ConsiderCheckRule("should be listed?", viewer, t) == CheckResult.Allow);
+
                     var normalContents = new List<MudObject>();
 
                     foreach (var thing in visibleThings)

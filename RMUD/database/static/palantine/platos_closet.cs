@@ -22,7 +22,7 @@ public class lamp : RMUD.Scenery
         Nouns.Add("gas", "lamp");
         Long = "This little gas lamp somehow manages to fill the endless closet with light.";
 
-        Value<RMUD.MudObject, RMUD.LightingLevel>("emits-light").Do(a => RMUD.LightingLevel.Bright);
+        Value<RMUD.MudObject, RMUD.LightingLevel>("light level").Do(a => RMUD.LightingLevel.Bright);
     }
 
 }

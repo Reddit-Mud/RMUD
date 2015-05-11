@@ -38,7 +38,7 @@ namespace RMUD
                 }
 
                 if (r != null && r.State == ObjectState.Unitialized)
-                    InitializeMudObject(r);
+                    MudObject.InitializeObject(r);
 
                 return r;
             }
