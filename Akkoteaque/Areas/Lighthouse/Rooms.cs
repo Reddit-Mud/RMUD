@@ -7,7 +7,7 @@ namespace Akko.Areas.Lighthouse
         public static bool Powered = true;
     }
 
-    public class Lamp : RMUD.Scenery
+    public class Lamp : RMUD.MudObject
     {
         public override void Initialize()
         {

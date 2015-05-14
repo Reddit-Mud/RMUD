@@ -176,7 +176,6 @@
     <Compile Include="WorldModel\Room.cs" />
     <Compile Include="WorldModel\RoomLightingRules.cs" />
     <Compile Include="WorldModel\RoomType.cs" />
-    <Compile Include="WorldModel\Scenery.cs" />
     <Compile Include="WorldModel\Settings.cs" />
   </ItemGroup>
   <ItemGroup>

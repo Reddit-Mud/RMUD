@@ -10,6 +10,10 @@ namespace StandardActionsModule
     {
         public override void Create(CommandParser Parser)
         {
+            Parser.AddCommand(Or(KeyWord("EXAMINE"), KeyWord("X")))
+                .Manual("Take a detailed look at your surroundings.")
+                .Perform("examine", "ACTOR");
+
             Parser.AddCommand(
                 Sequence(
                     Or(
@@ -38,6 +42,20 @@ namespace StandardActionsModule
                 .Last
                 .Do((viewer, item) => CheckResult.Allow)
                 .Name("Default can examine everything rule.");
+
+            GlobalRules.DeclarePerformRuleBook<MudObject>("examine", "[Actor] -> Take a close look at the actor's surroundings.");
+
+            GlobalRules.Perform<MudObject>("examine")
+                .Do((actor) =>
+                {
+                    MudObject.SendMessage(actor, "A detailed account of all objects present.");
+                    if (actor.Location != null && actor.Location is Container)
+                        foreach (var item in (actor.Location as Container).EnumerateObjects().Where(i => !System.Object.ReferenceEquals(i, actor)))
+                        {
+                            MudObject.SendMessage(actor, "<a0>", item);
+                        }
+                    return PerformResult.Continue;
+                });
         }
     }
 }

@@ -91,7 +91,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
-                .When((actor, thing) => thing is Scenery)
+                .When((actor, thing) => thing.GetBooleanProperty("scenery?"))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@cant take scenery");

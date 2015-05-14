@@ -62,8 +62,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, RelativeLocations>("look relloc")
                 .Do((actor, item, relloc) =>
                 {
-                    var contents = new List<MudObject>((item as Container).EnumerateObjects(relloc)
-                        .Where(t => GlobalRules.ConsiderCheckRule("should be listed?", actor, t) == CheckResult.Allow));
+                    var contents = new List<MudObject>((item as Container).EnumerateObjects(relloc));
 
                     if (contents.Count > 0)
                     {

@@ -12,8 +12,6 @@ namespace RMUD
         Default = 0,
 
         Contents = 1, //As of a room
-        Links = 2,
-        Scenery = 4,
 
         In = 8,
         On = 16,

@@ -101,7 +101,7 @@ namespace AdminModule
             PlaceSymbol(MapGrid, X + 1, Y + 1, '-');
             PlaceSymbol(MapGrid, X + 2, Y + 1, '+');
                         
-            foreach (var link in Location.EnumerateObjects(RMUD.RelativeLocations.Links).Where(t => t.HasProperty("link direction")))
+            foreach (var link in Location.EnumerateObjects().Where(t => t.HasProperty("link direction")))
             {
                 var destinationName = link.GetProperty<string>("link destination");
                 var destination = MudObject.GetObject(destinationName) as RMUD.Room;

@@ -97,19 +97,24 @@ namespace StandardActionsModule
                     })
                     .Name("List contents of container after name when describing locale rule");
 
-            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("should be listed?", "[Viewer, Item] : When describing a room, or the contents of a container, should this item be listed?");
+            GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("should be listed in locale?", "[Viewer, Item] : When describing a room, or the contents of a container, should this item be listed?");
 
-            GlobalRules.Check<MudObject, MudObject>("should be listed?")
+            GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
                 .When((viewer, item) => System.Object.ReferenceEquals(viewer, item))
                 .Do((viewer, item) => CheckResult.Disallow)
                 .Name("Don't list yourself rule.");
 
-            GlobalRules.Check<MudObject, MudObject>("should be listed?")
-               .When((viewer, item) => item.GetBooleanProperty("minor?"))
+            GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
+               .When((viewer, item) => item.GetBooleanProperty("scenery?"))
                .Do((viewer, item) => CheckResult.Disallow)
-               .Name("Don't list minor objects rule.");
+               .Name("Don't list scenery objects rule.");
 
-            GlobalRules.Check<MudObject, MudObject>("should be listed?")
+            GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
+                .When((viewer, item) => item.GetBooleanProperty("portal?"))
+                .Do((viewer, item) => CheckResult.Disallow)
+                .Name("Don't list portals rule.");
+
+            GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
                .Do((viewer, item) => CheckResult.Allow)
                .Name("List objects by default rule.");
 
@@ -117,7 +122,7 @@ namespace StandardActionsModule
                 .Do((viewer, room) =>
                 {
                     var visibleThings = (room as Room).EnumerateObjects(RelativeLocations.Contents)
-                        .Where(t => GlobalRules.ConsiderCheckRule("should be listed?", viewer, t) == CheckResult.Allow);
+                        .Where(t => GlobalRules.ConsiderCheckRule("should be listed in locale?", viewer, t) == CheckResult.Allow);
 
                     var normalContents = new List<MudObject>();
 
@@ -143,11 +148,11 @@ namespace StandardActionsModule
                 .Last
                 .Do((viewer, room) =>
                 {
-                    if ((room as Room).EnumerateObjects(RelativeLocations.Links).Count() > 0)
+                    if ((room as Room).EnumerateObjects().Where(l => l.GetBooleanProperty("portal?")).Count() > 0)
                     {
                         MudObject.SendMessage(viewer, "@obvious exits");
 
-                        foreach (var link in (room as Room).EnumerateObjects<MudObject>(RelativeLocations.Links))
+                        foreach (var link in (room as Room).EnumerateObjects<MudObject>().Where(l => l.GetBooleanProperty("portal?")))
                         {
                             var builder = new StringBuilder();
                             builder.Append("  ^");

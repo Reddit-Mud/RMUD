@@ -10,7 +10,7 @@ namespace Space
             BriefDescription = "I'm in the cargo bay again.";
             Short = "cargo bay";
 
-            AddScenery(GetObject("CargoRoomGrate") as Scenery);
+            AddScenery(GetObject("CargoRoomGrate"));
             Move(GetObject("CargoRoomBoxes"), this);
 
             OpenLink(Direction.EAST, "Start");
@@ -41,7 +41,7 @@ namespace Space
         }
     }
 
-    public class CargoRoomGrate : Scenery
+    public class CargoRoomGrate : MudObject
     {
         public override void Initialize()
         {

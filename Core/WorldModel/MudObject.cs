@@ -26,8 +26,8 @@ namespace RMUD
             else return Path;
         }
 
-        public String Short;
-        public String Long;
+        public String Short = "object";
+        public String Long = "undescribed object";
         public String Article = "a";
 		public NounList Nouns { get; set; }
         public MudObject Location { get; set; }

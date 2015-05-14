@@ -29,8 +29,8 @@ namespace RMUD
             
             var direction = Portal.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE);
             var oppositeDirection = Link.Opposite(direction);
-            var mirrorLink = destination.EnumerateObjects(RelativeLocations.Links).FirstOrDefault(p =>
-                p.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == oppositeDirection);
+            var mirrorLink = destination.EnumerateObjects().FirstOrDefault(p =>
+                p.GetBooleanProperty("portal?") && p.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == oppositeDirection);
             return mirrorLink;
         }
     }

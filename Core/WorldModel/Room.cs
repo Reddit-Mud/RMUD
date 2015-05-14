@@ -9,7 +9,7 @@ namespace RMUD
 	{
         public RoomType RoomType = RoomType.Exterior;
 
-        public Room() : base(RelativeLocations.Contents | RelativeLocations.Links | RelativeLocations.Scenery, RelativeLocations.Contents)
+        public Room() : base(RelativeLocations.Contents, RelativeLocations.Contents)
         { }
 
         public void OpenLink(Direction Direction, String Destination, MudObject Portal = null)
@@ -21,20 +21,22 @@ namespace RMUD
             {
                 Portal = new MudObject();
                 Portal.SetProperty("link anonymous?", true);
+                Portal.Short = "link " + Direction + " to " + Destination;
             }
 
             Portal.SetProperty("portal?", true);
             Portal.SetProperty("link direction", Direction);
             Portal.SetProperty("link destination", Destination);
             Portal.Location = this;
-            Add(Portal, RelativeLocations.Links);
+            Add(Portal, RelativeLocations.Contents);
         }
 
         #region Scenery 
 
-        public Scenery AddScenery(String Description, params String[] Nouns)
+        public MudObject AddScenery(String Description, params String[] Nouns)
 		{
-			var scenery = new Scenery();
+			var scenery = new MudObject();
+            scenery.SetProperty("scenery?", true);
 			scenery.Long = Description;
 			foreach (var noun in Nouns)
 				scenery.Nouns.Add(noun.ToUpper());
@@ -44,7 +46,8 @@ namespace RMUD
 
         public void AddScenery(MudObject Scenery)
         {
-            Add(Scenery, RelativeLocations.Scenery);
+            Scenery.SetProperty("scenery?", true);
+            Add(Scenery, RelativeLocations.Contents);
             Scenery.Location = this;
         }
 
