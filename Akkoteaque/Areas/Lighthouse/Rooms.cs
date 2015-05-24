@@ -4,7 +4,7 @@ namespace Akko.Areas.Lighthouse
 {
     public static class LighthouseVar
     {
-        public static bool Powered = true;
+        public static bool Powered = false;
     }
 
     public class Lamp : RMUD.MudObject
@@ -22,6 +22,7 @@ namespace Akko.Areas.Lighthouse
         public override void Initialize()
         {
             RoomType = RMUD.RoomType.Interior;
+            this.AmbientLighting = LightingLevel.Dim;
             Short = "Base of the Lighthouse";
 
             OpenLink(Direction.EAST, "LH-CON-INN");
