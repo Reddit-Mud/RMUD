@@ -28,11 +28,11 @@ namespace AdminModule
                             if (target == null)
                             {
                                 MudObject.SendMessage(actor, "I can't find whomever it is you want to submit to your foolish whims.");
-                                return PerformResult.Stop;
+                                return SharpRuleEngine.PerformResult.Stop;
                             }
                             match.Upsert("OBJECT", target);
                         }
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     }, "Convert path to object rule.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -42,7 +42,7 @@ namespace AdminModule
                     if (targetActor == null)
                     {
                         MudObject.SendMessage(actor, "You can order inanimate objects about as much as you like, they aren't going to listen.");
-                        return PerformResult.Stop;
+                        return SharpRuleEngine.PerformResult.Stop;
                     }
 
                     var command = match["RAW-COMMAND"].ToString();
@@ -61,7 +61,7 @@ namespace AdminModule
                     else
                         MudObject.SendMessage(actor, "The command did not match.");
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 	}

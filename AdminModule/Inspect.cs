@@ -23,7 +23,7 @@ namespace AdminModule
                     {
                         if (!match.ContainsKey("OBJECT"))
                             match.Upsert("OBJECT", actor.Location);
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     }, "Convert locale option to standard form rule.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -51,7 +51,7 @@ namespace AdminModule
                         MudObject.SendMessage(actor, s);
                     }
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 }, "List all the damn things rule.");
         }
 

@@ -40,7 +40,7 @@ namespace StandardActionsModule
                 .Do((actor, item, relloc) =>
                 {
                     MudObject.SendMessage(actor, "@cant look relloc", Relloc.GetRelativeLocationName(relloc));
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 })
                 .Name("Container must support relloc rule.");
 
@@ -49,12 +49,12 @@ namespace StandardActionsModule
                 .Do((actor, item, relloc) =>
                 {
                         MudObject.SendMessage(actor, "@is closed error", item);
-                        return CheckResult.Disallow;
+                        return SharpRuleEngine.CheckResult.Disallow;
                 })
                 .Name("Container must be open to look in rule.");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
-                .Do((actor, item, relloc) => CheckResult.Allow)
+                .Do((actor, item, relloc) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default allow looking relloc rule.");
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, RelativeLocations>("look relloc", "[Actor, Item, Relative Location] : Handle the actor looking on/under/in/behind the item.", "actor", "item", "relloc");
@@ -73,7 +73,7 @@ namespace StandardActionsModule
                     else
                         MudObject.SendMessage(actor, "@nothing relloc it", Relloc.GetRelativeLocationName(relloc), item);
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("List contents in relative location rule.");
         }

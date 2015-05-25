@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -36,7 +37,7 @@ namespace StandardActionsModule
                         else
                             match.Upsert("RELLOC", RelativeLocations.On);
                     }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 }, "Supply default for optional relloc procedural rule.")
                 .Check("can put?", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
                 .BeforeActing()
@@ -46,7 +47,7 @@ namespace StandardActionsModule
 
         }
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("cant put relloc", "You can't put things <s0> that.");
             Core.StandardMessage("you put", "You put <the0> <s1> <the2>.");

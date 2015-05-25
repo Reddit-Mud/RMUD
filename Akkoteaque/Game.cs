@@ -30,7 +30,7 @@ namespace Akko
 
             GlobalRules.Perform<Player>("list topics")
                 .When(player => SuppressTopics)
-                .Do(player => RMUD.PerformResult.Stop);
+                .Do(player => SharpRuleEngine.PerformResult.Stop);
 
             GlobalRules.Perform<Player>("singleplayer game started")
                 .First
@@ -49,8 +49,8 @@ namespace Akko
                     //Player.SetProperty("interlocutor", RMUD.MudObject.GetObject("Areas.Prologue.Henrico"));
                     //RMUD.Core.EnqueuActorCommand(Player, "topics");
                     //BlockingConversation = true;
-                    
-                    return RMUD.PerformResult.Stop;
+
+                    return SharpRuleEngine.PerformResult.Stop;
                 });
         }
     }

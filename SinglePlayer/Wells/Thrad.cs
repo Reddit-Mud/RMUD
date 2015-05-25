@@ -23,7 +23,7 @@ namespace Wells
                 .Do((actor, item) =>
                 {
                     SendMessage(actor, "A massive knight stands in the middle of the little room.");
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 
 
@@ -45,7 +45,7 @@ namespace Wells
                 {
                     SendMessage(actor, "^<the0> peers at you from within his incredible helmet. \"Thrad\", he says.", this);
                     this.Introduced = true;
-                    return PerformResult.Stop;
+                    return SharpRuleEngine.PerformResult.Stop;
                 });
 
             var helmet = this.Response("about his incredible helmet", "\"This?\" Thrad rumbles from inside the helmet. \"This is nothing. This is to keep my brain from splattering on walls. Instead it splatters on inside of helmet. Much easier to cleanup.\"").Available(() => who_he_is.Discussed);

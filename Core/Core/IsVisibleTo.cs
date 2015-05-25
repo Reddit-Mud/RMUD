@@ -5,6 +5,7 @@ using System.Text;
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.Reflection;
+using SharpRuleEngine;
 
 namespace RMUD
 {

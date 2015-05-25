@@ -20,10 +20,10 @@ namespace Space
                 {
                     var command = match["COMMAND"] as RMUD.CommandEntry;
                     if (command.IsNamed("ASK") || command.IsNamed("HELP") || command.IsNamed("TOPICS"))
-                        return RMUD.PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     RMUD.MudObject.SendMessage(actor, "Sal, I really need to talk about this.");
                     RMUD.Core.EnqueuActorCommand(actor, "TOPICS");
-                    return RMUD.PerformResult.Stop;
+                    return SharpRuleEngine.PerformResult.Stop;
                 })
                 .Name("Can only converse during a blocking conversation rule.");
 
@@ -31,13 +31,13 @@ namespace Space
                 .Do((actor, npc, topic) =>
                 {
                     topic.SetProperty("discussed", true);
-                    return RMUD.PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Mark topic discussed rule.");
 
             GlobalRules.Perform<Player>("list topics")
                 .When(player => SuppressTopics)
-                .Do(player => RMUD.PerformResult.Stop);
+                .Do(player => SharpRuleEngine.PerformResult.Stop);
 
             GlobalRules.Perform<Player>("list topics")
                 .Do(player =>
@@ -48,7 +48,7 @@ namespace Space
                     if (availableTopics.Count() == 0)
                         BlockingConversation = false;
 
-                    return RMUD.PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Unblock game if no available topics rule.");
 
@@ -64,7 +64,7 @@ namespace Space
                     
                     RMUD.MudObject.Move(actor, RMUD.MudObject.GetObject("Start"));
                     RMUD.Core.EnqueuActorCommand(actor, "look");
-                    return RMUD.PerformResult.Stop;
+                    return SharpRuleEngine.PerformResult.Stop;
                 });
         }
     }

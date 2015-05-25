@@ -26,7 +26,7 @@ namespace AdminModule
 
                     //TODO MudObject.SendGlobalMessage("The database has been saved.");
                     MudObject.SendMessage(actor, String.Format("I saved {0} persistent objects.", saved));
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 		}
 	}

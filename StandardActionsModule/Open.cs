@@ -17,7 +17,7 @@ namespace StandardActionsModule
                         MustMatch("@not here",
                             Object("SUBJECT", InScope, (actor, thing) =>
                             {
-                                if (Core.GlobalRules.ConsiderCheckRuleSilently("can open?", actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
+                                if (Core.GlobalRules.ConsiderCheckRuleSilently("can open?", actor, thing) == SharpRuleEngine.CheckResult.Allow) return MatchPreference.Likely;
                                 return MatchPreference.Unlikely;
                             })))))
                 .ID("StandardActions:Open")
@@ -43,19 +43,19 @@ namespace StandardActionsModule
                 .Do((a, b) =>
                 {
                     MudObject.SendMessage(a, "@not openable");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 })
                 .Name("Can't open the unopenable rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can open?")
-                .Do((a, b) => CheckResult.Allow)
+                .Do((a, b) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default go ahead and open it rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("opened").Do((actor, target) =>
             {
                 MudObject.SendMessage(actor, "@you open", target);
                 MudObject.SendExternalMessage(actor, "@they open", actor, target);
-                return PerformResult.Continue;
+                return SharpRuleEngine.PerformResult.Continue;
             }).Name("Default report opening rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can open?").First.Do((actor, item) => MudObject.CheckIsVisibleTo(actor, item)).Name("Item must be visible rule.");

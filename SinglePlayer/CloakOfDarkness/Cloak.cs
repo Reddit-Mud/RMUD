@@ -30,7 +30,7 @@ Its blackness is so deep that it almost seems to suck light from the room."
 
             //Carry out taking the cloak:
             //    now the bar is dark.
-            Perform<MudObject, MudObject>("take").Do((actor, thing) => { GetObject<Room>("Bar").AmbientLighting = LightingLevel.Dark; return PerformResult.Continue; });
+            Perform<MudObject, MudObject>("take").Do((actor, thing) => { GetObject<Room>("Bar").AmbientLighting = LightingLevel.Dark; return SharpRuleEngine.PerformResult.Continue; });
 
             //Carry out putting the unhung cloak on something in the cloakroom:
             //    now the cloak is hung;
@@ -43,13 +43,13 @@ Its blackness is so deep that it almost seems to suck light from the room."
             //    now the bar is lit.
             Perform<MudObject, MudObject, MudObject, RelativeLocations>("put")
                 .When((actor, item, container, relloc) => actor.Location is Cloakroom)
-                .Do((actor, item, container, relloc) => { GetObject<Room>("Bar").AmbientLighting = LightingLevel.Bright; return PerformResult.Continue; });
+                .Do((actor, item, container, relloc) => { GetObject<Room>("Bar").AmbientLighting = LightingLevel.Bright; return SharpRuleEngine.PerformResult.Continue; });
 
             //Carry out dropping the cloak in the cloakroom:
             //    now the bar is lit.
             Perform<MudObject, MudObject>("drop")
                 .When((actor, item) => actor.Location is Cloakroom)
-                .Do((actor, item) => { GetObject<Room>("Bar").AmbientLighting = LightingLevel.Bright; return PerformResult.Continue; });
+                .Do((actor, item) => { GetObject<Room>("Bar").AmbientLighting = LightingLevel.Bright; return SharpRuleEngine.PerformResult.Continue; });
 
             //Instead of dropping or putting the cloak on when the player is not in the cloakroom:
             //  say "This isn't the best place to leave a smart cloak lying around."
@@ -59,7 +59,7 @@ Its blackness is so deep that it almost seems to suck light from the room."
                 .Do((actor, item) =>
                 {
                     SendMessage(actor, "This isn't the best place to leave a smart cloak lying around.");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 });
         }
     }

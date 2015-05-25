@@ -5,8 +5,10 @@ using System.Text;
 
 namespace RMUD
 {
-	public partial class MudObject : RuleSource
+	public partial class MudObject : SharpRuleEngine.RuleObject
     {
+        public override SharpRuleEngine.RuleEngine GlobalRules { get { return Core.GlobalRules; } }
+
         public ObjectState State = ObjectState.Unitialized; 
 		public String Path { get; set; }
 		public String Instance { get; set; }
@@ -30,11 +32,10 @@ namespace RMUD
         public String Long = "undescribed object";
         public String Article = "a";
 		public NounList Nouns { get; set; }
-        public MudObject Location { get; set; }
 
-        public RuleSet Rules { get; private set; }
-        public RuleSource LinkedRuleSource { get { return Location; } }
-        
+        public MudObject Location { get; set; }
+        public override SharpRuleEngine.RuleObject LinkedRuleSource { get { return Location; } }
+
         #region Properties
 
         // Every MudObject has a set of generic properties. Modules use these properties to store values on MudObjects.
@@ -89,7 +90,6 @@ namespace RMUD
 			Nouns = new NounList();
             State = ObjectState.Alive;
             IsPersistent = false;
-            Rules = null;
 		}
 
         public MudObject(String Short, String Long)
@@ -106,7 +106,6 @@ namespace RMUD
             State = ObjectState.Alive;
             IsPersistent = false;
 
-            Rules = null;
         }
 
         public void SimpleName(String Short, params String[] Synonyms)

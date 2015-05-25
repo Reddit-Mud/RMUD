@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RMUD;
+using SharpRuleEngine;
 
 namespace ClothingModule
 {
     public class ClothingRules 
     {
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             GlobalRules.Perform<Actor>("inventory")
                 .Do(a =>

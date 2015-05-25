@@ -21,7 +21,7 @@ namespace NetworkModule
                     if (actor.ConnectedClient != null)
                         actor.ConnectedClient.Player.GetProperty<Account>("account").AFKMessage = match["MESSAGE"].ToString();
                     MudObject.SendMessage(actor, "AFK message set.");
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 	}

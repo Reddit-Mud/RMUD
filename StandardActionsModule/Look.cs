@@ -38,7 +38,7 @@ namespace StandardActionsModule
                 .Do((viewer, room) =>
                 {
                     MudObject.SendMessage(viewer, "@nowhere");
-                    return PerformResult.Stop;
+                    return SharpRuleEngine.PerformResult.Stop;
                 })
                 .Name("Can't describe the locale if there isn't one rule.");
 
@@ -47,7 +47,7 @@ namespace StandardActionsModule
                 .Do((viewer, room) =>
                 {
                     GlobalRules.ConsiderPerformRule("update", room);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Update room lighting before generating description rule.");
 
@@ -56,7 +56,7 @@ namespace StandardActionsModule
                 .Do((viewer, room) =>
                 {
                     if (!String.IsNullOrEmpty(room.Short)) MudObject.SendMessage(viewer, room.Short);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Display room name rule.");
 
@@ -66,7 +66,7 @@ namespace StandardActionsModule
                 .Do((viewer, room) =>
                 {
                     MudObject.SendMessage(viewer, "@dark");
-                    return PerformResult.Stop;
+                    return SharpRuleEngine.PerformResult.Stop;
                 })
                 .Name("Can't see in darkness rule.");
 
@@ -74,7 +74,7 @@ namespace StandardActionsModule
                 .Do((viewer, room) =>
                 {
                     GlobalRules.ConsiderPerformRule("describe", viewer, room);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Include describe rules in locale description rule.");
 
@@ -88,7 +88,7 @@ namespace StandardActionsModule
                 .Do((viewer, container, article) =>
                     {
                         var subObjects = new List<MudObject>(container.EnumerateObjects(RelativeLocations.On)
-                        .Where(t => GlobalRules.ConsiderCheckRule("should be listed?", viewer, t) == CheckResult.Allow));
+                        .Where(t => GlobalRules.ConsiderCheckRule("should be listed?", viewer, t) == SharpRuleEngine.CheckResult.Allow));
 
                         if (subObjects.Count > 0)
                             return container.Short + " " + Core.FormatMessage(viewer, Core.GetMessage("on which"), subObjects);
@@ -101,28 +101,28 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
                 .When((viewer, item) => System.Object.ReferenceEquals(viewer, item))
-                .Do((viewer, item) => CheckResult.Disallow)
+                .Do((viewer, item) => SharpRuleEngine.CheckResult.Disallow)
                 .Name("Don't list yourself rule.");
 
             GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
                .When((viewer, item) => item.GetBooleanProperty("scenery?"))
-               .Do((viewer, item) => CheckResult.Disallow)
+               .Do((viewer, item) => SharpRuleEngine.CheckResult.Disallow)
                .Name("Don't list scenery objects rule.");
 
             GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
                 .When((viewer, item) => item.GetBooleanProperty("portal?"))
-                .Do((viewer, item) => CheckResult.Disallow)
+                .Do((viewer, item) => SharpRuleEngine.CheckResult.Disallow)
                 .Name("Don't list portals rule.");
 
             GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
-               .Do((viewer, item) => CheckResult.Allow)
+               .Do((viewer, item) => SharpRuleEngine.CheckResult.Allow)
                .Name("List objects by default rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .Do((viewer, room) =>
                 {
                     var visibleThings = (room as Room).EnumerateObjects(RelativeLocations.Contents)
-                        .Where(t => GlobalRules.ConsiderCheckRule("should be listed in locale?", viewer, t) == CheckResult.Allow);
+                        .Where(t => GlobalRules.ConsiderCheckRule("should be listed in locale?", viewer, t) == SharpRuleEngine.CheckResult.Allow);
 
                     var normalContents = new List<MudObject>();
 
@@ -140,7 +140,7 @@ namespace StandardActionsModule
                         describingLocale = false;
                     }
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("List contents of room rule.");
 
@@ -169,7 +169,7 @@ namespace StandardActionsModule
                         }
                     }
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("List exits in locale description rule.");
         }

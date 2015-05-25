@@ -43,7 +43,7 @@ namespace Space
                 .Do((actor, subject, @object) =>
                 {
                     MudObject.SendMessage(actor, "You don't have any tape.");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 })
                 .Name("Need tape to tape rule.");
 
@@ -52,7 +52,7 @@ namespace Space
                 .Do((actor, subject, @object) =>
                 {
                     MudObject.SendMessage(actor, "^<the0> is too heavy to tape to things.", subject);
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 })
                 .Name("Can only tape light things rule.");
 
@@ -61,12 +61,12 @@ namespace Space
                .Do((actor, subject, @object) =>
                {
                    MudObject.SendMessage(actor, "I can't tape things to <the0>.", @object);
-                   return CheckResult.Disallow;
+                   return SharpRuleEngine.CheckResult.Disallow;
                })
                .Name("Can only tape things to containers that support 'on' rule");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can tape to?")
-                .Do((a, b, c) => CheckResult.Allow)
+                .Do((a, b, c) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default allow taping things to things rule.");
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("taped to", "[Actor, Subject, Object] : Handle the actor taping the subject to the object.");
@@ -75,7 +75,7 @@ namespace Space
             {
                 MudObject.SendMessage(actor, "Okay, I taped <the0> onto <the1>.", subject, @object);
                 MudObject.Move(subject, @object, RelativeLocations.On);
-                return PerformResult.Continue;
+                return SharpRuleEngine.PerformResult.Continue;
             });
         }
     }

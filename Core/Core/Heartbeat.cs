@@ -16,7 +16,7 @@ namespace RMUD
             GlobalRules.Perform("heartbeat").Do(() =>
                 {
                     MudObject.TimeOfDay += Core.SettingsObject.ClockAdvanceRate;
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 }).Name("Advance clock on heartbeat rule");
         }
     }

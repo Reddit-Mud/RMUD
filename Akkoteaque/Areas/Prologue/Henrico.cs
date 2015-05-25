@@ -13,7 +13,7 @@ namespace Akko.Areas.Prologue
             Perform<RMUD.MudObject, RMUD.MudObject>("describe in locale").Do((actor, item) =>
             {
                 SendMessage(actor, "Mr. Henrico is driving the car.");
-                return RMUD.PerformResult.Continue;
+                return SharpRuleEngine.PerformResult.Continue;
             });
 
             Long = "Mr. Henrico is a balding, middle aged man with a moustache and a squinty face. The combination thereof makes it seem like he's captured a squirrel under his nose and is squeezing it as tightly as possible to avoid it escaping. He's been rather kind to you, or at least, kinder than you expected after the series of social workers you had to deal with before him.";
@@ -27,7 +27,7 @@ namespace Akko.Areas.Prologue
                 .Do((actor, npc, topic) =>
             {
                 conversationCounter += 1;
-                return PerformResult.Continue;
+                return SharpRuleEngine.PerformResult.Continue;
             });
 
             #region Primary Conversation

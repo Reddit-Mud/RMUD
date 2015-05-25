@@ -18,7 +18,7 @@ namespace NetworkModule
                     MudObject.SendMessage(actor, "~~~ ALL SET BANS ~~~");
                     foreach (var proscription in Clients.ProscriptionList.Proscriptions)
                         MudObject.SendMessage(actor, proscription.Glob + " : " + proscription.Reason);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 
             Parser.AddCommand(
@@ -32,7 +32,7 @@ namespace NetworkModule
                 {
                     Clients.ProscriptionList.Ban(match["GLOB"].ToString(), match["REASON"].ToString());
                     Clients.SendGlobalMessage("^<the0> has banned " + match["GLOB"].ToString(), actor);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 
             Parser.AddCommand(
@@ -45,7 +45,7 @@ namespace NetworkModule
                 {
                     Clients.ProscriptionList.RemoveBan(match["GLOB"].ToString());
                     Clients.SendGlobalMessage("^<the0> removes the ban on " + match["GLOB"].ToString(), actor);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
     }

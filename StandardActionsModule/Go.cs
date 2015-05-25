@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -37,7 +38,7 @@ namespace StandardActionsModule
                 }, "Mark both sides of link for update rule");
 		}
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("unmatched cardinal", "What way was that?");
             Core.StandardMessage("go to null link", "You can't go that way.");

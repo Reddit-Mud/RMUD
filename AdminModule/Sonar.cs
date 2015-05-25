@@ -56,7 +56,7 @@ namespace AdminModule
                         builder.Append((char)entry.Key + " - " + entry.Value + "\r\n");
 
                     MudObject.SendMessage(actor, builder.ToString());
-                    return RMUD.PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 }, "Implement sonar device rule.");
         }
 

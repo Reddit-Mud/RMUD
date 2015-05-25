@@ -25,7 +25,7 @@ namespace AdminModule
                             MudObject.SendMessage(actor, "Could not display source: " + source.Item2);
                         else
                             MudObject.SendMessage(actor, "Source of " + target + "\n" + source.Item2);
-                    return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                 });
         }
     }

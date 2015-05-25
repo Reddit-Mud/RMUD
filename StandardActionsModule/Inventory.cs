@@ -37,7 +37,7 @@ namespace StandardActionsModule
                         foreach (var item in heldObjects)
                             MudObject.SendMessage(a, "  <a0>", item);
                     }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("List held items in inventory rule.");
         }

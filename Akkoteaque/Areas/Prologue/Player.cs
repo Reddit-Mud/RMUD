@@ -14,7 +14,7 @@ namespace Akko.Areas.Prologue
             this.PerformDescribe().Do((viewer, player) =>
                 {
                     SendMessage(viewer, ChooseAtRandom("You're kind of frumpy, aren't you?", "You suspect that you are perfectly, entirely, and very dissapointingly, average.", "You aren't like other girls. This is probably not a bad thing."));
-                    return PerformResult.Stop;
+                    return SharpRuleEngine.PerformResult.Stop;
                 });
 
             Move(GetObject("Areas.Prologue.Watch"), this, RelativeLocations.Held);

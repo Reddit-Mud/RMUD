@@ -18,7 +18,7 @@ namespace RMUD
                 .Do((actor) =>
                     {
                         Core.UpdateMarkedObjects();
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     })
                 .Name("Update marked objects at end of turn rule.");
 
@@ -27,7 +27,7 @@ namespace RMUD
                 .Do((actor) =>
                     {
                         Core.SendPendingMessages();
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     })
                .Name("Send pending messages at end of turn rule.");
         }

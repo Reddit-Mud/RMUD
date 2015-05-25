@@ -10,7 +10,7 @@ namespace QuestModule
 {
     public class QuestProceduralRules 
     {
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             GlobalRules.Perform<PossibleMatch, Actor>("after acting")
                 .Do((match, actor) =>
@@ -31,7 +31,7 @@ namespace QuestModule
                         }
                     }
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Check quest status after acting rule.");
 

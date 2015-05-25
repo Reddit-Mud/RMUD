@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -109,7 +110,7 @@ namespace StandardActionsModule
         // Any function with this signature will be called when the module is loaded. This is our chance to
         // do anything we want, but usually all we'll do is define some rules. We used some rulebooks above,
         // now we have to actually define them.
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             // Lets start by defining some messages we'll use later. This commentary isn't about the message
             // formatting system, but lets still do this 'right'.

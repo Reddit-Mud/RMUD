@@ -26,7 +26,7 @@ namespace ConversationModule
 
             if (source != null)
                 if (source.HasProperty<List<MudObject>>("conversation-topics"))
-                    return new List<MudObject>(source.GetProperty<List<MudObject>>("conversation-topics").Where(t => Core.GlobalRules.ConsiderCheckRuleSilently("topic available?", Context.ExecutingActor, source, t) == CheckResult.Allow));
+                    return new List<MudObject>(source.GetProperty<List<MudObject>>("conversation-topics").Where(t => Core.GlobalRules.ConsiderCheckRuleSilently("topic available?", Context.ExecutingActor, source, t) == SharpRuleEngine.CheckResult.Allow));
 
             return new List<MudObject>();
         }

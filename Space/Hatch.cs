@@ -26,9 +26,9 @@ namespace Space
                     if (GetBooleanProperty("open?"))
                     {
                         MudObject.SendMessage(a, "@already open");
-                        return CheckResult.Disallow;
+                        return SharpRuleEngine.CheckResult.Disallow;
                     }
-                    return CheckResult.Allow;
+                    return SharpRuleEngine.CheckResult.Allow;
                 })
                 .Name("Can open doors rule.");
 
@@ -39,9 +39,9 @@ namespace Space
                     if (!GetBooleanProperty("open?"))
                     {
                         MudObject.SendMessage(a, "@already closed");
-                        return CheckResult.Disallow;
+                        return SharpRuleEngine.CheckResult.Disallow;
                     }
-                    return CheckResult.Allow;
+                    return SharpRuleEngine.CheckResult.Allow;
                 });
 
             Perform<MudObject, Hatch>("opened").Do((a, b) =>
@@ -49,7 +49,7 @@ namespace Space
                 SetProperty("open?", true);
                 var otherSide = Portal.FindOppositeSide(this);
                 otherSide.SetProperty("open?", true);
-                return PerformResult.Continue;
+                return SharpRuleEngine.PerformResult.Continue;
             });
 
             Perform<MudObject, Hatch>("close").Do((a, b) =>
@@ -57,7 +57,7 @@ namespace Space
                 SetProperty("open?", false);
                 var otherSide = Portal.FindOppositeSide(this);
                 otherSide.SetProperty("open?", false);
-                return PerformResult.Continue;
+                return SharpRuleEngine.PerformResult.Continue;
             });
 
             ControlPanel = new Space.ControlPanel();
@@ -74,19 +74,19 @@ namespace Space
                         if (thisSide.AirLevel == AirLevel.Vacuum || otherSide.AirLevel == AirLevel.Vacuum)
                         {
                             SendMessage(player, "That would let all the air out. That's not a good idea with this hole in my suit.");
-                            return CheckResult.Disallow;
+                            return SharpRuleEngine.CheckResult.Disallow;
                         }
                     }
 
-                    if (ControlPanel.Broken) return CheckResult.Continue;
+                    if (ControlPanel.Broken) return SharpRuleEngine.CheckResult.Continue;
 
                     if (thisSide.AirLevel != otherSide.AirLevel)
                     {
                         SendMessage(player, "It won't open.");
-                        return CheckResult.Disallow;
+                        return SharpRuleEngine.CheckResult.Disallow;
                     }
 
-                    return CheckResult.Continue;
+                    return SharpRuleEngine.CheckResult.Continue;
                 });
         }
     }

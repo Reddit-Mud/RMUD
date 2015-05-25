@@ -84,7 +84,7 @@ namespace RMUD
                         new CommandEntry().ProceduralRule((match, actor) => 
                         {
                             MudObject.SendMessage(actor, ma.Message);
-                            return PerformResult.Continue;
+                            return SharpRuleEngine.PerformResult.Continue;
                         }), 
                         // We need a fake match just so it can be passed to the procedural rule.
                         new PossibleMatch[] { new PossibleMatch(null) });

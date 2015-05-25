@@ -57,7 +57,7 @@ namespace RMUD
             try
             {
                 // Setup the rule engine and some basic rules.
-                GlobalRules = new RuleEngine(NewRuleQueueingMode.QueueNewRules);
+                GlobalRules = new RuleEngine();
                 GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");
                 GlobalRules.DeclarePerformRuleBook<MudObject>("singleplayer game started", "Considered when a single player game is begun");
 

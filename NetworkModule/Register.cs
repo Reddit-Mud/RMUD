@@ -21,13 +21,13 @@ namespace NetworkModule
                     if (actor.ConnectedClient is NetworkClient && (actor.ConnectedClient as NetworkClient).IsLoggedOn)
                     {
                         MudObject.SendMessage(actor, "You are already logged in.");
-                        return PerformResult.Stop;
+                        return SharpRuleEngine.PerformResult.Stop;
                     }
 
                     var userName = match["USERNAME"].ToString();
 
                     actor.CommandHandler = new PasswordCommandHandler(actor, Authenticate, userName);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 

@@ -14,7 +14,7 @@ namespace Akkoteaque
             GlobalRules.Perform<Actor>("singleplayer game started")
                 .Do((actor) =>
                 {
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 
             GlobalRules.Perform<PossibleMatch, Actor>("before command")
@@ -22,7 +22,7 @@ namespace Akkoteaque
                 .Do((match, actor) =>
                     {
                         Console.WriteLine();
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     });
 
             GlobalRules.Perform<Actor>("after every command")
@@ -30,7 +30,7 @@ namespace Akkoteaque
                 .Do((actor) =>
                 {
                     Console.WriteLine();
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 

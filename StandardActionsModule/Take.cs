@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -31,7 +32,7 @@ namespace StandardActionsModule
                 .MarkLocaleForUpdate();
 		}
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("you take", "You take <the0>.");
             Core.StandardMessage("they take", "^<the0> takes <the1>.");

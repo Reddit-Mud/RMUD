@@ -52,12 +52,12 @@ namespace StandardActionsModule
                 .Do((a, b, c) =>
                 {
                     MudObject.SendMessage(a, "@not lockable");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 })
                 .Name("Can't lock the unlockable rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can lock?")
-                .Do((a, b, c) => CheckResult.Allow)
+                .Do((a, b, c) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default allow locking rule.");
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("locked", "[Actor, Item, Key] : Handle the actor locking the item with the key.", "actor", "item", "key");
@@ -66,7 +66,7 @@ namespace StandardActionsModule
             {
                 MudObject.SendMessage(actor, "@you lock", target);
                 MudObject.SendExternalMessage(actor, "@they lock", actor, target, key);
-                return PerformResult.Continue;
+                return SharpRuleEngine.PerformResult.Continue;
             });
         }
     }

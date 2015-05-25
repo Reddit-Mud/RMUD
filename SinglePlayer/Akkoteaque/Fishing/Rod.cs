@@ -19,7 +19,7 @@ namespace Akkoteaque.Fishing
                 .Do((actor, item, container, location) =>
                 {
                     SendMessage(actor, "There doesn't seem to be any way to attach that to the fishing rod.");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 });
 
             Perform<MudObject, MudObject, MudObject, RelativeLocations>("put")
@@ -38,7 +38,7 @@ namespace Akkoteaque.Fishing
                     else
                         SendMessage(actor, "You put <the0> on the hook.", item);
 
-                    return PerformResult.Stop;
+                    return SharpRuleEngine.PerformResult.Stop;
                 });
         }
     }   

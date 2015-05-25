@@ -50,7 +50,7 @@ to the game, they would automatically be described correctly as well.]
                 .Do((actor, item) =>
                 {
                     SendMessage(actor, "It's screwed into the wall.");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 });
         }
     }   

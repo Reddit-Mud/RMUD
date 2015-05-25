@@ -39,7 +39,7 @@ namespace NetworkModule
                         }
                     }
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 

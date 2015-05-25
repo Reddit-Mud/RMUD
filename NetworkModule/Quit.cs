@@ -22,7 +22,7 @@ namespace NetworkModule
                         (match["CLIENT"] as Client).Send("Goodbye...\r\n");
                         (match["CLIENT"] as Client).Disconnect();
                     }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 	}

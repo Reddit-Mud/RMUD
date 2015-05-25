@@ -38,7 +38,7 @@ namespace StandardActionsModule
             {
                 MudObject.SendMessage(actor, "@you unlock", target);
                 MudObject.SendExternalMessage(actor, "@they unlock", actor, target, key);
-                return PerformResult.Continue;
+                return SharpRuleEngine.PerformResult.Continue;
             });
         }
     }

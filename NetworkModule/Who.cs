@@ -24,7 +24,7 @@ namespace NetworkModule
                             + (client.IsAfk ? (" afk: " + client.Player.GetProperty<Account>("account").AFKMessage) : "")
                             + (client.Player.Location != null ? (" -- " + client.Player.Location.Path) : ""),
                             client.Player);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 	}

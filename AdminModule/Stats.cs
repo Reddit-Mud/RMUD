@@ -25,7 +25,7 @@ namespace AdminModule
                     }
                     else
                         Core.GlobalRules.ConsiderPerformRule("stats", actor, match["TYPE"].ToString().ToUpper());
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });                
         }
 

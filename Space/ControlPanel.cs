@@ -24,7 +24,7 @@ namespace Space
                 .Do((actor, panel) =>
                 {
                     SendMessage(actor, "I can't take it. It's firmly attached.");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 });
 
             GlobalRules.Perform<Actor, ControlPanel>("describe")
@@ -42,7 +42,7 @@ namespace Space
                     }
 
                     SendMessage(actor, "It's a little square panel covered in buttons. There is a <s0> light on it.", panel.Indicator.ToString());
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 
             GlobalRules.Perform<Actor, ControlPanel>("describe")
@@ -50,7 +50,7 @@ namespace Space
                 .Do((actor, panel) =>
                 {
                     SendMessage(actor, "It's been smashed up real good.");
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 
             GlobalRules.Perform<Player, Space.ControlPanel, MudObject>("hit with")
@@ -59,7 +59,7 @@ namespace Space
                 {
                     SendMessage(player, "The panel smashed up good.");
                     panel.Broken = true;
-                    return PerformResult.Stop;
+                    return SharpRuleEngine.PerformResult.Stop;
                 });
         }
 

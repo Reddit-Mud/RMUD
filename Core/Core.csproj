@@ -39,6 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Octokit.0.6.2\lib\net45\Octokit.dll</HintPath>
     </Reference>
+    <Reference Include="SharpRuleEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SharpRuleEngine.1.0.1\lib\SharpRuleEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -58,31 +62,6 @@
     <Compile Include="Core\FormatMessage.cs" />
     <Compile Include="Core\ModuleAssembly.cs" />
     <Compile Include="Core\Startup.cs" />
-    <Compile Include="Core\Rules\Rule.cs" />
-    <Compile Include="Core\Rules\RuleBook.cs" />
-    <Compile Include="Core\Rules\RuleBuilderGen.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuleBuilderGen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Core\Rules\RuleDelegatesGen.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuleDelegatesGen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Core\Rules\RuleEngineAddRuleGen.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuleEngineAddRuleGen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Core\Rules\RuleResult.cs" />
-    <Compile Include="Core\Rules\RuleSet.cs" />
-    <Compile Include="Core\Rules\RuleSetAddRuleGen.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuleSetAddRuleGen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Core\Rules\RuleSource.cs" />
     <Compile Include="Core\StandardMessages.cs" />
     <Compile Include="Core\IsVisibleTo.cs" />
     <Compile Include="Core\ManPages.cs" />
@@ -123,11 +102,6 @@
     <Compile Include="Core\PendingMessages.cs" />
     <Compile Include="Core\ExecuteCommand.cs" />
     <Compile Include="Core\Random.cs" />
-    <Compile Include="Core\Rules\MudObjectAddRuleGen.cs">
-      <DependentUpon>MudObjectAddRuleGen.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Core\Rules\RuleEngine.cs" />
     <Compile Include="Core\SendMessage.cs" />
     <Compile Include="Core\Serialization\BitArraySerializer.cs" />
@@ -179,27 +153,6 @@
     <Compile Include="WorldModel\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\Rules\MudObjectAddRuleGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MudObjectAddRuleGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleBuilderGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleBuilderGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleDelegatesGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleDelegatesGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleEngineAddRuleGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleEngineAddRuleGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleGen.t4" />
-    <None Include="Core\Rules\RuleSetAddRuleGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleSetAddRuleGen.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

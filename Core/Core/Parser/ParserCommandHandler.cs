@@ -52,7 +52,7 @@ namespace RMUD
                 {
                     // Display all the rules invoked while executing this command.
                     Command.RawCommand = Command.RawCommand.Substring("@RULES ".Length);
-                    Core.GlobalRules.LogRules(Command.Actor);
+                    Core.GlobalRules.LogRules(s => MudObject.SendMessage(Command.Actor, s));
                 }
                 else
                 {

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace ConversationModule
 {
     public class ConversationRules 
     {
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("convo topic prompt", "Suggested topics: <l0>");
             Core.StandardMessage("convo cant converse", "You can't converse with that.");

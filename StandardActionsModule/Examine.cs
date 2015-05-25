@@ -40,7 +40,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can examine?")
                 .Last
-                .Do((viewer, item) => CheckResult.Allow)
+                .Do((viewer, item) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default can examine everything rule.");
 
             GlobalRules.DeclarePerformRuleBook<MudObject>("examine", "[Actor] -> Take a close look at the actor's surroundings.");
@@ -54,7 +54,7 @@ namespace StandardActionsModule
                         {
                             MudObject.SendMessage(actor, "<a0>", item);
                         }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
     }

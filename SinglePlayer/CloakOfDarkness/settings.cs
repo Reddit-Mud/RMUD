@@ -14,7 +14,7 @@ namespace CloakOfDarkness
                 .Do((actor) =>
                 {
                     SendMessage(actor, "Hurrying through the rainswept November night, you're glad to see the bright lights of the Opera House. It's surprising that there aren't more people about but, hey, what do you expect in a cheap demo game...?");
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 
             GlobalRules.Perform<PossibleMatch, Actor>("before command")
@@ -22,7 +22,7 @@ namespace CloakOfDarkness
                 .Do((match, actor) =>
                     {
                         Console.WriteLine();
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     });
 
             GlobalRules.Perform<Actor>("after every command")
@@ -30,7 +30,7 @@ namespace CloakOfDarkness
                 .Do((actor) =>
                 {
                     Console.WriteLine();
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 

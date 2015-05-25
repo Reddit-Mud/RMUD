@@ -19,7 +19,7 @@ namespace AdminModule
                 {
                     foreach (var thing in MudObject.EnumerateVisibleTree(MudObject.FindLocale(actor)))
                         MudObject.SendMessage(actor, thing.Short + " - " + thing.GetType().Name);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 }, "List all the damn things in scope rule.");
         }
     }

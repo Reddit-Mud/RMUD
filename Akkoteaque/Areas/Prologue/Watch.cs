@@ -13,13 +13,13 @@ namespace Akko.Areas.Prologue
             this.CheckCanDrop().Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "That is all you've got left of your father. You don't want to lose it.");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 });
 
             this.PerformDescribe().First.Do((viewer, thing) =>
                 {
                     thing.SetProperty("has-been-viewed", true);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
     }
