@@ -6,7 +6,7 @@
             {
                 SendLocaleMessage(actor, "\"I am Soranus,\" <the0> says.", this);
                 GlobalRules.ConsiderPerformRule("introduce self", this);
-                return RMUD.PerformResult.Stop;
+                return PerformResult.Stop;
             });
 
         this.Response("the entrails", "\"These things?\" <the0> asks. \"Nothing special. They're for the wolves.\"");
@@ -18,17 +18,17 @@
             if (GlobalRules.ConsiderValueRule<bool>("quest available?", actor, quest))
             {
                 SendMessage(actor, "\"Would you mind feeding them for me?\" <the0> asks.", this);
-                this.OfferQuest(actor as RMUD.Actor, quest);
+                this.OfferQuest(actor as Actor, quest);
             }
-            return RMUD.PerformResult.Stop;
+            return PerformResult.Stop;
         });
 
-        Perform<RMUD.MudObject, RMUD.MudObject, RMUD.MudObject>("topic response")
+        Perform<MudObject, MudObject, MudObject>("topic response")
             .When((actor, npc, topic) => topic == null)
             .Do((actor, npc, topic) =>
             {
                 SendLocaleMessage(actor, "\"This is my default response,\" <the0> says, showing his sharp little teeth.", this);
-                return RMUD.PerformResult.Stop;
+                return PerformResult.Stop;
             });
 
         Short = "Soranus";

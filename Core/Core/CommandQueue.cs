@@ -172,7 +172,7 @@ namespace RMUD
                                     LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Actor.ConnectedClient.ConnectionDescription, PendingCommand.RawCommand));
                                 }
                                 else
-                                    LogError(String.Format("Command timeout [No client] - {1}", PendingCommand.RawCommand));
+                                    LogError(String.Format("Command timeout [No client] - {0}", PendingCommand.RawCommand));
                                 IndividualCommandThread = new Thread(ProcessCommandsWorkerThread);
                                 IndividualCommandThread.Start();
                             }

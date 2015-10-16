@@ -13,7 +13,7 @@ namespace RMUD
         private String GetFileHeader()
         {
             var builder = new StringBuilder();
-            builder.Append("using System;\nusing System.Collections.Generic;\nusing System.Linq;\n");
+            builder.Append("using System;\nusing System.Collections.Generic;\nusing System.Linq;\nusing SharpRuleEngine;\nusing RMUD;\n");
 
             foreach (var module in Core.IntegratedModules)
                 builder.AppendLine("using " + module.Info.BaseNameSpace + ";\n");
@@ -33,6 +33,7 @@ namespace RMUD
             parameters.ReferencedAssemblies.Add("System.dll");
             parameters.ReferencedAssemblies.Add("System.Core.dll");
             parameters.ReferencedAssemblies.Add("System.Data.Linq.dll");
+            parameters.ReferencedAssemblies.Add("SharpRuleEngine.dll");
 
             foreach (var module in Core.IntegratedModules)
                 if (!String.IsNullOrEmpty(module.FileName))

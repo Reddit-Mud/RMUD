@@ -1,14 +1,14 @@
-﻿class wolf : RMUD.NPC
+﻿class wolf : NPC
 {
     public bool IsFed = false;
 
     public override void Initialize()
     {
-        Perform<RMUD.MudObject, RMUD.MudObject, RMUD.MudObject>("topic response")
+        Perform<MudObject, MudObject, MudObject>("topic response")
             .Do((actor, npc, topic) =>
             {
-                RMUD.MudObject.SendLocaleMessage(actor, "The wolf snarls and howls, showing its large sharp teeth.");
-                return RMUD.PerformResult.Stop;
+                MudObject.SendLocaleMessage(actor, "The wolf snarls and howls, showing its large sharp teeth.");
+                return PerformResult.Stop;
             });
 
         Short = "wolf";
@@ -16,27 +16,27 @@
 
         Nouns.Add("wolf");
 
-        Perform<RMUD.MudObject, RMUD.MudObject>("handle-entrail-drop").Do((wolf, entrails) =>
+        Perform<MudObject, MudObject>("handle-entrail-drop").Do((wolf, entrails) =>
             {
-                RMUD.MudObject.SendLocaleMessage(this, "The wolf snatches up the entrails.");
+                MudObject.SendLocaleMessage(this, "The wolf snatches up the entrails.");
                 IsFed = true;
-                RMUD.MudObject.Move(entrails, RMUD.MudObject.GetObject("palantine/soranus"), RMUD.RelativeLocations.Worn);
-                return RMUD.PerformResult.Stop;
+                MudObject.Move(entrails, MudObject.GetObject("palantine/soranus"), RelativeLocations.Worn);
+                return PerformResult.Stop;
             });
 
-        Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed name").First.Do((viewer, item, article) => article + " wolf");
+        Value<MudObject, MudObject, string, string>("printed name").First.Do((viewer, item, article) => article + " wolf");
 
-        Value<RMUD.MudObject, bool>("entrail-quest-is-fed").Do(wolf => IsFed);
+        Value<MudObject, bool>("entrail-quest-is-fed").Do(wolf => IsFed);
 
-        Perform<RMUD.MudObject, RMUD.MudObject>("quest reset")
+        Perform<MudObject, MudObject>("quest reset")
             .When((quest, item) => quest.Path == "palantine/entrail_quest")
-            .Do((quest, item) => { IsFed = false; return RMUD.PerformResult.Stop; });
+            .Do((quest, item) => { IsFed = false; return PerformResult.Stop; });
 
-        RMUD.Core.GlobalRules.Perform("heartbeat").Do(() =>
+        Core.GlobalRules.Perform("heartbeat").Do(() =>
         {
             if (!IsFed)
-                RMUD.MudObject.SendLocaleMessage(this, "The wolf whines for food.");
-            return RMUD.PerformResult.Continue;
+                MudObject.SendLocaleMessage(this, "The wolf whines for food.");
+            return PerformResult.Continue;
         });
     }
 

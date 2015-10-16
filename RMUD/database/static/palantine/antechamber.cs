@@ -40,7 +40,7 @@
     }
 }
 
-public class Jupiter : RMUD.Scenery
+public class Jupiter : RMUD.MudObject
 {
     public Jupiter()
     {
@@ -48,6 +48,8 @@ public class Jupiter : RMUD.Scenery
         Long = "Jupiter holds in his left hand a gleaming thunderbolt. It glows bright enough to light the entire chamber. In his right, he holds a chisel.";
 
         Value<RMUD.MudObject, RMUD.LightingLevel>("light level").Do(a => RMUD.LightingLevel.Bright);
+
+        SetProperty("scenery?", true); // We could also add a 'should be listed in locale?' rule to Jupiter.
     }
 }
 
@@ -65,10 +67,10 @@ public class Table : RMUD.Container
         Check<RMUD.MudObject, RMUD.MudObject>("can take?").Do((actor, thing) =>
         {
             SendMessage(actor, "It's far too heavy.");
-            return RMUD.CheckResult.Disallow;
+            return CheckResult.Disallow;
         });
 
-        this.CheckCanPushDirection().Do((actor, subject, link) => RMUD.CheckResult.Allow);
+        this.CheckCanPushDirection().Do((actor, subject, link) => CheckResult.Allow);
 
         //Value<RMUD.MudObject, RMUD.MudObject, string, string>("printed name").When((viewer, thing, article) => thing == this).Do((viewer, thing, article) => "an ancient table");
     }

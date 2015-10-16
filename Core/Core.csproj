@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>ExtendedDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -124,6 +125,7 @@
     <Compile Include="GithubDatabase\Persistence.cs" />
     <Compile Include="GithubDatabase\Preprocess.cs" />
     <Compile Include="GithubDatabase\ReloadObject.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HelperExtensions.cs" />
     <Compile Include="ModuleInfo.cs" />
     <Compile Include="ReverseLineReader.cs" />

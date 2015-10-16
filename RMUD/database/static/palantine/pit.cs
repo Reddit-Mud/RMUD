@@ -1,8 +1,8 @@
-﻿public class pit : RMUD.Room
+﻿public class pit : Room
 {
 	public override void Initialize()
 	{
-        RoomType = RMUD.RoomType.Exterior;
+        RoomType = RoomType.Exterior;
         Short = "Palantine Villa - Pit";
 
         OpenLink(RMUD.Direction.NORTH, "palantine/antechamber");
