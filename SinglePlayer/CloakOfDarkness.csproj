@@ -45,44 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Akkoteaque\Cipher.cs" />
-    <Compile Include="Akkoteaque\Fishing\Worm.cs" />
-    <Compile Include="Akkoteaque\Fishing\Clam.cs" />
-    <Compile Include="Akkoteaque\Fishing\FishHead.cs" />
-    <Compile Include="Akkoteaque\Fishing\Bait.cs" />
-    <Compile Include="Akkoteaque\Fishing\SinkingLure.cs" />
-    <Compile Include="Akkoteaque\Fishing\ShinyHook.cs" />
-    <Compile Include="Akkoteaque\Fishing\RustyHook.cs" />
-    <Compile Include="Akkoteaque\Fishing\Hook.cs" />
-    <Compile Include="Akkoteaque\Fishing\Rod.cs" />
-    <Compile Include="Minimum\GameInfo.cs" />
-    <Compile Include="Wells\Player.cs" />
-    <Compile Include="Wells\Settings.cs" />
-    <Compile Include="Wells\Thrad.cs">
-      <LastGenOutput>Thrad2.cs</LastGenOutput>
-    </Compile>
-    <Compile Include="Wells\Start.cs" />
-    <Compile Include="Akkoteaque\Jetty.cs">
-      <LastGenOutput>Jetty2.cs</LastGenOutput>
-    </Compile>
-    <Compile Include="Minimum\Start.cs" />
-    <Compile Include="Minimum\Player.cs" />
-    <Compile Include="Minimum\Settings.cs" />
-    <Compile Include="Akkoteaque\Player.cs">
-      <LastGenOutput>Player.cs</LastGenOutput>
-    </Compile>
-    <Compile Include="Akkoteaque\Settings.cs">
-      <LastGenOutput>Settings.cs</LastGenOutput>
-    </Compile>
-    <Compile Include="CloakOfDarkness\Cloakroom.cs" />
-    <Compile Include="CloakOfDarkness\Outside.cs" />
-    <Compile Include="CloakOfDarkness\Foyer.cs" />
-    <Compile Include="CloakOfDarkness\Cloak.cs" />
-    <Compile Include="CloakOfDarkness\Player.cs" />
-    <Compile Include="CloakOfDarkness\settings.cs" />
+    <Compile Include="Cloakroom.cs" />
+    <Compile Include="Outside.cs" />
+    <Compile Include="Foyer.cs" />
+    <Compile Include="Cloak.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="settings.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="GameInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CloakOfDarkness\Bar.cs">
+    <Compile Include="Bar.cs">
       <LastGenOutput>Bar2.cs</LastGenOutput>
     </Compile>
   </ItemGroup>
@@ -111,9 +84,6 @@
       <Project>{1a004032-0f05-4545-88f2-3f58efa1ce1d}</Project>
       <Name>StandardActionsModule</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Wells\Info.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

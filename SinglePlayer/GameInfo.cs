@@ -10,10 +10,10 @@ namespace Minimum
     {
         public GameInfo()
         {
-            Title = "Minimum";
-            DatabaseNameSpace = "Minimum";
+            Title = "Cloak Of Darkness";
+            DatabaseNameSpace = "CloakOfDarkness";
             Description = "This is a game with the absolute minimum required to run.";
-            Modules = new List<string>(new String[] { "StandardActionsModule.dll", "AdminModule.dll" });
+            Modules = new List<string>(new String[] { "StandardActionsModule.dll", "AdminModule.dll", "ClothingModule.dll" });
         }
     }
 }

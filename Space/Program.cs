@@ -10,7 +10,7 @@ class Program
     static void Main(string[] args)
     {
         var driver = new RMUD.SinglePlayer.Driver();
-        driver.Start(typeof(CloakOfDarkness.Game).Assembly, Console.Write);
+        driver.Start(typeof(Space.Game).Assembly, Console.Write);
         while (driver.IsRunning)
             driver.Input(Console.ReadLine());
         Console.WriteLine("[Press any key to exit..]");
