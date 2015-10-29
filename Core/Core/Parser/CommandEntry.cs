@@ -235,6 +235,7 @@ namespace RMUD
             builder.AppendLine(ManualName);
             builder.AppendLine(Matcher.Emit());
             builder.AppendLine();
+            if (!String.IsNullOrEmpty(_ID)) builder.AppendFormat("ID specified: {0}\n\n", _ID);
             if (GeneratedManual != null) builder.AppendLine(GeneratedManual.ToString());
             builder.Append(ManualPage);
             MudObject.SendMessage(To, builder.ToString());

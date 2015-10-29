@@ -17,6 +17,7 @@ namespace StandardActionsModule
                         KeyWord("L")),
                     RelativeLocation("RELLOC"),
                     Object("OBJECT", InScope)))
+                .ID("StandardActions:LookRelloc")
                 .Manual("Lists object that are in, on, under, or behind the object specified.")
                 .Check("can look relloc?", "ACTOR", "OBJECT", "RELLOC")
                 .Perform("look relloc", "ACTOR", "OBJECT", "RELLOC");

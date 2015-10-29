@@ -21,6 +21,7 @@ namespace StandardActionsModule
                                     if (Core.GlobalRules.ConsiderCheckRuleSilently("can close?", actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
                                     return MatchPreference.Unlikely;
                                 })))))
+                .ID("StandardActions:Close")
                 .Manual("Closes a thing.")
                 .Check("can close?", "ACTOR", "SUBJECT")
                 .BeforeActing()

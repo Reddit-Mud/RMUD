@@ -24,6 +24,7 @@ namespace StandardActionsModule
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             })))))
+                .ID("StandardActions:Take")
                 .Manual("Takes an item and adds it to your inventory.")
                 .Check("can take?", "ACTOR", "SUBJECT")
                 .BeforeActing()

@@ -20,6 +20,7 @@ namespace StandardActionsModule
                     BestScore("KEY",
                         MustMatch("@not here",
                             Object("KEY", InScope, PreferHeld)))))
+                .ID("StandardActions:Unlock")
                 .Manual("Use the KEY to unlock the ITEM.")
                 .Check("can lock?", "ACTOR", "ITEM", "KEY")
                 .BeforeActing()

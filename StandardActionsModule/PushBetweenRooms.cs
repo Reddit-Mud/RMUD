@@ -41,6 +41,10 @@ namespace StandardActionsModule
                     MustMatch("@unmatched cardinal", Cardinal("DIRECTION")))) // Finally, match a cardinal direction.
                 // With the matcher itself built, the call to AddCommand is over. AddCommand return a 
                 // command building object with a fluent interface.
+
+                // Commands need an ID string so that they can be invoked by rules. For an example, take a look at
+                // the go command, which attempts to open closed doors before going.
+                .ID("StandardActions:Push")
                 
                 // Lets attach some help documentation to the command.
                 .Manual("Push objects from room to room.")

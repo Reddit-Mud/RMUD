@@ -20,6 +20,7 @@ namespace StandardActionsModule
                             OptionalKeyWord("WITH"),
                             MustMatch("@not here",
                                 Object("KEY", InScope, PreferHeld))))))
+                .ID("StandardActions:Lock")
                 .Manual("Lock the subject with a key.")
                 .Check("can lock?", "ACTOR", "SUBJECT", "KEY")
                 .BeforeActing()

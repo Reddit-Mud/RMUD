@@ -15,6 +15,7 @@ namespace StandardActionsModule
                     KeyWord("INVENTORY"),
                     KeyWord("INV"),
                     KeyWord("I")))
+                .ID("StandardActions:Inventory")
                 .Manual("Displays what you are wearing and carrying.")
                 .Perform("inventory", "ACTOR");
         }

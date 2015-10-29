@@ -26,6 +26,7 @@ namespace StandardActionsModule
                     match.Upsert("LINK", link);
                     return PerformResult.Continue;
                 }, "lookup link rule")
+                .ID("StandardActions:Go")
                 .Check("can go?", "ACTOR", "LINK")
                 .BeforeActing()
                 .Perform("go", "ACTOR", "LINK")

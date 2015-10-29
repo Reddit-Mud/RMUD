@@ -17,6 +17,7 @@ namespace StandardActionsModule
                     BestScore("SUBJECT",
                         MustMatch("@dont have that",
                             Object("SUBJECT", InScope, PreferHeld)))))
+                .ID("StandardActions:Drop")
                 .Manual("Drop a held item. This can also be used to remove and drop a worn item.")
                 .Check("can drop?", "ACTOR", "SUBJECT")
                 .BeforeActing()

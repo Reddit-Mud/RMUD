@@ -21,6 +21,7 @@ namespace StandardActionsModule
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             })))))
+                .ID("StandardActions:Pull")
                 .Manual("Pull an item. By default, this does nothing.")
                 .Check("can pull?", "ACTOR", "SUBJECT")
                 .BeforeActing()

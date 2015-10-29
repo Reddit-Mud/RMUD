@@ -11,6 +11,7 @@ namespace StandardActionsModule
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(Or(KeyWord("EXAMINE"), KeyWord("X")))
+                .ID("StandardActions:ExamineArea")
                 .Manual("Take a detailed look at your surroundings.")
                 .Perform("examine", "ACTOR");
 
@@ -22,6 +23,7 @@ namespace StandardActionsModule
                             Or(KeyWord("LOOK"), KeyWord("L")),
                             KeyWord("AT"))),
                     MustMatch("@dont see that", Object("OBJECT", InScope))))
+                .ID("StandardActions:ExamineThing")
                 .Manual("Take a close look at an object.")
                 .Check("can examine?", "ACTOR", "OBJECT")
                 .Perform("describe", "ACTOR", "OBJECT");

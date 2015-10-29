@@ -14,6 +14,7 @@ namespace StandardActionsModule
                 Or(
                     KeyWord("LOOK"),
                     KeyWord("L")))
+                .ID("StandardActions:Look")
                 .Manual("Displays a description of your location, and lists what else is present there.")
                 .ProceduralRule((match, actor) => Core.GlobalRules.ConsiderPerformRule("describe locale", actor, actor.Location));
         }

@@ -68,6 +68,8 @@ namespace AdminModule
 
         private static int FindSymbol(RMUD.Room Location)
         {
+            if (Location == null) return '?';
+
             var spacer = Location.Short.LastIndexOf('-');
             if (spacer > 0 && spacer < Location.Short.Length - 2)
                 return Location.Short.ToUpper()[spacer + 2];
@@ -83,7 +85,7 @@ namespace AdminModule
 
             if (Symbol == ' ') Symbol = FindSymbol(Location);
 
-            RoomLegend.Upsert(Symbol, Location.Short);
+            if (Location != null) RoomLegend.Upsert(Symbol, Location.Short);
             
             PlaceSymbol(MapGrid, X, Y, Symbol);
             PlaceSymbol(MapGrid, X - 2, Y - 1, '+');
@@ -100,30 +102,33 @@ namespace AdminModule
             PlaceSymbol(MapGrid, X - 0, Y + 1, '-');
             PlaceSymbol(MapGrid, X + 1, Y + 1, '-');
             PlaceSymbol(MapGrid, X + 2, Y + 1, '+');
-                        
-            foreach (var link in Location.EnumerateObjects().Where(t => t.HasProperty("link direction")))
+
+            if (Location != null)
             {
-                var destinationName = link.GetProperty<string>("link destination");
-                var destination = MudObject.GetObject(destinationName) as RMUD.Room;
-                var direction = link.GetPropertyOrDefault<RMUD.Direction>("link direction", RMUD.Direction.NORTH);
+                foreach (var link in Location.EnumerateObjects().Where(t => t.HasProperty("link direction")))
+                {
+                    var destinationName = link.GetProperty<string>("link destination");
+                    var destination = MudObject.GetObject(destinationName) as RMUD.Room;
+                    var direction = link.GetPropertyOrDefault<RMUD.Direction>("link direction", RMUD.Direction.NORTH);
 
-                if (direction == Direction.UP)
-                {
-                    PlaceSymbol(MapGrid, X + 1, Y - 2, ':');
-                    PlaceSymbol(MapGrid, X + 1, Y - 3, FindSymbol(destination));
-                }
-                else if (direction == Direction.DOWN)
-                {
-                    PlaceSymbol(MapGrid, X - 1, Y + 2, ':');
-                    PlaceSymbol(MapGrid, X - 1, Y + 3, FindSymbol(destination));
-                }
-                else
-                {
-                    var directionVector = RMUD.Link.GetAsVector(direction);
-                    PlaceEdge(MapGrid, X + directionVector.X * 3, Y + directionVector.Y * 2, direction);
+                    if (direction == Direction.UP)
+                    {
+                        PlaceSymbol(MapGrid, X + 1, Y - 2, ':');
+                        PlaceSymbol(MapGrid, X + 1, Y - 3, FindSymbol(destination));
+                    }
+                    else if (direction == Direction.DOWN)
+                    {
+                        PlaceSymbol(MapGrid, X - 1, Y + 2, ':');
+                        PlaceSymbol(MapGrid, X - 1, Y + 3, FindSymbol(destination));
+                    }
+                    else
+                    {
+                        var directionVector = RMUD.Link.GetAsVector(direction);
+                        PlaceEdge(MapGrid, X + directionVector.X * 3, Y + directionVector.Y * 2, direction);
 
-                    //if (destination.RoomType == Location.RoomType)
-                    MapLocation(MapGrid, RoomLegend, X + (directionVector.X * 7), Y + (directionVector.Y * 5), destination, ' ');
+                        //if (destination.RoomType == Location.RoomType)
+                        MapLocation(MapGrid, RoomLegend, X + (directionVector.X * 7), Y + (directionVector.Y * 5), destination, ' ');
+                    }
                 }
             }
         }

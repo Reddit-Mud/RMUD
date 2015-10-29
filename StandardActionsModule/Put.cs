@@ -27,6 +27,7 @@ namespace StandardActionsModule
                                     if (thing is Container) return MatchPreference.Likely;
                                     return MatchPreference.Plausible;
                                 })))))
+                .ID("StandardActions:Put")
                 .Manual("This commands allows you to put things on other things. While dropping just deposits the object into your current location, putting is much more specific.")
                 .ProceduralRule((match, actor) =>
                 {

@@ -12,7 +12,7 @@ namespace Minimum
         {
             Title = "Cloak Of Darkness";
             DatabaseNameSpace = "CloakOfDarkness";
-            Description = "This is a game with the absolute minimum required to run.";
+            Description = "This game implements the famous CLOAK OF DARKNESS sample that all new Interactive Fiction Authoring Systems are required to implement. By law. The source contains the Inform7 source for the game as comments.";
             Modules = new List<string>(new String[] { "StandardActionsModule.dll", "AdminModule.dll", "ClothingModule.dll" });
         }
     }

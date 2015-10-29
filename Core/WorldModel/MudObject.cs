@@ -29,7 +29,7 @@ namespace RMUD
         }
 
         public String Short = "object";
-        public String Long = "undescribed object";
+        public String Long = "";
         public String Article = "a";
 		public NounList Nouns { get; set; }
 
