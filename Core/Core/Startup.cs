@@ -28,6 +28,8 @@ namespace RMUD
             if (Module.Assembly == null) throw new InvalidOperationException("Tried to load invalid module assembly - " + Module.FileName);
             if (Module.Info == null) throw new InvalidOperationException("Tried to load invalid module assembly - " + Module.FileName);
 
+            DefaultParser.ModuleBeingInitialized = Module.FileName;
+
             foreach (var type in Module.Assembly.GetTypes())
                 if (type.FullName.StartsWith(Module.Info.BaseNameSpace))
                     foreach (var method in type.GetMethods())
@@ -60,6 +62,8 @@ namespace RMUD
                 GlobalRules = new RuleEngine();
                 GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");
                 GlobalRules.DeclarePerformRuleBook<MudObject>("singleplayer game started", "Considered when a single player game is begun");
+
+                DefaultParser = new CommandParser();
 
                 // Integrate modules. The Core assembly is always integrated.
                 IntegratedModules.Add(new ModuleAssembly(Assembly.GetExecutingAssembly(), new ModuleInfo { Author = "Blecki", Description = "RMUD Core", BaseNameSpace = "RMUD" }, "Core.dll"));

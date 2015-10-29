@@ -56,14 +56,15 @@ namespace RMUD
         internal static void DiscoverCommandFactories(ModuleAssembly In, CommandParser AddTo)
         {
             foreach (var type in In.Assembly.GetTypes())
+            {
+                AddTo.ModuleBeingInitialized = In.FileName;
                 if (type.FullName.StartsWith(In.Info.BaseNameSpace) && type.IsSubclassOf(typeof(CommandFactory)))
                     CommandFactory.CreateCommandFactory(type).Create(AddTo);
+            }
         }
 
         private static void InitializeCommandProcessor()
         {
-            DefaultParser = new CommandParser();
-
             foreach (var assembly in IntegratedModules)
                 DiscoverCommandFactories(assembly, DefaultParser);
 

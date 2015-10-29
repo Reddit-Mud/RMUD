@@ -28,6 +28,7 @@ namespace RMUD
         internal StringBuilder GeneratedManual = null;
         internal PerformRuleBook ProceduralRules;
         internal String _ID = "";
+        internal String SourceModule = null;
         
         public CommandEntry()
         {
@@ -235,7 +236,11 @@ namespace RMUD
             builder.AppendLine(ManualName);
             builder.AppendLine(Matcher.Emit());
             builder.AppendLine();
-            if (!String.IsNullOrEmpty(_ID)) builder.AppendFormat("ID specified: {0}\n\n", _ID);
+            if (!String.IsNullOrEmpty(SourceModule)) builder.AppendFormat("SOURCE MODULE: {0}\n", SourceModule);
+            if (!String.IsNullOrEmpty(_ID)) builder.AppendFormat("ID specified: {0}\n", _ID);
+            else builder.Append("NO ID SPECIFIED\n");
+            builder.AppendLine();
+            builder.AppendLine("Rules invoked by command:");
             if (GeneratedManual != null) builder.AppendLine(GeneratedManual.ToString());
             builder.Append(ManualPage);
             MudObject.SendMessage(To, builder.ToString());

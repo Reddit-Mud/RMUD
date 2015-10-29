@@ -11,10 +11,12 @@ namespace RMUD
     public partial class CommandParser
     {
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
+        internal String ModuleBeingInitialized = null;
 
         public CommandEntry AddCommand(CommandTokenMatcher Matcher)
         {
             var Entry = new CommandEntry { Matcher = Matcher };
+            Entry.SourceModule = ModuleBeingInitialized;
             Entry.ManualName = Matcher.FindFirstKeyWord();
             Commands.Add(Entry);
             return Entry;
