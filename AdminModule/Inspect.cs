@@ -28,10 +28,15 @@ namespace AdminModule
                 .ProceduralRule((match, actor) =>
                 {
                     var target = match["OBJECT"] as MudObject;
+
+                    MudObject.SendMessage(actor, "*** INSPECT LISTING ***");
+
                     MudObject.SendMessage(actor, target.GetType().Name);
 
                     foreach (var @interface in target.GetType().GetInterfaces())
                         MudObject.SendMessage(actor, "Implements " + @interface.Name);
+
+                    MudObject.SendMessage(actor, "*** SYSTEM MEMBERS ***");
 
                     foreach (var field in target.GetType().GetFields())
                         MudObject.SendMessage(actor, "field " + field.FieldType.Name + " " + field.Name + " = " + WriteValue(field.GetValue(target)));
@@ -50,6 +55,20 @@ namespace AdminModule
                         }
                         MudObject.SendMessage(actor, s);
                     }
+
+                    if (target.Properties != null && target.Properties.Count > 0)
+                    {
+                        MudObject.SendMessage(actor, "*** DYNAMIC MEMBERS ***");
+
+                        foreach (var dynamicMember in target.Properties)
+                        {
+                            string typeName = "null";
+                            if (dynamicMember.Value != null) typeName = dynamicMember.Value.GetType().ToString();
+                            MudObject.SendMessage(actor, dynamicMember.Key + " " + typeName + " = " + WriteValue(dynamicMember.Value));
+                        }
+                    }
+
+                    MudObject.SendMessage(actor, "*** END OF LISTING ***");
 
                     return SharpRuleEngine.PerformResult.Continue;
                 }, "List all the damn things rule.");
@@ -74,6 +93,19 @@ namespace AdminModule
             {
                 var v = (Value as KeyValuePair<RelativeLocations, List<MudObject>>?).Value;
                 return v.Key + ": " + WriteValue(v.Value, indent + 1);
+            }
+            else if (Value is NounList)
+            {
+                var r = "[ ";
+                bool first = true;
+                foreach (var noun in (Value as NounList).EnumerateNouns())
+                {
+                    if (!first) r += "\n" + new String(' ', indent * 2);
+                    first = false;
+                    r += noun.ToInspectString();
+                }
+                r += " ] ";
+                return r;
             }
             else if (Value is System.Collections.IEnumerable)
             {

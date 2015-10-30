@@ -9,12 +9,18 @@ namespace RMUD
     {
         bool Match(String Word, Actor Actor);
         bool CouldMatch(String Word);
+        String ToInspectString();
     }
 
     public class BasicNoun : Noun
     {
         public String Value;
         public Func<Actor, bool> Available;
+
+        public String ToInspectString()
+        {
+            return Value;
+        }
 
         public bool Match(String Word, Actor Actor)
         {
@@ -46,6 +52,11 @@ namespace RMUD
         public List<String> Value;
         public Func<Actor, bool> Available;
 
+        public String ToInspectString()
+        {
+            return String.Join(", ", Value);
+        }
+
         public bool Match(String Word, Actor Actor)
         {
             if (!Value.Contains(Word)) return false;
@@ -74,6 +85,12 @@ namespace RMUD
     public class NounList
     {
         List<Noun> Nouns = new List<Noun>();
+
+        public IEnumerable<Noun> EnumerateNouns()
+        {
+            foreach (var noun in Nouns)
+                yield return noun;
+        }
 
         public NounList() { }
 

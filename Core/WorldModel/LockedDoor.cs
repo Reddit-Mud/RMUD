@@ -23,7 +23,7 @@ namespace RMUD
 		{
 			Locked = true;
 
-            Value<MudObject, bool>("lockable?").Do(a => true);
+            SetProperty("lockable?", true);
 
             Check<MudObject, MudObject, MudObject>("can lock?").Do((actor, door, key) =>
                 {
