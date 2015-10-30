@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Meta
+namespace AdminModule
 {
 	internal class DumpMessages : CommandFactory
 	{

@@ -13,6 +13,12 @@ namespace RMUD
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
         internal String ModuleBeingInitialized = null;
 
+        public IEnumerable<CommandEntry> EnumerateCommands()
+        {
+            foreach (var command in Commands)
+                yield return command;
+        }
+
         public CommandEntry AddCommand(CommandTokenMatcher Matcher)
         {
             var Entry = new CommandEntry { Matcher = Matcher };

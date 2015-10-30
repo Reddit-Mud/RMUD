@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RMUD;
 
-namespace RMUD.Modules.Meta
+namespace AdminModule
 {
 	internal class Cons : CommandFactory
 	{
@@ -29,9 +30,9 @@ namespace RMUD.Modules.Meta
                     MudObject.SendMessage(actor, "@cons");
 
                     if (!localScan)
-                        foreach (var command in Core.DefaultParser.Commands)
+                        foreach (var command in Core.DefaultParser.EnumerateCommands())
                         {
-                            if (String.IsNullOrEmpty(command._ID)) 
+                            if (String.IsNullOrEmpty(command.GetID())) 
                             {
                                 resultsFound += 1;
                                 MudObject.SendMessage(actor, "Command has no ID set: " + command.ManualName + " from " + command.SourceModule);

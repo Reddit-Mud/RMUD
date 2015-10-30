@@ -23,15 +23,18 @@ namespace RMUD
     public sealed class CommandEntry : ManPage
     {
         internal CommandTokenMatcher Matcher;
-        internal String ManualName = "";
+        public String ManualName { get; internal set; }
         internal String ManualPage = "";
         internal StringBuilder GeneratedManual = null;
         internal PerformRuleBook ProceduralRules;
         internal String _ID = "";
-        internal String SourceModule = null;
+        public String SourceModule { get; internal set; }
         
         public CommandEntry()
         {
+            ManualName = "";
+            SourceModule = null;
+
             ManPages.Pages.Add(this);
             GeneratedManual = new StringBuilder();
             ProceduralRules = new PerformRuleBook(Core.GlobalRules.Rules)
@@ -50,6 +53,11 @@ namespace RMUD
         {
             this._ID = _ID;
             return this;
+        }
+
+        public String GetID()
+        {
+            return this._ID;
         }
 
         public bool IsNamed(String Name)
