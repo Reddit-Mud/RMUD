@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -28,7 +29,7 @@ namespace StandardActionsModule
                 .AfterActing();
         }
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("not openable", "I don't think the concept of 'open' applies to that.");
             Core.StandardMessage("you open", "You open <the0>.");
@@ -59,6 +60,19 @@ namespace StandardActionsModule
             }).Name("Default report opening rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can open?").First.Do((actor, item) => MudObject.CheckIsVisibleTo(actor, item)).Name("Item must be visible rule.");
+        }
+    }
+
+    public static class OpenExtensions
+    {
+        public static RuleBuilder<MudObject, MudObject, PerformResult> PerformOpened(this MudObject Object)
+        {
+            return Object.Perform<MudObject, MudObject>("opened").ThisOnly(1);
+        }
+
+        public static RuleBuilder<MudObject, MudObject, CheckResult> CheckCanOpen(this MudObject Object)
+        {
+            return Object.Check<MudObject, MudObject>("can open?").ThisOnly(1);
         }
     }
 }

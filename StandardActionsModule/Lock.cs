@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -28,15 +29,11 @@ namespace StandardActionsModule
                 .AfterActing();
         }
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("not lockable", "I don't think the concept of 'locked' applies to that.");
             Core.StandardMessage("you lock", "You lock <the0>.");
             Core.StandardMessage("they lock", "^<the0> locks <the1> with <the2>.");
-
-            GlobalRules.DeclareValueRuleBook<MudObject, bool>("lockable?", "[Item] : Can this item be locked?", "item");
-
-            GlobalRules.Value<MudObject, bool>("lockable?").Do(item => false).Name("Things not lockable by default rule.");
 
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject, MudObject>("can lock?", "[Actor, Item, Key] : Can the item be locked by the actor with the key?", "actor", "item", "key");
             
@@ -49,7 +46,7 @@ namespace StandardActionsModule
                 .Name("Key must be held rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can lock?")
-                .When((actor, item, key) => !GlobalRules.ConsiderValueRule<bool>("lockable?", item))
+                .When((actor, item, key) => !item.GetBooleanProperty("lockable?"))
                 .Do((a, b, c) =>
                 {
                     MudObject.SendMessage(a, "@not lockable");
@@ -69,6 +66,19 @@ namespace StandardActionsModule
                 MudObject.SendExternalMessage(actor, "@they lock", actor, target, key);
                 return SharpRuleEngine.PerformResult.Continue;
             });
+        }
+    }
+
+    public static class LockExtensions
+    {
+        public static RuleBuilder<MudObject, MudObject, MudObject, CheckResult> CheckCanLock(this MudObject Object)
+        {
+            return Object.Check<MudObject, MudObject, MudObject>("can lock?").ThisOnly();
+        }
+
+        public static RuleBuilder<MudObject, MudObject, MudObject, PerformResult> PerformLocked(this MudObject Object)
+        {
+            return Object.Perform<MudObject, MudObject, MudObject>("locked");
         }
     }
 }

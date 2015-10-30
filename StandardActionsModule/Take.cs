@@ -107,12 +107,12 @@ namespace StandardActionsModule
     {
         public static RuleBuilder<MudObject, MudObject, CheckResult> CheckCanTake(this MudObject ThisObject)
         {
-            return ThisObject.Check<MudObject, MudObject>("can take?").When((taker, obj) => System.Object.ReferenceEquals(obj, ThisObject));
+            return ThisObject.Check<MudObject, MudObject>("can take?").ThisOnly(1);
         }
 
         public static RuleBuilder<MudObject, MudObject, PerformResult> PerformTake(this MudObject ThisObject)
         {
-            return ThisObject.Perform<MudObject, MudObject>("take").When((taker, obj) => System.Object.ReferenceEquals(obj, ThisObject));
+            return ThisObject.Perform<MudObject, MudObject>("take").ThisOnly(1);
         }
     }
 }
