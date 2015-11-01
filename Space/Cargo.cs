@@ -20,6 +20,8 @@ namespace Space
             Move(locker, this);
             Move(GetObject("Wrench"), locker);
             Move(GetObject("DuctTape"), locker);
+
+           
         }
     }   
 

@@ -29,7 +29,7 @@ namespace RMUD
         /// <returns></returns>
         public PerformResult ConsiderMatchBasedPerformRule(String Name, PossibleMatch Match, Actor Actor)
         {
-            return ConsiderPerformRule(Name, EnumerateMatchRules(Match), Match, Actor);
+            return ConsiderPerformRule_Enum(Name, (args) => EnumerateMatchRules(Match), Match, Actor);
         }
 
         /// <summary>

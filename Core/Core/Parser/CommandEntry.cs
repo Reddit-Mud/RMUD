@@ -186,6 +186,7 @@ namespace RMUD
         /// <returns>This command</returns>
         public CommandEntry BeforeActing()
         {
+            GeneratedManual.AppendLine("Consider the before acting rules.");
             ProceduralRules.AddRule(new Rule<PerformResult>{
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => Core.GlobalRules.ConsiderMatchBasedPerformRule("before acting", match, actor)),
                 DescriptiveName = "Before acting procedural rule."});
@@ -198,6 +199,7 @@ namespace RMUD
         /// <returns>This command</returns>
         public CommandEntry AfterActing()
         {
+            GeneratedManual.AppendLine("Consider the after acting rules.");
             ProceduralRules.AddRule(new Rule<PerformResult>
             {
                 BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => 

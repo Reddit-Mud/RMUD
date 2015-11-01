@@ -61,6 +61,14 @@ namespace Space
                     //RMUD.MudObject.SendMessage(actor, "Sal? Sal? Can you hear me?");
                     //actor.SetProperty("interlocutor", RMUD.MudObject.GetObject("DanConversation0"));
                     //RMUD.Core.EnqueuActorCommand(actor, "topics");
+
+                    GlobalRules.Perform<RMUD.PossibleMatch, RMUD.Actor>("after acting").Do((match, _a) =>
+                    {
+                        var x = 5;
+                        x += 1;
+
+                        return SharpRuleEngine.PerformResult.Continue;
+                    });
                     
                     RMUD.MudObject.Move(actor, RMUD.MudObject.GetObject("Start"));
                     RMUD.Core.EnqueuActorCommand(actor, "look");

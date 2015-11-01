@@ -22,6 +22,7 @@ namespace ConversationModule
                             if (thing is NPC) return MatchPreference.VeryLikely;
                             else return MatchPreference.VeryUnlikely;
                         }))))
+                .ID("Conversation:Greet")
                 .Manual("Initiates a conversation with the npc.")
                 .Check("can converse?", "ACTOR", "LOCUTOR")
                 .BeforeActing()
@@ -54,7 +55,9 @@ namespace ConversationModule
                                     Object("TOPIC", new TopicSource("NEW-LOCUTOR")),
                                     Rest("STRING-TOPIC"))),
                             Rest("STRING-TOPIC"))))
+                .ID("Conversation:DiscussTopic")
                 .Manual("Discusses the topic with whomever you are talking too.")
+                .BeforeActing()
                 .ProceduralRule((match, actor) =>
                 {
                     if (!(actor is Player)) return PerformResult.Stop;
@@ -82,10 +85,12 @@ namespace ConversationModule
                 }, "Must be talking to someone rule.")
                 .Check("can converse?", "ACTOR", "LOCUTOR")
                 .Perform("discuss topic", "ACTOR", "LOCUTOR", "TOPIC")
+                .AfterActing()
                 .Perform("list topics", "ACTOR");
 
             Parser.AddCommand(
                 KeyWord("TOPICS"))
+                .ID("Conversation:Topic")
                 .Manual("Lists topics currently available.")
                 .Perform("list topics", "ACTOR");
         }
