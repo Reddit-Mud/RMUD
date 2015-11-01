@@ -34,8 +34,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpRuleEngine">
-      <HintPath>..\packages\SharpRuleEngine.1.0.1\lib\SharpRuleEngine.dll</HintPath>
+    <Reference Include="SharpRuleEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SharpRuleEngine.1.0.3\lib\SharpRuleEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -22,7 +22,6 @@ namespace StandardActionsModule
 
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            Core.StandardMessage("empty handed", "You have nothing.");
             Core.StandardMessage("carrying", "You are carrying..");
 
             GlobalRules.DeclarePerformRuleBook<MudObject>("inventory", "[Actor] : Describes a player's inventory to themselves.", "actor");
@@ -31,7 +30,7 @@ namespace StandardActionsModule
                 .Do(a =>
                 {
                     var heldObjects = (a as Actor).GetContents(RelativeLocations.Held);
-                    if (heldObjects.Count == 0) MudObject.SendMessage(a, "@empty handed");
+                    if (heldObjects.Count == 0) MudObject.SendMessage(a, "@empty handed", a);
                     else
                     {
                         MudObject.SendMessage(a, "@carrying");

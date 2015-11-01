@@ -82,6 +82,7 @@ namespace StandardActionsModule
 
                     return PerformResult.Continue;
                 })
+                .ID("list-actor-held-items-rule")
                 .Name("List held items when describing an actor rule.");
         }
 
