@@ -43,6 +43,17 @@ namespace ConversationModule
 
     public static class ResponseExtensionMethods
     {
+        public static List<MudObject> InitializeConversationTopics(this MudObject To)
+        {
+            var topics = To.GetProperty<List<MudObject>>("conversation-topics");
+            if (topics == null)
+            {
+                topics = new List<MudObject>();
+                To.SetProperty("conversation-topics", topics);
+            }
+            return topics;
+        }
+
         public static Topic Response(this MudObject To, String Topic, String StringResponse)
         {
             return Response(To, Topic, (actor, npc, topic) =>
@@ -54,12 +65,7 @@ namespace ConversationModule
 
         public static Topic Response(this MudObject To, String Topic, Func<MudObject, MudObject, MudObject, PerformResult> FuncResponse)
         {
-            var topics = To.GetProperty<List<MudObject>>("conversation-topics");
-            if (topics == null)
-            {
-                topics = new List<MudObject>();
-                To.SetProperty("conversation-topics", topics);
-            }
+            var topics = To.InitializeConversationTopics();
 
             var response = new Topic();
             topics.Add(response);
@@ -70,6 +76,8 @@ namespace ConversationModule
 
         public static void DefaultResponse(this MudObject To, Func<MudObject, MudObject, MudObject, PerformResult> FuncResponse)
         {
+            To.InitializeConversationTopics();
+
             To.Perform<MudObject, MudObject, MudObject>("topic response").When((actor, npc, topic) => topic == null).Do(FuncResponse);
         }
 
@@ -80,6 +88,23 @@ namespace ConversationModule
                 MudObject.SendMessage(actor, StringResponse);
                 return PerformResult.Stop;
             });
+        }
+
+        public static RuleBuilder<MudObject, MudObject, PerformResult> PerformNoTopicsToDiscuss(this MudObject To)
+        {
+            To.InitializeConversationTopics();
+
+            return To.Perform<MudObject, MudObject>("no topics to discuss").ThisOnly(1);
+        }
+
+        public static RuleBuilder<MudObject, MudObject, CheckResult> CheckCanConverse(this MudObject To)
+        {
+            return To.Check<MudObject, MudObject>("can converse?").ThisOnly(1);
+        }
+
+        public static RuleBuilder<MudObject, MudObject, PerformResult> PerformGreet(this MudObject To)
+        {
+            return To.Perform<MudObject, MudObject>("greet").ThisOnly(1);
         }
     }
 }

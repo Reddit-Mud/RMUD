@@ -87,7 +87,7 @@ namespace StandardActionsModule
                 .When((actor, thing) => thing.GetPropertyOrDefault<bool>("portal?", false))
                 .Do((actor, thing) =>
                 {
-                    MudObject.SendMessage(actor, "@cant take portal");
+                    MudObject.SendMessage(actor, "@cant take portals");
                     return CheckResult.Disallow;
                 });
 

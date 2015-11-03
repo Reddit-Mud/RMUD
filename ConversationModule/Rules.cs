@@ -68,11 +68,21 @@ namespace ConversationModule
                     if (enumeratedSuggestedTopics.Count != 0)
                         MudObject.SendMessage(actor, "@convo topic prompt", enumeratedSuggestedTopics);
                     else
-                        MudObject.SendMessage(actor, "@convo no topics");
+                        GlobalRules.ConsiderPerformRule("no topics to discuss", actor, npc);
 
                     return PerformResult.Continue;
                 })
                 .Name("List un-discussed available topics rule.");
+
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("no topics to discuss", "[Actor, NPC] : Handle there being no topics to list.");
+
+            GlobalRules.Perform<MudObject, MudObject>("no topics to discuss")
+                .Do((actor, npc) => 
+                {
+                    MudObject.SendMessage(actor, "@convo no topics");
+                    return PerformResult.Continue;
+                })
+                .Name("Default report no topics to discuss rule.");
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("discuss topic", "[Actor, NPC, Topic] : Handle the actor discussing the topic with the npc.");
 
