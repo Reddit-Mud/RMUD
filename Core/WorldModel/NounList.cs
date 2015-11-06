@@ -124,6 +124,11 @@ namespace RMUD
             Nouns.Add(new NounSet(new List<String>(Words.Select(s => s.ToUpper())), Available));
         }
 
+        public void Add(Noun Noun)
+        {
+            Nouns.Add(Noun);
+        }
+
         public bool Match(String Word, Actor Actor)
         {
             foreach (var noun in Nouns)

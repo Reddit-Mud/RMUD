@@ -10,6 +10,7 @@ namespace RMUD
     public static partial class Core
     {
         private static String CriticalLog = "errors.log";
+        public static Action<String> DynamicCriticalLog = Console.WriteLine;
 
         public static void LogCommandError(Exception e)
         {
@@ -21,9 +22,12 @@ namespace RMUD
                 logfile.WriteLine(e.StackTrace);
                 logfile.Close();
                 
-                Console.WriteLine("{0:MM/dd/yy HH:mm:ss} -- Error while handling client command.", DateTime.Now);
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                DynamicCriticalLog(String.Format("{0:MM/dd/yy HH:mm:ss} -- Error while handling client command.", DateTime.Now));
+                DynamicCriticalLog(e.Message);
+                DynamicCriticalLog(e.StackTrace);
+
+                if (e.InnerException != null)
+                    LogCriticalError(e.InnerException);
             }
         }
 
@@ -38,11 +42,14 @@ namespace RMUD
                 logfile.WriteLine(e.StackTrace);
                 logfile.Close();
 
-                Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- Critical error.", DateTime.Now);
-                Console.WriteLine(e.GetType().Name);
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                DynamicCriticalLog(String.Format("{0:MM/dd/yy H:mm:ss} -- Critical error.", DateTime.Now));
+                DynamicCriticalLog(e.GetType().Name);
+                DynamicCriticalLog(e.Message);
+                DynamicCriticalLog(e.StackTrace);
 
+                if (e.InnerException != null)
+                    LogCriticalError(e.InnerException);
+                
                 if (e is AggregateException)
                 {
                     var ag = e as AggregateException;
@@ -60,7 +67,7 @@ namespace RMUD
                 logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}\n", DateTime.Now, ErrorString);
                 logfile.Close();
 
-                Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- {1}\n", DateTime.Now, ErrorString);
+                DynamicCriticalLog(String.Format("{0:MM/dd/yy H:mm:ss} -- {1}\n", DateTime.Now, ErrorString));
             }
         }
 
@@ -72,7 +79,7 @@ namespace RMUD
                 logfile.WriteLine("{0:MM/dd/yy H:mm:ss} -- WARNING: {1}", DateTime.Now, Warning);
                 logfile.Close();
 
-                Console.WriteLine("{0:MM/dd/yy H:mm:ss} -- WARNING: {1}", DateTime.Now, Warning);
+                DynamicCriticalLog(String.Format("{0:MM/dd/yy H:mm:ss} -- WARNING: {1}", DateTime.Now, Warning));
             }
         }
     }

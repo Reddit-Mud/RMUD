@@ -10,8 +10,7 @@ namespace RMUD.SinglePlayer
     {
         private DummyClient Client;
         public RMUD.Player Player { get; private set; }
-        public bool BlockOnInput { get; set; }
-        private System.Threading.AutoResetEvent CommandQueueReady = new System.Threading.AutoResetEvent(false);
+        
         public bool IsRunning
         {
             get
@@ -22,7 +21,6 @@ namespace RMUD.SinglePlayer
 
         public Driver()
         {
-            BlockOnInput = true;
         }
 
         public void SwitchPlayerCharacter(RMUD.Player NewCharacter)
@@ -66,7 +64,7 @@ namespace RMUD.SinglePlayer
             // Add the database assembly last, so that's AtStartup items are called last.
             assemblies.Add(new ModuleAssembly(DatabaseAssembly, new ModuleInfo { BaseNameSpace = gameInfo.DatabaseNameSpace }));
 
-            if (RMUD.Core.Start(StartupFlags.Silent,
+            if (RMUD.Core.Start(StartupFlags.Silent | StartupFlags.SingleThreaded,
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, gameInfo.DatabaseNameSpace),
                 assemblies.ToArray()))
             {
@@ -85,55 +83,11 @@ namespace RMUD.SinglePlayer
             return false;
         }
 
-
-        public bool Start(
-            String AssemblyFile,
-            Action<String> Output)
-        {
-            var assembly = System.Reflection.Assembly.LoadFile(System.IO.Path.GetFullPath(AssemblyFile));
-            if (assembly == null) throw new InvalidOperationException("Game assembly could not be loaded.");
-
-            GameInfo gameInfo = null;
-            foreach (var type in assembly.GetTypes())
-                if (type.IsSubclassOf(typeof(GameInfo)))
-                    gameInfo = Activator.CreateInstance(type) as GameInfo;
-
-            if (gameInfo == null) throw new InvalidOperationException("No GameInfo defined in game assembly.");
-
-            var assemblies = new List<ModuleAssembly>();
-            assemblies.Add(new ModuleAssembly(assembly, new ModuleInfo { BaseNameSpace = gameInfo.DatabaseNameSpace }, AssemblyFile));
-            foreach (var module in gameInfo.Modules)
-                assemblies.Add(new ModuleAssembly(module));
-
-            if (RMUD.Core.Start(StartupFlags.Silent,
-                new RMUD.SinglePlayer.CompiledDatabase(assembly, gameInfo.DatabaseNameSpace),
-                assemblies.ToArray()))
-            {
-                Player = RMUD.MudObject.GetObject<RMUD.Player>(RMUD.Core.SettingsObject.PlayerBaseObject);
-                Player.CommandHandler = RMUD.Core.ParserCommandHandler;
-                Client = new DummyClient(Output);
-                RMUD.Core.TiePlayerToClient(Client, Player);
-                Player.Rank = 500;
-
-                DetectAndAssignDriver(assembly);
-                Core.GlobalRules.ConsiderPerformRule("singleplayer game started", Player);
-
-                return true;
-            }
-
-            return false;
-        }
-
         public void Input(String Command)
         {
-            if (BlockOnInput)
-            {
-                RMUD.Core.EnqueuActorCommand(Player, Command, () =>
-                    CommandQueueReady.Set());
-                CommandQueueReady.WaitOne();
-            }
-            else
-                RMUD.Core.EnqueuActorCommand(Player, Command);
+            RMUD.Core.EnqueuActorCommand(Player, Command);
+            RMUD.Core.ProcessCommands();
+            RMUD.Core.SendPendingMessages(); // This is a hack, in case messages are never sent.
         }
     }
 }

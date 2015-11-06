@@ -30,7 +30,7 @@ namespace StandardActionsModule
                 .Name("Basic description rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => GlobalRules.ConsiderValueRule<bool>("openable", item))
+                .When((viewer, item) => item.GetBooleanProperty("openable?"))
                 .Do((viewer, item) =>
                 {
                     if (item.GetBooleanProperty("open?"))
