@@ -62,9 +62,9 @@ namespace ClothingModule
                 .First
                 .Do((viewer, actor) =>
                 {
-                    var wornItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Worn));
+                    var wornItems = actor.GetContents(RelativeLocations.Worn);
                     if (wornItems.Count == 0)
-                        MudObject.SendMessage(viewer, "@clothing they are naked", actor);
+                        MudObject.SendMessage(viewer, "@clothing they are nude", actor);
                     else
                         MudObject.SendMessage(viewer, "@clothing they are wearing", actor, wornItems);
                     return PerformResult.Continue;
