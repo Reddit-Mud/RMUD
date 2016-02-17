@@ -117,7 +117,7 @@ namespace IntroductionModule
 
             GlobalRules.Value<Player, Actor, String, String>("printed name")
                 .When((viewer, thing, article) => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", viewer, thing))
-                .Do((viewer, actor, article) => actor.Short)
+                .Do((viewer, actor, article) => actor.GetProperty<String>("Short"))
                 .Name("Name of introduced actor.");
 
             GlobalRules.Value<MudObject, MudObject, String, String>("printed name")

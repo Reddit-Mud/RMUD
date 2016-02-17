@@ -48,7 +48,7 @@ namespace ChatModule
                 {
                     MudObject.SendMessage(actor, "~~ CHANNELS ~~");
                     foreach (var channel in ChatChannel.ChatChannels)
-                        MudObject.SendMessage(actor, (channel.Subscribers.Contains(actor) ? "*" : "") + channel.Short);
+                        MudObject.SendMessage(actor, (channel.Subscribers.Contains(actor) ? "*" : "") + channel.GetProperty<String>("Short"));
                     return PerformResult.Continue;
                 });
 
@@ -76,7 +76,7 @@ namespace ChatModule
                 {
                     var message = match["TEXT"].ToString();
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
-                    ChatChannel.SendChatMessage(channel, "[" + channel.Short + "] " + actor.Short +
+                    ChatChannel.SendChatMessage(channel, "[" + channel.GetProperty<String>("Short") + "] " + actor.GetProperty<String>("Short") +
                         (message.StartsWith("\"") ?
                             (" " + message.Substring(1).Trim())
                             : (": \"" + message + "\"")));
@@ -100,7 +100,7 @@ namespace ChatModule
                     int count = 20;
                     if (match.ContainsKey("COUNT")) count = (match["COUNT"] as int?).Value;
 
-                    var logFilename = ChatChannel.ChatLogsPath + channel.Short + ".txt";
+                    var logFilename = ChatChannel.ChatLogsPath + channel.GetProperty<String>("Short") + ".txt";
                     if (System.IO.File.Exists(logFilename))
                         foreach (var line in (new RMUD.ReverseLineReader(logFilename)).Take(count).Reverse())
                             MudObject.SendMessage(actor, line);

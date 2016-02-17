@@ -47,6 +47,7 @@
     <Compile Include="Dump.cs" />
     <Compile Include="DumpMessages.cs" />
     <Compile Include="Force.cs" />
+    <Compile Include="Set.cs" />
     <Compile Include="Scope.cs" />
     <Compile Include="Inspect.cs" />
     <Compile Include="Instance.cs" />
@@ -63,13 +64,13 @@
     <Compile Include="Stats.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{5c29e6ad-54e3-4105-a9f3-2aab48a17c41}</Project>
       <Name>Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

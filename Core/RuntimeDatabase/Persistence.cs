@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace RMUD
 {
-    public partial class GithubDatabase
+    public partial class RuntimeDatabase
     {
         override public void PersistInstance(MudObject Object)
         {

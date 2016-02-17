@@ -40,8 +40,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Octokit.0.6.2\lib\net45\Octokit.dll</HintPath>
     </Reference>
-    <Reference Include="SharpRuleEngine">
+    <Reference Include="SharpRuleEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpRuleEngine.1.0.5\lib\SharpRuleEngine.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -113,16 +114,16 @@
     <Compile Include="Core\StringIterator.cs" />
     <Compile Include="Core\Time.cs" />
     <Compile Include="Core\WorldDataService.cs" />
-    <Compile Include="GithubDatabase\Compile.cs" />
-    <Compile Include="GithubDatabase\Database.cs" />
-    <Compile Include="GithubDatabase\EnumerateDatabase.cs" />
-    <Compile Include="GithubDatabase\GetObject.cs" />
-    <Compile Include="GithubDatabase\InitialBulkCompile.cs" />
-    <Compile Include="GithubDatabase\Initialize.cs" />
-    <Compile Include="GithubDatabase\LoadSourceFile.cs" />
-    <Compile Include="GithubDatabase\Persistence.cs" />
-    <Compile Include="GithubDatabase\Preprocess.cs" />
-    <Compile Include="GithubDatabase\ReloadObject.cs" />
+    <Compile Include="RuntimeDatabase\Compile.cs" />
+    <Compile Include="RuntimeDatabase\Database.cs" />
+    <Compile Include="RuntimeDatabase\EnumerateDatabase.cs" />
+    <Compile Include="RuntimeDatabase\GetObject.cs" />
+    <Compile Include="RuntimeDatabase\InitialBulkCompile.cs" />
+    <Compile Include="RuntimeDatabase\Initialize.cs" />
+    <Compile Include="RuntimeDatabase\LoadSourceFile.cs" />
+    <Compile Include="RuntimeDatabase\Persistence.cs" />
+    <Compile Include="RuntimeDatabase\Preprocess.cs" />
+    <Compile Include="RuntimeDatabase\ReloadObject.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HelperExtensions.cs" />
     <Compile Include="ModuleInfo.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="WorldModel\Directions.cs" />
     <Compile Include="WorldModel\LockedDoor.cs" />
     <Compile Include="WorldModel\MudObject.cs" />
+    <Compile Include="WorldModel\MudObjectProperty.cs" />
     <Compile Include="WorldModel\MudObjectRules.cs" />
     <Compile Include="WorldModel\NounList.cs" />
     <Compile Include="WorldModel\NPC.cs" />

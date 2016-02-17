@@ -51,8 +51,10 @@ namespace RMUD
         /// <param name="Database"></param>
         /// <param name="Assemblies">Modules to integrate</param>
         /// <returns></returns>
-        public static bool Start(StartupFlags Flags, WorldDataService Database, params ModuleAssembly[] Assemblies)
+        public static bool Start(StartupFlags Flags, String DatabasePath, WorldDataService Database, params ModuleAssembly[] Assemblies)
         {
+            Core.DatabasePath = DatabasePath;
+
             ShuttingDown = false;
             Core.Flags = Flags;
 
@@ -88,7 +90,7 @@ namespace RMUD
                 foreach (var startupAssembly in IntegratedModules)
                     IntegrateModule(startupAssembly);
 
-                PersistentValueSerializer.AddGlobalSerializer(new BitArraySerializer());
+                ValueSerializer.AddGlobalSerializer(new BitArraySerializer());
 
                 InitializeCommandProcessor();
 

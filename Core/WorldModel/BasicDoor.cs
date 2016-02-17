@@ -14,11 +14,11 @@ namespace RMUD
     {
         public BasicDoor()
         {
-            this.Nouns.Add("DOOR");
+            GetProperty<NounList>("Nouns").Add("DOOR");
 
             // Doors can be referred to as 'the open door' or 'the closed door' as appropriate.
-            this.Nouns.Add("CLOSED", actor => !GetBooleanProperty("open?"));
-            this.Nouns.Add("OPEN", actor => GetBooleanProperty("open?"));
+            GetProperty<NounList>("Nouns").Add("CLOSED", actor => !GetPropertyOrDefault("open?", false));
+            GetProperty<NounList>("Nouns").Add("OPEN", actor => GetPropertyOrDefault("open?", false));
 
             SetProperty("open?", false);
             SetProperty("openable?", true);
@@ -27,7 +27,7 @@ namespace RMUD
                 .Last
                 .Do((a, b) =>
                 {
-                    if (GetBooleanProperty("open?"))
+                    if (GetPropertyOrDefault("open?", false))
                     {
                         MudObject.SendMessage(a, "@already open");
                         return CheckResult.Disallow;
@@ -40,7 +40,7 @@ namespace RMUD
                 .Last
                 .Do((a, b) =>
                 {
-                    if (!GetBooleanProperty("open?"))
+                    if (!GetPropertyOrDefault("open?", false))
                     {
                         MudObject.SendMessage(a, "@already closed");
                         return CheckResult.Disallow;

@@ -11,7 +11,7 @@ namespace ConversationModule
     {
         public Topic()
         {
-            Article = "";
+            SetProperty("Article", "");
         }
 
         public Topic Available(Func<MudObject, MudObject, MudObject, CheckResult> Func, String Name = "")
@@ -32,7 +32,7 @@ namespace ConversationModule
 
         public bool Discussed
         {
-            get { return this.GetBooleanProperty("topic-discussed"); }
+            get { return this.GetPropertyOrDefault<bool>("topic-discussed", false); }
         }
 
         public Topic Follows(Topic Previous)

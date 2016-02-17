@@ -40,7 +40,7 @@ namespace Akko.Areas.Prologue
 
             #region Secondary Conversation Topics
 
-            this.Response("about your watch", "\"Are you still carrying that around?\" Mr Henrico asks. He drives in silence for a moment. \"I've spoken to you so many times about closure.\"").Available(() => GetObject("Areas.Prologue.Watch").GetBooleanProperty("has-been-viewed"), "Watch response is available after watch examined rule.");
+            this.Response("about your watch", "\"Are you still carrying that around?\" Mr Henrico asks. He drives in silence for a moment. \"I've spoken to you so many times about closure.\"").Available(() => GetObject("Areas.Prologue.Watch").GetPropertyOrDefault<bool>("has-been-viewed", false), "Watch response is available after watch examined rule.");
 
             #endregion
 

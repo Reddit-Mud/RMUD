@@ -42,8 +42,7 @@ namespace AdminModule
 
                     var roomLegend = new Dictionary<int, String>();
 
-                    if (actor.Location is RMUD.Room)
-                        MapLocation(mapGrid, roomLegend, (MapWidth / 2), (MapHeight / 2), actor.Location as RMUD.Room, '@');
+                    MapLocation(mapGrid, roomLegend, (MapWidth / 2), (MapHeight / 2), actor.Location, '@');
 
                     for (int y = 0; y < MapHeight; ++y)
                     {
@@ -66,18 +65,18 @@ namespace AdminModule
             MapGrid[X, Y] = Symbol;
         }
 
-        private static int FindSymbol(RMUD.Room Location)
+        private static int FindSymbol(RMUD.MudObject Location)
         {
             if (Location == null) return '?';
 
-            var spacer = Location.Short.LastIndexOf('-');
-            if (spacer > 0 && spacer < Location.Short.Length - 2)
-                return Location.Short.ToUpper()[spacer + 2];
+            var spacer = Location.GetProperty<String>("Short").LastIndexOf('-');
+            if (spacer > 0 && spacer < Location.GetProperty<String>("Short").Length - 2)
+                return Location.GetProperty<String>("Short").ToUpper()[spacer + 2];
             else
-                return Location.Short.ToUpper()[0];
+                return Location.GetProperty<String>("Short").ToUpper()[0];
         }
 
-        private static void MapLocation(int[,] MapGrid, Dictionary<int, String> RoomLegend, int X, int Y, RMUD.Room Location, int Symbol)
+        private static void MapLocation(int[,] MapGrid, Dictionary<int, String> RoomLegend, int X, int Y, RMUD.MudObject Location, int Symbol)
         {
             if (X < 1 || X >= MapWidth - 1 || Y < 1 || Y >= MapHeight - 1) return;
 
@@ -85,7 +84,7 @@ namespace AdminModule
 
             if (Symbol == ' ') Symbol = FindSymbol(Location);
 
-            if (Location != null) RoomLegend.Upsert(Symbol, Location.Short);
+            if (Location != null) RoomLegend.Upsert(Symbol, Location.GetProperty<String>("Short"));
             
             PlaceSymbol(MapGrid, X, Y, Symbol);
             PlaceSymbol(MapGrid, X - 2, Y - 1, '+');
@@ -108,7 +107,7 @@ namespace AdminModule
                 foreach (var link in Location.EnumerateObjects().Where(t => t.HasProperty("link direction")))
                 {
                     var destinationName = link.GetProperty<string>("link destination");
-                    var destination = MudObject.GetObject(destinationName) as RMUD.Room;
+                    var destination = MudObject.GetObject(destinationName);
                     var direction = link.GetPropertyOrDefault<RMUD.Direction>("link direction", RMUD.Direction.NORTH);
 
                     if (direction == Direction.UP)

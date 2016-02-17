@@ -106,7 +106,7 @@ namespace RMUD
                         }
                         else if (type == "a" && Objects[index] is MudObject)
                         {
-                            formattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, Objects[index], (Objects[index] as MudObject).Article));
+                            formattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, Objects[index], (Objects[index] as MudObject).GetProperty<String>("Article")));
                         }
                         else if (type == "l") //No connective clause is used for this style of list. eg 1, 2, 3.
                         {
@@ -190,7 +190,7 @@ namespace RMUD
 
             for (int x = 0; x < list.Count; ++x)
             {
-                FormattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, list[x], list[x].Article));
+                FormattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, list[x], list[x].GetProperty<String>("Article")));
                 if (x != list.Count - 1) FormattedMessage.Append(", ");
                 if (x == list.Count - 2 && !String.IsNullOrEmpty(CoordinatingConjunction)) FormattedMessage.Append(CoordinatingConjunction + " ");
             }

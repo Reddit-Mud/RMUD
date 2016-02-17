@@ -37,7 +37,7 @@ namespace StandardActionsModule
                 .Name("Container must be visible rule.");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
-                .When((actor, item, relloc) => !(item is Container) || (((item as Container).LocationsSupported & relloc) != relloc))
+                .When((actor, item, relloc) => (item.LocationsSupported & relloc) != relloc)
                 .Do((actor, item, relloc) =>
                 {
                     MudObject.SendMessage(actor, "@cant look relloc", Relloc.GetRelativeLocationName(relloc));
@@ -46,7 +46,7 @@ namespace StandardActionsModule
                 .Name("Container must support relloc rule.");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
-                .When((actor, item, relloc) => (relloc == RelativeLocations.In) && !item.GetBooleanProperty("open?"))
+                .When((actor, item, relloc) => (relloc == RelativeLocations.In) && !item.GetPropertyOrDefault<bool>("open?", false))
                 .Do((actor, item, relloc) =>
                 {
                         MudObject.SendMessage(actor, "@is closed error", item);
@@ -63,7 +63,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, RelativeLocations>("look relloc")
                 .Do((actor, item, relloc) =>
                 {
-                    var contents = new List<MudObject>((item as Container).EnumerateObjects(relloc));
+                    var contents = new List<MudObject>(item.EnumerateObjects(relloc));
 
                     if (contents.Count > 0)
                     {

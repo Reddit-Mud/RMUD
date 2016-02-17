@@ -11,7 +11,13 @@ namespace NetworkModule
 {
     public static class Accounts
     {
-        private static String AccountsPath = "database/accounts/";
+        private static String AccountsPath
+        {
+            get
+            {
+                return Core.DatabasePath + "accounts/";
+            }
+        }
 
         private static string GenerateRandomSalt()
         {
@@ -60,8 +66,8 @@ namespace NetworkModule
             Core.CommandTimeoutEnabled = false;
             var playerObject = Core.Database.GetObject(Core.SettingsObject.PlayerBaseObject + "@" + Account.UserName) as Player;
 
-            playerObject.Short = Account.UserName;
-            playerObject.Nouns.Add(Account.UserName.ToUpper());
+            playerObject.SetProperty("Short", Account.UserName);
+            playerObject.GetProperty<NounList>("Nouns").Add(Account.UserName.ToUpper());
             MudObject.PersistInstance(playerObject);
             return playerObject;
         }

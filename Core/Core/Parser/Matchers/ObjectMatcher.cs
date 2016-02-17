@@ -113,7 +113,7 @@ namespace RMUD
 			{
                 PossibleMatch possibleMatch = State;
 				bool matched = false;
-				while (possibleMatch.Next != null && matchableMudObject.Nouns.Match(possibleMatch.Next.Value.ToUpper(), Context.ExecutingActor))
+				while (possibleMatch.Next != null && matchableMudObject.GetProperty<NounList>("Nouns").Match(possibleMatch.Next.Value.ToUpper(), Context.ExecutingActor))
 				{
                     if (matched == false) possibleMatch = State.Clone();
 					matched = true;

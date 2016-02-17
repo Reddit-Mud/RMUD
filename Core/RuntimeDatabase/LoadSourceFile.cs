@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public partial class GithubDatabase : WorldDataService
+    public partial class RuntimeDatabase : WorldDataService
     {
         override public Tuple<bool, String> LoadSourceFile(String Path)
         {

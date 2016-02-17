@@ -21,19 +21,19 @@ namespace StandardActionsModule
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe", "[Actor, Item] : Generates descriptions of the item.", "actor", "item");
                  
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => !String.IsNullOrEmpty(item.Long))
+                .When((viewer, item) => !String.IsNullOrEmpty(item.GetProperty<String>("Long")))
                 .Do((viewer, item) =>
                 {
-                    MudObject.SendMessage(viewer, item.Long);
+                    MudObject.SendMessage(viewer, item.GetProperty<String>("Long"));
                     return PerformResult.Continue;
                 })
                 .Name("Basic description rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => item.GetBooleanProperty("openable?"))
+                .When((viewer, item) => item.GetPropertyOrDefault("openable?", false))
                 .Do((viewer, item) =>
                 {
-                    if (item.GetBooleanProperty("open?"))
+                    if (item.GetPropertyOrDefault("open?", false))
                         MudObject.SendMessage(viewer, "@is open", item);
                     else
                         MudObject.SendMessage(viewer, "@is closed", item);
@@ -42,10 +42,10 @@ namespace StandardActionsModule
                 .Name("Describe open or closed state rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => (item is Container) && ((item as Container).LocationsSupported & RelativeLocations.On) == RelativeLocations.On)
+                .When((viewer, item) => (item.LocationsSupported & RelativeLocations.On) == RelativeLocations.On)
                 .Do((viewer, item) =>
                 {
-                    var contents = (item as Container).GetContents(RelativeLocations.On);
+                    var contents = item.GetContents(RelativeLocations.On);
                     if (contents.Count() > 0)
                         MudObject.SendMessage(viewer, "@describe on", item, contents);
                     return PerformResult.Continue;
@@ -55,14 +55,14 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("describe")
                 .When((viewer, item) =>
                     {
-                        if (!(item is Container)) return false;
-                        if (!item.GetBooleanProperty("open?")) return false;
-                        if ((item as Container).EnumerateObjects(RelativeLocations.In).Count() == 0) return false;
+                        if (item.GetPropertyOrDefault<bool>("container?", false)) return false;
+                        if (!item.GetPropertyOrDefault<bool>("open?", false)) return false;
+                        if (item.EnumerateObjects(RelativeLocations.In).Count() == 0) return false;
                         return true;
                     })
                 .Do((viewer, item) =>
                 {
-                    var contents = (item as Container).GetContents(RelativeLocations.In);
+                    var contents = item.GetContents(RelativeLocations.In);
                     if (contents.Count() > 0)
                         MudObject.SendMessage(viewer, "@describe in", item, contents);
                     return PerformResult.Continue;

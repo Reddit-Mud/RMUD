@@ -59,7 +59,7 @@ namespace ConversationModule
                     var suggestedTopics = npc.GetPropertyOrDefault<List<MudObject>>("conversation-topics", new List<MudObject>()).AsEnumerable();
 
                     if (!Settings.ListDiscussedTopics)
-                        suggestedTopics = suggestedTopics.Where(obj => !obj.GetBooleanProperty("topic-discussed"));
+                        suggestedTopics = suggestedTopics.Where(obj => !obj.GetPropertyOrDefault("topic-discussed", false));
 
                     suggestedTopics = suggestedTopics.Where(topic => GlobalRules.ConsiderCheckRule("topic available?", actor, npc, topic) == CheckResult.Allow);
 
@@ -109,7 +109,7 @@ namespace ConversationModule
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("topic available?")
                 .First
-                .When((actor, npc, topic) => (topic != null) && (Settings.AllowRepeats == false) && topic.GetBooleanProperty("topic-discussed"))
+                .When((actor, npc, topic) => (topic != null) && (Settings.AllowRepeats == false) && topic.GetPropertyOrDefault("topic-discussed", false))
                 .Do((actor, npc, topic) => CheckResult.Disallow)
                 .Name("Already discussed topics unavailable when repeats disabled rule.");
 

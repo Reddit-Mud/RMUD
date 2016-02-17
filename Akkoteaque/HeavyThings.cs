@@ -11,7 +11,7 @@ namespace Akko
     {
         public static bool IsHeavy(MudObject Object)
         {
-            return Object.GetBooleanProperty("heavy?");
+            return Object.GetPropertyOrDefault<bool>("heavy?", false);
         }
 
         public static bool HasHeavyThing(MudObject Object)

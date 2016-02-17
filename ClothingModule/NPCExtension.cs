@@ -15,7 +15,7 @@ namespace ClothingModule
 
         public static void Wear(this NPC NPC, String Short, ClothingLayer Layer, ClothingBodyPart BodyPart)
         {
-            Wear(NPC, Clothing.Create(Short, Layer, BodyPart));
+            Wear(NPC, Factory.Create(Short, Layer, BodyPart));
         }
 	}
 }

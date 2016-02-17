@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public partial class GithubDatabase : WorldDataService
+    public partial class RuntimeDatabase : WorldDataService
     {
         public String StaticPath { get; private set; }
         public String DynamicPath { get; private set; }

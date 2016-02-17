@@ -21,8 +21,7 @@ namespace StandardActionsModule
                 .ProceduralRule((match, actor) =>
                 {
                     var direction = match["DIRECTION"] as Direction?;
-                    var location = actor.Location as Room;
-                    var link = location.EnumerateObjects().FirstOrDefault(thing => thing.GetPropertyOrDefault<bool>("portal?", false) && thing.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == direction.Value);
+                    var link = actor.Location.EnumerateObjects().FirstOrDefault(thing => thing.GetPropertyOrDefault<bool>("portal?", false) && thing.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == direction.Value);
                     match.Upsert("LINK", link);
                     return PerformResult.Continue;
                 }, "lookup link rule")
@@ -62,7 +61,7 @@ namespace StandardActionsModule
                 .Name("No link found rule.");
 
             GlobalRules.Check<Actor, MudObject>("can go?")
-                .When((actor, link) => link != null && link.GetBooleanProperty("openable?") && !link.GetBooleanProperty("open?"))
+                .When((actor, link) => link != null && link.GetPropertyOrDefault<bool>("openable?", false) && !link.GetPropertyOrDefault<bool>("open?", false))
                 .Do((actor, link) =>
                 {
                     MudObject.SendMessage(actor, "@first opening", link);
@@ -92,7 +91,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("go")
                 .Do((actor, link) =>
                 {
-                    var destination = MudObject.GetObject(link.GetProperty<String>("link destination")) as Room;
+                    var destination = MudObject.GetObject(link.GetProperty<String>("link destination"));
                     if (destination == null)
                     {
                         MudObject.SendMessage(actor, "@bad link");

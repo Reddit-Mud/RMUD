@@ -12,7 +12,7 @@ namespace ChatModule
 
         public ChatChannel(String Short) : base(Short, "")
         {
-            Article = "";
+            SetProperty("Article", "");
         }
 
         internal static List<ChatChannel> ChatChannels = new List<ChatChannel>();
@@ -28,7 +28,7 @@ namespace ChatModule
         {
             var realMessage = String.Format("{0} : {1}", DateTime.Now, Message);
 
-            var chatLogFilename = ChatChannel.ChatLogsPath + Channel.Short + ".txt";
+            var chatLogFilename = ChatChannel.ChatLogsPath + Channel.GetProperty<String>("Short") + ".txt";
             System.IO.Directory.CreateDirectory(ChatChannel.ChatLogsPath);
             System.IO.File.AppendAllText(chatLogFilename, realMessage + "\n");
 

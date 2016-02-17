@@ -3,7 +3,7 @@
 namespace CloakOfDarkness
 {
 
-    public class Bar : RMUD.Room
+    public class Bar : RMUD.MudObject
     {
         public override void Initialize()
         {
@@ -13,12 +13,11 @@ The Bar is dark.  "The bar, much rougher than you'd have guessed
 after the opulence of the foyer to the north, is completely empty.
 There seems to be some sort of message scrawled in the sawdust on the floor."
              */
-
-            Short = "Foyer Bar";
-            Long = "The bar, much rougher than you'd have guessed after the opulence of the foyer to the north, is completely empty. There seems to be some sort of message scrawled in the sawdust on the floor.";
-            RoomType = RMUD.RoomType.Interior;
-            AmbientLighting = LightingLevel.Dark;
-
+            Room(RoomType.Interior);
+            
+            SetProperty("Short", "Foyer Bar");
+            SetProperty("Long", "The bar, much rougher than you'd have guessed after the opulence of the foyer to the north, is completely empty. There seems to be some sort of message scrawled in the sawdust on the floor.");
+            
             OpenLink(Direction.NORTH, "Foyer");
 
             // The scrawled message is scenery in the Bar. Understand "floor" or "sawdust" as the message.
@@ -67,7 +66,7 @@ Instead of examining the trampled message:
     say "In the dark? You could easily disturb something."
              */
             Perform<PossibleMatch, Actor>("before acting")
-                .When((match, actor) => AmbientLighting == LightingLevel.Dark)
+                .When((match, actor) => GetProperty<LightingLevel>("ambient light") == LightingLevel.Dark)
                 .Do((match, actor) =>
                 {
                     if (match.TypedValue<CommandEntry>("COMMAND").IsNamed("GO"))
@@ -83,7 +82,7 @@ Instead of examining the trampled message:
     say "Blundering around in the dark isn't a good idea!"
              */
             Perform<PossibleMatch, Actor>("before command")
-                .When((match, actor) => AmbientLighting == LightingLevel.Dark
+                .When((match, actor) => GetProperty<LightingLevel>("ambient light") == LightingLevel.Dark
                     && match.TypedValue<CommandEntry>("COMMAND").IsNamed("GO")
                     && (match.ValueOrDefault("DIRECTION") as Direction?).Value != Direction.NORTH)
                 .Do((match, actor) =>

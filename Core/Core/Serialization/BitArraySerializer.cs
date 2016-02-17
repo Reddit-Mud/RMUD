@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public class BitArraySerializer : PersistentValueSerializer
+    public class BitArraySerializer : ValueSerializer
     {
         public BitArraySerializer()
         {

@@ -6,7 +6,7 @@ namespace Minimum
     {
         public override void Initialize()
         {
-            Short = "you";
+            SetProperty("Short", "you");
         }
     }
 }

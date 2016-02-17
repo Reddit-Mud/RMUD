@@ -19,7 +19,7 @@ namespace ChatModule
             GlobalRules.Perform<Actor>("player joined")
                 .Do(player =>
                 {
-                    foreach (var c in ChatChannel.ChatChannels.Where(c => c.Short == "OOC"))
+                    foreach (var c in ChatChannel.ChatChannels.Where(c => c.GetProperty<String>("Short") == "OOC"))
                         c.Subscribers.Add(player);
                     return SharpRuleEngine.PerformResult.Continue;
                 })

@@ -24,7 +24,9 @@ namespace NetworkModule
         {
             ClientLock.WaitOne();
             ConnectedClients.Remove(client);
-            client.Player.GetProperty<Account>("account").LoggedInCharacter = null;
+            var account = client.Player.GetPropertyOrDefault<Account>("account", null);
+            if (account != null)
+                account.LoggedInCharacter = null;
             Core.RemovePlayer(client.Player);
             ClientLock.ReleaseMutex();
         }

@@ -24,13 +24,13 @@ namespace RMUD
             // Every object added to a room as a portal will be given the 'portal?' property, with a value of true.
             if (Portal.GetPropertyOrDefault<bool>("portal?", false) == false) return null; // Not a portal.
 
-            var destination = MudObject.GetObject(Portal.GetProperty<String>("link destination")) as Room;
+            var destination = MudObject.GetObject(Portal.GetProperty<String>("link destination"));
             if (destination == null) return null; // Link is malformed in some way.
             
             var direction = Portal.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE);
             var oppositeDirection = Link.Opposite(direction);
             var mirrorLink = destination.EnumerateObjects().FirstOrDefault(p =>
-                p.GetBooleanProperty("portal?") && p.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == oppositeDirection);
+                p.GetPropertyOrDefault<bool>("portal?", false) && p.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == oppositeDirection);
             return mirrorLink;
         }
     }

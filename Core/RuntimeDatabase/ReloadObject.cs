@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public partial class GithubDatabase : WorldDataService
+    public partial class RuntimeDatabase : WorldDataService
     {
         override public MudObject ReloadObject(String Path)
 		{
@@ -25,10 +25,9 @@ namespace RMUD
                 MudObject.InitializeObject(newObject);
 
 				//Preserve contents
-				if (existing is Container && newObject is Container)
-                    foreach (var item in (existing as Container).EnumerateObjectsAndRelloc())
+                    foreach (var item in existing.EnumerateObjectsAndRelloc())
                     {
-                        (newObject as Container).Add(item.Item1, item.Item2);
+                        newObject.Add(item.Item1, item.Item2);
                         item.Item1.Location = newObject;
                     }
                  
@@ -37,7 +36,7 @@ namespace RMUD
 				{
 					if ((existing as MudObject).Location != null)
 					{
-                        var loc = ((existing as MudObject).Location as Container).RelativeLocationOf(existing);
+                        var loc = existing.Location.RelativeLocationOf(existing);
 						MudObject.Move(newObject as MudObject, (existing as MudObject).Location, loc);
 						MudObject.Move(existing as MudObject, null, RelativeLocations.None);
 					}

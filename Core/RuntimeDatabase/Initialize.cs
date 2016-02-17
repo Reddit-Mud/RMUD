@@ -8,13 +8,13 @@ using System.Reflection;
 
 namespace RMUD
 {
-    public partial class GithubDatabase : WorldDataService
+    public partial class RuntimeDatabase : WorldDataService
     {
         override public void Initialize()
         {
             NamedObjects = new Dictionary<string, MudObject>();
-            StaticPath = "database/static/";
-            DynamicPath = "database/dynamic/";
+            StaticPath = Core.DatabasePath + "static/";
+            DynamicPath = Core.DatabasePath + "dynamic/";
 
             Core.SettingsObject = new Settings();
             var settings = GetObject("settings") as Settings;

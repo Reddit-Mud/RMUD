@@ -35,7 +35,7 @@ namespace Space
                 .Last
                 .Do((a, b) =>
                 {
-                    if (GetBooleanProperty("open?"))
+                    if (GetPropertyOrDefault<bool>("open?", false))
                     {
                         MudObject.SendMessage(a, "It's already open.");
                         return CheckResult.Disallow;
@@ -48,7 +48,7 @@ namespace Space
                 .Last
                 .Do((a, b) =>
                 {
-                    if (!GetBooleanProperty("open?"))
+                    if (!GetPropertyOrDefault<bool>("open?", false))
                     {
                         MudObject.SendMessage(a, "It's already closed.");
                         return CheckResult.Disallow;

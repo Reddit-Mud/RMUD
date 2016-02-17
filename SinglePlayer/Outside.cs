@@ -2,11 +2,13 @@
 
 namespace CloakOfDarkness
 {
-    public class Outside : RMUD.Room
+    public class Outside : RMUD.MudObject
     {
         public override void Initialize()
         {
-            Short = "Outside the Opera House";
+            Room(RoomType.Exterior);
+
+            SetProperty("Short", "Outside the Opera House");
         }
     }
 }

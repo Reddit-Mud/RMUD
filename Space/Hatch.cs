@@ -13,17 +13,17 @@ namespace Space
             Long = "It looks just like every other hatch.";
 
             this.Nouns.Add("HATCH");
-            this.Nouns.Add("CLOSED", h => !GetBooleanProperty("open?"));
-            this.Nouns.Add("OPEN", h => GetBooleanProperty("open?"));
+            this.Nouns.Add("CLOSED", h => !GetPropertyOrDefault<bool>("open?", false));
+            this.Nouns.Add("OPEN", h => GetPropertyOrDefault<bool>("open?", false));
 
-            SetProperty("open?", false);
-            SetProperty("openable?", true);
+            UpsertProperty("open?", typeof(bool), false);
+            UpsertProperty("openable?", typeof(bool), true);
 
             Check<MudObject, Hatch>("can open?")
                 .Last
                 .Do((a, b) =>
                 {
-                    if (GetBooleanProperty("open?"))
+                    if (GetPropertyOrDefault<bool>("open?", false))
                     {
                         MudObject.SendMessage(a, "@already open");
                         return SharpRuleEngine.CheckResult.Disallow;
@@ -36,7 +36,7 @@ namespace Space
                 .Last
                 .Do((a, b) =>
                 {
-                    if (!GetBooleanProperty("open?"))
+                    if (!GetPropertyOrDefault<bool>("open?", false))
                     {
                         MudObject.SendMessage(a, "@already closed");
                         return SharpRuleEngine.CheckResult.Disallow;

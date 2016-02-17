@@ -2,7 +2,7 @@
 
 namespace CloakOfDarkness
 {
-    public class Cloakroom : RMUD.Room
+    public class Cloakroom : RMUD.MudObject
     {
         public override void Initialize()
         {
@@ -25,9 +25,10 @@ hanging on it[otherwise]screwed to the wall[end if]."
 [This description is general enough that, if we were to add other hangable items
 to the game, they would automatically be described correctly as well.]
              */
-             
-            Short = "Cloakroom";
-            Long = "The walls of this small room were clearly once lined with hooks, though now only one remains.";
+            Room(RoomType.Interior);
+
+            SetProperty("Short", "Cloakroom");
+            SetProperty("Long", "The walls of this small room were clearly once lined with hooks, though now only one remains.");
 
             OpenLink(Direction.EAST, "Foyer");
 
@@ -35,16 +36,17 @@ to the game, they would automatically be described correctly as well.]
         }
     }
 
-    public class Hook : RMUD.Container
+    public class Hook : MudObject
     {
         public Hook()
-            : base(RelativeLocations.On, RelativeLocations.On)
-        { }
+        {
+            Container(RelativeLocations.On, RelativeLocations.On);
+        }
 
         public override void Initialize()
         {
             SimpleName("small brass hook", "peg");
-            Long = "It's just a small brass hook.";
+            SetProperty("Long", "It's just a small brass hook.");
 
             Check<MudObject, MudObject>("can take?")
                 .Do((actor, item) =>

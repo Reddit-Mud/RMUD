@@ -28,14 +28,8 @@ namespace ClothingModule
         Cloak,
     }
 
-    public static class Clothing// : RMUD.MudObject
+    public static class Factory// : RMUD.MudObject
     {
-        //public ClothingLayer Layer = ClothingLayer.Outer;
-        //public ClothingBodyPart BodyPart = ClothingBodyPart.Torso;
-
-        //public Clothing() : base() { }
-        //public Clothing(String Short, String Long) : base(Short, Long) { }
-
         public static RMUD.MudObject Create(String Short, ClothingLayer Layer, ClothingBodyPart BodyPart)
         {
             var r = new RMUD.MudObject(Short, "This is a generic " + Short + ". Layer: " + Layer + " BodyPart: " + BodyPart);
@@ -43,6 +37,14 @@ namespace ClothingModule
             r.SetProperty("clothing part", BodyPart);
             r.SetProperty("wearable?", true);
             return r;
+        }
+
+        public static void Clothing(this RMUD.MudObject MudObject, ClothingLayer Layer, ClothingBodyPart BodyPart)
+        {
+            MudObject.UpsertProperty("clothing layer", Layer);
+            MudObject.UpsertProperty("clothing part", BodyPart);
+            MudObject.UpsertProperty("wearable?", true);
+
         }
     }
 }

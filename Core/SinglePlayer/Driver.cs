@@ -65,6 +65,7 @@ namespace RMUD.SinglePlayer
             assemblies.Add(new ModuleAssembly(DatabaseAssembly, new ModuleInfo { BaseNameSpace = gameInfo.DatabaseNameSpace }));
 
             if (RMUD.Core.Start(StartupFlags.Silent | StartupFlags.SingleThreaded,
+                "database/",
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, gameInfo.DatabaseNameSpace),
                 assemblies.ToArray()))
             {

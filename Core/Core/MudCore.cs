@@ -31,6 +31,7 @@ namespace RMUD
         internal static Mutex DatabaseLock = new Mutex();
         public static bool ShuttingDown { get; private set; }
         public static Settings SettingsObject;
+        public static String DatabasePath;
         public static WorldDataService Database;
         public static RuleEngine GlobalRules;
         public static Action OnShutDown = null;

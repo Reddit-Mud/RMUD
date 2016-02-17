@@ -49,7 +49,7 @@ namespace StandardActionsModule
                 .Name("Item must be visible to take rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
-                .When((actor, item) => actor is Container && (actor as Container).Contains(item, RelativeLocations.Held))
+                .When((actor, item) => actor.Contains(item, RelativeLocations.Held))
                 .Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "@already have that");
@@ -93,7 +93,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
-                .When((actor, thing) => thing.GetBooleanProperty("scenery?"))
+                .When((actor, thing) => thing.GetPropertyOrDefault<bool>("scenery?", false))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@cant take scenery");

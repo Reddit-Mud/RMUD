@@ -59,11 +59,10 @@ namespace StandardActionsModule
                 {
                     // The direction matched was stored in the match as "DIRECTION".
                     var direction = match["DIRECTION"] as Direction?;
-                    var location = actor.Location as Room;
                     // Rooms have a collection of objects that are in them. Links happen to have two specific 
                     // properties set that we can use to find them: First, 'portal?' will be true, and 
                     // 'link direction' will hold the direction the link goes in. So we search for the link.
-                    var link = location.EnumerateObjects().FirstOrDefault(thing => thing.GetPropertyOrDefault<bool>("portal?", false) && thing.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == direction.Value);
+                    var link = actor.Location.EnumerateObjects().FirstOrDefault(thing => thing.GetPropertyOrDefault<bool>("portal?", false) && thing.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == direction.Value);
                     // Store the link in the match, and later procedural rules will be able to find it.
                     match.Upsert("LINK", link);
                     // Procedural rules return PerformResults. If they return stop, the command stops right there.
@@ -167,7 +166,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, MudObject>("push direction")
                 .Do((actor, subject, link) =>
                 {
-                    var destination = MudObject.GetObject(link.GetProperty<String>("link destination")) as Room;
+                    var destination = MudObject.GetObject(link.GetProperty<String>("link destination"));
                     if (destination == null)
                     {
                         MudObject.SendMessage(actor, "@bad link");

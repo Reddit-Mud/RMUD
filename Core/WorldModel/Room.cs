@@ -5,12 +5,15 @@ using System.Text;
 
 namespace RMUD
 {
-	public class Room : Container
+	public partial class MudObject
 	{
-        public RoomType RoomType = RoomType.Exterior;
-
-        public Room() : base(RelativeLocations.Contents, RelativeLocations.Contents)
-        { }
+        public void Room(RoomType Type)
+        {
+            Container(RelativeLocations.Contents, RelativeLocations.Contents);
+            UpsertProperty<RoomType>("room type", Type);
+            UpsertProperty<LightingLevel>("light", LightingLevel.Dark);
+            UpsertProperty<LightingLevel>("ambient light", LightingLevel.Dark);
+        }
 
         public void OpenLink(Direction Direction, String Destination, MudObject Portal = null)
         {
@@ -21,7 +24,7 @@ namespace RMUD
             {
                 Portal = new MudObject();
                 Portal.SetProperty("link anonymous?", true);
-                Portal.Short = "link " + Direction + " to " + Destination;
+                Portal.SetProperty("Short", "link " + Direction + " to " + Destination);
             }
 
             Portal.SetProperty("portal?", true);
@@ -37,9 +40,9 @@ namespace RMUD
 		{
 			var scenery = new MudObject();
             scenery.SetProperty("scenery?", true);
-			scenery.Long = Description;
+            scenery.SetProperty("Long", Description);
 			foreach (var noun in Nouns)
-				scenery.Nouns.Add(noun.ToUpper());
+				scenery.GetProperty<NounList>("Nouns").Add(noun.ToUpper());
             AddScenery(scenery);
             return scenery;
 		}
@@ -52,26 +55,6 @@ namespace RMUD
         }
 
         #endregion
-
-        public LightingLevel Light { get; private set; }
-        public LightingLevel AmbientLighting = LightingLevel.Dark;
-
-        public void UpdateLighting()
-        {
-            Light = LightingLevel.Dark;
-
-            if (RoomType == RMUD.RoomType.Exterior)
-            {
-                Light = AmbientExteriorLightingLevel;
-            }
-
-            foreach (var item in MudObject.EnumerateVisibleTree(this))
-            {
-                var lightingLevel = GlobalRules.ConsiderValueRule<LightingLevel>("light level", item);
-                if (lightingLevel > Light) Light = lightingLevel;
-            }
-
-            if (AmbientLighting > Light) Light = AmbientLighting;
-        }
+        
     }
 }

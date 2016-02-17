@@ -3,7 +3,7 @@
 namespace CloakOfDarkness
 {
 
-    public class Foyer : RMUD.Room
+    public class Foyer : RMUD.MudObject
     {
         public override void Initialize()
         {
@@ -16,9 +16,10 @@ Instead of going north in the Foyer, say "You've only just arrived, and besides,
 the weather outside seems to be getting worse."
 
              */
+            Room(RoomType.Interior);
 
-            Short = "Foyer of the Opera House";
-            Long = "You are standing in a spacious hall, splendidly decorated in red and gold, with glittering chandeliers overhead.";
+            SetProperty("Short", "Foyer of the Opera House");
+            SetProperty("Long", "You are standing in a spacious hall, splendidly decorated in red and gold, with glittering chandeliers overhead.");
 
             OpenLink(Direction.NORTH, "Outside");
             OpenLink(Direction.SOUTH, "Bar");

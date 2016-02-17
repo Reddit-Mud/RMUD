@@ -12,12 +12,12 @@ namespace RMUD
     /// </summary>
     public class PersistAttribute : Attribute
     {
-        internal PersistentValueSerializer Serializer = null;
+        internal ValueSerializer Serializer = null;
 
         public PersistAttribute(Type SerializerType = null)
         {
             if (SerializerType != null)
-                Serializer = Activator.CreateInstance(SerializerType) as PersistentValueSerializer;
+                Serializer = Activator.CreateInstance(SerializerType) as ValueSerializer;
         }
 
         public void WriteValue(Object Value, JsonWriter Writer, MudObject Owner)
@@ -29,8 +29,8 @@ namespace RMUD
         public static void _WriteValue(Object Value, JsonWriter Writer, MudObject Owner)
         {
             var name = Value.GetType().Name;
-            PersistentValueSerializer serializer = null;
-            if (PersistentValueSerializer.GlobalSerializers.TryGetValue(name, out serializer))
+            ValueSerializer serializer = null;
+            if (ValueSerializer.GlobalSerializers.TryGetValue(name, out serializer))
             {
                 Writer.WriteStartObject();
                 Writer.WritePropertyName("$type");
@@ -57,15 +57,15 @@ namespace RMUD
             else if (Reader.TokenType == JsonToken.Boolean) { r = Convert.ToBoolean(Reader.Value.ToString()); Reader.Read(); }
             else 
             {
-                PersistentValueSerializer serializer = null;
-                if (ValueType != null && PersistentValueSerializer.GlobalSerializers.TryGetValue(ValueType.Name, out serializer))
+                ValueSerializer serializer = null;
+                if (ValueType != null && ValueSerializer.GlobalSerializers.TryGetValue(ValueType.Name, out serializer))
                     return serializer.ReadValue(ValueType, Reader, Owner);
                 else if (Reader.TokenType == JsonToken.StartObject)
                 {
                     Reader.Read();
                     if (Reader.TokenType != JsonToken.PropertyName || Reader.Value.ToString() != "$type") throw new InvalidOperationException();
                     Reader.Read();
-                    if (!PersistentValueSerializer.GlobalSerializers.TryGetValue(Reader.Value.ToString(), out serializer))
+                    if (!ValueSerializer.GlobalSerializers.TryGetValue(Reader.Value.ToString(), out serializer))
                         throw new InvalidOperationException();
                     Reader.Read();
                     Reader.Read();

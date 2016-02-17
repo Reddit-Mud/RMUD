@@ -5,19 +5,21 @@ using System.Text;
 
 namespace RMUD
 {
-    public class Container : MudObject
+    public partial class MudObject
     {
         [Persist(typeof(ContainerSerializer))]
         public Dictionary<RelativeLocations, List<MudObject>> Lists { get; set; }
 
-        public RelativeLocations Supported;
-        public RelativeLocations Default;
+        public RelativeLocations Supported = RelativeLocations.None;
+        public RelativeLocations Default = RelativeLocations.None;
 
-        public Container(RelativeLocations Locations, RelativeLocations Default)
+        public void Container(RelativeLocations Locations, RelativeLocations Default)
         {
             this.Supported = Locations;
             this.Default = Default;
             this.Lists = new Dictionary<RelativeLocations, List<MudObject>>();
+
+            UpsertProperty("container?", true);
         }
 
         public void Remove(MudObject Object)

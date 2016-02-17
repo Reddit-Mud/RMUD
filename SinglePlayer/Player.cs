@@ -6,7 +6,7 @@ namespace CloakOfDarkness
     {
         public override void Initialize()
         {
-            Short = "you";
+            SetProperty("Short", "you");
 
             Move(GetObject("Cloak"), this, RelativeLocations.Worn);
         }

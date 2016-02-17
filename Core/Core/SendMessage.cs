@@ -58,9 +58,8 @@ namespace RMUD
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
-            var container = MudObject.FindLocale(Object) as Container;
-            if (container != null)
-                foreach (var actor in container.EnumerateObjects<Actor>().Where(a => a.ConnectedClient != null))
+            var locale = MudObject.FindLocale(Object);
+                foreach (var actor in locale.EnumerateObjects<Actor>().Where(a => a.ConnectedClient != null))
                     Core.PendingMessages.Add(new PendingMessage(actor.ConnectedClient, Core.FormatMessage(actor, Message, MentionedObjects)));
         }
 
@@ -71,10 +70,9 @@ namespace RMUD
             Core.OutputQueryTriggered = true;
 
             if (Actor == null) return;
-            var location = Actor.Location as Room;
-            if (location == null) return;
+            if (Actor.Location == null) return;
 
-            foreach (var other in location.EnumerateObjects<Actor>().Where(a => !Object.ReferenceEquals(a, Actor) && (a.ConnectedClient != null)))
+            foreach (var other in Actor.Location.EnumerateObjects<Actor>().Where(a => !Object.ReferenceEquals(a, Actor) && (a.ConnectedClient != null)))
                 Core.PendingMessages.Add(new PendingMessage(other.ConnectedClient, Core.FormatMessage(other, Message, MentionedObjects)));
                 
         }

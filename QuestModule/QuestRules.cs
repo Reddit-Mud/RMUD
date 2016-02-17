@@ -15,18 +15,18 @@ namespace QuestModule
             GlobalRules.Perform<PossibleMatch, Actor>("after acting")
                 .Do((match, actor) =>
                 {
-                    if (actor.GetProperty<MudObject>("active-quest") != null)
+                    if (actor.GetPropertyOrDefault<MudObject>("active-quest", null) != null)
                     {
                         var quest = actor.GetProperty<MudObject>("active-quest");
-
+                                                
                         if (GlobalRules.ConsiderValueRule<bool>("quest complete?", actor, quest))
                         {
-                            actor.RemoveProperty("active-quest");
+                            actor.SetProperty("active-quest", null);
                             GlobalRules.ConsiderPerformRule("quest completed", actor, quest);
                         }
                         else if (GlobalRules.ConsiderValueRule<bool>("quest failed?", actor, quest))
                         {
-                            actor.RemoveProperty("active-quest");
+                            actor.SetProperty("active-quest", null);
                             GlobalRules.ConsiderPerformRule("quest failed", actor, quest);
                         }
                     }

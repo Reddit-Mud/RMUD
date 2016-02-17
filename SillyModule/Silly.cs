@@ -86,7 +86,7 @@ And we can dance")
                     var ruleID = Guid.NewGuid();
                     var counter = 100;
 
-                    target.Nouns.Add("silly");
+                    target.GetProperty<NounList>("Nouns").Add("silly");
 
                     target.Value<MudObject, bool>("silly?").Do((thing) => true).ID(ruleID.ToString())
                         .Name("Silly things are silly rule.");
@@ -94,7 +94,7 @@ And we can dance")
                     target.Value<MudObject, MudObject, String, String>("printed name")
                         .Do((viewer, thing, article) =>
                         {
-                            return "silly " + thing.Short;
+                            return "silly " + thing.GetProperty<String>("Short");
                         })
                         .Name("Silly things have silly names rule.")
                         .ID(ruleID.ToString());
@@ -106,7 +106,7 @@ And we can dance")
                             if (counter <= 0)
                             {
                                 MudObject.SendExternalMessage(target, "^<the0> is serious now.", target);
-                                target.Nouns.Remove("silly");
+                                target.GetProperty<NounList>("Nouns").Remove("silly");
                                 target.Rules.DeleteAll(ruleID.ToString());
                                 GlobalRules.DeleteRule("heartbeat", ruleID.ToString());
                             }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public class Actor : Container
+    public class Actor : MudObject
     {
         public ClientCommandHandler CommandHandler;
         public Client ConnectedClient;
@@ -15,11 +15,11 @@ namespace RMUD
         public Gender Gender { get; set; }
 
         public Actor()
-            : base(RelativeLocations.Held | RelativeLocations.Worn, RelativeLocations.Held)
         {
+            Container(RelativeLocations.Held | RelativeLocations.Worn, RelativeLocations.Held);
             Gender = RMUD.Gender.Male;
-            Nouns.Add("MAN", (a) => a.Gender == RMUD.Gender.Male);
-            Nouns.Add("WOMAN", (a) => a.Gender == RMUD.Gender.Female);
+            GetProperty<NounList>("Nouns").Add("MAN", (a) => a.Gender == RMUD.Gender.Male);
+            GetProperty<NounList>("Nouns").Add("WOMAN", (a) => a.Gender == RMUD.Gender.Female);
         }
 
     }

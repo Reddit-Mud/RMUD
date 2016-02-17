@@ -46,7 +46,7 @@ namespace StandardActionsModule
                 .Name("Key must be held rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can lock?")
-                .When((actor, item, key) => !item.GetBooleanProperty("lockable?"))
+                .When((actor, item, key) => !item.GetPropertyOrDefault<bool>("lockable?", false))
                 .Do((a, b, c) =>
                 {
                     MudObject.SendMessage(a, "@not lockable");

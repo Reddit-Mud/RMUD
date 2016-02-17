@@ -51,8 +51,8 @@ namespace StandardActionsModule
                 .Do((actor) =>
                 {
                     MudObject.SendMessage(actor, "A detailed account of all objects present.");
-                    if (actor.Location != null && actor.Location is Container)
-                        foreach (var item in (actor.Location as Container).EnumerateObjects().Where(i => !System.Object.ReferenceEquals(i, actor)))
+                    if (actor.Location != null)
+                        foreach (var item in actor.Location.EnumerateObjects().Where(i => !System.Object.ReferenceEquals(i, actor)))
                         {
                             MudObject.SendMessage(actor, "<a0>", item);
                         }
