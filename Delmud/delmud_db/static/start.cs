@@ -4,6 +4,6 @@
 	{
         Room(RoomType.Interior);
 
-        SetProperty("Short", "Chamber of the swirling elements");
+        SetProperty("short", "Chamber of the swirling elements");
     }
 }

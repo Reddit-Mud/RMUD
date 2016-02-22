@@ -15,8 +15,8 @@ There seems to be some sort of message scrawled in the sawdust on the floor."
              */
             Room(RoomType.Interior);
             
-            SetProperty("Short", "Foyer Bar");
-            SetProperty("Long", "The bar, much rougher than you'd have guessed after the opulence of the foyer to the north, is completely empty. There seems to be some sort of message scrawled in the sawdust on the floor.");
+            SetProperty("short", "Foyer Bar");
+            SetProperty("long", "The bar, much rougher than you'd have guessed after the opulence of the foyer to the north, is completely empty. There seems to be some sort of message scrawled in the sawdust on the floor.");
             
             OpenLink(Direction.NORTH, "Foyer");
 
@@ -65,7 +65,7 @@ Instead of examining the trampled message:
     to the neatness after the neatness of the message;
     say "In the dark? You could easily disturb something."
              */
-            Perform<PossibleMatch, Actor>("before acting")
+            Perform<PossibleMatch, MudObject>("before acting")
                 .When((match, actor) => GetProperty<LightingLevel>("ambient light") == LightingLevel.Dark)
                 .Do((match, actor) =>
                 {
@@ -81,7 +81,7 @@ Instead of examining the trampled message:
     now the message is trampled;
     say "Blundering around in the dark isn't a good idea!"
              */
-            Perform<PossibleMatch, Actor>("before command")
+            Perform<PossibleMatch, MudObject>("before command")
                 .When((match, actor) => GetProperty<LightingLevel>("ambient light") == LightingLevel.Dark
                     && match.TypedValue<CommandEntry>("COMMAND").IsNamed("GO")
                     && (match.ValueOrDefault("DIRECTION") as Direction?).Value != Direction.NORTH)

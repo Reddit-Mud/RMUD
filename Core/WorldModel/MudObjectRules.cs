@@ -13,7 +13,7 @@ namespace RMUD
 
             GlobalRules.Value<MudObject, MudObject, String, String>("printed name")
                .Last
-               .Do((viewer, thing, article) => (String.IsNullOrEmpty(article) ? (thing.GetProperty<String>("Short")) : (article + " " + thing.GetProperty<String>("Short"))))
+               .Do((viewer, thing, article) => (String.IsNullOrEmpty(article) ? (thing.GetProperty<String>("short")) : (article + " " + thing.GetProperty<String>("short"))))
                .Name("Default name of a thing.");
         }
     }

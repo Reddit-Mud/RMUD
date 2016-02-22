@@ -46,7 +46,7 @@ namespace StandardActionsModule
                 .Name("Container must support relloc rule.");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
-                .When((actor, item, relloc) => (relloc == RelativeLocations.In) && !item.GetPropertyOrDefault<bool>("open?", false))
+                .When((actor, item, relloc) => (relloc == RelativeLocations.In) && !item.GetPropertyOrDefault<bool>("open?"))
                 .Do((actor, item, relloc) =>
                 {
                         MudObject.SendMessage(actor, "@is closed error", item);

@@ -38,7 +38,7 @@ namespace ClothingModule
                 });
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((a, b) => a is Actor && (a as Actor).RelativeLocationOf(b) == RelativeLocations.Worn)
+                .When((a, b) => a.RelativeLocationOf(b) == RelativeLocations.Worn)
                 .Do((a, b) =>
                 {
                     MudObject.SendMessage(a, "@clothing already wearing");
@@ -46,7 +46,8 @@ namespace ClothingModule
                 });
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((actor, item) => !item.GetPropertyOrDefault<bool>("wearable?", false))
+                .When((actor, item) => !item.GetPropertyOrDefault<bool>("wearable?"))
+                .When((actor, item) => !actor.GetPropertyOrDefault<bool>("actor?"))
                 .Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "@clothing cant wear");

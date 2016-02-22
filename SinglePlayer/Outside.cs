@@ -8,7 +8,7 @@ namespace CloakOfDarkness
         {
             Room(RoomType.Exterior);
 
-            SetProperty("Short", "Outside the Opera House");
+            SetProperty("short", "Outside the Opera House");
         }
     }
 }

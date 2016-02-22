@@ -5,6 +5,17 @@ using System.Text;
 
 namespace RMUD
 {
+    public static class RegisterBaseProperties
+    {
+        public static void AtStartup(RuleEngine GlobalRules)
+        {
+            PropertyManifest.RegisterProperty("short", typeof(String), "object");
+            PropertyManifest.RegisterProperty("long", typeof(String), "");
+            PropertyManifest.RegisterProperty("article", typeof(String), "a");
+            PropertyManifest.RegisterProperty("nouns", typeof(NounList), new NounList());
+        }
+    }
+
 	public partial class MudObject : SharpRuleEngine.RuleObject
     {
         public override SharpRuleEngine.RuleEngine GlobalRules { get { return Core.GlobalRules; } }
@@ -33,82 +44,36 @@ namespace RMUD
 
         // Every MudObject has a set of generic properties. Modules use these properties to store values on MudObjects.
                 
-        public Dictionary<String, MudObjectProperty> Properties = new Dictionary<string, MudObjectProperty>();
-
-        public void AddProperty(String Name, System.Type Type)
-        {
-            if (Properties.ContainsKey(Name))
-            {
-                Core.LogWarning(String.Format("Add property erased previous value: {0}.", Name));
-                if (Properties[Name].PropertyType != Type)
-                {
-                    Core.LogWarning(String.Format("Add property changed type: {0} changed to type {1}.", Name, Type.Name));
-                }
-            }
-
-            Properties.Upsert(Name, new MudObjectProperty(Type));
-        }
+        public Dictionary<String, Object> Properties = new Dictionary<string, Object>();
+                
 
         public void SetProperty(String Name, Object Value)
         {
-            MudObjectProperty property = null;
-            if (!Properties.TryGetValue(Name, out property))
-            {
-                if (Value == null)
-                {
-                    Core.LogWarning(String.Format("Implicit property creation with NULL: {0}.", Name));
-                    UpsertProperty(Name, typeof(Object), null);
-                }
-                else
-                {
-                    Core.LogWarning(String.Format("Implicit property creation: {0} of type {1}.", Name, Value.GetType()));
-                    UpsertProperty(Name, Value.GetType(), Value);
-                }
-            }
+            if (PropertyManifest.CheckPropertyType(Name, Value))
+                Properties.Upsert(Name, Value);
             else
-                property.SetValue(Value);
-        }
-
-        /// <summary>
-        /// Same as adding a property, but adding a property twice is not an error and will not erase
-        /// the current value.
-        /// </summary>
-        /// <param name="Name"></param>
-        /// <param name="Type"></param>
-        /// <param name="Value"></param>
-        public void UpsertProperty(String Name, System.Type Type, Object Value)
-        {
-            if (!Properties.ContainsKey(Name))
-                AddProperty(Name, Type);
-
-            if (Properties[Name].PropertyType != Type)
-            {
-                Core.LogWarning(String.Format("Upsert property changed type: {0} changed to type {1}.", Name, Type.Name));
-                Properties.Upsert(Name, new MudObjectProperty(Type));
-            }
-
-            SetProperty(Name, Value);
-        }
-
-        public void UpsertProperty<T>(String Name, T Value)
-        {
-            UpsertProperty(Name, typeof(T), Value);
+                throw new InvalidOperationException("Setting property with object of wrong type.");
         }
 
         public T GetProperty<T>(String Name)
         {
-            MudObjectProperty property = null;
-            if (!Properties.TryGetValue(Name, out property))
+            if (Properties.ContainsKey(Name))
+                return (T)Properties[Name];
+            else
                 throw new InvalidOperationException("Mud Object does not have a property named " + Name);
-            return property.As<T>();
         }
 
-        public T GetPropertyOrDefault<T>(String Name, T Default)
+        public T GetPropertyOrDefault<T>(String Name)
         {
-            MudObjectProperty property = null;
-            if (!Properties.TryGetValue(Name, out property))
-                return Default;
-            return property.As<T>();
+            if (Properties.ContainsKey(Name))
+                return (T)Properties[Name];
+            else
+            {
+                var info = PropertyManifest.GetPropertyInformation(Name);
+                if (info == null)
+                    throw new InvalidOperationException("Property " + Name + " does not exist.");
+                return (T)info.DefaultValue;
+            }
         }
         
         public bool HasProperty(String Name)
@@ -116,39 +81,23 @@ namespace RMUD
             return Properties.ContainsKey(Name);
         }
 
-        public bool HasProperty<T>(String Name)
-        {
-            return Properties.ContainsKey(Name) && Properties[Name].PropertyType == typeof(T);
-        }
-
         #endregion
-
-        private void SetupProperties()
-        {
-            UpsertProperty("Short", "object");
-            UpsertProperty("Long", "");
-            UpsertProperty("Article", "a");
-            UpsertProperty("Nouns", new NounList());
-        }
 
 		public MudObject()
 		{
-            SetupProperties();
-
 		    State = ObjectState.Alive;
             IsPersistent = false;
 		}
 
         public MudObject(String Short, String Long)
         {
-            SetupProperties();
-            SetProperty("Short", Short);
-            SetProperty("Long", Long);
-            GetProperty<NounList>("Nouns").Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            SetProperty("short", Short);
+            SetProperty("long", Long);
+            GetProperty<NounList>("nouns").Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
 
             var firstChar = Short.ToLower()[0];
             if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')
-                SetProperty("Article", "an");
+                SetProperty("article", "an");
 
             State = ObjectState.Alive;
             IsPersistent = false;
@@ -157,9 +106,9 @@ namespace RMUD
 
         public void SimpleName(String Short, params String[] Synonyms)
         {
-            SetProperty("Short", Short);
-            GetProperty<NounList>("Nouns").Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
-            GetProperty<NounList>("Nouns").Add(Synonyms);
+            SetProperty("short", Short);
+            GetProperty<NounList>("nouns").Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            GetProperty<NounList>("nouns").Add(Synonyms);
         }
 
         /// <summary>

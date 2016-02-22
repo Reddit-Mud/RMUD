@@ -133,23 +133,22 @@
     <Compile Include="SinglePlayer\Driver.cs" />
     <Compile Include="SinglePlayer\DummyClient.cs" />
     <Compile Include="SinglePlayer\GameInfo.cs" />
-    <Compile Include="WorldModel\Actor.cs" />
+    <Compile Include="WorldModel\ObjectDecorators\Actor.cs" />
     <Compile Include="WorldModel\BasicDoor.cs" />
-    <Compile Include="WorldModel\Container.cs" />
+    <Compile Include="WorldModel\ObjectDecorators\Container.cs" />
     <Compile Include="WorldModel\EnumerateObjectTree.cs" />
     <Compile Include="WorldModel\Gender.cs" />
     <Compile Include="WorldModel\Directions.cs" />
     <Compile Include="WorldModel\LockedDoor.cs" />
     <Compile Include="WorldModel\MudObject.cs" />
-    <Compile Include="WorldModel\MudObjectProperty.cs" />
     <Compile Include="WorldModel\MudObjectRules.cs" />
     <Compile Include="WorldModel\NounList.cs" />
-    <Compile Include="WorldModel\NPC.cs" />
     <Compile Include="WorldModel\ObjectState.cs" />
-    <Compile Include="WorldModel\Player.cs" />
     <Compile Include="WorldModel\Portal.cs" />
+    <Compile Include="WorldModel\PropertyManifest.cs" />
     <Compile Include="WorldModel\RelativeLocations.cs" />
-    <Compile Include="WorldModel\Room.cs" />
+    <Compile Include="WorldModel\ObjectDecorators\Scenery.cs" />
+    <Compile Include="WorldModel\ObjectDecorators\Room.cs" />
     <Compile Include="WorldModel\RoomLightingRules.cs" />
     <Compile Include="WorldModel\RoomType.cs" />
     <Compile Include="WorldModel\Settings.cs" />
@@ -164,6 +163,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

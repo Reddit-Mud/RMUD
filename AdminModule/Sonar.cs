@@ -69,11 +69,11 @@ namespace AdminModule
         {
             if (Location == null) return '?';
 
-            var spacer = Location.GetProperty<String>("Short").LastIndexOf('-');
-            if (spacer > 0 && spacer < Location.GetProperty<String>("Short").Length - 2)
-                return Location.GetProperty<String>("Short").ToUpper()[spacer + 2];
+            var spacer = Location.GetProperty<String>("short").LastIndexOf('-');
+            if (spacer > 0 && spacer < Location.GetProperty<String>("short").Length - 2)
+                return Location.GetProperty<String>("short").ToUpper()[spacer + 2];
             else
-                return Location.GetProperty<String>("Short").ToUpper()[0];
+                return Location.GetProperty<String>("short").ToUpper()[0];
         }
 
         private static void MapLocation(int[,] MapGrid, Dictionary<int, String> RoomLegend, int X, int Y, RMUD.MudObject Location, int Symbol)
@@ -84,7 +84,7 @@ namespace AdminModule
 
             if (Symbol == ' ') Symbol = FindSymbol(Location);
 
-            if (Location != null) RoomLegend.Upsert(Symbol, Location.GetProperty<String>("Short"));
+            if (Location != null) RoomLegend.Upsert(Symbol, Location.GetProperty<String>("short"));
             
             PlaceSymbol(MapGrid, X, Y, Symbol);
             PlaceSymbol(MapGrid, X - 2, Y - 1, '+');
@@ -108,7 +108,7 @@ namespace AdminModule
                 {
                     var destinationName = link.GetProperty<string>("link destination");
                     var destination = MudObject.GetObject(destinationName);
-                    var direction = link.GetPropertyOrDefault<RMUD.Direction>("link direction", RMUD.Direction.NORTH);
+                    var direction = link.GetPropertyOrDefault<RMUD.Direction>("link direction");
 
                     if (direction == Direction.UP)
                     {

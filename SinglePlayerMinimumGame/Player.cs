@@ -2,11 +2,13 @@
 
 namespace Minimum
 {
-    public class Player : RMUD.Player
+    public class Player : RMUD.MudObject
     {
         public override void Initialize()
         {
-            SetProperty("Short", "you");
+            Actor();
+
+            SetProperty("short", "you");
         }
     }
 }

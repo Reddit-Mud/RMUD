@@ -8,8 +8,8 @@ namespace Minimum
         public override void Initialize()
         {
             Room(RoomType.Exterior);
-            SetProperty("Short", "Start Room");
-            SetProperty("Long", "This is a game with the minimum possible objects.");
+            SetProperty("short", "Start Room");
+            SetProperty("long", "This is a game with the minimum possible objects.");
         }
     }   
 }

@@ -11,11 +11,11 @@ namespace RMUD
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclarePerformRuleBook<Actor>("player joined", "[Player] : Considered when a player enters the game.", "actor");
+            GlobalRules.DeclarePerformRuleBook<MudObject>("player joined", "[Player] : Considered when a player enters the game.", "actor");
 
-            GlobalRules.DeclarePerformRuleBook<Actor>("player left", "[Player] : Considered when a player leaves the game.", "actor");
+            GlobalRules.DeclarePerformRuleBook<MudObject>("player left", "[Player] : Considered when a player leaves the game.", "actor");
 
-            GlobalRules.Perform<Actor>("player joined")
+            GlobalRules.Perform<MudObject>("player joined")
                 .First
                 .Do((actor) =>
                 {
@@ -41,22 +41,22 @@ namespace RMUD
         public static bool Silent { get { return (Flags & StartupFlags.Silent) == StartupFlags.Silent; } }
         public static bool NoLog { get { return (Flags & StartupFlags.NoLog) == StartupFlags.NoLog; } }
 
-        public static void TiePlayerToClient(Client Client, Actor Actor)
+        public static void TiePlayerToClient(Client Client, MudObject Actor)
         {
             Client.Player = Actor;
-            Actor.ConnectedClient = Client;
+            Actor.SetProperty("client", Client);
         }
 
-        public static void AddPlayer(Actor Actor)
+        public static void AddPlayer(MudObject Actor)
         {
-            Actor.Rank = 500;
+            Actor.SetProperty("rank", 500);
             GlobalRules.ConsiderPerformRule("player joined", Actor);
         }
 
-        public static void RemovePlayer(Actor Actor)
+        public static void RemovePlayer(MudObject Actor)
         {
             GlobalRules.ConsiderPerformRule("player left", Actor);
-            Actor.ConnectedClient = null;
+            Actor.SetProperty("client", null);
             MudObject.Move(Actor, null);
         }
 

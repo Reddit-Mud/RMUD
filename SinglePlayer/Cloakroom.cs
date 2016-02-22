@@ -27,8 +27,8 @@ to the game, they would automatically be described correctly as well.]
              */
             Room(RoomType.Interior);
 
-            SetProperty("Short", "Cloakroom");
-            SetProperty("Long", "The walls of this small room were clearly once lined with hooks, though now only one remains.");
+            SetProperty("short", "Cloakroom");
+            SetProperty("long", "The walls of this small room were clearly once lined with hooks, though now only one remains.");
 
             OpenLink(Direction.EAST, "Foyer");
 
@@ -46,7 +46,7 @@ to the game, they would automatically be described correctly as well.]
         public override void Initialize()
         {
             SimpleName("small brass hook", "peg");
-            SetProperty("Long", "It's just a small brass hook.");
+            SetProperty("long", "It's just a small brass hook.");
 
             Check<MudObject, MudObject>("can take?")
                 .Do((actor, item) =>

@@ -7,7 +7,7 @@ namespace RMUD
 {
     public interface Noun
     {
-        bool Match(String Word, Actor Actor);
+        bool Match(String Word, MudObject Actor);
         bool CouldMatch(String Word);
         String ToInspectString();
     }
@@ -15,14 +15,14 @@ namespace RMUD
     public class BasicNoun : Noun
     {
         public String Value;
-        public Func<Actor, bool> Available;
+        public Func<MudObject, bool> Available;
 
         public String ToInspectString()
         {
             return Value;
         }
 
-        public bool Match(String Word, Actor Actor)
+        public bool Match(String Word, MudObject Actor)
         {
             if (Word != Value) return false;
             if (Available != null) return Available(Actor);
@@ -34,7 +34,7 @@ namespace RMUD
             return Word == Value;
         }
 
-        public BasicNoun (String Value, Func<Actor, bool> Available)
+        public BasicNoun (String Value, Func<MudObject, bool> Available)
         {
             this.Value = Value;
             this.Available = Available;
@@ -50,14 +50,14 @@ namespace RMUD
     public class NounSet : Noun
     {
         public List<String> Value;
-        public Func<Actor, bool> Available;
+        public Func<MudObject, bool> Available;
 
         public String ToInspectString()
         {
             return String.Join(", ", Value);
         }
 
-        public bool Match(String Word, Actor Actor)
+        public bool Match(String Word, MudObject Actor)
         {
             if (!Value.Contains(Word)) return false;
             if (Available != null) return Available(Actor);
@@ -69,7 +69,7 @@ namespace RMUD
             return Value.Contains(Word);
         }
 
-        public NounSet (List<String> Value, Func<Actor, bool> Available)
+        public NounSet (List<String> Value, Func<MudObject, bool> Available)
         {
             this.Value = Value;
             this.Available = Available;
@@ -104,7 +104,7 @@ namespace RMUD
             Nouns.Add(new BasicNoun(Noun.ToUpper()));
         }
 
-        public void Add(String Word, Func<Actor,bool> Available)
+        public void Add(String Word, Func<MudObject, bool> Available)
         {
             Nouns.Add(new BasicNoun(Word.ToUpper(), Available));
         }
@@ -119,7 +119,7 @@ namespace RMUD
             Nouns.Add(new NounSet(new List<String>(Range.Select(s => s.ToUpper()))));
         }
 
-        public void Add(List<String> Words, Func<Actor, bool> Available)
+        public void Add(List<String> Words, Func<MudObject, bool> Available)
         {
             Nouns.Add(new NounSet(new List<String>(Words.Select(s => s.ToUpper())), Available));
         }
@@ -129,7 +129,7 @@ namespace RMUD
             Nouns.Add(Noun);
         }
 
-        public bool Match(String Word, Actor Actor)
+        public bool Match(String Word, MudObject Actor)
         {
             foreach (var noun in Nouns)
                 if (noun.Match(Word, Actor)) return true;

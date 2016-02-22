@@ -9,9 +9,9 @@ namespace Minimum
     public static class Game
     {
         public static RMUD.SinglePlayer.Driver Driver { get; set; }
-        internal static RMUD.Player Player { get { return Driver.Player; } }
+        internal static RMUD.MudObject Player { get { return Driver.Player; } }
 
-        public static void SwitchPlayerCharacter(RMUD.Player NewCharacter)
+        public static void SwitchPlayerCharacter(RMUD.MudObject NewCharacter)
         {
             Driver.SwitchPlayerCharacter(NewCharacter);
         }
@@ -22,7 +22,7 @@ namespace Minimum
                 .First
                 .Do((actor) =>
                 {
-                    SwitchPlayerCharacter(RMUD.MudObject.GetObject("Player") as RMUD.Player);
+                    SwitchPlayerCharacter(RMUD.MudObject.GetObject("Player"));
                     RMUD.MudObject.Move(Player, RMUD.MudObject.GetObject("Start"));
                     RMUD.Core.EnqueuActorCommand(Player, "look");
         

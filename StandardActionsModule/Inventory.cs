@@ -26,10 +26,10 @@ namespace StandardActionsModule
 
             GlobalRules.DeclarePerformRuleBook<MudObject>("inventory", "[Actor] : Describes a player's inventory to themselves.", "actor");
 
-            GlobalRules.Perform<Actor>("inventory")
+            GlobalRules.Perform<MudObject>("inventory")
                 .Do(a =>
                 {
-                    var heldObjects = (a as Actor).GetContents(RelativeLocations.Held);
+                    var heldObjects = a.GetContents(RelativeLocations.Held);
                     if (heldObjects.Count == 0) MudObject.SendMessage(a, "@empty handed", a);
                     else
                     {

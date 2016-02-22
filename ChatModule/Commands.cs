@@ -36,7 +36,7 @@ namespace ChatModule
                 .ProceduralRule((match, actor) =>
                 {
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
-                    channel.Subscribers.RemoveAll(c => System.Object.ReferenceEquals(c, actor.ConnectedClient));
+                    channel.Subscribers.RemoveAll(c => System.Object.ReferenceEquals(c, actor));
                     MudObject.SendMessage(actor, "You are now unsubscribed from <a0>.", channel);
                     return PerformResult.Continue;
                 });
@@ -48,7 +48,7 @@ namespace ChatModule
                 {
                     MudObject.SendMessage(actor, "~~ CHANNELS ~~");
                     foreach (var channel in ChatChannel.ChatChannels)
-                        MudObject.SendMessage(actor, (channel.Subscribers.Contains(actor) ? "*" : "") + channel.GetProperty<String>("Short"));
+                        MudObject.SendMessage(actor, (channel.Subscribers.Contains(actor) ? "*" : "") + channel.GetProperty<String>("short"));
                     return PerformResult.Continue;
                 });
 
@@ -60,7 +60,6 @@ namespace ChatModule
                 .Manual("Chat on a chat channel.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor.ConnectedClient == null) return PerformResult.Stop;
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
                     if (!channel.Subscribers.Contains(actor))
                     {
@@ -76,7 +75,7 @@ namespace ChatModule
                 {
                     var message = match["TEXT"].ToString();
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
-                    ChatChannel.SendChatMessage(channel, "[" + channel.GetProperty<String>("Short") + "] " + actor.GetProperty<String>("Short") +
+                    ChatChannel.SendChatMessage(channel, "[" + channel.GetProperty<String>("short") + "] " + actor.GetProperty<String>("short") +
                         (message.StartsWith("\"") ?
                             (" " + message.Substring(1).Trim())
                             : (": \"" + message + "\"")));
@@ -94,13 +93,12 @@ namespace ChatModule
                 .Check("can access channel?", "ACTOR", "CHANNEL")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor.ConnectedClient == null) return PerformResult.Stop;
                     var channel = match.ValueOrDefault("CHANNEL") as ChatChannel;
                     
                     int count = 20;
                     if (match.ContainsKey("COUNT")) count = (match["COUNT"] as int?).Value;
 
-                    var logFilename = ChatChannel.ChatLogsPath + channel.GetProperty<String>("Short") + ".txt";
+                    var logFilename = ChatChannel.ChatLogsPath + channel.GetProperty<String>("short") + ".txt";
                     if (System.IO.File.Exists(logFilename))
                         foreach (var line in (new RMUD.ReverseLineReader(logFilename)).Take(count).Reverse())
                             MudObject.SendMessage(actor, line);

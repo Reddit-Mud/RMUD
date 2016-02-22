@@ -30,7 +30,7 @@ namespace ClothingModule
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("removed", "[Actor, Item] : Handle the actor removing the item.", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can remove?")
-                .When((a, b) => !(a is Actor) || !(a as Actor).Contains(b, RelativeLocations.Worn))
+                .When((a, b) => !a.Contains(b, RelativeLocations.Worn))
                 .Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "@clothing not wearing");

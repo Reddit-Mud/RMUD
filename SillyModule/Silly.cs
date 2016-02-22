@@ -18,7 +18,7 @@ namespace SillyModule
                     MustMatch("Who is being too damn serious?",
                         Object("OBJECT", InScope, (actor, item) =>
                             {
-                                if (item is RMUD.Actor) return MatchPreference.Likely;
+                                if (item.GetPropertyOrDefault<bool>("actor?")) return MatchPreference.Likely;
                                 else return MatchPreference.Unlikely;
                             }))))
                  .Manual("Applies the silly status effect to the target of your choice. Being silly will make it safe for your victim to dance. Sillification is meant as a demonstration of the concepts involved with rule books and status effects, and not as an actual component of the game world.")
@@ -49,7 +49,7 @@ And we can dance")
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can silly?", "[Actor, Target] : Can the actor make the target silly?", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can silly?").First
-                .When((actor, target) => !(target is Actor))
+                .When((actor, target) => !(target.GetPropertyOrDefault<bool>("actor?")))
                 .Do((actor, target) =>
                 {
                     MudObject.SendMessage(actor, "That just sounds silly.");
@@ -86,7 +86,7 @@ And we can dance")
                     var ruleID = Guid.NewGuid();
                     var counter = 100;
 
-                    target.GetProperty<NounList>("Nouns").Add("silly");
+                    target.GetProperty<NounList>("nouns").Add("silly");
 
                     target.Value<MudObject, bool>("silly?").Do((thing) => true).ID(ruleID.ToString())
                         .Name("Silly things are silly rule.");
@@ -94,7 +94,7 @@ And we can dance")
                     target.Value<MudObject, MudObject, String, String>("printed name")
                         .Do((viewer, thing, article) =>
                         {
-                            return "silly " + thing.GetProperty<String>("Short");
+                            return "silly " + thing.GetProperty<String>("short");
                         })
                         .Name("Silly things have silly names rule.")
                         .ID(ruleID.ToString());
@@ -106,7 +106,7 @@ And we can dance")
                             if (counter <= 0)
                             {
                                 MudObject.SendExternalMessage(target, "^<the0> is serious now.", target);
-                                target.GetProperty<NounList>("Nouns").Remove("silly");
+                                target.GetProperty<NounList>("nouns").Remove("silly");
                                 target.Rules.DeleteAll(ruleID.ToString());
                                 GlobalRules.DeleteRule("heartbeat", ruleID.ToString());
                             }

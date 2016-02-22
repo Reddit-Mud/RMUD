@@ -61,13 +61,13 @@ namespace NetworkModule
             return newAccount;
         }
 
-        public static Player GetAccountCharacter(Account Account)
+        public static MudObject GetAccountCharacter(Account Account)
         {
             Core.CommandTimeoutEnabled = false;
-            var playerObject = Core.Database.GetObject(Core.SettingsObject.PlayerBaseObject + "@" + Account.UserName) as Player;
+            var playerObject = Core.Database.GetObject(Core.SettingsObject.PlayerBaseObject + "@" + Account.UserName);
 
-            playerObject.SetProperty("Short", Account.UserName);
-            playerObject.GetProperty<NounList>("Nouns").Add(Account.UserName.ToUpper());
+            playerObject.SetProperty("short", Account.UserName);
+            playerObject.GetProperty<NounList>("nouns").Add(Account.UserName.ToUpper());
             MudObject.PersistInstance(playerObject);
             return playerObject;
         }

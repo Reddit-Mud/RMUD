@@ -18,9 +18,10 @@ namespace NetworkModule
                 .Manual("If you got this far, you know how to login.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor.ConnectedClient == null) return SharpRuleEngine.PerformResult.Stop;
+                    var client = actor.GetPropertyOrDefault<Client>("client");
+                    if (client == null) return SharpRuleEngine.PerformResult.Stop;
 
-                    if (actor.ConnectedClient is NetworkClient && (actor.ConnectedClient as NetworkClient).IsLoggedOn)
+                    if (client is NetworkClient && (client as NetworkClient).IsLoggedOn)
                     {
                         MudObject.SendMessage(actor, "You are already logged in.");
                         return SharpRuleEngine.PerformResult.Stop;
@@ -28,12 +29,12 @@ namespace NetworkModule
 
                     var userName = match["USERNAME"].ToString();
 
-                    actor.CommandHandler = new PasswordCommandHandler(actor, Authenticate, userName);
+                    actor.SetProperty("command handler", new PasswordCommandHandler(actor, Authenticate, userName));
                     return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 
-        public void Authenticate(Actor Actor, String UserName, String Password)
+        public void Authenticate(MudObject Actor, String UserName, String Password)
         {
             var existingAccount = Accounts.LoadAccount(UserName);
             if (existingAccount == null || Accounts.VerifyAccount(existingAccount, Password) == false)
@@ -42,7 +43,8 @@ namespace NetworkModule
                 return;
             }
 
-            LoginCommandHandler.LogPlayerIn(Actor.ConnectedClient as NetworkClient, existingAccount);
+            var client = Actor.GetPropertyOrDefault<Client>("client");
+            LoginCommandHandler.LogPlayerIn(client as NetworkClient, existingAccount);
         }
 	}
 }

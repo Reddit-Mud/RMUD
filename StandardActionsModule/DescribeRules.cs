@@ -21,19 +21,19 @@ namespace StandardActionsModule
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("describe", "[Actor, Item] : Generates descriptions of the item.", "actor", "item");
                  
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => !String.IsNullOrEmpty(item.GetProperty<String>("Long")))
+                .When((viewer, item) => !String.IsNullOrEmpty(item.GetProperty<String>("long")))
                 .Do((viewer, item) =>
                 {
-                    MudObject.SendMessage(viewer, item.GetProperty<String>("Long"));
+                    MudObject.SendMessage(viewer, item.GetProperty<String>("long"));
                     return PerformResult.Continue;
                 })
                 .Name("Basic description rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => item.GetPropertyOrDefault("openable?", false))
+                .When((viewer, item) => item.GetPropertyOrDefault<bool>("openable?"))
                 .Do((viewer, item) =>
                 {
-                    if (item.GetPropertyOrDefault("open?", false))
+                    if (item.GetPropertyOrDefault<bool>("open?"))
                         MudObject.SendMessage(viewer, "@is open", item);
                     else
                         MudObject.SendMessage(viewer, "@is closed", item);
@@ -55,8 +55,8 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("describe")
                 .When((viewer, item) =>
                     {
-                        if (item.GetPropertyOrDefault<bool>("container?", false)) return false;
-                        if (!item.GetPropertyOrDefault<bool>("open?", false)) return false;
+                        if (item.GetPropertyOrDefault<bool>("container?")) return false;
+                        if (!item.GetPropertyOrDefault<bool>("open?")) return false;
                         if (item.EnumerateObjects(RelativeLocations.In).Count() == 0) return false;
                         return true;
                     })
@@ -70,8 +70,9 @@ namespace StandardActionsModule
                 .Name("List things in open container in description rule.");
 
 
-            GlobalRules.Perform<MudObject, Actor>("describe")
+            GlobalRules.Perform<MudObject, MudObject>("describe")
                 .First
+                .When((viewer, actor) => actor.GetPropertyOrDefault<bool>("actor?"))
                 .Do((viewer, actor) =>
                 {
                     var heldItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Held));

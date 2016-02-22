@@ -39,12 +39,18 @@ namespace ClothingModule
             return r;
         }
 
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
+        {
+            RMUD.PropertyManifest.RegisterProperty("clothing layer", typeof(ClothingLayer), ClothingLayer.Outer);
+            RMUD.PropertyManifest.RegisterProperty("clothing part", typeof(ClothingBodyPart), ClothingBodyPart.Cloak);
+            RMUD.PropertyManifest.RegisterProperty("wearable?", typeof(bool), false);
+        }
+
         public static void Clothing(this RMUD.MudObject MudObject, ClothingLayer Layer, ClothingBodyPart BodyPart)
         {
-            MudObject.UpsertProperty("clothing layer", Layer);
-            MudObject.UpsertProperty("clothing part", BodyPart);
-            MudObject.UpsertProperty("wearable?", true);
-
+            MudObject.SetProperty("clothing layer", Layer);
+            MudObject.SetProperty("clothing part", BodyPart);
+            MudObject.SetProperty("wearable?", true);
         }
     }
 }

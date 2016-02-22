@@ -21,13 +21,13 @@ namespace RMUD
 
         /// <summary>
         /// Consider a perform rule, but check the values of the possible match for applicable rules. This can apply
-        /// only to perform rules with the argument pattern <PossibleMatch, Actor>.
+        /// only to perform rules with the argument pattern [PossibleMatch, MudObject].
         /// </summary>
         /// <param name="Name"></param>
         /// <param name="Match"></param>
         /// <param name="Actor"></param>
         /// <returns></returns>
-        public PerformResult ConsiderMatchBasedPerformRule(String Name, PossibleMatch Match, Actor Actor)
+        public PerformResult ConsiderMatchBasedPerformRule(String Name, PossibleMatch Match, MudObject Actor)
         {
             return ConsiderPerformRule_Enum(Name, (args) => EnumerateMatchRules(Match), Match, Actor);
         }

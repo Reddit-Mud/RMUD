@@ -18,8 +18,8 @@ the weather outside seems to be getting worse."
              */
             Room(RoomType.Interior);
 
-            SetProperty("Short", "Foyer of the Opera House");
-            SetProperty("Long", "You are standing in a spacious hall, splendidly decorated in red and gold, with glittering chandeliers overhead.");
+            SetProperty("short", "Foyer of the Opera House");
+            SetProperty("long", "You are standing in a spacious hall, splendidly decorated in red and gold, with glittering chandeliers overhead.");
 
             OpenLink(Direction.NORTH, "Outside");
             OpenLink(Direction.SOUTH, "Bar");

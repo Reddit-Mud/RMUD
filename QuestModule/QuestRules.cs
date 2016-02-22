@@ -12,10 +12,13 @@ namespace QuestModule
     {
         public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
-            GlobalRules.Perform<PossibleMatch, Actor>("after acting")
+            PropertyManifest.RegisterProperty("active-quest", typeof(MudObject), null);
+            PropertyManifest.RegisterProperty("offered-quest", typeof(MudObject), null);
+
+            GlobalRules.Perform<PossibleMatch, MudObject>("after acting")
                 .Do((match, actor) =>
                 {
-                    if (actor.GetPropertyOrDefault<MudObject>("active-quest", null) != null)
+                    if (actor.GetPropertyOrDefault<MudObject>("active-quest") != null)
                     {
                         var quest = actor.GetProperty<MudObject>("active-quest");
                                                 

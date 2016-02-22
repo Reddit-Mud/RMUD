@@ -16,16 +16,16 @@ namespace ChatModule
                 .Do((client, channel) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default allow channel access rule.");
 
-            GlobalRules.Perform<Actor>("player joined")
+            GlobalRules.Perform<MudObject>("player joined")
                 .Do(player =>
                 {
-                    foreach (var c in ChatChannel.ChatChannels.Where(c => c.GetProperty<String>("Short") == "OOC"))
+                    foreach (var c in ChatChannel.ChatChannels.Where(c => c.GetProperty<String>("short") == "OOC"))
                         c.Subscribers.Add(player);
                     return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Subscribe new players to OOC rule.");
 
-            GlobalRules.Perform<Actor>("player left")
+            GlobalRules.Perform<MudObject>("player left")
                 .Do(player =>
                 {
                     ChatChannel.RemoveFromAllChannels(player);
@@ -39,7 +39,7 @@ namespace ChatModule
 
             var senate = new ChatChannel("SENATE");
             senate.Check<MudObject, MudObject>("can access channel?")
-                .When((actor, channel) => !(actor is Actor) || (actor as Actor).Rank < 100)
+                .When((actor, channel) => actor.GetPropertyOrDefault<int>("rank") < 100)
                 .Do((actor, channel) =>
                 {
                     MudObject.SendMessage(actor, "You must have a rank of 100 or greater to access this channel.");

@@ -80,7 +80,7 @@ namespace RMUD
         /// <param name="Message">The message, possibly containing specifiers.</param>
         /// <param name="Objects">Specifier indicies refer to this list of objects.</param>
         /// <returns></returns>
-        public static String FormatMessage(Actor Recipient, String Message, params Object[] Objects)
+        public static String FormatMessage(MudObject Recipient, String Message, params Object[] Objects)
         {
             //A leading @ indicates that the message should be interpretted as an entry in the global message table.
             if (Message[0] == '@') Message = Core.GetMessage(Message.Substring(1));
@@ -106,7 +106,7 @@ namespace RMUD
                         }
                         else if (type == "a" && Objects[index] is MudObject)
                         {
-                            formattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, Objects[index], (Objects[index] as MudObject).GetProperty<String>("Article")));
+                            formattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, Objects[index], (Objects[index] as MudObject).GetProperty<String>("article")));
                         }
                         else if (type == "l") //No connective clause is used for this style of list. eg 1, 2, 3.
                         {
@@ -170,7 +170,7 @@ namespace RMUD
         /// <param name="FormattedMessage">Append the formatted message to this StringBuilder.</param>
         /// <param name="CoordinatingConjunction">The word that separates the final item of a list from those proceeding it. EG, and, or, nor.</param>
         private static void FormatList(
-            Actor Recipient, 
+            MudObject Recipient, 
             Object ListObject, 
             StringBuilder FormattedMessage,
             String CoordinatingConjunction)
@@ -190,7 +190,7 @@ namespace RMUD
 
             for (int x = 0; x < list.Count; ++x)
             {
-                FormattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, list[x], list[x].GetProperty<String>("Article")));
+                FormattedMessage.Append(GlobalRules.ConsiderValueRule<String>("printed name", Recipient, list[x], list[x].GetProperty<String>("article")));
                 if (x != list.Count - 1) FormattedMessage.Append(", ");
                 if (x == list.Count - 2 && !String.IsNullOrEmpty(CoordinatingConjunction)) FormattedMessage.Append(CoordinatingConjunction + " ");
             }

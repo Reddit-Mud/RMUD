@@ -32,24 +32,18 @@ namespace RMUD
 
     public partial class MudObject
     {
-        public static void SendMessage(Actor Actor, String Message, params Object[] MentionedObjects)
+        public static void SendMessage(MudObject Actor, String Message, params Object[] MentionedObjects)
         {
             if (String.IsNullOrEmpty(Message)) return;
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
-            if (Actor != null && Actor.ConnectedClient != null)
-                Core.PendingMessages.Add(new PendingMessage(Actor.ConnectedClient, Core.FormatMessage(Actor, Message, MentionedObjects)));
-        }
-
-        public static void SendMessage(MudObject MudObject, String Message, params Object[] MentionedObjects)
-        {
-            if (String.IsNullOrEmpty(Message)) return;
-            if (Core.SilentFlag) return;
-            Core.OutputQueryTriggered = true;
-
-            if (MudObject is Actor)
-                SendMessage(MudObject as Actor, Message, MentionedObjects);
+            if (Actor != null)
+            {
+                var client = Actor.GetPropertyOrDefault<Client>("client");
+                if (client != null)
+                    Core.PendingMessages.Add(new PendingMessage(client, Core.FormatMessage(Actor, Message, MentionedObjects)));
+            }
         }
 
         public static void SendLocaleMessage(MudObject Object, String Message, params Object[] MentionedObjects)
@@ -59,22 +53,12 @@ namespace RMUD
             Core.OutputQueryTriggered = true;
 
             var locale = MudObject.FindLocale(Object);
-                foreach (var actor in locale.EnumerateObjects<Actor>().Where(a => a.ConnectedClient != null))
-                    Core.PendingMessages.Add(new PendingMessage(actor.ConnectedClient, Core.FormatMessage(actor, Message, MentionedObjects)));
-        }
-
-        public static void SendExternalMessage(Actor Actor, String Message, params Object[] MentionedObjects)
-        {
-            if (String.IsNullOrEmpty(Message)) return;
-            if (Core.SilentFlag) return;
-            Core.OutputQueryTriggered = true;
-
-            if (Actor == null) return;
-            if (Actor.Location == null) return;
-
-            foreach (var other in Actor.Location.EnumerateObjects<Actor>().Where(a => !Object.ReferenceEquals(a, Actor) && (a.ConnectedClient != null)))
-                Core.PendingMessages.Add(new PendingMessage(other.ConnectedClient, Core.FormatMessage(other, Message, MentionedObjects)));
-                
+            foreach (var actor in locale.EnumerateObjects())
+            {
+                var client = actor.GetPropertyOrDefault<Client>("client");
+                if (client != null)
+                    Core.PendingMessages.Add(new PendingMessage(client, Core.FormatMessage(actor, Message, MentionedObjects)));
+            }
         }
 
         public static void SendExternalMessage(MudObject Actor, String Message, params Object[] MentionedObjects)
@@ -83,9 +67,16 @@ namespace RMUD
             if (Core.SilentFlag) return;
             Core.OutputQueryTriggered = true;
 
-            SendExternalMessage(Actor as Actor, Message, MentionedObjects);
-        }
+            if (Actor == null) return;
+            if (Actor.Location == null) return;
 
+            foreach (var other in Actor.Location.EnumerateObjects().Where(a => !Object.ReferenceEquals(a, Actor)))
+            {
+                var client = other.GetPropertyOrDefault<Client>("client");
+                if (client != null)
+                    Core.PendingMessages.Add(new PendingMessage(client, Core.FormatMessage(other, Message, MentionedObjects)));
+            }
+        }
 
         public static void SendMessage(Client Client, String Message, params Object[] MentionedObjects)
         {

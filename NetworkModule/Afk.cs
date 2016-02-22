@@ -18,9 +18,13 @@ namespace NetworkModule
                 .Manual("Sets your afk message. This message is displayed after 5 minutes of inactivity on the WHO list, and to any player who attempts to whisper to you.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor.ConnectedClient != null)
-                        actor.ConnectedClient.Player.GetProperty<Account>("account").AFKMessage = match["MESSAGE"].ToString();
-                    MudObject.SendMessage(actor, "AFK message set.");
+                    var account = actor.GetPropertyOrDefault<Account>("account");
+                    if (account != null)
+                    {
+                        account.AFKMessage = match["MESSAGE"].ToString();
+                        MudObject.SendMessage(actor, "AFK message set.");
+                    }
+
                     return SharpRuleEngine.PerformResult.Continue;
                 });
         }

@@ -31,6 +31,8 @@ namespace StandardActionsModule
 
         public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
+            PropertyManifest.RegisterProperty("lockable?", typeof(bool), false);
+
             Core.StandardMessage("not lockable", "I don't think the concept of 'locked' applies to that.");
             Core.StandardMessage("you lock", "You lock <the0>.");
             Core.StandardMessage("they lock", "^<the0> locks <the1> with <the2>.");
@@ -46,7 +48,7 @@ namespace StandardActionsModule
                 .Name("Key must be held rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can lock?")
-                .When((actor, item, key) => !item.GetPropertyOrDefault<bool>("lockable?", false))
+                .When((actor, item, key) => !item.GetPropertyOrDefault<bool>("lockable?"))
                 .Do((a, b, c) =>
                 {
                     MudObject.SendMessage(a, "@not lockable");

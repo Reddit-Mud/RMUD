@@ -33,7 +33,7 @@ namespace RMUD
 
                 foreach (var list in C.Lists)
                 {
-                    if (list.Key == RelativeLocations.In && C.GetPropertyOrDefault("openable?", false) && !C.GetPropertyOrDefault("open?", false)) continue;
+                    if (list.Key == RelativeLocations.In && C.GetPropertyOrDefault<bool>("openable?") && !C.GetPropertyOrDefault<bool>("open?")) continue;
                     foreach (var item in list.Value)
                         foreach (var sub in _enumerateVisibleTree(item))
                             yield return sub;

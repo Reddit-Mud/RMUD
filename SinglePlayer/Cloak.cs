@@ -24,9 +24,9 @@ Its blackness is so deep that it almost seems to suck light from the room."
             SetProperty("clothing part", ClothingModule.ClothingBodyPart.Cloak);
             SetProperty("wearable?", true);
 
-            SetProperty("Short", "velvet cloak");
-            GetProperty<NounList>("Nouns").Add("dark", "black", "satin", "velvet", "cloak");
-            SetProperty("Long", "A handsome cloak, of velvet trimmed with satin, and slightly spattered with raindrops. Its blackness is so deep that it almost seems to suck light from the room.");
+            SetProperty("short", "velvet cloak");
+            GetProperty<NounList>("nouns").Add("dark", "black", "satin", "velvet", "cloak");
+            SetProperty("long", "A handsome cloak, of velvet trimmed with satin, and slightly spattered with raindrops. Its blackness is so deep that it almost seems to suck light from the room.");
 
             //Carry out taking the cloak:
             //    now the bar is dark.

@@ -45,7 +45,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can drop?")
                 .First
-                .When((actor, item) => actor is Actor && (actor as Actor).Contains(item, RelativeLocations.Worn))
+                .When((actor, item) => actor.Contains(item, RelativeLocations.Worn))
                 .Do((actor, item) =>
                 {
                     if (GlobalRules.ConsiderCheckRule("can remove?", actor, item) == CheckResult.Allow)

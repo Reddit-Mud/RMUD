@@ -15,13 +15,13 @@ namespace NetworkModule
                 .Manual("Disconnect from the game immediately.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor != null && actor.ConnectedClient != null)
-                        match.Upsert("CLIENT", actor.ConnectedClient);
-                    if (match.ContainsKey("CLIENT"))
+                    var client = actor.GetPropertyOrDefault<Client>("client");
+                    if (client != null)
                     {
-                        (match["CLIENT"] as Client).Send("Goodbye...\r\n");
-                        (match["CLIENT"] as Client).Disconnect();
+                        client.Send("Goodbye...\r\n");
+                        client.Disconnect();
                     }
+
                     return SharpRuleEngine.PerformResult.Continue;
                 });
         }

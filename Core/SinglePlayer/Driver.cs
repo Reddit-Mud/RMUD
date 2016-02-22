@@ -9,13 +9,13 @@ namespace RMUD.SinglePlayer
     public class Driver
     {
         private DummyClient Client;
-        public RMUD.Player Player { get; private set; }
+        public MudObject Player { get; private set; }
         
         public bool IsRunning
         {
             get
             {
-                return !RMUD.Core.ShuttingDown;
+                return !Core.ShuttingDown;
             }
         }
 
@@ -23,12 +23,13 @@ namespace RMUD.SinglePlayer
         {
         }
 
-        public void SwitchPlayerCharacter(RMUD.Player NewCharacter)
+        public void SwitchPlayerCharacter(MudObject NewCharacter)
         {
-            NewCharacter.Rank = 500;
-            NewCharacter.CommandHandler = RMUD.Core.ParserCommandHandler;
-            var client = Player.ConnectedClient;
-            RMUD.Core.TiePlayerToClient(client, NewCharacter);
+            //NewCharacter.Rank = 500;
+            NewCharacter.SetProperty("command handler", Core.ParserCommandHandler);
+            var client = Player.GetPropertyOrDefault<Client>("client");
+            if (client != null)
+                Core.TiePlayerToClient(client, NewCharacter);
             Player = NewCharacter;
         }
 
@@ -69,11 +70,11 @@ namespace RMUD.SinglePlayer
                 new RMUD.SinglePlayer.CompiledDatabase(DatabaseAssembly, gameInfo.DatabaseNameSpace),
                 assemblies.ToArray()))
             {
-                Player = RMUD.MudObject.GetObject<RMUD.Player>(RMUD.Core.SettingsObject.PlayerBaseObject);
-                Player.CommandHandler = RMUD.Core.ParserCommandHandler;
+                Player = RMUD.MudObject.GetObject(RMUD.Core.SettingsObject.PlayerBaseObject);
+                Player.SetProperty("command handler", Core.ParserCommandHandler);
                 Client = new DummyClient(Output);
                 RMUD.Core.TiePlayerToClient(Client, Player);
-                Player.Rank = 500;
+                //Player.Rank = 500;
 
                 DetectAndAssignDriver(DatabaseAssembly);
                 Core.GlobalRules.ConsiderPerformRule("singleplayer game started", Player);

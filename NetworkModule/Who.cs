@@ -19,7 +19,7 @@ namespace NetworkModule
                     MudObject.SendMessage(actor, "~~ THESE PLAYERS ARE ONLINE NOW ~~");
                     foreach (NetworkClient client in clients)
                         MudObject.SendMessage(actor,
-                            "[" + Core.SettingsObject.GetNameForRank(client.Player.Rank) + "] <a0> ["
+                            "[" + Core.SettingsObject.GetNameForRank(client.Player.GetPropertyOrDefault<int>("rank")) + "] <a0> ["
                             + client.ConnectionDescription + "]"
                             + (client.IsAfk ? (" afk: " + client.Player.GetProperty<Account>("account").AFKMessage) : "")
                             + (client.Player.Location != null ? (" -- " + client.Player.Location.Path) : ""),

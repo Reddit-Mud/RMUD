@@ -57,8 +57,9 @@ namespace StandardActionsModule
                 })
                 .Name("Default handle pulling rule.");
 
-            GlobalRules.Check<MudObject, Actor>("can pull?")
+            GlobalRules.Check<MudObject, MudObject>("can pull?")
                 .First
+                .When((actor, target) => target.GetPropertyOrDefault<bool>("actor?"))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@unappreciated", thing);

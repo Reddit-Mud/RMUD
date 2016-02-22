@@ -31,6 +31,9 @@ namespace StandardActionsModule
 
         public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
+            PropertyManifest.RegisterProperty("openable?", typeof(bool), false);
+            PropertyManifest.RegisterProperty("open?", typeof(bool), false);
+
             Core.StandardMessage("not openable", "I don't think the concept of 'open' applies to that.");
             Core.StandardMessage("you open", "You open <the0>.");
             Core.StandardMessage("they open", "^<the0> opens <the1>.");
@@ -40,7 +43,7 @@ namespace StandardActionsModule
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("opened", "[Actor, Item] : Handle the actor opening the item.", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can open?")
-                .When((actor, item) => !item.GetPropertyOrDefault<bool>("openable?", false))
+                .When((actor, item) => !item.GetPropertyOrDefault<bool>("openable?"))
                 .Do((a, b) =>
                 {
                     MudObject.SendMessage(a, "@not openable");

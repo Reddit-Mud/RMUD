@@ -12,7 +12,7 @@ namespace StandardActionsModule
         public static void AtStartup(RuleEngine GlobalRules)
         {
             // This rule is never called in a single player context.
-            GlobalRules.Perform<Actor>("player joined")
+            GlobalRules.Perform<MudObject>("player joined")
                 .Last
                 .Do((actor) =>
                 {

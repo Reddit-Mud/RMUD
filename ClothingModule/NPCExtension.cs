@@ -8,12 +8,12 @@ namespace ClothingModule
 {
 	public static class NPCExtension
 	{
-        public static void Wear(this NPC NPC, MudObject Item)
+        public static void Wear(this MudObject NPC, MudObject Item)
         {
             MudObject.Move(Item, NPC, RelativeLocations.Worn);
         }
 
-        public static void Wear(this NPC NPC, String Short, ClothingLayer Layer, ClothingBodyPart BodyPart)
+        public static void Wear(this MudObject NPC, String Short, ClothingLayer Layer, ClothingBodyPart BodyPart)
         {
             Wear(NPC, Factory.Create(Short, Layer, BodyPart));
         }

@@ -74,7 +74,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
-                .When((actor, thing) => thing is Actor)
+                .When((actor, thing) => thing.GetPropertyOrDefault<bool>("actor?"))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@cant take people");
@@ -84,7 +84,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
-                .When((actor, thing) => thing.GetPropertyOrDefault<bool>("portal?", false))
+                .When((actor, thing) => thing.GetPropertyOrDefault<bool>("portal?"))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@cant take portals");
@@ -93,7 +93,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
-                .When((actor, thing) => thing.GetPropertyOrDefault<bool>("scenery?", false))
+                .When((actor, thing) => thing.GetPropertyOrDefault<bool>("scenery?"))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@cant take scenery");

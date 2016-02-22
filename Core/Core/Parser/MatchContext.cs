@@ -10,7 +10,7 @@ namespace RMUD
     /// </summary>
     public class MatchContext
     {
-        public Actor ExecutingActor;
+        public MudObject ExecutingActor;
 
         /// <summary>
         /// The objects in scope will not change while matching a command, as command matchers by definition

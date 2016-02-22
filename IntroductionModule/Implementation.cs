@@ -30,7 +30,7 @@ namespace IntroductionModule
                     MustMatch("Introduce whom?",
                         Object("OBJECT", InScope, (actor, item) =>
                         {
-                            if (item is Actor) return MatchPreference.Likely;
+                            if (item.GetPropertyOrDefault<bool>("actor?")) return MatchPreference.Likely;
                             return MatchPreference.Unlikely;
                         }))))
                 .Manual("Introduces someone you know to everyone present. Now they will know them, too.")
@@ -42,10 +42,12 @@ namespace IntroductionModule
 
         public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
+            PropertyManifest.RegisterProperty("introduction memory", typeof(Dictionary<String, bool>), null);
+
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can introduce?", "[Actor A, Actor B] : Can A introduce B?", "actor", "itroductee");
 
             GlobalRules.Check<MudObject, MudObject>("can introduce?")
-                .When((a, b) => !(b is Actor))
+                .When((a, b) => !b.GetPropertyOrDefault<bool>("actor?"))
                 .Do((a, b) =>
                 {
                     MudObject.SendMessage(a, "That just sounds silly.");
@@ -66,12 +68,12 @@ namespace IntroductionModule
                 })
                 .Name("Can't introduce who you don't know rule.");
 
-            GlobalRules.Perform<MudObject, Actor>("describe")
+            GlobalRules.Perform<MudObject, MudObject>("describe")
                 .First
                 .When((viewer, actor) => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", viewer, actor))
                 .Do((viewer, actor) =>
                 {
-                    MudObject.SendMessage(viewer, "^<the0>, a " + (actor.Gender == Gender.Male ? "man." : "woman."), actor);
+                    MudObject.SendMessage(viewer, "^<the0>, a " + (actor.GetPropertyOrDefault<Gender>("gender") == Gender.Male ? "man." : "woman."), actor);
                     return PerformResult.Continue;
                 })
                 .Name("Report gender of known actors rule.");
@@ -85,7 +87,7 @@ namespace IntroductionModule
                 {
                     var locale = MudObject.FindLocale(introductee);
                     if (locale != null)
-                        foreach (var player in MudObject.EnumerateObjectTree(locale).Where(o => o is Player).Select(o => o as Player))
+                        foreach (var player in MudObject.EnumerateObjectTree(locale).Where(o => o.GetPropertyOrDefault<bool>("actor?")))
                             GlobalRules.ConsiderPerformRule("introduce to", introductee, player);
 
                     MudObject.SendExternalMessage(actor, "^<the0> introduces <the1>.", actor, introductee);
@@ -94,14 +96,14 @@ namespace IntroductionModule
                 })
                 .Name("Report introduction rule.");
 
-            GlobalRules.DeclarePerformRuleBook<Actor>("introduce self", "[Introductee] : Introduce the introductee");
+            GlobalRules.DeclarePerformRuleBook<MudObject>("introduce self", "[Introductee] : Introduce the introductee");
 
-            GlobalRules.Perform<Actor>("introduce self")
+            GlobalRules.Perform<MudObject>("introduce self")
                 .Do((introductee) =>
                 {
                     var locale = MudObject.FindLocale(introductee);
                     if (locale != null)
-                        foreach (var player in MudObject.EnumerateObjectTree(locale).Where(o => o is Player).Select(o => o as Player))
+                        foreach (var player in MudObject.EnumerateObjectTree(locale).Where(o => o.GetPropertyOrDefault<bool>("actor?")))
                             GlobalRules.ConsiderPerformRule("introduce to", introductee, player);
 
                     MudObject.SendExternalMessage(introductee, "^<the0> introduces themselves.", introductee);
@@ -115,18 +117,21 @@ namespace IntroductionModule
 
             #region Printed name rules
 
-            GlobalRules.Value<Player, Actor, String, String>("printed name")
+            GlobalRules.Value<MudObject, MudObject, String, String>("printed name")
+                .When((viewer, thing, article) => thing.GetPropertyOrDefault<bool>("actor?"))
                 .When((viewer, thing, article) => GlobalRules.ConsiderValueRule<bool>("actor knows actor?", viewer, thing))
-                .Do((viewer, actor, article) => actor.GetProperty<String>("Short"))
+                .Do((viewer, actor, article) => actor.GetProperty<String>("short"))
                 .Name("Name of introduced actor.");
 
             GlobalRules.Value<MudObject, MudObject, String, String>("printed name")
-                .When((viewer, thing, article) => thing is Actor && (thing as Actor).Gender == Gender.Male)
+                .When((viewer, thing, article) => thing.GetPropertyOrDefault<bool>("actor?"))
+                .When((viewer, thing, article) => thing.GetPropertyOrDefault<Gender>("gender") == Gender.Male)
                 .Do((viewer, actor, article) => article + " man")
                 .Name("Default name for unintroduced male actor.");
 
             GlobalRules.Value<MudObject, MudObject, String, String>("printed name")
-                .When((viewer, thing, article) => thing is Actor && (thing as Actor).Gender == Gender.Female)
+                .When((viewer, thing, article) => thing.GetPropertyOrDefault<bool>("actor?"))
+                .When((viewer, thing, article) => thing.GetPropertyOrDefault<Gender>("gender") == Gender.Female)
                 .Do((viewer, actor, article) => article + " woman")
                 .Name("Default name for unintroduced female actor.");
 
@@ -134,27 +139,38 @@ namespace IntroductionModule
 
             #region Knowledge management rules
 
-            GlobalRules.DeclareValueRuleBook<Actor, Actor, bool>("actor knows actor?", "[Player, Whom] : Does the player know the actor?");
+            GlobalRules.DeclareValueRuleBook<MudObject, MudObject, bool>("actor knows actor?", "[Player, Whom] : Does the player know the actor?");
 
-            GlobalRules.Value<Player, Actor, bool>("actor knows actor?")
-                .Do((player, whom) => player.Recall<bool>(whom, "knows"))
+            GlobalRules.Value<MudObject, MudObject, bool>("actor knows actor?")
+                .Do((player, whom) => RecallActor(player, whom))
                 .Name("Use player memory to recall actors rule.");
 
-            GlobalRules.Value<Actor, Actor, bool>("actor knows actor?")
-                .Do((player, whom) => false)
-                .Name("Actors that aren't players don't know anybody rule.");
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("introduce to", "[Introductee, ToWhom] : Introduce the introductee to someone");
 
-            GlobalRules.DeclarePerformRuleBook<Actor, Actor>("introduce to", "[Introductee, ToWhom] : Introduce the introductee to someone");
-
-            GlobalRules.Perform<Actor, Player>("introduce to")
+            GlobalRules.Perform<MudObject, MudObject>("introduce to")
                 .Do((introductee, player) =>
                 {
-                    player.Remember(introductee, "knows", true);
+                    RememberActor(player, introductee);
                     return PerformResult.Continue;
                 })
                 .Name("Players remember actors rule.");
                         
             #endregion
+        }
+
+        private static void RememberActor(MudObject Player, MudObject Actor)
+        {
+            if (!Player.HasProperty("introduction memory"))
+                Player.SetProperty("introduction memory", new Dictionary<string, bool>());
+            Player.GetProperty<Dictionary<String, bool>>("introduction memory").Upsert(Actor.Path, true);
+        }
+
+        private static bool RecallActor(MudObject Player, MudObject Actor)
+        {
+            if (!Player.HasProperty("introduction memory")) return false;
+            var memory = Player.GetProperty<Dictionary<String, bool>>("introduction memory");
+            if (!memory.ContainsKey(Actor.Path)) return false;
+            return memory[Actor.Path];
         }
     }
 }

@@ -5,8 +5,17 @@ using System.Text;
 
 namespace RMUD
 {
+    public static class RegisterContainerProperties
+    {
+        public static void AtStartup(RuleEngine GlobalRules)
+        {
+            PropertyManifest.RegisterProperty("container?", typeof(bool), false);
+        }
+    }
+
     public partial class MudObject
     {
+
         [Persist(typeof(ContainerSerializer))]
         public Dictionary<RelativeLocations, List<MudObject>> Lists { get; set; }
 
@@ -19,7 +28,7 @@ namespace RMUD
             this.Default = Default;
             this.Lists = new Dictionary<RelativeLocations, List<MudObject>>();
 
-            UpsertProperty("container?", true);
+            SetProperty("container?", true);
         }
 
         public void Remove(MudObject Object)

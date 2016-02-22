@@ -8,11 +8,11 @@ namespace ChatModule
 {
     public class ChatChannel : MudObject
     {
-        public List<Actor> Subscribers = new List<Actor>();
+        public List<MudObject> Subscribers = new List<MudObject>();
 
         public ChatChannel(String Short) : base(Short, "")
         {
-            SetProperty("Article", "");
+            SetProperty("article", "");
         }
 
         internal static List<ChatChannel> ChatChannels = new List<ChatChannel>();
@@ -28,12 +28,12 @@ namespace ChatModule
         {
             var realMessage = String.Format("{0} : {1}", DateTime.Now, Message);
 
-            var chatLogFilename = ChatChannel.ChatLogsPath + Channel.GetProperty<String>("Short") + ".txt";
+            var chatLogFilename = ChatChannel.ChatLogsPath + Channel.GetProperty<String>("short") + ".txt";
             System.IO.Directory.CreateDirectory(ChatChannel.ChatLogsPath);
             System.IO.File.AppendAllText(chatLogFilename, realMessage + "\n");
 
-            foreach (var client in Channel.Subscribers.Where(c => c.ConnectedClient != null))
-                MudObject.SendMessage(client, realMessage);
+            foreach (var client in Channel.Subscribers)
+                SendMessage(client, realMessage);
         }
     }
 }
