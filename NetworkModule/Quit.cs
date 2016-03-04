@@ -15,7 +15,7 @@ namespace NetworkModule
                 .Manual("Disconnect from the game immediately.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var client = actor.GetPropertyOrDefault<Client>("client");
+                    var client = actor.GetProperty<Client>("client");
                     if (client != null)
                     {
                         client.Send("Goodbye...\r\n");

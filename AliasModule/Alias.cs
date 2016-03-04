@@ -10,7 +10,7 @@ namespace AliasModule
 	{
         public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
-            PropertyManifest.RegisterProperty("aliases", typeof(Dictionary<String, String>), null);
+            PropertyManifest.RegisterProperty("aliases", typeof(Dictionary<String, String>), null, new DefaultSerializer());
         }
 
         public override void Create(CommandParser Parser)

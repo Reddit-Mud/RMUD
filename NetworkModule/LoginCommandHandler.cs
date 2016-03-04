@@ -18,7 +18,7 @@ namespace NetworkModule
             if (Account.LoggedInCharacter != null)
             {
                 //Connect to the existing session
-                var existingClient = Account.LoggedInCharacter.GetPropertyOrDefault<Client>("client");
+                var existingClient = Account.LoggedInCharacter.GetProperty<Client>("client");
                 if (existingClient != null)
                 {
                     existingClient.Player = null;

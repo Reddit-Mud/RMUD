@@ -9,13 +9,12 @@ namespace RMUD
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            PropertyManifest.RegisterProperty("container?", typeof(bool), false);
+            PropertyManifest.RegisterProperty("container?", typeof(bool), false, new BoolSerializer());
         }
     }
 
     public partial class MudObject
     {
-
         [Persist(typeof(ContainerSerializer))]
         public Dictionary<RelativeLocations, List<MudObject>> Lists { get; set; }
 

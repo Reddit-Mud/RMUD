@@ -9,7 +9,7 @@ namespace RMUD
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            PropertyManifest.RegisterProperty("scenery?", typeof(bool), false);
+            PropertyManifest.RegisterProperty("scenery?", typeof(bool), false, new BoolSerializer());
         }
     }
 

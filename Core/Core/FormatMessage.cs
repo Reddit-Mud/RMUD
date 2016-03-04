@@ -126,7 +126,10 @@ namespace RMUD
                         }
                         else if (type == "s")
                         {
-                            formattedMessage.Append(Objects[index].ToString());
+                            if (Objects[index] == null)
+                                formattedMessage.Append("%NULL%");
+                            else
+                                formattedMessage.Append(Objects[index].ToString());
                         }
                         #endregion
                     }

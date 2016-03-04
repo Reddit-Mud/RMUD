@@ -34,7 +34,7 @@ namespace NetworkModule
                     var player = match["PLAYER"] as MudObject;
                     MudObject.SendMessage(player, "[privately " + DateTime.Now + "] ^<the0> : \"" + match["SPEECH"].ToString() + "\"", actor);
                     MudObject.SendMessage(actor, "[privately to <the0>] ^<the1> : \"" + match["SPEECH"].ToString() + "\"", player, actor);
-                    var client = player.GetPropertyOrDefault<Client>("client");
+                    var client = player.GetProperty<Client>("client");
                     if (client is NetworkClient && (client as NetworkClient).IsAfk)
                         MudObject.SendMessage(actor, "^<the0> is afk : " + player.GetProperty<Account>("account").AFKMessage, player);
                     return SharpRuleEngine.PerformResult.Continue;

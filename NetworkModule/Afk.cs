@@ -18,7 +18,7 @@ namespace NetworkModule
                 .Manual("Sets your afk message. This message is displayed after 5 minutes of inactivity on the WHO list, and to any player who attempts to whisper to you.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var account = actor.GetPropertyOrDefault<Account>("account");
+                    var account = actor.GetProperty<Account>("account");
                     if (account != null)
                     {
                         account.AFKMessage = match["MESSAGE"].ToString();

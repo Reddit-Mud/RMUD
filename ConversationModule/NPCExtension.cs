@@ -32,7 +32,7 @@ namespace ConversationModule
 
         public bool Discussed
         {
-            get { return this.GetPropertyOrDefault<bool>("topic-discussed"); }
+            get { return this.GetProperty<bool>("topic-discussed"); }
         }
 
         public Topic Follows(Topic Previous)

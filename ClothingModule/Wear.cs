@@ -46,8 +46,8 @@ namespace ClothingModule
                 });
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((actor, item) => !item.GetPropertyOrDefault<bool>("wearable?"))
-                .When((actor, item) => !actor.GetPropertyOrDefault<bool>("actor?"))
+                .When((actor, item) => !item.GetProperty<bool>("wearable?"))
+                .When((actor, item) => !actor.GetProperty<bool>("actor?"))
                 .Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "@clothing cant wear");

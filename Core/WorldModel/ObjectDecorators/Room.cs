@@ -9,9 +9,9 @@ namespace RMUD
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            PropertyManifest.RegisterProperty("room type", typeof(RoomType), RoomType.NotARoom);
-            PropertyManifest.RegisterProperty("light", typeof(LightingLevel), LightingLevel.Dark);
-            PropertyManifest.RegisterProperty("ambient light", typeof(LightingLevel), LightingLevel.Dark);
+            PropertyManifest.RegisterProperty("room type", typeof(RoomType), RoomType.NotARoom, new EnumSerializer<RoomType>());
+            PropertyManifest.RegisterProperty("light", typeof(LightingLevel), LightingLevel.Dark, new EnumSerializer<LightingLevel>());
+            PropertyManifest.RegisterProperty("ambient light", typeof(LightingLevel), LightingLevel.Dark, new EnumSerializer<LightingLevel>());
         }
     }
 
@@ -25,7 +25,7 @@ namespace RMUD
 
         public void OpenLink(Direction Direction, String Destination, MudObject Portal = null)
         {
-            if (RemoveAll(thing => thing.GetPropertyOrDefault<Direction>("link direction") == Direction && thing.GetPropertyOrDefault<bool>("portal?")) > 0)
+            if (RemoveAll(thing => thing.GetProperty<Direction>("link direction") == Direction && thing.GetProperty<bool>("portal?")) > 0)
                 Core.LogWarning("Opened duplicate link in " + Path);
 
             if (Portal == null)

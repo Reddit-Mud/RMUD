@@ -34,14 +34,36 @@ namespace RMUD
                 if (type.FullName.StartsWith(Module.Info.BaseNameSpace))
                     foreach (var method in type.GetMethods())
                         if (method.IsStatic && method.Name == "AtStartup")
-                            try
+                        {
+                            var methodParameters = method.GetParameters();
+
+                            if (methodParameters.Length == 0)
                             {
-                                method.Invoke(null, new Object[] { GlobalRules });
+                                try
+                                {
+                                    method.Invoke(null, null);
+                                }
+                                catch (Exception e)
+                                {
+                                    LogWarning("Error while loading module " + Module.FileName + " : " + e.Message);
+                                }
                             }
-                            catch (Exception e)
+                            else if (methodParameters.Length == 1 && methodParameters[0].ParameterType == typeof(RuleEngine))
                             {
-                                LogWarning("Error while loading module " + Module.FileName + " : " + e.Message);
+                                try
+                                {
+                                    method.Invoke(null, new Object[] { GlobalRules });
+                                }
+                                catch (Exception e)
+                                {
+                                    LogWarning("Error while loading module " + Module.FileName + " : " + e.Message);
+                                }
                             }
+                            else
+                            {
+                                LogWarning("Error while loading module " + Module.FileName + " : AtStartup method had incompatible signature.");
+                            }
+                        }
         }
 
         /// <summary>
@@ -89,8 +111,6 @@ namespace RMUD
 
                 foreach (var startupAssembly in IntegratedModules)
                     IntegrateModule(startupAssembly);
-
-                ValueSerializer.AddGlobalSerializer(new BitArraySerializer());
 
                 InitializeCommandProcessor();
 

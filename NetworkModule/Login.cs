@@ -18,7 +18,7 @@ namespace NetworkModule
                 .Manual("If you got this far, you know how to login.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var client = actor.GetPropertyOrDefault<Client>("client");
+                    var client = actor.GetProperty<Client>("client");
                     if (client == null) return SharpRuleEngine.PerformResult.Stop;
 
                     if (client is NetworkClient && (client as NetworkClient).IsLoggedOn)
@@ -43,7 +43,7 @@ namespace NetworkModule
                 return;
             }
 
-            var client = Actor.GetPropertyOrDefault<Client>("client");
+            var client = Actor.GetProperty<Client>("client");
             LoginCommandHandler.LogPlayerIn(client as NetworkClient, existingAccount);
         }
 	}

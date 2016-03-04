@@ -40,7 +40,7 @@ namespace RMUD
 
             if (Actor != null)
             {
-                var client = Actor.GetPropertyOrDefault<Client>("client");
+                var client = Actor.GetProperty<Client>("client");
                 if (client != null)
                     Core.PendingMessages.Add(new PendingMessage(client, Core.FormatMessage(Actor, Message, MentionedObjects)));
             }
@@ -55,7 +55,7 @@ namespace RMUD
             var locale = MudObject.FindLocale(Object);
             foreach (var actor in locale.EnumerateObjects())
             {
-                var client = actor.GetPropertyOrDefault<Client>("client");
+                var client = actor.GetProperty<Client>("client");
                 if (client != null)
                     Core.PendingMessages.Add(new PendingMessage(client, Core.FormatMessage(actor, Message, MentionedObjects)));
             }
@@ -72,7 +72,7 @@ namespace RMUD
 
             foreach (var other in Actor.Location.EnumerateObjects().Where(a => !Object.ReferenceEquals(a, Actor)))
             {
-                var client = other.GetPropertyOrDefault<Client>("client");
+                var client = other.GetProperty<Client>("client");
                 if (client != null)
                     Core.PendingMessages.Add(new PendingMessage(client, Core.FormatMessage(other, Message, MentionedObjects)));
             }

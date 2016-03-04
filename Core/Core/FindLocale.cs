@@ -25,7 +25,7 @@ namespace RMUD
             if (Of.Location.RelativeLocationOf(Of) == RelativeLocations.In)
             {
                 // Should this check to see if Of.Location is... openable? If not, consider it open or closed?
-                if (Of.Location.GetPropertyOrDefault<bool>("open?"))
+                if (Of.Location.GetProperty<bool>("open?"))
                     return FindLocale(Of.Location);
                 else
                     return Of.Location;

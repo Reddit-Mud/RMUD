@@ -18,7 +18,7 @@ namespace NetworkModule
                 .Manual("If you got this far, you know how to register.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var client = actor.GetPropertyOrDefault<Client>("client");
+                    var client = actor.GetProperty<Client>("client");
                     if (client is NetworkClient && (client as NetworkClient).IsLoggedOn)
                     {
                         MudObject.SendMessage(actor, "You are already logged in.");
@@ -48,7 +48,7 @@ namespace NetworkModule
                 return;
             }
 
-            var client = Actor.GetPropertyOrDefault<Client>("client");
+            var client = Actor.GetProperty<Client>("client");
             LoginCommandHandler.LogPlayerIn(client as NetworkClient, newAccount);
         }
     }

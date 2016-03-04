@@ -18,7 +18,7 @@ namespace SillyModule
                     MustMatch("Who is being too damn serious?",
                         Object("OBJECT", InScope, (actor, item) =>
                             {
-                                if (item.GetPropertyOrDefault<bool>("actor?")) return MatchPreference.Likely;
+                                if (item.GetProperty<bool>("actor?")) return MatchPreference.Likely;
                                 else return MatchPreference.Unlikely;
                             }))))
                  .Manual("Applies the silly status effect to the target of your choice. Being silly will make it safe for your victim to dance. Sillification is meant as a demonstration of the concepts involved with rule books and status effects, and not as an actual component of the game world.")
@@ -49,7 +49,7 @@ And we can dance")
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can silly?", "[Actor, Target] : Can the actor make the target silly?", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can silly?").First
-                .When((actor, target) => !(target.GetPropertyOrDefault<bool>("actor?")))
+                .When((actor, target) => !(target.GetProperty<bool>("actor?")))
                 .Do((actor, target) =>
                 {
                     MudObject.SendMessage(actor, "That just sounds silly.");

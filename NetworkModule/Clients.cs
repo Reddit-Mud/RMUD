@@ -24,7 +24,7 @@ namespace NetworkModule
         {
             ClientLock.WaitOne();
             ConnectedClients.Remove(client);
-            var account = client.Player.GetPropertyOrDefault<Account>("account");
+            var account = client.Player.GetProperty<Account>("account");
             if (account != null)
                 account.LoggedInCharacter = null;
             Core.RemovePlayer(client.Player);
@@ -62,7 +62,7 @@ namespace NetworkModule
         public static void AtStartup(RuleEngine GlobalRules)
         {
             ProscriptionList = new ProscriptionList("proscriptions.txt");
-            PropertyManifest.RegisterProperty("account", typeof(Account), null);
+            PropertyManifest.RegisterProperty("account", typeof(Account), null, new DefaultSerializer());
         }
 
         public static void SendGlobalMessage(String Message, params MudObject[] MentionedObjects)

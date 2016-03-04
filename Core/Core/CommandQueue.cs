@@ -87,7 +87,7 @@ namespace RMUD
                 {
                     //if (NextCommand.Actor.ConnectedClient != null)
                     //    NextCommand.Actor.ConnectedClient.TimeOfLastCommand = DateTime.Now;
-                    var commandHandler = NextCommand.Actor.GetPropertyOrDefault<ClientCommandHandler>("command handler");
+                    var commandHandler = NextCommand.Actor.GetProperty<ClientCommandHandler>("command handler");
                     if (commandHandler != null)
                         commandHandler.HandleCommand(NextCommand);
                 }
@@ -169,7 +169,7 @@ namespace RMUD
                                 //Kill the command processor thread.
                                 IndividualCommandThread.Abort();
                                 ClearPendingMessages();
-                                var client = PendingCommand.Actor.GetPropertyOrDefault<Client>("client");
+                                var client = PendingCommand.Actor.GetProperty<Client>("client");
                                 if (client != null)
                                 {
                                     client.Send("Command timeout.\r\n");
@@ -234,7 +234,7 @@ namespace RMUD
 
                     try
                     {
-                        var handler = NextCommand.Actor.GetPropertyOrDefault<ClientCommandHandler>("command handler");
+                        var handler = NextCommand.Actor.GetProperty<ClientCommandHandler>("command handler");
                         if (handler != null)
                             handler.HandleCommand(NextCommand);
                     }

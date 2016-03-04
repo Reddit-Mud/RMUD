@@ -27,7 +27,7 @@ namespace RMUD
 
             Check<MudObject, MudObject, MudObject>("can lock?").Do((actor, door, key) =>
                 {
-                    if (GetPropertyOrDefault<bool>("open?")) {
+                    if (GetProperty<bool>("open?")) {
                         MudObject.SendMessage(actor, "@close it first");
                         return CheckResult.Disallow;
                     }

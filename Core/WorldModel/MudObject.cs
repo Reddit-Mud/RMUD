@@ -9,10 +9,10 @@ namespace RMUD
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            PropertyManifest.RegisterProperty("short", typeof(String), "object");
-            PropertyManifest.RegisterProperty("long", typeof(String), "");
-            PropertyManifest.RegisterProperty("article", typeof(String), "a");
-            PropertyManifest.RegisterProperty("nouns", typeof(NounList), new NounList());
+            PropertyManifest.RegisterProperty("short", typeof(String), "object", new StringSerializer());
+            PropertyManifest.RegisterProperty("long", typeof(String), "", new StringSerializer());
+            PropertyManifest.RegisterProperty("article", typeof(String), "a", new StringSerializer());
+            PropertyManifest.RegisterProperty("nouns", typeof(NounList), null, new DefaultSerializer());
         }
     }
 
@@ -54,16 +54,8 @@ namespace RMUD
             else
                 throw new InvalidOperationException("Setting property with object of wrong type.");
         }
-
+        
         public T GetProperty<T>(String Name)
-        {
-            if (Properties.ContainsKey(Name))
-                return (T)Properties[Name];
-            else
-                throw new InvalidOperationException("Mud Object does not have a property named " + Name);
-        }
-
-        public T GetPropertyOrDefault<T>(String Name)
         {
             if (Properties.ContainsKey(Name))
                 return (T)Properties[Name];
@@ -86,6 +78,7 @@ namespace RMUD
 		public MudObject()
 		{
 		    State = ObjectState.Alive;
+            SetProperty("nouns", new NounList());
             IsPersistent = false;
 		}
 
@@ -93,7 +86,7 @@ namespace RMUD
         {
             SetProperty("short", Short);
             SetProperty("long", Long);
-            GetProperty<NounList>("nouns").Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            SetProperty("nouns", new NounList(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)));
 
             var firstChar = Short.ToLower()[0];
             if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')

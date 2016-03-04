@@ -27,7 +27,7 @@ namespace RMUD.SinglePlayer
         {
             //NewCharacter.Rank = 500;
             NewCharacter.SetProperty("command handler", Core.ParserCommandHandler);
-            var client = Player.GetPropertyOrDefault<Client>("client");
+            var client = Player.GetProperty<Client>("client");
             if (client != null)
                 Core.TiePlayerToClient(client, NewCharacter);
             Player = NewCharacter;

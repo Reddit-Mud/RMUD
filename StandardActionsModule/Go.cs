@@ -21,7 +21,7 @@ namespace StandardActionsModule
                 .ProceduralRule((match, actor) =>
                 {
                     var direction = match["DIRECTION"] as Direction?;
-                    var link = actor.Location.EnumerateObjects().FirstOrDefault(thing => thing.GetPropertyOrDefault<bool>("portal?") && thing.GetPropertyOrDefault<Direction>("link direction") == direction.Value);
+                    var link = actor.Location.EnumerateObjects().FirstOrDefault(thing => thing.GetProperty<bool>("portal?") && thing.GetProperty<Direction>("link direction") == direction.Value);
                     match.Upsert("LINK", link);
                     return PerformResult.Continue;
                 }, "lookup link rule")
@@ -61,7 +61,7 @@ namespace StandardActionsModule
                 .Name("No link found rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can go?")
-                .When((actor, link) => link != null && link.GetPropertyOrDefault<bool>("openable?") && !link.GetPropertyOrDefault<bool>("open?"))
+                .When((actor, link) => link != null && link.GetProperty<bool>("openable?") && !link.GetProperty<bool>("open?"))
                 .Do((actor, link) =>
                 {
                     MudObject.SendMessage(actor, "@first opening", link);
@@ -81,7 +81,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("go")
                 .Do((actor, link) =>
                 {
-                    var direction = link.GetPropertyOrDefault<Direction>("link direction");
+                    var direction = link.GetProperty<Direction>("link direction");
                     MudObject.SendMessage(actor, "@you went", direction.ToString().ToLower());
                     MudObject.SendExternalMessage(actor, "@they went", actor, direction.ToString().ToLower());
                     return PerformResult.Continue;
@@ -105,7 +105,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("go")
                 .Do((actor, link) =>
                 {
-                    var direction = link.GetPropertyOrDefault<Direction>("link direction");
+                    var direction = link.GetProperty<Direction>("link direction");
                     var arriveMessage = Link.FromMessage(Link.Opposite(direction));
                     MudObject.SendExternalMessage(actor, "@they arrive", actor, arriveMessage);
                     return PerformResult.Continue;
@@ -113,7 +113,7 @@ namespace StandardActionsModule
                 .Name("Report arrival rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("go")
-                .When((actor, link) => actor.GetPropertyOrDefault<Client>("client") != null)
+                .When((actor, link) => actor.GetProperty<Client>("client") != null)
                 .Do((actor, link) =>
                 {
                     Core.EnqueuActorCommand(actor, "look", HelperExtensions.MakeDictionary("AUTO", true));

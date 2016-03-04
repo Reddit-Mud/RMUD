@@ -41,9 +41,9 @@ namespace ClothingModule
 
         public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
-            RMUD.PropertyManifest.RegisterProperty("clothing layer", typeof(ClothingLayer), ClothingLayer.Outer);
-            RMUD.PropertyManifest.RegisterProperty("clothing part", typeof(ClothingBodyPart), ClothingBodyPart.Cloak);
-            RMUD.PropertyManifest.RegisterProperty("wearable?", typeof(bool), false);
+            RMUD.PropertyManifest.RegisterProperty("clothing layer", typeof(ClothingLayer), ClothingLayer.Outer, new RMUD.EnumSerializer<ClothingLayer>());
+            RMUD.PropertyManifest.RegisterProperty("clothing part", typeof(ClothingBodyPart), ClothingBodyPart.Cloak, new RMUD.EnumSerializer<ClothingBodyPart>());
+            RMUD.PropertyManifest.RegisterProperty("wearable?", typeof(bool), false, new RMUD.BoolSerializer());
         }
 
         public static void Clothing(this RMUD.MudObject MudObject, ClothingLayer Layer, ClothingBodyPart BodyPart)

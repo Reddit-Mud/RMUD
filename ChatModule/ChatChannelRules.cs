@@ -39,7 +39,7 @@ namespace ChatModule
 
             var senate = new ChatChannel("SENATE");
             senate.Check<MudObject, MudObject>("can access channel?")
-                .When((actor, channel) => actor.GetPropertyOrDefault<int>("rank") < 100)
+                .When((actor, channel) => actor.GetProperty<int>("rank") < 100)
                 .Do((actor, channel) =>
                 {
                     MudObject.SendMessage(actor, "You must have a rank of 100 or greater to access this channel.");

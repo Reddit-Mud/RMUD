@@ -100,7 +100,7 @@ namespace RMUD
 
                 // Any object marked with the 'preserve?' flag should be kept. Other objects should be discarded.
                 foreach (var item in existing.EnumerateObjectsAndRelloc())
-                    if (item.Item1.GetPropertyOrDefault<bool>("preserve?"))
+                    if (item.Item1.GetProperty<bool>("preserve?"))
                     {
                         newObject.Add(item.Item1, item.Item2);
                         item.Item1.Location = newObject;

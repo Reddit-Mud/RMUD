@@ -45,7 +45,7 @@ namespace NetworkModule
 
         public static void KickPlayer(MudObject Player, MudObject Actor)
         {
-            var client = Player.GetPropertyOrDefault<Client>("client");
+            var client = Player.GetProperty<Client>("client");
             if (client != null)
             {
                 Core.MarkLocaleForUpdate(Player);

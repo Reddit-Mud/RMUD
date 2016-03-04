@@ -15,7 +15,7 @@ namespace NetworkModule
 
         public PasswordCommandHandler(MudObject Actor, Action<MudObject, String, String> AuthenticatingCommand, String UserName)
 		{
-            this.ParentHandler = Actor.GetPropertyOrDefault<ClientCommandHandler>("command handler");
+            this.ParentHandler = Actor.GetProperty<ClientCommandHandler>("command handler");
             this.AuthenticatingCommand = AuthenticatingCommand;
             this.UserName = UserName;
 

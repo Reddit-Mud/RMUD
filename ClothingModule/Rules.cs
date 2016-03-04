@@ -28,13 +28,13 @@ namespace ClothingModule
                 .Name("List worn items in inventory rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((actor, item) => actor.GetPropertyOrDefault<bool>("actor?"))
+                .When((actor, item) => actor.GetProperty<bool>("actor?"))
                 .Do((actor, item) =>
                 {
-                    var layer = item.GetPropertyOrDefault<ClothingLayer>("clothing layer");
-                    var part = item.GetPropertyOrDefault<ClothingBodyPart>("clothing part");
+                    var layer = item.GetProperty<ClothingLayer>("clothing layer");
+                    var part = item.GetProperty<ClothingBodyPart>("clothing part");
                     foreach (var wornItem in actor.EnumerateObjects(RelativeLocations.Worn))
-                        if (wornItem.GetPropertyOrDefault<ClothingLayer>("clothing layer") == layer && wornItem.GetPropertyOrDefault<ClothingBodyPart>("clothing part") == part)
+                        if (wornItem.GetProperty<ClothingLayer>("clothing layer") == layer && wornItem.GetProperty<ClothingBodyPart>("clothing part") == part)
                         {
                             MudObject.SendMessage(actor, "@clothing remove first", wornItem);
                             return CheckResult.Disallow;
@@ -46,10 +46,10 @@ namespace ClothingModule
             GlobalRules.Check<MudObject, MudObject>("can remove?")
                 .Do((actor, item) =>
                 {
-                    var layer = item.GetPropertyOrDefault<ClothingLayer>("clothing layer");
-                    var part = item.GetPropertyOrDefault<ClothingBodyPart>("clothing part");
+                    var layer = item.GetProperty<ClothingLayer>("clothing layer");
+                    var part = item.GetProperty<ClothingBodyPart>("clothing part");
                     foreach (var wornItem in actor.EnumerateObjects(RelativeLocations.Worn))
-                        if (wornItem.GetPropertyOrDefault<ClothingLayer>("clothing layer") < layer && wornItem.GetPropertyOrDefault<ClothingBodyPart>("clothing part") == part)
+                        if (wornItem.GetProperty<ClothingLayer>("clothing layer") < layer && wornItem.GetProperty<ClothingBodyPart>("clothing part") == part)
                         {
                             MudObject.SendMessage(actor, "@clothing remove first", wornItem);
                             return CheckResult.Disallow;
@@ -61,7 +61,7 @@ namespace ClothingModule
             
             GlobalRules.Perform<MudObject, MudObject>("describe")
                 .First
-                .When((viewer, actor) => actor.GetPropertyOrDefault<bool>("actor?"))
+                .When((viewer, actor) => actor.GetProperty<bool>("actor?"))
                 .Do((viewer, actor) =>
                 {
                     var wornItems = actor.GetContents(RelativeLocations.Worn);

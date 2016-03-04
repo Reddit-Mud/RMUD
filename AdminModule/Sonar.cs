@@ -108,7 +108,7 @@ namespace AdminModule
                 {
                     var destinationName = link.GetProperty<string>("link destination");
                     var destination = MudObject.GetObject(destinationName);
-                    var direction = link.GetPropertyOrDefault<RMUD.Direction>("link direction");
+                    var direction = link.GetProperty<RMUD.Direction>("link direction");
 
                     if (direction == Direction.UP)
                     {

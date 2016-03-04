@@ -45,8 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CharacterClasses.cs" />
+    <Compile Include="Attack.cs" />
+    <Compile Include="CombatStats.cs" />
     <Compile Include="ElementTypes.cs" />
     <Compile Include="ModuleInfo.cs" />
+    <Compile Include="Monster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

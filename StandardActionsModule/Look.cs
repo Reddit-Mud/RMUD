@@ -63,7 +63,7 @@ namespace StandardActionsModule
 
             GlobalRules.Perform<MudObject, MudObject>("describe locale")
                 .First
-                .When((viewer, room) => room.GetPropertyOrDefault<LightingLevel>("light") == LightingLevel.Dark)
+                .When((viewer, room) => room.GetProperty<LightingLevel>("light") == LightingLevel.Dark)
                 .Do((viewer, room) =>
                 {
                     MudObject.SendMessage(viewer, "@dark");
@@ -103,12 +103,12 @@ namespace StandardActionsModule
                 .Name("Don't list yourself rule.");
 
             GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
-               .When((viewer, item) => item.GetPropertyOrDefault<bool>("scenery?"))
+               .When((viewer, item) => item.GetProperty<bool>("scenery?"))
                .Do((viewer, item) => SharpRuleEngine.CheckResult.Disallow)
                .Name("Don't list scenery objects rule.");
 
             GlobalRules.Check<MudObject, MudObject>("should be listed in locale?")
-                .When((viewer, item) => item.GetPropertyOrDefault<bool>("portal?"))
+                .When((viewer, item) => item.GetProperty<bool>("portal?"))
                 .Do((viewer, item) => SharpRuleEngine.CheckResult.Disallow)
                 .Name("Don't list portals rule.");
 
@@ -146,17 +146,17 @@ namespace StandardActionsModule
                 .Last
                 .Do((viewer, room) =>
                 {
-                    if (room.EnumerateObjects().Where(l => l.GetPropertyOrDefault<bool>("portal?")).Count() > 0)
+                    if (room.EnumerateObjects().Where(l => l.GetProperty<bool>("portal?")).Count() > 0)
                     {
                         MudObject.SendMessage(viewer, "@obvious exits");
 
-                        foreach (var link in room.EnumerateObjects<MudObject>().Where(l => l.GetPropertyOrDefault<bool>("portal?")))
+                        foreach (var link in room.EnumerateObjects<MudObject>().Where(l => l.GetProperty<bool>("portal?")))
                         {
                             var builder = new StringBuilder();
                             builder.Append("  ^");
-                            builder.Append(link.GetPropertyOrDefault<Direction>("link direction").ToString());
+                            builder.Append(link.GetProperty<Direction>("link direction").ToString());
 
-                            if (!link.GetPropertyOrDefault<bool>("link anonymous?"))
+                            if (!link.GetProperty<bool>("link anonymous?"))
                                 builder.Append(" " + Core.FormatMessage(viewer, Core.GetMessage("through"), link));
 
                             var destinationRoom = MudObject.GetObject(link.GetProperty<String>("link destination"));

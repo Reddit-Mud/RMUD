@@ -19,7 +19,7 @@ namespace ConversationModule
                     MustMatch("@convo greet whom",
                         Object("LOCUTOR", InScope, (actor, thing) =>
                         {
-                            if (thing.GetPropertyOrDefault<bool>("actor?")) return MatchPreference.VeryLikely;
+                            if (thing.GetProperty<bool>("actor?")) return MatchPreference.VeryLikely;
                             else return MatchPreference.VeryUnlikely;
                         }))))
                 .ID("Conversation:Greet")
@@ -45,8 +45,8 @@ namespace ConversationModule
                             Sequence(
                                 Object("NEW-LOCUTOR", InScope, (actor, thing) =>
                                 {
-                                    if (System.Object.ReferenceEquals(thing, actor.GetPropertyOrDefault<MudObject>("interlocutor"))) return MatchPreference.VeryLikely;
-                                    if (thing.GetPropertyOrDefault<bool>("actor?")) return MatchPreference.Likely;
+                                    if (System.Object.ReferenceEquals(thing, actor.GetProperty<MudObject>("interlocutor"))) return MatchPreference.VeryLikely;
+                                    if (thing.GetProperty<bool>("actor?")) return MatchPreference.Likely;
                                     return MatchPreference.VeryUnlikely;
                                 }),
                                 OptionalKeyWord("ABOUT"),
@@ -63,7 +63,7 @@ namespace ConversationModule
                     {
                         var newLocutor = match["NEW-LOCUTOR"] as MudObject;
                         if (Core.GlobalRules.ConsiderCheckRule("can converse?", actor, newLocutor) == CheckResult.Disallow) return PerformResult.Stop;
-                        if (!System.Object.ReferenceEquals(newLocutor, actor.GetPropertyOrDefault<MudObject>("interlocutor")))
+                        if (!System.Object.ReferenceEquals(newLocutor, actor.GetProperty<MudObject>("interlocutor")))
                         {
                             Core.GlobalRules.ConsiderPerformRule("greet", actor, newLocutor);
                             actor.SetProperty("interlocutor", newLocutor);
@@ -74,7 +74,7 @@ namespace ConversationModule
                 }, "Implicitly greet new locutors rule.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor.GetPropertyOrDefault<MudObject>("interlocutor") == null)
+                    if (actor.GetProperty<MudObject>("interlocutor") == null)
                     {
                         MudObject.SendMessage(actor, "@convo nobody");
                         return PerformResult.Stop;

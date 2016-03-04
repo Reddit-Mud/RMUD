@@ -24,7 +24,7 @@ namespace StandardActionsModule
                                 {
                                     //Prefer objects that are actually containers. No means curently to prefer
                                     //objects that actually support the relloc we matched previously.
-                                    if (thing.GetPropertyOrDefault<bool>("container?")) return MatchPreference.Likely;
+                                    if (thing.GetProperty<bool>("container?")) return MatchPreference.Likely;
                                     return MatchPreference.Plausible;
                                 })))))
                 .ID("StandardActions:Put")
@@ -33,7 +33,7 @@ namespace StandardActionsModule
                 {
                     if (!match.ContainsKey("RELLOC"))
                     {
-                        if ((match["OBJECT"] as MudObject).GetPropertyOrDefault<bool>("container?"))
+                        if ((match["OBJECT"] as MudObject).GetProperty<bool>("container?"))
                             match.Upsert("RELLOC", (match["OBJECT"] as MudObject).DefaultLocation);
                         else
                             match.Upsert("RELLOC", RelativeLocations.On);
@@ -65,7 +65,7 @@ namespace StandardActionsModule
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
-                    if (!(container.GetPropertyOrDefault<bool>("container?")))
+                    if (!(container.GetProperty<bool>("container?")))
                     {
                         MudObject.SendMessage(actor, "@cant put relloc", Relloc.GetRelativeLocationName(relloc));
                         return CheckResult.Disallow;
@@ -108,7 +108,7 @@ namespace StandardActionsModule
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
-                    if (relloc == RelativeLocations.In && !container.GetPropertyOrDefault<bool>("open?"))
+                    if (relloc == RelativeLocations.In && !container.GetProperty<bool>("open?"))
                     {
                         MudObject.SendMessage(actor, "@is closed error", container);
                         return CheckResult.Disallow;

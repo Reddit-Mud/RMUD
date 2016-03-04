@@ -47,6 +47,7 @@
     <Compile Include="Dump.cs" />
     <Compile Include="DumpMessages.cs" />
     <Compile Include="Force.cs" />
+    <Compile Include="Properties.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="Scope.cs" />
     <Compile Include="Inspect.cs" />

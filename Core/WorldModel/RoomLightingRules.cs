@@ -19,11 +19,11 @@ namespace RMUD
                 .Name("Items emit no light by default rule.");
 
             GlobalRules.Perform<MudObject>("update")
-                .When(room => room.GetPropertyOrDefault<RoomType>("room type") != RoomType.NotARoom)
+                .When(room => room.GetProperty<RoomType>("room type") != RoomType.NotARoom)
                 .Do(room =>
                 {
                     var light = LightingLevel.Dark;
-                    var roomType = room.GetPropertyOrDefault<RoomType>("room type");
+                    var roomType = room.GetProperty<RoomType>("room type");
 
                     if (roomType == RMUD.RoomType.Exterior)
                         light = AmbientExteriorLightingLevel;
@@ -34,7 +34,7 @@ namespace RMUD
                         if (lightingLevel > light) light = lightingLevel;
                     }
 
-                    var ambient = room.GetPropertyOrDefault<LightingLevel>("ambient light");
+                    var ambient = room.GetProperty<LightingLevel>("ambient light");
                     if (ambient > light) light = ambient;
 
                     room.SetProperty("light", light);

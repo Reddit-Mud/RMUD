@@ -62,7 +62,7 @@ namespace StandardActionsModule
                     // Rooms have a collection of objects that are in them. Links happen to have two specific 
                     // properties set that we can use to find them: First, 'portal?' will be true, and 
                     // 'link direction' will hold the direction the link goes in. So we search for the link.
-                    var link = actor.Location.EnumerateObjects().FirstOrDefault(thing => thing.GetPropertyOrDefault<bool>("portal?") && thing.GetPropertyOrDefault<Direction>("link direction") == direction.Value);
+                    var link = actor.Location.EnumerateObjects().FirstOrDefault(thing => thing.GetProperty<bool>("portal?") && thing.GetProperty<Direction>("link direction") == direction.Value);
                     // Store the link in the match, and later procedural rules will be able to find it.
                     match.Upsert("LINK", link);
                     // Procedural rules return PerformResults. If they return stop, the command stops right there.
@@ -152,7 +152,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, MudObject>("push direction")
                 .Do((actor, subject, link) =>
                 {
-                    var direction = link.GetPropertyOrDefault<Direction>("link direction");
+                    var direction = link.GetProperty<Direction>("link direction");
                     MudObject.SendMessage(actor, "@you push", subject, direction.ToString().ToLower());
 
                     // SendExternalMessage sends the message to everyone in the same place as the actor, 
@@ -184,7 +184,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, MudObject>("push direction")
                 .Do((actor, subject, link) =>
                 {
-                    var direction = link.GetPropertyOrDefault<Direction>("link direction");
+                    var direction = link.GetProperty<Direction>("link direction");
                     var arriveMessage = Link.FromMessage(Link.Opposite(direction));
                     MudObject.SendExternalMessage(actor, "@they arrive pushing", actor, subject, arriveMessage);
                     return PerformResult.Continue;

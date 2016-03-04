@@ -59,7 +59,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can pull?")
                 .First
-                .When((actor, target) => target.GetPropertyOrDefault<bool>("actor?"))
+                .When((actor, target) => target.GetProperty<bool>("actor?"))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@unappreciated", thing);

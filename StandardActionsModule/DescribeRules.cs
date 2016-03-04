@@ -30,10 +30,10 @@ namespace StandardActionsModule
                 .Name("Basic description rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("describe")
-                .When((viewer, item) => item.GetPropertyOrDefault<bool>("openable?"))
+                .When((viewer, item) => item.GetProperty<bool>("openable?"))
                 .Do((viewer, item) =>
                 {
-                    if (item.GetPropertyOrDefault<bool>("open?"))
+                    if (item.GetProperty<bool>("open?"))
                         MudObject.SendMessage(viewer, "@is open", item);
                     else
                         MudObject.SendMessage(viewer, "@is closed", item);
@@ -55,8 +55,8 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("describe")
                 .When((viewer, item) =>
                     {
-                        if (item.GetPropertyOrDefault<bool>("container?")) return false;
-                        if (!item.GetPropertyOrDefault<bool>("open?")) return false;
+                        if (item.GetProperty<bool>("container?")) return false;
+                        if (!item.GetProperty<bool>("open?")) return false;
                         if (item.EnumerateObjects(RelativeLocations.In).Count() == 0) return false;
                         return true;
                     })
@@ -72,7 +72,7 @@ namespace StandardActionsModule
 
             GlobalRules.Perform<MudObject, MudObject>("describe")
                 .First
-                .When((viewer, actor) => actor.GetPropertyOrDefault<bool>("actor?"))
+                .When((viewer, actor) => actor.GetProperty<bool>("actor?"))
                 .Do((viewer, actor) =>
                 {
                     var heldItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Held));

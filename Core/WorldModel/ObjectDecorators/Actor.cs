@@ -9,12 +9,12 @@ namespace RMUD
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            PropertyManifest.RegisterProperty("actor?", typeof(bool), false);
-            PropertyManifest.RegisterProperty("preserve?", typeof(bool), false);
-            PropertyManifest.RegisterProperty("gender", typeof(Gender), Gender.Male);
-            PropertyManifest.RegisterProperty("rank", typeof(int), 0);
-            PropertyManifest.RegisterProperty("client", typeof(Client), null);
-            PropertyManifest.RegisterProperty("command handler", typeof(ClientCommandHandler), null);
+            PropertyManifest.RegisterProperty("actor?", typeof(bool), false, new BoolSerializer());
+            PropertyManifest.RegisterProperty("preserve?", typeof(bool), false, new BoolSerializer());
+            PropertyManifest.RegisterProperty("gender", typeof(Gender), Gender.Male, new EnumSerializer<Gender>());
+            PropertyManifest.RegisterProperty("rank", typeof(int), 0, new IntSerializer());
+            PropertyManifest.RegisterProperty("client", typeof(Client), null, new DefaultSerializer());
+            PropertyManifest.RegisterProperty("command handler", typeof(ClientCommandHandler), null, new DefaultSerializer());
         }
     }
 

@@ -104,10 +104,8 @@
     <Compile Include="Core\Random.cs" />
     <Compile Include="Core\Rules\RuleEngine.cs" />
     <Compile Include="Core\SendMessage.cs" />
-    <Compile Include="Core\Serialization\BitArraySerializer.cs" />
     <Compile Include="Core\Serialization\ContainerSerializer.cs" />
     <Compile Include="Core\Serialization\DictionaryStringObjectSerializer.cs" />
-    <Compile Include="Core\Serialization\EnumSerializer.cs" />
     <Compile Include="Core\Serialization\ObjectSerialization.cs" />
     <Compile Include="Core\Serialization\PersistAttribute.cs" />
     <Compile Include="Core\Serialization\PersistentValueSerializer.cs" />
@@ -143,9 +141,15 @@
     <Compile Include="WorldModel\MudObject.cs" />
     <Compile Include="WorldModel\MudObjectRules.cs" />
     <Compile Include="WorldModel\NounList.cs" />
+    <Compile Include="WorldModel\ObjectProperties\EnumSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\BoolSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\StringSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\IntSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\DefaultSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\TypeSerializer.cs" />
     <Compile Include="WorldModel\ObjectState.cs" />
     <Compile Include="WorldModel\Portal.cs" />
-    <Compile Include="WorldModel\PropertyManifest.cs" />
+    <Compile Include="WorldModel\ObjectProperties\PropertyManifest.cs" />
     <Compile Include="WorldModel\RelativeLocations.cs" />
     <Compile Include="WorldModel\ObjectDecorators\Scenery.cs" />
     <Compile Include="WorldModel\ObjectDecorators\Room.cs" />
