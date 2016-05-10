@@ -26,9 +26,7 @@ namespace RMUD
     {
         public DateTime StartTime;
         public TimeSpan Interval;
-        public MudObject InvokeOn;
-        public String Rule;
-        public Object[] RuleArguments;
+        public Action Action;
     }
 
     public static partial class Core
@@ -42,7 +40,7 @@ namespace RMUD
 
         internal static List<Timer> ActiveTimers = new List<Timer>();
 
-        public static void AddTimer(TimeSpan Interval, MudObject On, String Rule, params Object[] Arguments)
+        public static void AddTimer(TimeSpan Interval, Action Action)
         {
             if (Interval < TimeSpan.FromSeconds(1))
             {
@@ -54,9 +52,7 @@ namespace RMUD
             {
                 StartTime = DateTime.Now,
                 Interval = Interval,
-                InvokeOn = On,
-                Rule = Rule,
-                RuleArguments = Arguments
+                Action = Action
             });
         }
 
@@ -86,7 +82,7 @@ namespace RMUD
                 var timerFireTime = ActiveTimers[i].StartTime + ActiveTimers[i].Interval;
                 if (timerFireTime <= now)
                 {
-                    ConsiderLocalOnlyPerformRule(ActiveTimers[i].InvokeOn, ActiveTimers[i].Rule, ActiveTimers[i].RuleArguments);
+                    ActiveTimers[i].Action();
                     Core.SendPendingMessages();
                     ActiveTimers.RemoveAt(i);
                 }

@@ -23,7 +23,28 @@ namespace DelmudGameplay
                     return SharpRuleEngine.PerformResult.Continue;
                 });
 
-            
+            Perform<MudObject, MudObject>("attack")
+                .When((actor, victim) => Object.ReferenceEquals(victim, this))
+                .When((actor, victim) => actor.State == ObjectState.Alive && victim.State == ObjectState.Alive)
+                .Do((actor, victim) =>
+                {
+                    // Now actor is an aggressor.
+                    victim.SetProperty("combatant", actor);
+                    Core.AddTimer(TimeSpan.FromSeconds(2), () => ConsiderPerformRule("attack", victim, actor));
+                    return SharpRuleEngine.PerformResult.Continue;
+                })
+                .Name("Fight back rule");
+
+            Perform<MudObject, MudObject>("attack")
+                .When((actor, victim) => Object.ReferenceEquals(actor, this))
+                .When((actor, victim) => actor.State == ObjectState.Alive && victim.State == ObjectState.Alive)
+                .Do((actor, victim) =>
+                {
+                    actor.SetProperty("combatant", victim);
+                    Core.AddTimer(TimeSpan.FromSeconds(2), () => ConsiderPerformRule("attack", actor, victim));
+                    return SharpRuleEngine.PerformResult.Continue;
+                })
+                .Name("Keep attacking rule.");
         }
     }
 }

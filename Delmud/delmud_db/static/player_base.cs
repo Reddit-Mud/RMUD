@@ -1,7 +1,7 @@
-﻿public class player_base : RMUD.MudObject
+﻿public class player_base : DelmudGameplay.Player
 {
     public override void Initialize()
     {
-        Actor();
+        base.Initialize();
     }
 }

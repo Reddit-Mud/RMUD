@@ -49,6 +49,7 @@
     <Compile Include="CombatStats.cs" />
     <Compile Include="ElementTypes.cs" />
     <Compile Include="ModuleInfo.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Monster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
