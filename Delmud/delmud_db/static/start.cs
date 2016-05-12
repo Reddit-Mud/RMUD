@@ -6,6 +6,7 @@
 
         SetProperty("short", "Chamber of the swirling elements");
         SetProperty("ambient light", LightingLevel.Bright);
+        OpenLink(Direction.NORTH, "area/beginning/secondroom");
 
         MudObject.Move(new target(), this);
     }
