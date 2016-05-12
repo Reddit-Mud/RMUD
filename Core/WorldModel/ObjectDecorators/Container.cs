@@ -32,7 +32,7 @@ namespace RMUD
 
         public void Remove(MudObject Object)
         {
-            foreach (var list in Lists)
+            if (Lists != null) foreach (var list in Lists)
             {
                 if (list.Value.Remove(Object))
                     Object.Location = null;
@@ -42,13 +42,15 @@ namespace RMUD
         public int RemoveAll(Predicate<MudObject> Func)
         {
             var r = 0;
-            foreach (var list in Lists)
+            if (Lists != null) foreach (var list in Lists)
                 r += list.Value.RemoveAll(Func);
             return r;
         }
 
         public void Add(MudObject Object, RelativeLocations Locations)
         {
+            if (Lists == null) return;
+
             if (Locations == RelativeLocations.Default) Locations = Default;
 
             if ((Supported & Locations) == Locations)
@@ -60,28 +62,28 @@ namespace RMUD
 
         public IEnumerable<MudObject> EnumerateObjects()
         {
-            foreach (var list in Lists)
+            if (Lists != null) foreach (var list in Lists)
                 foreach (var item in list.Value)
                     yield return item;
         }
 
         public IEnumerable<Tuple<MudObject, RelativeLocations>> EnumerateObjectsAndRelloc()
         {
-            foreach (var list in Lists)
+            if (Lists != null) foreach (var list in Lists)
                 foreach (var item in list.Value)
                     yield return Tuple.Create(item, list.Key);
         }
 
         public IEnumerable<T> EnumerateObjects<T>() where T : MudObject
         {
-            foreach (var list in Lists)
+            if (Lists != null) foreach (var list in Lists)
                 foreach (var item in list.Value)
                     if (item is T) yield return item as T;
         }
 
         public IEnumerable<MudObject> EnumerateObjects(RelativeLocations Locations)
         {
-            foreach (var list in Lists)
+            if (Lists != null) foreach (var list in Lists)
                 if ((list.Key & Locations) == list.Key)
                     foreach (var item in list.Value)
                         yield return item;
@@ -89,7 +91,7 @@ namespace RMUD
 
         public IEnumerable<T> EnumerateObjects<T>(RelativeLocations Locations) where T : MudObject
         {
-            foreach (var list in Lists)
+            if (Lists != null) foreach (var list in Lists)
                 if ((list.Key & Locations) == list.Key)
                     foreach (var item in list.Value)
                         if (item is T) yield return item as T;
@@ -104,8 +106,9 @@ namespace RMUD
         {
             if (Locations == RelativeLocations.Default) Locations = Default;
 
-            if (Lists.ContainsKey(Locations))
-                return Lists[Locations].Contains(Object);
+            if (Lists != null)
+                if (Lists.ContainsKey(Locations))
+                    return Lists[Locations].Contains(Object);
             return false;
         }
 
@@ -115,8 +118,10 @@ namespace RMUD
 
         public RelativeLocations RelativeLocationOf(MudObject Object)
         {
-            foreach (var list in Lists)
-                if (list.Value.Contains(Object)) return list.Key;
+            if (Lists != null)
+                foreach (var list in Lists)
+                    if (list.Value.Contains(Object))
+                        return list.Key;
             return RelativeLocations.None;
         }
     }

@@ -160,6 +160,7 @@ namespace IntroductionModule
 
         private static void RememberActor(MudObject Player, MudObject Actor)
         {
+            if (String.IsNullOrEmpty(Actor.Path)) return; // Don't remember unimportant mobs.
             if (!Player.HasProperty("introduction memory"))
                 Player.SetProperty("introduction memory", new Dictionary<string, bool>());
             Player.GetProperty<Dictionary<String, bool>>("introduction memory").Upsert(Actor.Path, true);
@@ -167,6 +168,7 @@ namespace IntroductionModule
 
         private static bool RecallActor(MudObject Player, MudObject Actor)
         {
+            if (String.IsNullOrEmpty(Actor.Path)) return false; // Some mob.
             if (!Player.HasProperty("introduction memory")) return false;
             var memory = Player.GetProperty<Dictionary<String, bool>>("introduction memory");
             if (!memory.ContainsKey(Actor.Path)) return false;

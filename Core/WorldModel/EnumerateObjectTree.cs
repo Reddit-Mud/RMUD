@@ -31,12 +31,15 @@ namespace RMUD
             {
                 yield return C;
 
-                foreach (var list in C.Lists)
+                if (C.Lists != null)
                 {
-                    if (list.Key == RelativeLocations.In && C.GetProperty<bool>("openable?") && !C.GetProperty<bool>("open?")) continue;
-                    foreach (var item in list.Value)
-                        foreach (var sub in _enumerateVisibleTree(item))
-                            yield return sub;
+                    foreach (var list in C.Lists)
+                    {
+                        if (list.Key == RelativeLocations.In && C.GetProperty<bool>("openable?") && !C.GetProperty<bool>("open?")) continue;
+                        foreach (var item in list.Value)
+                            foreach (var sub in _enumerateVisibleTree(item))
+                                yield return sub;
+                    }
                 }
             }
         }
