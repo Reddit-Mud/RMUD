@@ -20,7 +20,7 @@ namespace Space
                         foreach (var item in tapedObjects)
                             MudObject.SendMessage(a, "  <a0>", item);
                     }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("List taped items in inventory rule.");
         }

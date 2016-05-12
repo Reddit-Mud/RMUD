@@ -13,23 +13,23 @@ namespace ChatModule
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can access channel?", "[Client, Channel] : Can the client access the chat channel?", "actor", "channel");
 
             GlobalRules.Check<MudObject, MudObject>("can access channel?")
-                .Do((client, channel) => CheckResult.Allow)
+                .Do((client, channel) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default allow channel access rule.");
 
-            GlobalRules.Perform<Actor>("player joined")
+            GlobalRules.Perform<MudObject>("player joined")
                 .Do(player =>
                 {
-                    foreach (var c in ChatChannel.ChatChannels.Where(c => c.Short == "OOC"))
+                    foreach (var c in ChatChannel.ChatChannels.Where(c => c.GetProperty<String>("short") == "OOC"))
                         c.Subscribers.Add(player);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Subscribe new players to OOC rule.");
 
-            GlobalRules.Perform<Actor>("player left")
+            GlobalRules.Perform<MudObject>("player left")
                 .Do(player =>
                 {
                     ChatChannel.RemoveFromAllChannels(player);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Unsubscribe players from all channels when they leave rule.");
 
@@ -39,11 +39,11 @@ namespace ChatModule
 
             var senate = new ChatChannel("SENATE");
             senate.Check<MudObject, MudObject>("can access channel?")
-                .When((actor, channel) => !(actor is Actor) || (actor as Actor).Rank < 100)
+                .When((actor, channel) => actor.GetProperty<int>("rank") < 100)
                 .Do((actor, channel) =>
                 {
                     MudObject.SendMessage(actor, "You must have a rank of 100 or greater to access this channel.");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 });
             ChatChannel.ChatChannels.Add(senate);
         }

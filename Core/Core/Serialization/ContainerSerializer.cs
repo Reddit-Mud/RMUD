@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public class ContainerSerializer : PersistentValueSerializer
+    public class ContainerSerializer : ValueSerializer
     {
         private static String RelativeLocationToString(RelativeLocations Relloc)
         {

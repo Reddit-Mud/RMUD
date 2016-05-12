@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SharpRuleEngine">
+      <HintPath>..\packages\SharpRuleEngine.1.0.5\lib\SharpRuleEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,8 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cons.cs" />
     <Compile Include="Dump.cs" />
+    <Compile Include="DumpMessages.cs" />
     <Compile Include="Force.cs" />
+    <Compile Include="Properties.cs" />
+    <Compile Include="Set.cs" />
     <Compile Include="Scope.cs" />
     <Compile Include="Inspect.cs" />
     <Compile Include="Instance.cs" />
@@ -56,6 +63,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Stats.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

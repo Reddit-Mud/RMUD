@@ -9,7 +9,7 @@
             .ProceduralRule((match, actor) =>
             {
                 SendMessage(actor, "Database defined commands appear to work.");
-                return RMUD.PerformResult.Continue;
+                return PerformResult.Continue;
             });
     }
 }

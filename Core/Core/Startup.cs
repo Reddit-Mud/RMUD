@@ -28,18 +28,42 @@ namespace RMUD
             if (Module.Assembly == null) throw new InvalidOperationException("Tried to load invalid module assembly - " + Module.FileName);
             if (Module.Info == null) throw new InvalidOperationException("Tried to load invalid module assembly - " + Module.FileName);
 
+            DefaultParser.ModuleBeingInitialized = Module.FileName;
+
             foreach (var type in Module.Assembly.GetTypes())
                 if (type.FullName.StartsWith(Module.Info.BaseNameSpace))
                     foreach (var method in type.GetMethods())
                         if (method.IsStatic && method.Name == "AtStartup")
-                            try
+                        {
+                            var methodParameters = method.GetParameters();
+
+                            if (methodParameters.Length == 0)
                             {
-                                method.Invoke(null, new Object[] { GlobalRules });
+                                try
+                                {
+                                    method.Invoke(null, null);
+                                }
+                                catch (Exception e)
+                                {
+                                    LogWarning("Error while loading module " + Module.FileName + " : " + e.Message);
+                                }
                             }
-                            catch (Exception e)
+                            else if (methodParameters.Length == 1 && methodParameters[0].ParameterType == typeof(RuleEngine))
                             {
-                                LogWarning("Error while loading module " + Module.FileName + " : " + e.Message);
+                                try
+                                {
+                                    method.Invoke(null, new Object[] { GlobalRules });
+                                }
+                                catch (Exception e)
+                                {
+                                    LogWarning("Error while loading module " + Module.FileName + " : " + e.Message);
+                                }
                             }
+                            else
+                            {
+                                LogWarning("Error while loading module " + Module.FileName + " : AtStartup method had incompatible signature.");
+                            }
+                        }
         }
 
         /// <summary>
@@ -49,17 +73,21 @@ namespace RMUD
         /// <param name="Database"></param>
         /// <param name="Assemblies">Modules to integrate</param>
         /// <returns></returns>
-        public static bool Start(StartupFlags Flags, WorldDataService Database, params ModuleAssembly[] Assemblies)
+        public static bool Start(StartupFlags Flags, String DatabasePath, WorldDataService Database, params ModuleAssembly[] Assemblies)
         {
+            Core.DatabasePath = DatabasePath;
+
             ShuttingDown = false;
             Core.Flags = Flags;
 
             try
             {
                 // Setup the rule engine and some basic rules.
-                GlobalRules = new RuleEngine(NewRuleQueueingMode.QueueNewRules);
+                GlobalRules = new RuleEngine();
                 GlobalRules.DeclarePerformRuleBook("at startup", "[] : Considered when the engine is started.");
                 GlobalRules.DeclarePerformRuleBook<MudObject>("singleplayer game started", "Considered when a single player game is begun");
+
+                DefaultParser = new CommandParser();
 
                 // Integrate modules. The Core assembly is always integrated.
                 IntegratedModules.Add(new ModuleAssembly(Assembly.GetExecutingAssembly(), new ModuleInfo { Author = "Blecki", Description = "RMUD Core", BaseNameSpace = "RMUD" }, "Core.dll"));
@@ -83,8 +111,6 @@ namespace RMUD
 
                 foreach (var startupAssembly in IntegratedModules)
                     IntegrateModule(startupAssembly);
-
-                PersistentValueSerializer.AddGlobalSerializer(new BitArraySerializer());
 
                 InitializeCommandProcessor();
 

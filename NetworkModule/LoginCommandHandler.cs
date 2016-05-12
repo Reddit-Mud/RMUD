@@ -18,11 +18,12 @@ namespace NetworkModule
             if (Account.LoggedInCharacter != null)
             {
                 //Connect to the existing session
-                if (Account.LoggedInCharacter.ConnectedClient != null)
+                var existingClient = Account.LoggedInCharacter.GetProperty<Client>("client");
+                if (existingClient != null)
                 {
-                    Account.LoggedInCharacter.ConnectedClient.Player = null;
-                    Account.LoggedInCharacter.ConnectedClient.Send("You are being disconnected because you have logged into this account from another connection.\r\n");
-                    Account.LoggedInCharacter.ConnectedClient.Disconnect();
+                    existingClient.Player = null;
+                    existingClient.Send("You are being disconnected because you have logged into this account from another connection.\r\n");
+                    existingClient.Disconnect();
                 }
                 Client.Send("You were already logged in. You are being connected to that session.\r\n");
                 Client.Player = Account.LoggedInCharacter;
@@ -36,7 +37,7 @@ namespace NetworkModule
 
             Client.Player.SetProperty("account", Account);
             Client.IsLoggedOn = true;
-            Client.Player.CommandHandler = Core.ParserCommandHandler;
+            Client.Player.SetProperty("command handler", Core.ParserCommandHandler);
             Account.LoggedInCharacter = Client.Player;
             Core.TiePlayerToClient(Client, Client.Player);
 

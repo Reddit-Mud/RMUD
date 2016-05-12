@@ -14,7 +14,7 @@ namespace RMUD
         /// </summary>
         /// <param name="Object"></param>
         /// <returns></returns>
-        internal static String SerializeObject(MudObject Object)
+        public static String SerializeObject(MudObject Object)
         {
             var dest = new System.IO.StringWriter();
             var jsonWriter = new JsonTextWriter(dest);
@@ -34,7 +34,7 @@ namespace RMUD
         /// </summary>
         /// <param name="Object">The MudObject to write deserialized data to</param>
         /// <param name="Data"></param>
-        internal static void DeserializeObject(MudObject Object, String Data)
+        public static void DeserializeObject(MudObject Object, String Data)
         {
             var persistentProperties = new List<Tuple<System.Reflection.PropertyInfo, PersistAttribute>>(EnumeratePersistentProperties(Object));
             var jsonReader = new JsonTextReader(new System.IO.StringReader(Data));

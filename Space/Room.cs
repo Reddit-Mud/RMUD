@@ -29,7 +29,7 @@
                         RMUD.MudObject.SendMessage(viewer, item.Long);
 
                     item.TimesViewed += 1;
-                    return RMUD.PerformResult.Stop;
+                    return SharpRuleEngine.PerformResult.Stop;
                 }).Name("Choose brief or long description rule.");
 
         }

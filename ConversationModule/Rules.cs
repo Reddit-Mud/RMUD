@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace ConversationModule
 {
     public class ConversationRules 
     {
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
+            PropertyManifest.RegisterProperty("interlocutor", typeof(MudObject), null, new DefaultSerializer());
+            PropertyManifest.RegisterProperty("conversation-topics", typeof(List<MudObject>), new List<MudObject>(), new DefaultSerializer());
+            PropertyManifest.RegisterProperty("topic-discussed", typeof(bool), false, new BoolSerializer());
+            
             Core.StandardMessage("convo topic prompt", "Suggested topics: <l0>");
             Core.StandardMessage("convo cant converse", "You can't converse with that.");
             Core.StandardMessage("convo greet whom", "Whom did you want to greet?");
@@ -20,7 +25,7 @@ namespace ConversationModule
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can converse?", "[Actor, Item] : Can the actor converse with the item?", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can converse?")
-                .When((actor, item) => !(item is NPC))
+                .When((actor, item) => !item.GetProperty<bool>("actor?"))
                 .Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "@convo cant converse");
@@ -42,7 +47,7 @@ namespace ConversationModule
             GlobalRules.DeclarePerformRuleBook<MudObject>("list topics", "[Actor] : List conversation topics available to the actor.", "actor");
 
             GlobalRules.Perform<MudObject>("list topics")
-                .When(actor => !(actor is Player) || actor.GetProperty<NPC>("interlocutor") == null)
+                .When(actor => actor.GetProperty<MudObject>("interlocutor") == null)
                 .Do(actor =>
                 {
                     MudObject.SendMessage(actor, "@convo nobody");
@@ -53,25 +58,37 @@ namespace ConversationModule
             GlobalRules.Perform<MudObject>("list topics")
                 .Do(actor =>
                 {
-                    if (!(actor is Player)) return PerformResult.Stop;
-                    var npc = actor.GetProperty<NPC>("interlocutor");
-                    var suggestedTopics = npc.GetPropertyOrDefault<List<MudObject>>("conversation-topics", new List<MudObject>()).AsEnumerable();
+                    var npc = actor.GetProperty<MudObject>("interlocutor");
+                    if (npc != null)
+                    {
+                        var suggestedTopics = npc.GetProperty<List<MudObject>>("conversation-topics").AsEnumerable();
 
-                    if (!Settings.ListDiscussedTopics)
-                        suggestedTopics = suggestedTopics.Where(obj => !obj.GetBooleanProperty("topic-discussed"));
+                        if (!Settings.ListDiscussedTopics)
+                            suggestedTopics = suggestedTopics.Where(obj => !obj.GetProperty<bool>("topic-discussed"));
 
-                    suggestedTopics = suggestedTopics.Where(topic => GlobalRules.ConsiderCheckRule("topic available?", actor, npc, topic) == CheckResult.Allow);
+                        suggestedTopics = suggestedTopics.Where(topic => GlobalRules.ConsiderCheckRule("topic available?", actor, npc, topic) == CheckResult.Allow);
 
-                    var enumeratedSuggestedTopics = new List<MudObject>(suggestedTopics);
+                        var enumeratedSuggestedTopics = new List<MudObject>(suggestedTopics);
 
-                    if (enumeratedSuggestedTopics.Count != 0)
-                        MudObject.SendMessage(actor, "@convo topic prompt", enumeratedSuggestedTopics);
-                    else
-                        MudObject.SendMessage(actor, "@convo no topics");
+                        if (enumeratedSuggestedTopics.Count != 0)
+                            MudObject.SendMessage(actor, "@convo topic prompt", enumeratedSuggestedTopics);
+                        else
+                            GlobalRules.ConsiderPerformRule("no topics to discuss", actor, npc);
+                    }
 
                     return PerformResult.Continue;
                 })
                 .Name("List un-discussed available topics rule.");
+
+            GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("no topics to discuss", "[Actor, NPC] : Handle there being no topics to list.");
+
+            GlobalRules.Perform<MudObject, MudObject>("no topics to discuss")
+                .Do((actor, npc) => 
+                {
+                    MudObject.SendMessage(actor, "@convo no topics");
+                    return PerformResult.Continue;
+                })
+                .Name("Default report no topics to discuss rule.");
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("discuss topic", "[Actor, NPC, Topic] : Handle the actor discussing the topic with the npc.");
 
@@ -98,7 +115,7 @@ namespace ConversationModule
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("topic available?")
                 .First
-                .When((actor, npc, topic) => (topic != null) && (Settings.AllowRepeats == false) && topic.GetBooleanProperty("topic-discussed"))
+                .When((actor, npc, topic) => (topic != null) && (Settings.AllowRepeats == false) && topic.GetProperty<bool>("topic-discussed"))
                 .Do((actor, npc, topic) => CheckResult.Disallow)
                 .Name("Already discussed topics unavailable when repeats disabled rule.");
 

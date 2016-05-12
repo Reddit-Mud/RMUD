@@ -11,6 +11,6 @@ namespace NetworkModule
         public String AFKMessage = "AFK";
 
         [Newtonsoft.Json.JsonIgnore]
-        public Actor LoggedInCharacter;
+        public MudObject LoggedInCharacter;
     }
 }

@@ -17,6 +17,7 @@ namespace StandardActionsModule
                         KeyWord("L")),
                     RelativeLocation("RELLOC"),
                     Object("OBJECT", InScope)))
+                .ID("StandardActions:LookRelloc")
                 .Manual("Lists object that are in, on, under, or behind the object specified.")
                 .Check("can look relloc?", "ACTOR", "OBJECT", "RELLOC")
                 .Perform("look relloc", "ACTOR", "OBJECT", "RELLOC");
@@ -36,25 +37,25 @@ namespace StandardActionsModule
                 .Name("Container must be visible rule.");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
-                .When((actor, item, relloc) => !(item is Container) || (((item as Container).LocationsSupported & relloc) != relloc))
+                .When((actor, item, relloc) => (item.LocationsSupported & relloc) != relloc)
                 .Do((actor, item, relloc) =>
                 {
                     MudObject.SendMessage(actor, "@cant look relloc", Relloc.GetRelativeLocationName(relloc));
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 })
                 .Name("Container must support relloc rule.");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
-                .When((actor, item, relloc) => (relloc == RelativeLocations.In) && !item.GetBooleanProperty("open?"))
+                .When((actor, item, relloc) => (relloc == RelativeLocations.In) && !item.GetProperty<bool>("open?"))
                 .Do((actor, item, relloc) =>
                 {
                         MudObject.SendMessage(actor, "@is closed error", item);
-                        return CheckResult.Disallow;
+                        return SharpRuleEngine.CheckResult.Disallow;
                 })
                 .Name("Container must be open to look in rule.");
 
             GlobalRules.Check<MudObject, MudObject, RelativeLocations>("can look relloc?")
-                .Do((actor, item, relloc) => CheckResult.Allow)
+                .Do((actor, item, relloc) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default allow looking relloc rule.");
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, RelativeLocations>("look relloc", "[Actor, Item, Relative Location] : Handle the actor looking on/under/in/behind the item.", "actor", "item", "relloc");
@@ -62,7 +63,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, RelativeLocations>("look relloc")
                 .Do((actor, item, relloc) =>
                 {
-                    var contents = new List<MudObject>((item as Container).EnumerateObjects(relloc));
+                    var contents = new List<MudObject>(item.EnumerateObjects(relloc));
 
                     if (contents.Count > 0)
                     {
@@ -73,7 +74,7 @@ namespace StandardActionsModule
                     else
                         MudObject.SendMessage(actor, "@nothing relloc it", Relloc.GetRelativeLocationName(relloc), item);
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("List contents in relative location rule.");
         }

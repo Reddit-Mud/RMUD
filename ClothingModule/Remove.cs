@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace ClothingModule
 {
@@ -23,13 +24,13 @@ namespace ClothingModule
                 .AfterActing();
         }
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can remove?", "[Actor, Item] : Can the actor remove the item?", "actor", "item");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("removed", "[Actor, Item] : Handle the actor removing the item.", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can remove?")
-                .When((a, b) => !(a is Actor) || !(a as Actor).Contains(b, RelativeLocations.Worn))
+                .When((a, b) => !a.Contains(b, RelativeLocations.Worn))
                 .Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "@clothing not wearing");

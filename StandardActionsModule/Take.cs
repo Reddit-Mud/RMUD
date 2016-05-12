@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -23,6 +24,7 @@ namespace StandardActionsModule
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             })))))
+                .ID("StandardActions:Take")
                 .Manual("Takes an item and adds it to your inventory.")
                 .Check("can take?", "ACTOR", "SUBJECT")
                 .BeforeActing()
@@ -31,7 +33,7 @@ namespace StandardActionsModule
                 .MarkLocaleForUpdate();
 		}
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("you take", "You take <the0>.");
             Core.StandardMessage("they take", "^<the0> takes <the1>.");
@@ -47,7 +49,7 @@ namespace StandardActionsModule
                 .Name("Item must be visible to take rule.");
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
-                .When((actor, item) => actor is Container && (actor as Container).Contains(item, RelativeLocations.Held))
+                .When((actor, item) => actor.Contains(item, RelativeLocations.Held))
                 .Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "@already have that");
@@ -72,7 +74,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
-                .When((actor, thing) => thing is Actor)
+                .When((actor, thing) => thing.GetProperty<bool>("actor?"))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@cant take people");
@@ -82,16 +84,16 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
-                .When((actor, thing) => thing.GetPropertyOrDefault<bool>("portal?", false))
+                .When((actor, thing) => thing.GetProperty<bool>("portal?"))
                 .Do((actor, thing) =>
                 {
-                    MudObject.SendMessage(actor, "@cant take portal");
+                    MudObject.SendMessage(actor, "@cant take portals");
                     return CheckResult.Disallow;
                 });
 
             GlobalRules.Check<MudObject, MudObject>("can take?")
                 .First
-                .When((actor, thing) => thing.GetBooleanProperty("scenery?"))
+                .When((actor, thing) => thing.GetProperty<bool>("scenery?"))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@cant take scenery");
@@ -105,12 +107,12 @@ namespace StandardActionsModule
     {
         public static RuleBuilder<MudObject, MudObject, CheckResult> CheckCanTake(this MudObject ThisObject)
         {
-            return ThisObject.Check<MudObject, MudObject>("can take?").When((taker, obj) => System.Object.ReferenceEquals(obj, ThisObject));
+            return ThisObject.Check<MudObject, MudObject>("can take?").ThisOnly(1);
         }
 
         public static RuleBuilder<MudObject, MudObject, PerformResult> PerformTake(this MudObject ThisObject)
         {
-            return ThisObject.Perform<MudObject, MudObject>("take").When((taker, obj) => System.Object.ReferenceEquals(obj, ThisObject));
+            return ThisObject.Perform<MudObject, MudObject>("take").ThisOnly(1);
         }
     }
 }

@@ -11,12 +11,13 @@ namespace StandardActionsModule
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.Perform<Actor>("player joined")
+            // This rule is never called in a single player context.
+            GlobalRules.Perform<MudObject>("player joined")
                 .Last
                 .Do((actor) =>
                 {
                     Core.EnqueuActorCommand(actor, "look");
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("New players look rule.");
         }

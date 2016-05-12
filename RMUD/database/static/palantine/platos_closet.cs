@@ -1,8 +1,8 @@
-﻿public class platos_closet : RMUD.Room
+﻿public class platos_closet : Room
 {
 	public override void Initialize()
 	{
-        RoomType = RMUD.RoomType.Interior;
+        RoomType = RoomType.Interior;
         Short = "Palantine Villa - Plato's Closet";
 
         AddScenery(new lamp());
@@ -11,18 +11,20 @@
         Move(Clothing.Create("polo shirt", ClothingLayer.Outer, ClothingBodyPart.Torso), this);
         Move(Clothing.Create("pair of briefs", ClothingLayer.Under, ClothingBodyPart.Legs), this);
 
-        OpenLink(RMUD.Direction.WEST, "palantine\\solar");
+        OpenLink(Direction.WEST, "palantine\\solar");
 	}
 }
 
-public class lamp : RMUD.Scenery
+public class lamp : MudObject
 {
     public lamp()
     {
         Nouns.Add("gas", "lamp");
         Long = "This little gas lamp somehow manages to fill the endless closet with light.";
 
-        Value<RMUD.MudObject, RMUD.LightingLevel>("light level").Do(a => RMUD.LightingLevel.Bright);
+        Value<MudObject, LightingLevel>("light level").Do(a => LightingLevel.Bright);
+
+        SetProperty("scenery?", true);
     }
 
 }

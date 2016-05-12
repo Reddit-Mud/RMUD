@@ -37,6 +37,7 @@ namespace StandardActionsModule
                         r.Add(pm.EndWith("SPEECH", builder.ToString()));
                         return r;
                     }, "'[TEXT => SPEECH]")))
+                .ID("StandardActions:Say")
                 .Manual("Speak within your locale.")
                 .Perform("speak", "ACTOR", "SPEECH");
 
@@ -47,6 +48,7 @@ namespace StandardActionsModule
                         KeyWord("EMOTE"),
                         KeyWord("\"")),
                     MustMatch("@emote what", Rest("SPEECH"))))
+                .ID("StandardActions:Emote")
                 .Manual("Perform an action, visible within your locale.")
                 .Perform("emote", "ACTOR", "SPEECH");
 		}
@@ -64,7 +66,7 @@ namespace StandardActionsModule
                 .Do((actor, text) =>
                 {
                     MudObject.SendLocaleMessage(actor, "@speak", actor, text);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Default motormouth rule.");
 
@@ -74,7 +76,7 @@ namespace StandardActionsModule
                 .Do((actor, text) =>
                 {
                     MudObject.SendLocaleMessage(actor, "@emote", actor, text);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Default exhibitionist rule.");
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SharpRuleEngine;
 
 namespace RMUD
 {
@@ -22,11 +23,11 @@ namespace RMUD
 		{
 			Locked = true;
 
-            Value<MudObject, bool>("lockable?").Do(a => true);
+            SetProperty("lockable?", true);
 
             Check<MudObject, MudObject, MudObject>("can lock?").Do((actor, door, key) =>
                 {
-                    if (GetBooleanProperty("open?")) {
+                    if (GetProperty<bool>("open?")) {
                         MudObject.SendMessage(actor, "@close it first");
                         return CheckResult.Disallow;
                     }

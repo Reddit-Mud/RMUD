@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>ExtendedDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,6 +40,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Octokit.0.6.2\lib\net45\Octokit.dll</HintPath>
     </Reference>
+    <Reference Include="SharpRuleEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpRuleEngine.1.0.5\lib\SharpRuleEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -54,35 +59,9 @@
     <Compile Include="Core\ErrorLog.cs" />
     <Compile Include="Core\FindLocale.cs" />
     <Compile Include="Core\Heartbeat.cs" />
-    <Compile Include="Core\Meta\DumpMessages.cs" />
     <Compile Include="Core\FormatMessage.cs" />
     <Compile Include="Core\ModuleAssembly.cs" />
     <Compile Include="Core\Startup.cs" />
-    <Compile Include="Core\Rules\Rule.cs" />
-    <Compile Include="Core\Rules\RuleBook.cs" />
-    <Compile Include="Core\Rules\RuleBuilderGen.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuleBuilderGen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Core\Rules\RuleDelegatesGen.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuleDelegatesGen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Core\Rules\RuleEngineAddRuleGen.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuleEngineAddRuleGen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Core\Rules\RuleResult.cs" />
-    <Compile Include="Core\Rules\RuleSet.cs" />
-    <Compile Include="Core\Rules\RuleSetAddRuleGen.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuleSetAddRuleGen.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Core\Rules\RuleSource.cs" />
     <Compile Include="Core\StandardMessages.cs" />
     <Compile Include="Core\IsVisibleTo.cs" />
     <Compile Include="Core\ManPages.cs" />
@@ -123,33 +102,27 @@
     <Compile Include="Core\PendingMessages.cs" />
     <Compile Include="Core\ExecuteCommand.cs" />
     <Compile Include="Core\Random.cs" />
-    <Compile Include="Core\Rules\MudObjectAddRuleGen.cs">
-      <DependentUpon>MudObjectAddRuleGen.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Core\Rules\RuleEngine.cs" />
     <Compile Include="Core\SendMessage.cs" />
-    <Compile Include="Core\Serialization\BitArraySerializer.cs" />
     <Compile Include="Core\Serialization\ContainerSerializer.cs" />
     <Compile Include="Core\Serialization\DictionaryStringObjectSerializer.cs" />
-    <Compile Include="Core\Serialization\EnumSerializer.cs" />
     <Compile Include="Core\Serialization\ObjectSerialization.cs" />
     <Compile Include="Core\Serialization\PersistAttribute.cs" />
     <Compile Include="Core\Serialization\PersistentValueSerializer.cs" />
     <Compile Include="Core\StringIterator.cs" />
     <Compile Include="Core\Time.cs" />
     <Compile Include="Core\WorldDataService.cs" />
-    <Compile Include="GithubDatabase\Compile.cs" />
-    <Compile Include="GithubDatabase\Database.cs" />
-    <Compile Include="GithubDatabase\EnumerateDatabase.cs" />
-    <Compile Include="GithubDatabase\GetObject.cs" />
-    <Compile Include="GithubDatabase\InitialBulkCompile.cs" />
-    <Compile Include="GithubDatabase\Initialize.cs" />
-    <Compile Include="GithubDatabase\LoadSourceFile.cs" />
-    <Compile Include="GithubDatabase\Persistence.cs" />
-    <Compile Include="GithubDatabase\Preprocess.cs" />
-    <Compile Include="GithubDatabase\ReloadObject.cs" />
+    <Compile Include="RuntimeDatabase\Compile.cs" />
+    <Compile Include="RuntimeDatabase\Database.cs" />
+    <Compile Include="RuntimeDatabase\EnumerateDatabase.cs" />
+    <Compile Include="RuntimeDatabase\GetObject.cs" />
+    <Compile Include="RuntimeDatabase\InitialBulkCompile.cs" />
+    <Compile Include="RuntimeDatabase\Initialize.cs" />
+    <Compile Include="RuntimeDatabase\LoadSourceFile.cs" />
+    <Compile Include="RuntimeDatabase\Persistence.cs" />
+    <Compile Include="RuntimeDatabase\Preprocess.cs" />
+    <Compile Include="RuntimeDatabase\ReloadObject.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HelperExtensions.cs" />
     <Compile Include="ModuleInfo.cs" />
     <Compile Include="ReverseLineReader.cs" />
@@ -158,9 +131,9 @@
     <Compile Include="SinglePlayer\Driver.cs" />
     <Compile Include="SinglePlayer\DummyClient.cs" />
     <Compile Include="SinglePlayer\GameInfo.cs" />
-    <Compile Include="WorldModel\Actor.cs" />
+    <Compile Include="WorldModel\ObjectDecorators\Actor.cs" />
     <Compile Include="WorldModel\BasicDoor.cs" />
-    <Compile Include="WorldModel\Container.cs" />
+    <Compile Include="WorldModel\ObjectDecorators\Container.cs" />
     <Compile Include="WorldModel\EnumerateObjectTree.cs" />
     <Compile Include="WorldModel\Gender.cs" />
     <Compile Include="WorldModel\Directions.cs" />
@@ -168,38 +141,23 @@
     <Compile Include="WorldModel\MudObject.cs" />
     <Compile Include="WorldModel\MudObjectRules.cs" />
     <Compile Include="WorldModel\NounList.cs" />
-    <Compile Include="WorldModel\NPC.cs" />
+    <Compile Include="WorldModel\ObjectProperties\EnumSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\BoolSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\StringSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\IntSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\DefaultSerializer.cs" />
+    <Compile Include="WorldModel\ObjectProperties\TypeSerializer.cs" />
     <Compile Include="WorldModel\ObjectState.cs" />
-    <Compile Include="WorldModel\Player.cs" />
     <Compile Include="WorldModel\Portal.cs" />
+    <Compile Include="WorldModel\ObjectProperties\PropertyManifest.cs" />
     <Compile Include="WorldModel\RelativeLocations.cs" />
-    <Compile Include="WorldModel\Room.cs" />
+    <Compile Include="WorldModel\ObjectDecorators\Scenery.cs" />
+    <Compile Include="WorldModel\ObjectDecorators\Room.cs" />
     <Compile Include="WorldModel\RoomLightingRules.cs" />
     <Compile Include="WorldModel\RoomType.cs" />
     <Compile Include="WorldModel\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\Rules\MudObjectAddRuleGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MudObjectAddRuleGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleBuilderGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleBuilderGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleDelegatesGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleDelegatesGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleEngineAddRuleGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleEngineAddRuleGen.cs</LastGenOutput>
-    </None>
-    <None Include="Core\Rules\RuleGen.t4" />
-    <None Include="Core\Rules\RuleSetAddRuleGen.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuleSetAddRuleGen.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -209,6 +167,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

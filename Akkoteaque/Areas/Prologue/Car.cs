@@ -31,7 +31,7 @@ namespace Akko.Areas.Prologue
             Check<MudObject, MudObject>("can go?").Do((actor, link) =>
                 {
                     SendMessage(actor, "The car is moving. Rather fast, actually. You're going to stay put.");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 });
 
         }

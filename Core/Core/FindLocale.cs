@@ -22,18 +22,16 @@ namespace RMUD
             if (Of == null || Of.Location == null) return Of;
 
             //If the object is in a container, check to see if that container is open.
-            var container = Of.Location as Container;
-            if (container != null)
+            if (Of.Location.RelativeLocationOf(Of) == RelativeLocations.In)
             {
-                if (container.RelativeLocationOf(Of) == RelativeLocations.In)
-                {
-                    if (Of.Location.GetPropertyOrDefault<bool>("open?", false))
-                        return FindLocale(Of.Location);
-                    else 
-                        return Of.Location;
-                }
+                // Should this check to see if Of.Location is... openable? If not, consider it open or closed?
+                if (Of.Location.GetProperty<bool>("open?"))
+                    return FindLocale(Of.Location);
+                else
+                    return Of.Location;
             }
-
+            
+            // The relative location is something other than 'in', so open? does not apply.
             return FindLocale(Of.Location);
         }
     }

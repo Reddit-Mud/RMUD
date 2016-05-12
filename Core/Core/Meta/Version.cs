@@ -32,7 +32,7 @@ namespace RMUD.Modules.Meta
                     foreach (var module in Core.IntegratedModules)
                         MudObject.SendMessage(actor, module.Info.Description);
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 		}
 	}

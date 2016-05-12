@@ -43,7 +43,7 @@ namespace Space
                 .Name("Object must be held rule.");
 
             GlobalRules.Check<MudObject, MudObject, MudObject>("can hit with?")
-                .Do((a, b, c) => CheckResult.Allow)
+                .Do((a, b, c) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default allow hitting rule.");
 
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject, MudObject>("hit with", "[Actor, Subject, Object] : Handle the actor hitting the subject with the object.");
@@ -51,7 +51,7 @@ namespace Space
             GlobalRules.Perform<MudObject, MudObject, MudObject>("hit with").Do((actor, subject, @object) =>
             {
                 MudObject.SendMessage(actor, "I smacked <the0> with <the1>. I don't think it did anything.", subject, @object);
-                return PerformResult.Stop;
+                return SharpRuleEngine.PerformResult.Stop;
             });
         }
     }

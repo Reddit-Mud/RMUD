@@ -19,15 +19,12 @@ namespace RMUD
         {
             if (Object == null) return;
 
-            if (Object.Location != null && Object.Location is Container) (Object.Location as Container).Remove(Object);
+            if (Object.Location != null)
+                Object.Location.Remove(Object);
 
-            if (Destination is Container) 
-            {
-                (Destination as Container).Add(Object, Location);
-                Object.Location = Destination;
-            }
-            else
-                Object.Location = null;
+            if (Destination != null)
+                Destination.Add(Object, Location);
+            Object.Location = Destination;
         }
     }
 }

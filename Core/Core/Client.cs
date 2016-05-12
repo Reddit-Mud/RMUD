@@ -11,6 +11,6 @@ namespace RMUD
         public virtual void Disconnect() { }
         public virtual String ConnectionDescription { get { return "?"; } }
 
-        public Actor Player;
+        public MudObject Player;
     }
 }

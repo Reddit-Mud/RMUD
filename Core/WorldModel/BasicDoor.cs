@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SharpRuleEngine;
 
 namespace RMUD
 {
@@ -13,11 +14,11 @@ namespace RMUD
     {
         public BasicDoor()
         {
-            this.Nouns.Add("DOOR");
+            GetProperty<NounList>("nouns").Add("DOOR");
 
             // Doors can be referred to as 'the open door' or 'the closed door' as appropriate.
-            this.Nouns.Add("CLOSED", actor => !GetBooleanProperty("open?"));
-            this.Nouns.Add("OPEN", actor => GetBooleanProperty("open?"));
+            GetProperty<NounList>("nouns").Add("CLOSED", actor => !GetProperty<bool>("open?"));
+            GetProperty<NounList>("nouns").Add("OPEN", actor => GetProperty<bool>("open?"));
 
             SetProperty("open?", false);
             SetProperty("openable?", true);
@@ -26,7 +27,7 @@ namespace RMUD
                 .Last
                 .Do((a, b) =>
                 {
-                    if (GetBooleanProperty("open?"))
+                    if (GetProperty<bool>("open?"))
                     {
                         MudObject.SendMessage(a, "@already open");
                         return CheckResult.Disallow;
@@ -39,7 +40,7 @@ namespace RMUD
                 .Last
                 .Do((a, b) =>
                 {
-                    if (!GetBooleanProperty("open?"))
+                    if (!GetProperty<bool>("open?"))
                     {
                         MudObject.SendMessage(a, "@already closed");
                         return CheckResult.Disallow;

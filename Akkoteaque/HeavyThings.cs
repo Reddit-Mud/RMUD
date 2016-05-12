@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace Akko
 {
@@ -10,7 +11,7 @@ namespace Akko
     {
         public static bool IsHeavy(MudObject Object)
         {
-            return Object.GetBooleanProperty("heavy?");
+            return Object.GetPropertyOrDefault<bool>("heavy?", false);
         }
 
         public static bool HasHeavyThing(MudObject Object)

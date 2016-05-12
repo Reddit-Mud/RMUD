@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace AdminModule
 {
@@ -34,7 +35,7 @@ namespace AdminModule
                 });
         }
 
-        private static void DisplaySingleBook(Actor Actor, RuleSet From, String BookName)
+        private static void DisplaySingleBook(MudObject Actor, RuleSet From, String BookName)
         {
             if (From == null || From.FindRuleBook(BookName) == null)
                 MudObject.SendMessage(Actor, "[no rules]");
@@ -47,12 +48,12 @@ namespace AdminModule
             }
         }
 
-        private static void DisplayBookHeader(Actor Actor, RuleBook Book)
+        private static void DisplayBookHeader(MudObject Actor, RuleBook Book)
         {
             MudObject.SendMessage(Actor, Book.Name + " -> " + Book.ResultType.Name + " : " + Book.Description);
         }
 
-        private static void DisplayBookList(Actor Actor, RuleSet Rules)
+        private static void DisplayBookList(MudObject Actor, RuleSet Rules)
         {
             if (Rules == null || Rules.RuleBooks.Count == 0)
                 MudObject.SendMessage(Actor, "[no rules]");

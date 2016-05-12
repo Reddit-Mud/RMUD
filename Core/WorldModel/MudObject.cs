@@ -5,20 +5,34 @@ using System.Text;
 
 namespace RMUD
 {
-	public partial class MudObject : RuleSource
+    public static class RegisterBaseProperties
     {
+        public static void AtStartup(RuleEngine GlobalRules)
+        {
+            PropertyManifest.RegisterProperty("short", typeof(String), "object", new StringSerializer());
+            PropertyManifest.RegisterProperty("long", typeof(String), "", new StringSerializer());
+            PropertyManifest.RegisterProperty("article", typeof(String), "a", new StringSerializer());
+            PropertyManifest.RegisterProperty("nouns", typeof(NounList), null, new DefaultSerializer());
+        }
+    }
+
+	public partial class MudObject : SharpRuleEngine.RuleObject
+    {
+        public override SharpRuleEngine.RuleEngine GlobalRules { get { return Core.GlobalRules; } }
+
+        /// Fundamental properties of every mud object: Don't mess with them.
         public ObjectState State = ObjectState.Unitialized; 
 		public String Path { get; set; }
 		public String Instance { get; set; }
-
         public bool IsNamedObject { get { return Path != null; } }
         public bool IsAnonymousObject { get { return Path == null; } }
         public bool IsInstance { get { return IsNamedObject && Instance != null; } }
         public String GetFullName() { return Path + "@" + Instance; }
-
         public bool IsPersistent { get; set; }
-        
-		public virtual void Initialize() { }
+        public MudObject Location { get; set; }
+        public override SharpRuleEngine.RuleObject LinkedRuleSource { get { return Location; } }
+
+        public virtual void Initialize() { }
 
         public override string ToString()
         {
@@ -26,94 +40,68 @@ namespace RMUD
             else return Path;
         }
 
-        public String Short = "object";
-        public String Long = "undescribed object";
-        public String Article = "a";
-		public NounList Nouns { get; set; }
-        public MudObject Location { get; set; }
-
-        public RuleSet Rules { get; private set; }
-        public RuleSource LinkedRuleSource { get { return Location; } }
-        
         #region Properties
 
         // Every MudObject has a set of generic properties. Modules use these properties to store values on MudObjects.
-        
-        public Dictionary<String, Object> Properties = null;
+                
+        public Dictionary<String, Object> Properties = new Dictionary<string, Object>();
+                
 
         public void SetProperty(String Name, Object Value)
         {
-            if (Properties == null) Properties = new Dictionary<string, object>();
-            Properties.Upsert(Name, Value);
-        }
-
-        public T GetProperty<T>(String Name)
-        {
-            if (Properties == null) return default(T);
-            return (T)Properties.ValueOrDefault(Name);
-        }
-
-        public T GetPropertyOrDefault<T>(String Name, T Default)
-        {
-            if (Properties == null) return Default;
-            if (Properties.ContainsKey(Name) && Properties[Name] is T) return (T)Properties[Name];
-            return Default;
+            if (PropertyManifest.CheckPropertyType(Name, Value))
+                Properties.Upsert(Name, Value);
+            else
+                throw new InvalidOperationException("Setting property with object of wrong type.");
         }
         
-        public bool GetBooleanProperty(String Name)
+        public T GetProperty<T>(String Name)
         {
-            return GetPropertyOrDefault<bool>(Name, false);
+            if (Properties.ContainsKey(Name))
+                return (T)Properties[Name];
+            else
+            {
+                var info = PropertyManifest.GetPropertyInformation(Name);
+                if (info == null)
+                    throw new InvalidOperationException("Property " + Name + " does not exist.");
+                return (T)info.DefaultValue;
+            }
         }
-
+        
         public bool HasProperty(String Name)
         {
-            if (Properties == null) return false;
             return Properties.ContainsKey(Name);
         }
 
-        public bool HasProperty<T>(String Name)
-        {
-            if (Properties == null) return false;
-            return Properties.ContainsKey(Name) && Properties[Name] is T;
-        }
-
-        public void RemoveProperty(String Name)
-        {
-            if (Properties != null) Properties.Remove(Name);
-        }
-        
         #endregion
 
 		public MudObject()
 		{
-			Nouns = new NounList();
-            State = ObjectState.Alive;
+		    State = ObjectState.Alive;
+            SetProperty("nouns", new NounList());
             IsPersistent = false;
-            Rules = null;
 		}
 
         public MudObject(String Short, String Long)
         {
-            Nouns = new NounList();
-            this.Short = Short;
-            this.Long = Long;
-            Nouns.Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            SetProperty("short", Short);
+            SetProperty("long", Long);
+            SetProperty("nouns", new NounList(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)));
 
             var firstChar = Short.ToLower()[0];
             if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')
-                Article = "an";
+                SetProperty("article", "an");
 
             State = ObjectState.Alive;
             IsPersistent = false;
 
-            Rules = null;
         }
 
         public void SimpleName(String Short, params String[] Synonyms)
         {
-            this.Short = Short;
-            Nouns.Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
-            Nouns.Add(Synonyms);
+            SetProperty("short", Short);
+            GetProperty<NounList>("nouns").Add(Short.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            GetProperty<NounList>("nouns").Add(Synonyms);
         }
 
         /// <summary>
@@ -127,8 +115,8 @@ namespace RMUD
             State = ObjectState.Destroyed;
             MudObject.ForgetInstance(this);
 
-            if (DestroyChildren && this is Container)
-                foreach (var child in (this as Container).EnumerateObjects())
+            if (DestroyChildren)
+                foreach (var child in EnumerateObjects())
                     if (child.State != ObjectState.Destroyed)
                         child.Destroy(true);
         }

@@ -17,7 +17,7 @@ namespace RMUD
         public List<MudObject> DisambigObjects = null;
 
 		public DisambigCommandHandler(
-            Actor Actor, 
+            MudObject Actor, 
             CommandParser.MatchedCommand MatchedCommand, 
             ParserCommandHandler ParentHandler)
 		{
@@ -85,7 +85,7 @@ namespace RMUD
 
         public void HandleCommand(PendingCommand Command)
         {
-            Command.Actor.CommandHandler = ParentHandler;
+            Command.Actor.SetProperty("command handler", ParentHandler);
             
             //Just retry if the attempt to help has failed.
             if (DisambigObjects == null)
@@ -110,7 +110,7 @@ namespace RMUD
                     {
                         // WHat? There are still multiple options?
                         MudObject.SendMessage(Command.Actor, "That helped narrow it down, but I'm still not sure what you mean.");
-                        Command.Actor.CommandHandler = new DisambigCommandHandler(Command.Actor, MatchedCommand, ParentHandler);
+                        Command.Actor.SetProperty("command handler", new DisambigCommandHandler(Command.Actor, MatchedCommand, ParentHandler));
                     }
                 }
             }

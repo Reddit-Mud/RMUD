@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -23,20 +24,21 @@ namespace StandardActionsModule
                                 {
                                     //Prefer objects that are actually containers. No means curently to prefer
                                     //objects that actually support the relloc we matched previously.
-                                    if (thing is Container) return MatchPreference.Likely;
+                                    if (thing.GetProperty<bool>("container?")) return MatchPreference.Likely;
                                     return MatchPreference.Plausible;
                                 })))))
+                .ID("StandardActions:Put")
                 .Manual("This commands allows you to put things on other things. While dropping just deposits the object into your current location, putting is much more specific.")
                 .ProceduralRule((match, actor) =>
                 {
                     if (!match.ContainsKey("RELLOC"))
                     {
-                        if (match["OBJECT"] is Container)
-                            match.Upsert("RELLOC", (match["OBJECT"] as Container).DefaultLocation);
+                        if ((match["OBJECT"] as MudObject).GetProperty<bool>("container?"))
+                            match.Upsert("RELLOC", (match["OBJECT"] as MudObject).DefaultLocation);
                         else
                             match.Upsert("RELLOC", RelativeLocations.On);
                     }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 }, "Supply default for optional relloc procedural rule.")
                 .Check("can put?", "ACTOR", "SUBJECT", "OBJECT", "RELLOC")
                 .BeforeActing()
@@ -46,7 +48,7 @@ namespace StandardActionsModule
 
         }
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("cant put relloc", "You can't put things <s0> that.");
             Core.StandardMessage("you put", "You put <the0> <s1> <the2>.");
@@ -63,7 +65,7 @@ namespace StandardActionsModule
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
-                    if (!(container is Container))
+                    if (!(container.GetProperty<bool>("container?")))
                     {
                         MudObject.SendMessage(actor, "@cant put relloc", Relloc.GetRelativeLocationName(relloc));
                         return CheckResult.Disallow;
@@ -94,8 +96,7 @@ namespace StandardActionsModule
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
-                    var c = container as Container;
-                    if (c == null || (c.LocationsSupported & relloc) != relloc)
+                    if ((container.LocationsSupported & relloc) != relloc)
                     {
                         MudObject.SendMessage(actor, "@cant put relloc", Relloc.GetRelativeLocationName(relloc));
                         return CheckResult.Disallow;
@@ -107,7 +108,7 @@ namespace StandardActionsModule
             GlobalRules.Check<MudObject, MudObject, MudObject, RelativeLocations>("can put?")
                 .Do((actor, item, container, relloc) =>
                 {
-                    if (relloc == RelativeLocations.In && !container.GetBooleanProperty("open?"))
+                    if (relloc == RelativeLocations.In && !container.GetProperty<bool>("open?"))
                     {
                         MudObject.SendMessage(actor, "@is closed error", container);
                         return CheckResult.Disallow;

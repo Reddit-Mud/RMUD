@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -16,6 +17,7 @@ namespace StandardActionsModule
                     BestScore("SUBJECT",
                         MustMatch("@dont have that",
                             Object("SUBJECT", InScope, PreferHeld)))))
+                .ID("StandardActions:Drop")
                 .Manual("Drop a held item. This can also be used to remove and drop a worn item.")
                 .Check("can drop?", "ACTOR", "SUBJECT")
                 .BeforeActing()
@@ -23,7 +25,7 @@ namespace StandardActionsModule
                 .AfterActing();
 		}
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("you drop", "You drop <the0>.");
             Core.StandardMessage("they drop", "^<the0> drops <a1>.");
@@ -43,7 +45,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can drop?")
                 .First
-                .When((actor, item) => actor is Actor && (actor as Actor).Contains(item, RelativeLocations.Worn))
+                .When((actor, item) => actor.Contains(item, RelativeLocations.Worn))
                 .Do((actor, item) =>
                 {
                     if (GlobalRules.ConsiderCheckRule("can remove?", actor, item) == CheckResult.Allow)

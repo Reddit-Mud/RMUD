@@ -1,3 +1,3 @@
-﻿public class player_base : RMUD.Player
+﻿public class player_base : Player
 {
 }

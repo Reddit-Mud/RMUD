@@ -24,7 +24,9 @@ namespace NetworkModule
         {
             ClientLock.WaitOne();
             ConnectedClients.Remove(client);
-            client.Player.GetProperty<Account>("account").LoggedInCharacter = null;
+            var account = client.Player.GetProperty<Account>("account");
+            if (account != null)
+                account.LoggedInCharacter = null;
             Core.RemovePlayer(client.Player);
             ClientLock.ReleaseMutex();
         }
@@ -40,8 +42,9 @@ namespace NetworkModule
 
             ClientLock.WaitOne();
 
-            var dummyPlayer = new Actor();
-            dummyPlayer.CommandHandler = new LoginCommandHandler();
+            var dummyPlayer = new MudObject();
+            dummyPlayer.Actor();
+            dummyPlayer.SetProperty("command handler", new LoginCommandHandler());
             Core.TiePlayerToClient(Client, dummyPlayer);
 
             MudObject.SendMessage(Client, Core.SettingsObject.Banner);
@@ -59,6 +62,7 @@ namespace NetworkModule
         public static void AtStartup(RuleEngine GlobalRules)
         {
             ProscriptionList = new ProscriptionList("proscriptions.txt");
+            PropertyManifest.RegisterProperty("account", typeof(Account), null, new DefaultSerializer());
         }
 
         public static void SendGlobalMessage(String Message, params MudObject[] MentionedObjects)

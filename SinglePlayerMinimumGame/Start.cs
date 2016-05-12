@@ -3,12 +3,13 @@
 namespace Minimum
 {
 
-    public class Start : RMUD.Room
+    public class Start : RMUD.MudObject
     {
         public override void Initialize()
         {
-            Short = "Start Room";
-            Long = "This is a game with the minimum possible objects.";
+            Room(RoomType.Exterior);
+            SetProperty("short", "Start Room");
+            SetProperty("long", "This is a game with the minimum possible objects.");
         }
     }   
 }

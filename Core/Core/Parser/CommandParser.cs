@@ -11,10 +11,18 @@ namespace RMUD
     public partial class CommandParser
     {
 		internal List<CommandEntry> Commands = new List<CommandEntry>();
+        internal String ModuleBeingInitialized = null;
+
+        public IEnumerable<CommandEntry> EnumerateCommands()
+        {
+            foreach (var command in Commands)
+                yield return command;
+        }
 
         public CommandEntry AddCommand(CommandTokenMatcher Matcher)
         {
             var Entry = new CommandEntry { Matcher = Matcher };
+            Entry.SourceModule = ModuleBeingInitialized;
             Entry.ManualName = Matcher.FindFirstKeyWord();
             Commands.Add(Entry);
             return Entry;
@@ -84,7 +92,7 @@ namespace RMUD
                         new CommandEntry().ProceduralRule((match, actor) => 
                         {
                             MudObject.SendMessage(actor, ma.Message);
-                            return PerformResult.Continue;
+                            return SharpRuleEngine.PerformResult.Continue;
                         }), 
                         // We need a fake match just so it can be passed to the procedural rule.
                         new PossibleMatch[] { new PossibleMatch(null) });

@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RMUD;
+using SharpRuleEngine;
 
 namespace ClothingModule
 {
     public class ClothingRules 
     {
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
-            GlobalRules.Perform<Actor>("inventory")
+            GlobalRules.Perform<MudObject>("inventory")
                 .Do(a =>
                 {
-                    var wornObjects = (a as Actor).GetContents(RelativeLocations.Worn);
+                    var wornObjects = a.GetContents(RelativeLocations.Worn);
                     if (wornObjects.Count == 0) MudObject.SendMessage(a, "@nude");
                     else
                     {
@@ -26,13 +27,14 @@ namespace ClothingModule
                 })
                 .Name("List worn items in inventory rule.");
 
-            GlobalRules.Check<Actor, MudObject>("can wear?")
+            GlobalRules.Check<MudObject, MudObject>("can wear?")
+                .When((actor, item) => actor.GetProperty<bool>("actor?"))
                 .Do((actor, item) =>
                 {
-                    var layer = item.GetPropertyOrDefault<ClothingLayer>("clothing layer", ClothingLayer.Assecories);
-                    var part = item.GetPropertyOrDefault<ClothingBodyPart>("clothing part", ClothingBodyPart.Cloak);
+                    var layer = item.GetProperty<ClothingLayer>("clothing layer");
+                    var part = item.GetProperty<ClothingBodyPart>("clothing part");
                     foreach (var wornItem in actor.EnumerateObjects(RelativeLocations.Worn))
-                        if (wornItem.GetPropertyOrDefault<ClothingLayer>("clothing layer", ClothingLayer.Assecories) == layer && wornItem.GetPropertyOrDefault<ClothingBodyPart>("clothing part", ClothingBodyPart.Cloak) == part)
+                        if (wornItem.GetProperty<ClothingLayer>("clothing layer") == layer && wornItem.GetProperty<ClothingBodyPart>("clothing part") == part)
                         {
                             MudObject.SendMessage(actor, "@clothing remove first", wornItem);
                             return CheckResult.Disallow;
@@ -41,13 +43,13 @@ namespace ClothingModule
                 })
                 .Name("Check clothing layering before wearing rule.");
 
-            GlobalRules.Check<Actor, MudObject>("can remove?")
+            GlobalRules.Check<MudObject, MudObject>("can remove?")
                 .Do((actor, item) =>
                 {
-                    var layer = item.GetPropertyOrDefault<ClothingLayer>("clothing layer", ClothingLayer.Assecories);
-                    var part = item.GetPropertyOrDefault<ClothingBodyPart>("clothing part", ClothingBodyPart.Cloak);
+                    var layer = item.GetProperty<ClothingLayer>("clothing layer");
+                    var part = item.GetProperty<ClothingBodyPart>("clothing part");
                     foreach (var wornItem in actor.EnumerateObjects(RelativeLocations.Worn))
-                        if (wornItem.GetPropertyOrDefault<ClothingLayer>("clothing layer", ClothingLayer.Assecories) < layer && wornItem.GetPropertyOrDefault<ClothingBodyPart>("clothing part", ClothingBodyPart.Cloak) == part)
+                        if (wornItem.GetProperty<ClothingLayer>("clothing layer") < layer && wornItem.GetProperty<ClothingBodyPart>("clothing part") == part)
                         {
                             MudObject.SendMessage(actor, "@clothing remove first", wornItem);
                             return CheckResult.Disallow;
@@ -57,13 +59,14 @@ namespace ClothingModule
                 .Name("Can't remove items under other items rule.");
 
             
-            GlobalRules.Perform<MudObject, Actor>("describe")
+            GlobalRules.Perform<MudObject, MudObject>("describe")
                 .First
+                .When((viewer, actor) => actor.GetProperty<bool>("actor?"))
                 .Do((viewer, actor) =>
                 {
-                    var wornItems = new List<MudObject>(actor.EnumerateObjects(RelativeLocations.Worn));
+                    var wornItems = actor.GetContents(RelativeLocations.Worn);
                     if (wornItems.Count == 0)
-                        MudObject.SendMessage(viewer, "@clothing they are naked", actor);
+                        MudObject.SendMessage(viewer, "@clothing they are nude", actor);
                     else
                         MudObject.SendMessage(viewer, "@clothing they are wearing", actor, wornItems);
                     return PerformResult.Continue;

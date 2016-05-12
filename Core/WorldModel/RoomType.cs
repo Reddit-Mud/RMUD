@@ -7,6 +7,7 @@ namespace RMUD
 {
     public enum RoomType
     {
+        NotARoom,
         Exterior,
         Interior
     }

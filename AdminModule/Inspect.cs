@@ -23,72 +23,32 @@ namespace AdminModule
                     {
                         if (!match.ContainsKey("OBJECT"))
                             match.Upsert("OBJECT", actor.Location);
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     }, "Convert locale option to standard form rule.")
                 .ProceduralRule((match, actor) =>
                 {
                     var target = match["OBJECT"] as MudObject;
-                    MudObject.SendMessage(actor, target.GetType().Name);
 
-                    foreach (var @interface in target.GetType().GetInterfaces())
-                        MudObject.SendMessage(actor, "Implements " + @interface.Name);
+                    MudObject.SendMessage(actor, "*** INSPECT LISTING ***");
+                    MudObject.SendMessage(actor, "Path: <s0>", target.Path);
+                    MudObject.SendMessage(actor, "Instance: <s0>", target.Instance);
+                    MudObject.SendMessage(actor, "Persistent: <s0>", target.IsPersistent.ToString());
+                    if (target.Location == null)
+                        MudObject.SendMessage(actor, "Location: NOWHERE");
+                    else
+                        MudObject.SendMessage(actor, "Location: <s0>", target.Location.GetFullName());
+                    MudObject.SendMessage(actor, "*** DYNAMIC PROPERTIES ***");
 
-                    foreach (var field in target.GetType().GetFields())
-                        MudObject.SendMessage(actor, "field " + field.FieldType.Name + " " + field.Name + " = " + WriteValue(field.GetValue(target)));
-
-                    foreach (var property in target.GetType().GetProperties())
+                    foreach (var property in target.Properties)
                     {
-                        var s = (property.CanWrite ? "property " : "readonly ") + property.PropertyType.Name + " " + property.Name;
-                        if (property.CanRead)
-                        {
-                            s += " = ";
-                            try
-                            {
-                                s += WriteValue(property.GetValue(target, null));
-                            }
-                            catch (Exception) { s += "[Error reading value]"; }
-                        }
-                        MudObject.SendMessage(actor, s);
+                        var info = PropertyManifest.GetPropertyInformation(property.Key);
+                        MudObject.SendMessage(actor, "<s0>: <s1>", property.Key, info.Converter.ConvertToString(property.Value));
                     }
 
-                    return PerformResult.Continue;
-                }, "List all the damn things rule.");
-        }
+                    MudObject.SendMessage(actor, "*** END OF LISTING ***");
 
-        private static String WriteValue(Object Value, int indent = 1)
-        {
-            if (Value == null)
-                return "NULL";
-            else if (Value is String)
-                return "\"" + Value + "\"";
-            else if (Value is MudObject)
-            {
-                return (Value as MudObject).GetFullName();
-            }
-            else if (Value is KeyValuePair<String, Object>)
-            {
-                var v = (Value as KeyValuePair<String, Object>?).Value;
-                return v.Key + ": " + WriteValue(v.Value, indent + 1);
-            }
-            else if (Value is KeyValuePair<RelativeLocations, List<MudObject>>) //Containers..
-            {
-                var v = (Value as KeyValuePair<RelativeLocations, List<MudObject>>?).Value;
-                return v.Key + ": " + WriteValue(v.Value, indent + 1);
-            }
-            else if (Value is System.Collections.IEnumerable)
-            {
-                var r = "[ ";
-                bool first = true;
-                foreach (var sub in (Value as System.Collections.IEnumerable))
-                {
-                    if (!first) r += "\n" + new String(' ', indent * 2);
-                    first = false;
-                    r += WriteValue(sub, indent + 1);
-                }
-                r += " ] ";
-                return r;
-            }
-            else return Value.ToString();
+                    return SharpRuleEngine.PerformResult.Continue;
+                }, "List all the damn things rule.");
         }
 	}
 }

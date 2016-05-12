@@ -1,15 +1,15 @@
-﻿public class library : RMUD.Room
+﻿public class library : Room
 {
 	public override void Initialize()
 	{
 		Short = "Palantine Villa - The Ancient Library of Kuz";
         Move(new kuz_shelf(), this);
 
-        OpenLink(RMUD.Direction.EAST, "palantine/disambig", GetObject("palantine/disambig_blue_door@outside"));
+        OpenLink(Direction.EAST, "palantine/disambig", GetObject("palantine/disambig_blue_door@outside"));
 	}
 }
 
-public class kuz_shelf : RMUD.MudObject
+public class kuz_shelf : MudObject
 {
     public kuz_shelf()
     {
@@ -17,27 +17,27 @@ public class kuz_shelf : RMUD.MudObject
         Long = "There are so many books, and they all look so interesting and inviting. You could just go right ahead and take one.";
         Nouns.Add("BOOK", "BOOKS", "SHELF", "DUSTY");
 
-        Perform<RMUD.MudObject, RMUD.MudObject>("describe in locale").Do((actor, item) =>
+        Perform<MudObject, MudObject>("describe in locale").Do((actor, item) =>
             {
                 SendMessage(actor, "A massive book shelf looms in the center of the room.");
-                return RMUD.PerformResult.Continue;
+                return PerformResult.Continue;
             });
 
-        Check<RMUD.MudObject, RMUD.MudObject>("can take?").Do((a, b) => RMUD.CheckResult.Allow);
+        Check<MudObject, MudObject>("can take?").Do((a, b) => CheckResult.Allow);
 
-        Perform<RMUD.MudObject, RMUD.MudObject>("taken").Do((actor, target) =>
+        Perform<MudObject, MudObject>("taken").Do((actor, target) =>
             {
                 var newBook = new kuz_book();
                 Move(newBook, actor);
 
                 SendMessage(actor, "You take <a0>.", newBook);
                 SendExternalMessage(actor, "<a0> takes <a1>.", actor, newBook);
-                return RMUD.PerformResult.Stop;
+                return PerformResult.Stop;
             });
     }
 }
 
-public class kuz_book : RMUD.MudObject
+public class kuz_book : MudObject
 {
     public static System.Collections.Generic.List<System.String> TitlesA = new System.Collections.Generic.List<System.String>(new System.String[]{
         "Chronicles of",

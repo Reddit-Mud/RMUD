@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SharpRuleEngine;
 
 namespace RMUD
 {
@@ -9,9 +10,9 @@ namespace RMUD
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("before acting", "[Match, Actor] : Considered before performing in world actions.");
+            GlobalRules.DeclarePerformRuleBook<PossibleMatch, MudObject>("before acting", "[Match, Actor] : Considered before performing in world actions.");
 
-            GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("after acting", "[Match, Actor] : Considered after performing in world actions.");
+            GlobalRules.DeclarePerformRuleBook<PossibleMatch, MudObject>("after acting", "[Match, Actor] : Considered after performing in world actions.");
         }
     }
 
@@ -22,14 +23,18 @@ namespace RMUD
     public sealed class CommandEntry : ManPage
     {
         internal CommandTokenMatcher Matcher;
-        internal String ManualName = "";
+        public String ManualName { get; internal set; }
         internal String ManualPage = "";
         internal StringBuilder GeneratedManual = null;
         internal PerformRuleBook ProceduralRules;
         internal String _ID = "";
+        public String SourceModule { get; internal set; }
         
         public CommandEntry()
         {
+            ManualName = "";
+            SourceModule = null;
+
             ManPages.Pages.Add(this);
             GeneratedManual = new StringBuilder();
             ProceduralRules = new PerformRuleBook(Core.GlobalRules.Rules)
@@ -48,6 +53,11 @@ namespace RMUD
         {
             this._ID = _ID;
             return this;
+        }
+
+        public String GetID()
+        {
+            return this._ID;
         }
 
         public bool IsNamed(String Name)
@@ -83,7 +93,7 @@ namespace RMUD
         /// <param name="Rule"></param>
         /// <param name="Name"></param>
         /// <returns>This command</returns>
-        public CommandEntry ProceduralRule(Func<PossibleMatch, Actor, PerformResult> Rule, String Name = "an unamed procedural rule")
+        public CommandEntry ProceduralRule(Func<PossibleMatch, MudObject, PerformResult> Rule, String Name = "an unamed procedural rule")
         {
             GeneratedManual.AppendLine("Consider " + Name);
 
@@ -109,7 +119,7 @@ namespace RMUD
 
             var rule = new Rule<PerformResult>
             {
-                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, MudObject>(
                 (match, actor) =>
                 {
                     if (Core.GlobalRules.ConsiderCheckRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray()) == CheckResult.Allow)
@@ -135,7 +145,7 @@ namespace RMUD
 
             var rule = new Rule<PerformResult>
             {
-                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, MudObject>(
                 (match, actor) =>
                 {
                     Core.GlobalRules.ConsiderPerformRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray());
@@ -160,7 +170,7 @@ namespace RMUD
 
             var rule = new Rule<PerformResult>
             {
-                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, MudObject>(
                 (match, actor) =>
                     Core.GlobalRules.ConsiderPerformRule(RuleName, RuleArguments.Select(a => match.ValueOrDefault(a)).ToArray())
                     ),
@@ -176,8 +186,9 @@ namespace RMUD
         /// <returns>This command</returns>
         public CommandEntry BeforeActing()
         {
+            GeneratedManual.AppendLine("Consider the before acting rules.");
             ProceduralRules.AddRule(new Rule<PerformResult>{
-                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => Core.GlobalRules.ConsiderMatchBasedPerformRule("before acting", match, actor)),
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, MudObject>((match, actor) => Core.GlobalRules.ConsiderMatchBasedPerformRule("before acting", match, actor)),
                 DescriptiveName = "Before acting procedural rule."});
             return this;
         }
@@ -188,9 +199,10 @@ namespace RMUD
         /// <returns>This command</returns>
         public CommandEntry AfterActing()
         {
+            GeneratedManual.AppendLine("Consider the after acting rules.");
             ProceduralRules.AddRule(new Rule<PerformResult>
             {
-                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>((match, actor) => 
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, MudObject>((match, actor) => 
                 {
                     Core.GlobalRules.ConsiderMatchBasedPerformRule("after acting", match, actor);
                     return PerformResult.Continue;
@@ -211,7 +223,7 @@ namespace RMUD
 
             var rule = new Rule<PerformResult>
             {
-                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, Actor>(
+                BodyClause = RuleDelegateWrapper<PerformResult>.MakeWrapper<PossibleMatch, MudObject>(
                 (match, actor) =>
                 {
                     Core.MarkLocaleForUpdate(match["ACTOR"] as MudObject);
@@ -234,6 +246,11 @@ namespace RMUD
             builder.AppendLine(ManualName);
             builder.AppendLine(Matcher.Emit());
             builder.AppendLine();
+            if (!String.IsNullOrEmpty(SourceModule)) builder.AppendFormat("SOURCE MODULE: {0}\n", SourceModule);
+            if (!String.IsNullOrEmpty(_ID)) builder.AppendFormat("ID specified: {0}\n", _ID);
+            else builder.Append("NO ID SPECIFIED\n");
+            builder.AppendLine();
+            builder.AppendLine("Rules invoked by command:");
             if (GeneratedManual != null) builder.AppendLine(GeneratedManual.ToString());
             builder.Append(ManualPage);
             MudObject.SendMessage(To, builder.ToString());

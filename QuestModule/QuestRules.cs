@@ -10,28 +10,31 @@ namespace QuestModule
 {
     public class QuestProceduralRules 
     {
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
-            GlobalRules.Perform<PossibleMatch, Actor>("after acting")
+            PropertyManifest.RegisterProperty("active-quest", typeof(MudObject), null, new DefaultSerializer());
+            PropertyManifest.RegisterProperty("offered-quest", typeof(MudObject), null, new DefaultSerializer());
+
+            GlobalRules.Perform<PossibleMatch, MudObject>("after acting")
                 .Do((match, actor) =>
                 {
                     if (actor.GetProperty<MudObject>("active-quest") != null)
                     {
                         var quest = actor.GetProperty<MudObject>("active-quest");
-
+                                                
                         if (GlobalRules.ConsiderValueRule<bool>("quest complete?", actor, quest))
                         {
-                            actor.RemoveProperty("active-quest");
+                            actor.SetProperty("active-quest", null);
                             GlobalRules.ConsiderPerformRule("quest completed", actor, quest);
                         }
                         else if (GlobalRules.ConsiderValueRule<bool>("quest failed?", actor, quest))
                         {
-                            actor.RemoveProperty("active-quest");
+                            actor.SetProperty("active-quest", null);
                             GlobalRules.ConsiderPerformRule("quest failed", actor, quest);
                         }
                     }
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Check quest status after acting rule.");
 

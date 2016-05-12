@@ -39,7 +39,7 @@ namespace RMUD
                     // Use this when testing a command in the debugger. Otherwise, the command processing thread might
                     // be aborted while you are debugging it.
                     Command.RawCommand = Command.RawCommand.Substring("@DEBUG ".Length);
-                    if (Command.Actor.Rank < 500)
+                    if (Command.Actor.GetProperty<int>("rank") < 500)
                     {
                         MudObject.SendMessage(Command.Actor, "You do not have sufficient rank to use the debug command.");
                         return;
@@ -52,7 +52,7 @@ namespace RMUD
                 {
                     // Display all the rules invoked while executing this command.
                     Command.RawCommand = Command.RawCommand.Substring("@RULES ".Length);
-                    Core.GlobalRules.LogRules(Command.Actor);
+                    Core.GlobalRules.LogRules(s => MudObject.SendMessage(Command.Actor, s));
                 }
                 else
                 {
@@ -104,7 +104,7 @@ namespace RMUD
                 {
                     // If there are multiple matches, replace this handler with a disambiguation handler.
                     if (matchedCommand.Matches.Count > 1)
-                        Command.Actor.CommandHandler = new DisambigCommandHandler(Command.Actor, matchedCommand, this);
+                        Command.Actor.SetProperty("command handler", new DisambigCommandHandler(Command.Actor, matchedCommand, this));
                     else
                         Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], Command.Actor);
                 }

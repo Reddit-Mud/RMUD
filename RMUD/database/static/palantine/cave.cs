@@ -1,10 +1,10 @@
-﻿public class cave : RMUD.Room
+﻿public class cave : Room
 {
 	public override void Initialize()
 	{
-        RoomType = RMUD.RoomType.Exterior;
+        RoomType = RoomType.Exterior;
         Short = "Palantine Villa - Cave";
 
-        OpenLink(RMUD.Direction.UP, "palantine\\garden");
+        OpenLink(Direction.UP, "palantine\\garden");
 	}
 }

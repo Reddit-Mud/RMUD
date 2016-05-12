@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Reflection;
+using SharpRuleEngine;
 
 namespace RMUD
 {
@@ -22,7 +23,7 @@ namespace RMUD
         /// <param name="Match"></param>
         /// <param name="Actor"></param>
         /// <returns>The result of the command's procedural rules.</returns>
-        private static PerformResult ExecuteCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
+        private static PerformResult ExecuteCommand(CommandEntry Command, PossibleMatch Match, MudObject Actor)
         {
             var result = PerformResult.Stop;
             Match.Upsert("COMMAND", Command);
@@ -35,7 +36,7 @@ namespace RMUD
             return result;
         }
 
-        public static void ProcessPlayerCommand(CommandEntry Command, PossibleMatch Match, Actor Actor)
+        public static void ProcessPlayerCommand(CommandEntry Command, PossibleMatch Match, MudObject Actor)
         {
             ExecutingCommand = Match;
             try
@@ -58,7 +59,7 @@ namespace RMUD
         /// <param name="Match"></param>
         /// <param name="Actor"></param>
         /// <returns>The result of the command's proceedural rules.</returns>
-        public static PerformResult Try(String CommandID, PossibleMatch Match, Actor Actor)
+        public static PerformResult Try(String CommandID, PossibleMatch Match, MudObject Actor)
         {
             var parentCommand = ExecutingCommand;
             try
@@ -78,11 +79,11 @@ namespace RMUD
     {
         public static void AtStartup(RuleEngine GlobalRules)
         {
-            GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("before command", "[Match, Actor] : Considered before every command's procedural rules are run.", "match", "actor");
+            GlobalRules.DeclarePerformRuleBook<PossibleMatch, MudObject>("before command", "[Match, Actor] : Considered before every command's procedural rules are run.", "match", "actor");
 
-            GlobalRules.DeclarePerformRuleBook<PossibleMatch, Actor>("after command", "[Match, Actor] : Considered after every command's procedural rules are run, unless the before command rules stopped the command.", "match", "actor");
+            GlobalRules.DeclarePerformRuleBook<PossibleMatch, MudObject>("after command", "[Match, Actor] : Considered after every command's procedural rules are run, unless the before command rules stopped the command.", "match", "actor");
 
-            GlobalRules.DeclarePerformRuleBook<Actor>("after every command", "[Actor] : Considered after every command, even if earlier rules stopped the command.", "actor");
+            GlobalRules.DeclarePerformRuleBook<MudObject>("after every command", "[Actor] : Considered after every command, even if earlier rules stopped the command.", "actor");
         }
     }
 }

@@ -9,7 +9,7 @@ namespace RMUD
 {
     public class PendingCommand
     {
-        public Actor Actor;
+        public MudObject Actor;
         public String RawCommand;
         internal Action ProcessingCompleteCallback;
         internal Dictionary<String, Object> PreSettings;
@@ -32,14 +32,14 @@ namespace RMUD
         public static ParserCommandHandler ParserCommandHandler;
         public static CommandParser DefaultParser;
 
-        public static void EnqueuActorCommand(Actor Actor, String RawCommand, Dictionary<String, Object> MatchPreSettings = null)
+        public static void EnqueuActorCommand(MudObject Actor, String RawCommand, Dictionary<String, Object> MatchPreSettings = null)
         {
             PendingCommandLock.WaitOne();
             PendingCommands.AddLast(new PendingCommand { Actor = Actor, RawCommand = RawCommand, PreSettings = MatchPreSettings });
             PendingCommandLock.ReleaseMutex();
         }
 
-        public static void EnqueuActorCommand(Actor Actor, String RawCommand, Action ProcessingCompleteCallback)
+        public static void EnqueuActorCommand(MudObject Actor, String RawCommand, Action ProcessingCompleteCallback)
         {
             PendingCommandLock.WaitOne();
             PendingCommands.AddLast(new PendingCommand { Actor = Actor, RawCommand = RawCommand, ProcessingCompleteCallback = ProcessingCompleteCallback });
@@ -56,14 +56,15 @@ namespace RMUD
         internal static void DiscoverCommandFactories(ModuleAssembly In, CommandParser AddTo)
         {
             foreach (var type in In.Assembly.GetTypes())
+            {
+                AddTo.ModuleBeingInitialized = In.FileName;
                 if (type.FullName.StartsWith(In.Info.BaseNameSpace) && type.IsSubclassOf(typeof(CommandFactory)))
                     CommandFactory.CreateCommandFactory(type).Create(AddTo);
+            }
         }
 
         private static void InitializeCommandProcessor()
         {
-            DefaultParser = new CommandParser();
-
             foreach (var assembly in IntegratedModules)
                 DiscoverCommandFactories(assembly, DefaultParser);
 
@@ -86,7 +87,9 @@ namespace RMUD
                 {
                     //if (NextCommand.Actor.ConnectedClient != null)
                     //    NextCommand.Actor.ConnectedClient.TimeOfLastCommand = DateTime.Now;
-                    NextCommand.Actor.CommandHandler.HandleCommand(NextCommand);
+                    var commandHandler = NextCommand.Actor.GetProperty<ClientCommandHandler>("command handler");
+                    if (commandHandler != null)
+                        commandHandler.HandleCommand(NextCommand);
                 }
                 catch (System.Threading.ThreadAbortException)
                 {
@@ -166,13 +169,14 @@ namespace RMUD
                                 //Kill the command processor thread.
                                 IndividualCommandThread.Abort();
                                 ClearPendingMessages();
-                                if (PendingCommand.Actor.ConnectedClient != null)
+                                var client = PendingCommand.Actor.GetProperty<Client>("client");
+                                if (client != null)
                                 {
-                                    PendingCommand.Actor.ConnectedClient.Send("Command timeout.\r\n");
-                                    LogError(String.Format("Command timeout. {0} - {1}", PendingCommand.Actor.ConnectedClient.ConnectionDescription, PendingCommand.RawCommand));
+                                    client.Send("Command timeout.\r\n");
+                                    LogError(String.Format("Command timeout. {0} - {1}", client.ConnectionDescription, PendingCommand.RawCommand));
                                 }
                                 else
-                                    LogError(String.Format("Command timeout [No client] - {1}", PendingCommand.RawCommand));
+                                    LogError(String.Format("Command timeout [No client] - {0}", PendingCommand.RawCommand));
                                 IndividualCommandThread = new Thread(ProcessCommandsWorkerThread);
                                 IndividualCommandThread.Start();
                             }
@@ -230,7 +234,9 @@ namespace RMUD
 
                     try
                     {
-                        NextCommand.Actor.CommandHandler.HandleCommand(NextCommand);
+                        var handler = NextCommand.Actor.GetProperty<ClientCommandHandler>("command handler");
+                        if (handler != null)
+                            handler.HandleCommand(NextCommand);
                     }
                     catch (Exception e)
                     {

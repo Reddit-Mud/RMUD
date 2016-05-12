@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RMUD
 {
-    public class DictionaryStringObjectSerializer : PersistentValueSerializer
+    public class DictionaryStringObjectSerializer : ValueSerializer
     {
         public override void WriteValue(object Value, Newtonsoft.Json.JsonWriter Writer, MudObject Owner)
         {

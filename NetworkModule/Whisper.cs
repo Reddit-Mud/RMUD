@@ -25,18 +25,19 @@ namespace NetworkModule
                     if (System.Object.ReferenceEquals(actor, match["PLAYER"]))
                     {
                         MudObject.SendMessage(actor, "Talking to yourself?");
-                        return PerformResult.Stop;
+                        return SharpRuleEngine.PerformResult.Stop;
                     }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .ProceduralRule((match, actor) =>
                 {
-                    var player = match["PLAYER"] as Actor;
+                    var player = match["PLAYER"] as MudObject;
                     MudObject.SendMessage(player, "[privately " + DateTime.Now + "] ^<the0> : \"" + match["SPEECH"].ToString() + "\"", actor);
                     MudObject.SendMessage(actor, "[privately to <the0>] ^<the1> : \"" + match["SPEECH"].ToString() + "\"", player, actor);
-                    if (player.ConnectedClient is NetworkClient && (player.ConnectedClient as NetworkClient).IsAfk)
-                        MudObject.SendMessage(actor, "^<the0> is afk : " + player.ConnectedClient.Player.GetProperty<Account>("account").AFKMessage, player);
-                    return PerformResult.Continue;
+                    var client = player.GetProperty<Client>("client");
+                    if (client is NetworkClient && (client as NetworkClient).IsAfk)
+                        MudObject.SendMessage(actor, "^<the0> is afk : " + player.GetProperty<Account>("account").AFKMessage, player);
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 	}

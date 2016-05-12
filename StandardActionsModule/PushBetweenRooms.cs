@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -40,6 +41,10 @@ namespace StandardActionsModule
                     MustMatch("@unmatched cardinal", Cardinal("DIRECTION")))) // Finally, match a cardinal direction.
                 // With the matcher itself built, the call to AddCommand is over. AddCommand return a 
                 // command building object with a fluent interface.
+
+                // Commands need an ID string so that they can be invoked by rules. For an example, take a look at
+                // the go command, which attempts to open closed doors before going.
+                .ID("StandardActions:Push")
                 
                 // Lets attach some help documentation to the command.
                 .Manual("Push objects from room to room.")
@@ -54,11 +59,10 @@ namespace StandardActionsModule
                 {
                     // The direction matched was stored in the match as "DIRECTION".
                     var direction = match["DIRECTION"] as Direction?;
-                    var location = actor.Location as Room;
                     // Rooms have a collection of objects that are in them. Links happen to have two specific 
                     // properties set that we can use to find them: First, 'portal?' will be true, and 
                     // 'link direction' will hold the direction the link goes in. So we search for the link.
-                    var link = location.EnumerateObjects().FirstOrDefault(thing => thing.GetPropertyOrDefault<bool>("portal?", false) && thing.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == direction.Value);
+                    var link = actor.Location.EnumerateObjects().FirstOrDefault(thing => thing.GetProperty<bool>("portal?") && thing.GetProperty<Direction>("link direction") == direction.Value);
                     // Store the link in the match, and later procedural rules will be able to find it.
                     match.Upsert("LINK", link);
                     // Procedural rules return PerformResults. If they return stop, the command stops right there.
@@ -109,7 +113,7 @@ namespace StandardActionsModule
         // Any function with this signature will be called when the module is loaded. This is our chance to
         // do anything we want, but usually all we'll do is define some rules. We used some rulebooks above,
         // now we have to actually define them.
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             // Lets start by defining some messages we'll use later. This commentary isn't about the message
             // formatting system, but lets still do this 'right'.
@@ -148,7 +152,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, MudObject>("push direction")
                 .Do((actor, subject, link) =>
                 {
-                    var direction = link.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE);
+                    var direction = link.GetProperty<Direction>("link direction");
                     MudObject.SendMessage(actor, "@you push", subject, direction.ToString().ToLower());
 
                     // SendExternalMessage sends the message to everyone in the same place as the actor, 
@@ -162,7 +166,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, MudObject>("push direction")
                 .Do((actor, subject, link) =>
                 {
-                    var destination = MudObject.GetObject(link.GetProperty<String>("link destination")) as Room;
+                    var destination = MudObject.GetObject(link.GetProperty<String>("link destination"));
                     if (destination == null)
                     {
                         MudObject.SendMessage(actor, "@bad link");
@@ -180,7 +184,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject, MudObject>("push direction")
                 .Do((actor, subject, link) =>
                 {
-                    var direction = link.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE);
+                    var direction = link.GetProperty<Direction>("link direction");
                     var arriveMessage = Link.FromMessage(Link.Opposite(direction));
                     MudObject.SendExternalMessage(actor, "@they arrive pushing", actor, subject, arriveMessage);
                     return PerformResult.Continue;
@@ -189,13 +193,12 @@ namespace StandardActionsModule
 
             // And finally, lets make sure the player gets a description of the room they have arrived in.
             GlobalRules.Perform<MudObject, MudObject, MudObject>("push direction")
-                .When((actor, subject, link) => actor is Player && (actor as Player).ConnectedClient != null)
                 .Do((actor, subject, link) =>
                 {
                     // We set the 'auto' flag to let the look command know it's been generated, and not
                     // typed by the player. This is handy for deciding wether to show a brief description
                     // or the full description of a room.
-                    Core.EnqueuActorCommand(actor as Actor, "look", HelperExtensions.MakeDictionary("AUTO", true));
+                    Core.EnqueuActorCommand(actor, "look", HelperExtensions.MakeDictionary("AUTO", true));
                     return PerformResult.Continue;
                 })
                 .Name("Players look after pushing between rooms rule.");

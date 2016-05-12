@@ -15,7 +15,7 @@ namespace RMUD
         {
             TelnetClientSource telnetListener = null;
 
-            if (Core.Start(StartupFlags.SearchDirectory, new GithubDatabase()))
+            if (Core.Start(StartupFlags.SearchDirectory, "database/", new RuntimeDatabase()))
             {
                 telnetListener = new TelnetClientSource();
                 telnetListener.Port = Core.SettingsObject.TelnetPort;

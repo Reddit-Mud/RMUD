@@ -10,15 +10,14 @@ namespace QuestModule
 {
     public static class Extensions
     {
-        public static void OfferQuest(this MudObject This, Actor Actor, MudObject Quest)
+        public static void OfferQuest(this MudObject This, MudObject Actor, MudObject Quest)
         {
-            var player = Actor as Player;
-            if (player != null)
+            if (Actor != null)
             {
                 MudObject.SendMessage(Actor, "[To accept this quest, enter the command 'accept quest'.]");
-                if (player.GetProperty<MudObject>("active-quest") != null)
+                if (Actor.GetProperty<MudObject>("active-quest") != null)
                     MudObject.SendMessage(Actor, "[Accepting this quest will abandon your active quest.]");
-                player.SetProperty("offered-quest", Quest);
+                Actor.SetProperty("offered-quest", Quest);
             }
         }
 

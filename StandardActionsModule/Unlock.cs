@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -20,6 +21,7 @@ namespace StandardActionsModule
                     BestScore("KEY",
                         MustMatch("@not here",
                             Object("KEY", InScope, PreferHeld)))))
+                .ID("StandardActions:Unlock")
                 .Manual("Use the KEY to unlock the ITEM.")
                 .Check("can lock?", "ACTOR", "ITEM", "KEY")
                 .BeforeActing()
@@ -27,7 +29,7 @@ namespace StandardActionsModule
                 .AfterActing();
         }
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("you unlock", "You unlock <the0>.");
             Core.StandardMessage("they unlock", "^<the0> unlocks <the1> with <a2>.");
@@ -38,8 +40,16 @@ namespace StandardActionsModule
             {
                 MudObject.SendMessage(actor, "@you unlock", target);
                 MudObject.SendExternalMessage(actor, "@they unlock", actor, target, key);
-                return PerformResult.Continue;
+                return SharpRuleEngine.PerformResult.Continue;
             });
+        }
+    }
+
+    public static class UnlockExtensions
+    {
+        public static RuleBuilder<MudObject, MudObject, MudObject, PerformResult> PerformUnlocked(this MudObject Object)
+        {
+            return Object.Perform<MudObject, MudObject, MudObject>("unlocked");
         }
     }
 }

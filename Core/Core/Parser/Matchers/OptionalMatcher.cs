@@ -7,26 +7,36 @@ namespace RMUD
 {
     public partial class CommandFactory
     {
-        public static CommandTokenMatcher Optional(CommandTokenMatcher Sub)
+        public static CommandTokenMatcher Optional(CommandTokenMatcher Sub, String BooleanProperty = null)
         {
-            return new Optional(Sub);
+            return new Optional(Sub, BooleanProperty);
         }
     }
 
     internal class Optional : CommandTokenMatcher
     {
         public CommandTokenMatcher Sub;
+        public String BooleanProperty;
 
-        public Optional(CommandTokenMatcher Sub)
+        public Optional(CommandTokenMatcher Sub, String BooleanProperty = null)
         {
             this.Sub = Sub;
+            this.BooleanProperty = BooleanProperty;
         }
 
         public List<PossibleMatch> Match(PossibleMatch State, MatchContext Context)
         {
             var R = new List<PossibleMatch>();
-            R.AddRange(Sub.Match(State, Context));
-            if (R.Count == 0) R.Add(State);
+            if (String.IsNullOrEmpty(BooleanProperty))
+            {
+                R.AddRange(Sub.Match(State, Context));
+                if (R.Count == 0) R.Add(State);
+            }
+            else
+            {
+                R.AddRange(Sub.Match(State, Context).Select(s => s.With(BooleanProperty, true)));
+                if (R.Count == 0) R.Add(State.With(BooleanProperty, false));
+            }
             return R;
         }
 

@@ -11,6 +11,7 @@ namespace StandardActionsModule
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(Or(KeyWord("EXAMINE"), KeyWord("X")))
+                .ID("StandardActions:ExamineArea")
                 .Manual("Take a detailed look at your surroundings.")
                 .Perform("examine", "ACTOR");
 
@@ -22,6 +23,7 @@ namespace StandardActionsModule
                             Or(KeyWord("LOOK"), KeyWord("L")),
                             KeyWord("AT"))),
                     MustMatch("@dont see that", Object("OBJECT", InScope))))
+                .ID("StandardActions:ExamineThing")
                 .Manual("Take a close look at an object.")
                 .Check("can examine?", "ACTOR", "OBJECT")
                 .Perform("describe", "ACTOR", "OBJECT");
@@ -40,7 +42,7 @@ namespace StandardActionsModule
 
             GlobalRules.Check<MudObject, MudObject>("can examine?")
                 .Last
-                .Do((viewer, item) => CheckResult.Allow)
+                .Do((viewer, item) => SharpRuleEngine.CheckResult.Allow)
                 .Name("Default can examine everything rule.");
 
             GlobalRules.DeclarePerformRuleBook<MudObject>("examine", "[Actor] -> Take a close look at the actor's surroundings.");
@@ -49,12 +51,12 @@ namespace StandardActionsModule
                 .Do((actor) =>
                 {
                     MudObject.SendMessage(actor, "A detailed account of all objects present.");
-                    if (actor.Location != null && actor.Location is Container)
-                        foreach (var item in (actor.Location as Container).EnumerateObjects().Where(i => !System.Object.ReferenceEquals(i, actor)))
+                    if (actor.Location != null)
+                        foreach (var item in actor.Location.EnumerateObjects().Where(i => !System.Object.ReferenceEquals(i, actor)))
                         {
                             MudObject.SendMessage(actor, "<a0>", item);
                         }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
     }

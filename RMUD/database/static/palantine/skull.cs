@@ -1,6 +1,6 @@
-﻿public class skull : RMUD.MudObject
+﻿public class skull : MudObject
 {
-    [RMUD.Persist]
+    [Persist]
     public int ExamineCount { get; set; }
 
     public override void Initialize()
@@ -10,12 +10,12 @@
         Short = "human skull";
         Nouns.Add("human", "skull");
 
-        Perform<RMUD.MudObject, RMUD.MudObject>("describe")
+        Perform<MudObject, MudObject>("describe")
             .Do((viewer, thing) =>
             {
                 ExamineCount += 1;
                 SendMessage(viewer, string.Format("How many times? {0} times.", ExamineCount));
-                return RMUD.PerformResult.Continue;
+                return PerformResult.Continue;
             });
     }
 

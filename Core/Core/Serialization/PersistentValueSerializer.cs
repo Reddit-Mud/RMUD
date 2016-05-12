@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 
 namespace RMUD
 {
-    public class PersistentValueSerializer
+    public class ValueSerializer
     {
-        public static Dictionary<String, PersistentValueSerializer> GlobalSerializers = new Dictionary<String, PersistentValueSerializer>();
+        public static Dictionary<String, ValueSerializer> GlobalSerializers = new Dictionary<String, ValueSerializer>();
 
-        public static void AddGlobalSerializer(PersistentValueSerializer Serializer)
+        public static void AddGlobalSerializer(ValueSerializer Serializer)
         {
             GlobalSerializers.Upsert(Serializer.TargetType.Name, Serializer);
         }

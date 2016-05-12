@@ -37,6 +37,7 @@ namespace Akko.Areas.Lighthouse
     {
         public override void Initialize()
         {
+            RoomType = RMUD.RoomType.Interior;
             Short = "Lower Stairway";
 
             OpenLink(Direction.DOWN, "Areas.Lighthouse.Base");

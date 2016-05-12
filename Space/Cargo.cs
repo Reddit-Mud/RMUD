@@ -20,6 +20,8 @@ namespace Space
             Move(locker, this);
             Move(GetObject("Wrench"), locker);
             Move(GetObject("DuctTape"), locker);
+
+           
         }
     }   
 
@@ -36,7 +38,7 @@ namespace Space
                 .Do((actor, boxes) =>
                 {
                     SendMessage(actor, "I couldn't carry even one of those.");
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 });
         }
     }

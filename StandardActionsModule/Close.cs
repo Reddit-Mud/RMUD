@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -20,6 +21,7 @@ namespace StandardActionsModule
                                     if (Core.GlobalRules.ConsiderCheckRuleSilently("can close?", actor, thing) == CheckResult.Allow) return MatchPreference.Likely;
                                     return MatchPreference.Unlikely;
                                 })))))
+                .ID("StandardActions:Close")
                 .Manual("Closes a thing.")
                 .Check("can close?", "ACTOR", "SUBJECT")
                 .BeforeActing()
@@ -27,7 +29,7 @@ namespace StandardActionsModule
                 .AfterActing();
 		}
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("you close", "You close <the0>.");
             Core.StandardMessage("they close", "^<the0> closes <the1>.");
@@ -37,7 +39,7 @@ namespace StandardActionsModule
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("close", "[Actor, Item] : Handle the item being closed.", "actor", "item");
 
             GlobalRules.Check<MudObject, MudObject>("can close?")
-                .When((actor, item) => !item.GetBooleanProperty("openable?"))
+                .When((actor, item) => !item.GetProperty<bool>("openable?"))
                 .Do((a, b) =>
                 {
                     MudObject.SendMessage(a, "@not openable");

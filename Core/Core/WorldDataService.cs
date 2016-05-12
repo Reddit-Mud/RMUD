@@ -98,20 +98,19 @@ namespace RMUD
                 NamedObjects.Upsert(Path, newObject);
                 MudObject.InitializeObject(newObject);
 
-                //Preserve the location of actors, and actors only.
-                if (existing is Container)
-                    foreach (var item in (existing as Container).EnumerateObjectsAndRelloc())
-                        if (item.Item1 is Actor)
-                        {
-                            (newObject as Container).Add(item.Item1, item.Item2);
-                            item.Item1.Location = newObject;
-                        }
+                // Any object marked with the 'preserve?' flag should be kept. Other objects should be discarded.
+                foreach (var item in existing.EnumerateObjectsAndRelloc())
+                    if (item.Item1.GetProperty<bool>("preserve?"))
+                    {
+                        newObject.Add(item.Item1, item.Item2);
+                        item.Item1.Location = newObject;
+                    }
 
-                if (existing is MudObject && (existing as MudObject).Location != null)
+                if (existing.Location != null)
                 {
-                    var loc = ((existing as MudObject).Location as Container).RelativeLocationOf(existing);
-                    MudObject.Move(newObject as MudObject, (existing as MudObject).Location, loc);
-                    MudObject.Move(existing as MudObject, null, RelativeLocations.None);
+                    var loc = existing.Location.RelativeLocationOf(existing);
+                    MudObject.Move(newObject, existing.Location, loc);
+                    MudObject.Move(existing, null, RelativeLocations.None);
                 }
 
                 existing.Destroy(false);

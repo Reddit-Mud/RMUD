@@ -21,24 +21,23 @@ namespace QuestModule
                     if (actor.GetProperty<MudObject>("offered-quest") == null)
                     {
                         MudObject.SendMessage(actor, "Nobody has offered you a quest.");
-                        return PerformResult.Stop;
+                        return SharpRuleEngine.PerformResult.Stop;
                     }
                     else
                     {
                         match.Upsert("QUEST", actor.GetProperty<MudObject>("offered-quest"));
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     }
                 }, "the must have been offered a quest, and bookeeping rule.")
                 .ProceduralRule((match, actor) =>
                 {
-                    var player = actor as Player;
-                    if (!Core.GlobalRules.ConsiderValueRule<bool>("quest available?", player, player.GetProperty<MudObject>("offered-quest")))
+                    if (!Core.GlobalRules.ConsiderValueRule<bool>("quest available?", actor, actor.GetProperty<MudObject>("offered-quest")))
                     {
                         MudObject.SendMessage(actor, "The quest is no longer available.");
-                        player.RemoveProperty("offered-quest");
-                        return PerformResult.Stop;
+                        actor.SetProperty("offered-quest", null);
+                        return SharpRuleEngine.PerformResult.Stop;
                     }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 }, "the quest must be available rule.")
                 .ProceduralRule((match, actor) =>
                 {
@@ -46,8 +45,8 @@ namespace QuestModule
                         Core.GlobalRules.ConsiderPerformRule("quest abandoned", actor, actor.GetProperty<MudObject>("active-quest"));
 
                     actor.SetProperty("active-quest", actor.GetProperty<MudObject>("offered-quest"));
-                    actor.RemoveProperty("offered-quest");
-                    return PerformResult.Continue;
+                    actor.SetProperty("offered-quest", null);
+                    return SharpRuleEngine.PerformResult.Continue;
                 }, "the any active quest must be abandoned rule.")
                 .Perform("quest accepted", "ACTOR", "QUEST");
         }

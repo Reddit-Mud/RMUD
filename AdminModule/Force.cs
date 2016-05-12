@@ -28,25 +28,18 @@ namespace AdminModule
                             if (target == null)
                             {
                                 MudObject.SendMessage(actor, "I can't find whomever it is you want to submit to your foolish whims.");
-                                return PerformResult.Stop;
+                                return SharpRuleEngine.PerformResult.Stop;
                             }
                             match.Upsert("OBJECT", target);
                         }
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     }, "Convert path to object rule.")
                 .ProceduralRule((match, actor) =>
                 {
                     MudObject target = match["OBJECT"] as MudObject;
                     
-                    var targetActor = target as Actor;
-                    if (targetActor == null)
-                    {
-                        MudObject.SendMessage(actor, "You can order inanimate objects about as much as you like, they aren't going to listen.");
-                        return PerformResult.Stop;
-                    }
-
                     var command = match["RAW-COMMAND"].ToString();
-                    var matchedCommand = Core.DefaultParser.ParseCommand(new PendingCommand { RawCommand = command, Actor = targetActor });
+                    var matchedCommand = Core.DefaultParser.ParseCommand(new PendingCommand { RawCommand = command, Actor = target });
 
                     if (matchedCommand != null)
                     {
@@ -55,13 +48,13 @@ namespace AdminModule
                         else
                         {
                             MudObject.SendMessage(actor, "Enacting your will.");
-                            Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], targetActor);
+                            Core.ProcessPlayerCommand(matchedCommand.Command, matchedCommand.Matches[0], target);
                         }
                     }
                     else
                         MudObject.SendMessage(actor, "The command did not match.");
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 	}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace ConversationModule
 {
@@ -18,9 +19,10 @@ namespace ConversationModule
                     MustMatch("@convo greet whom",
                         Object("LOCUTOR", InScope, (actor, thing) =>
                         {
-                            if (thing is NPC) return MatchPreference.VeryLikely;
+                            if (thing.GetProperty<bool>("actor?")) return MatchPreference.VeryLikely;
                             else return MatchPreference.VeryUnlikely;
                         }))))
+                .ID("Conversation:Greet")
                 .Manual("Initiates a conversation with the npc.")
                 .Check("can converse?", "ACTOR", "LOCUTOR")
                 .BeforeActing()
@@ -28,8 +30,7 @@ namespace ConversationModule
                 .AfterActing()
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor is Player)
-                        actor.SetProperty("interlocutor", match["LOCUTOR"] as NPC);
+                    actor.SetProperty("interlocutor", match["LOCUTOR"] as MudObject);
                     return PerformResult.Continue;
                 }, "Set current interlocutor rule.")
                 .Perform("list topics", "ACTOR");
@@ -44,8 +45,8 @@ namespace ConversationModule
                             Sequence(
                                 Object("NEW-LOCUTOR", InScope, (actor, thing) =>
                                 {
-                                    if (actor is Player && System.Object.ReferenceEquals(thing, actor.GetProperty<NPC>("interlocutor"))) return MatchPreference.VeryLikely;
-                                    if (thing is NPC) return MatchPreference.Likely;
+                                    if (System.Object.ReferenceEquals(thing, actor.GetProperty<MudObject>("interlocutor"))) return MatchPreference.VeryLikely;
+                                    if (thing.GetProperty<bool>("actor?")) return MatchPreference.Likely;
                                     return MatchPreference.VeryUnlikely;
                                 }),
                                 OptionalKeyWord("ABOUT"),
@@ -53,26 +54,27 @@ namespace ConversationModule
                                     Object("TOPIC", new TopicSource("NEW-LOCUTOR")),
                                     Rest("STRING-TOPIC"))),
                             Rest("STRING-TOPIC"))))
+                .ID("Conversation:DiscussTopic")
                 .Manual("Discusses the topic with whomever you are talking too.")
+                .BeforeActing()
                 .ProceduralRule((match, actor) =>
                 {
-                    if (!(actor is Player)) return PerformResult.Stop;
                     if (match.ContainsKey("NEW-LOCUTOR"))
                     {
                         var newLocutor = match["NEW-LOCUTOR"] as MudObject;
                         if (Core.GlobalRules.ConsiderCheckRule("can converse?", actor, newLocutor) == CheckResult.Disallow) return PerformResult.Stop;
-                        if (!System.Object.ReferenceEquals(newLocutor, actor.GetProperty<NPC>("interlocutor")))
+                        if (!System.Object.ReferenceEquals(newLocutor, actor.GetProperty<MudObject>("interlocutor")))
                         {
                             Core.GlobalRules.ConsiderPerformRule("greet", actor, newLocutor);
-                            actor.SetProperty("interlocutor", newLocutor as NPC);
+                            actor.SetProperty("interlocutor", newLocutor);
                         }
                     }
-                    match.Upsert("LOCUTOR", actor.GetProperty<NPC>("interlocutor"));
+                    match.Upsert("LOCUTOR", actor.GetProperty<MudObject>("interlocutor"));
                     return PerformResult.Continue;
                 }, "Implicitly greet new locutors rule.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (actor.GetProperty<NPC>("interlocutor") == null)
+                    if (actor.GetProperty<MudObject>("interlocutor") == null)
                     {
                         MudObject.SendMessage(actor, "@convo nobody");
                         return PerformResult.Stop;
@@ -81,10 +83,12 @@ namespace ConversationModule
                 }, "Must be talking to someone rule.")
                 .Check("can converse?", "ACTOR", "LOCUTOR")
                 .Perform("discuss topic", "ACTOR", "LOCUTOR", "TOPIC")
+                .AfterActing()
                 .Perform("list topics", "ACTOR");
 
             Parser.AddCommand(
                 KeyWord("TOPICS"))
+                .ID("Conversation:Topic")
                 .Manual("Lists topics currently available.")
                 .Perform("list topics", "ACTOR");
         }

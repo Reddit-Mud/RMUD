@@ -21,7 +21,7 @@ namespace NetworkModule
                 .ProceduralRule((match, actor) =>
                 {
                     if (match.ContainsKey("PLAYER"))
-                        KickPlayer(match["PLAYER"] as Actor, actor);
+                        KickPlayer(match["PLAYER"] as MudObject, actor);
                     else
                     {
                         var mask = match["MASK"].ToString();
@@ -39,19 +39,20 @@ namespace NetworkModule
                         }
                     }
 
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 
-                public static void KickPlayer(Actor Player, Actor Actor)
+        public static void KickPlayer(MudObject Player, MudObject Actor)
         {
-            if (Player.ConnectedClient != null)
+            var client = Player.GetProperty<Client>("client");
+            if (client != null)
             {
                 Core.MarkLocaleForUpdate(Player);
 
-                MudObject.SendMessage(Player, Actor.Short + " has removed you from the server.");
-                Player.ConnectedClient.Disconnect();
-                Clients.SendGlobalMessage(Actor.Short + " has removed " + Player.Short + " from the server.");
+                MudObject.SendMessage(Player, Actor.GetProperty<String>("short") + " has removed you from the server.");
+                client.Disconnect();
+                Clients.SendGlobalMessage(Actor.GetProperty<String>("short") + " has removed " + Player.GetProperty<String>("short") + " from the server.");
             }
         }
     }

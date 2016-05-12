@@ -17,10 +17,11 @@ namespace StandardActionsModule
                         MustMatch("@not here",
                             Object("SUBJECT", InScope, (actor, item) =>
                             {
-                                if (Core.GlobalRules.ConsiderCheckRuleSilently("can pull?", actor, item) != CheckResult.Allow)
+                                if (Core.GlobalRules.ConsiderCheckRuleSilently("can pull?", actor, item) != SharpRuleEngine.CheckResult.Allow)
                                     return MatchPreference.Unlikely;
                                 return MatchPreference.Plausible;
                             })))))
+                .ID("StandardActions:Pull")
                 .Manual("Pull an item. By default, this does nothing.")
                 .Check("can pull?", "ACTOR", "SUBJECT")
                 .BeforeActing()
@@ -44,7 +45,7 @@ namespace StandardActionsModule
                 .Do((a, t) => 
                     {
                         MudObject.SendMessage(a, "@does nothing");
-                        return CheckResult.Disallow;
+                        return SharpRuleEngine.CheckResult.Disallow;
                     })
                 .Name("Default disallow pulling rule.");
 
@@ -52,16 +53,17 @@ namespace StandardActionsModule
                 .Do((actor, target) =>
                 {
                     MudObject.SendMessage(actor, "@nothing happens");
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 })
                 .Name("Default handle pulling rule.");
 
-            GlobalRules.Check<MudObject, Actor>("can pull?")
+            GlobalRules.Check<MudObject, MudObject>("can pull?")
                 .First
+                .When((actor, target) => target.GetProperty<bool>("actor?"))
                 .Do((actor, thing) =>
                 {
                     MudObject.SendMessage(actor, "@unappreciated", thing);
-                    return CheckResult.Disallow;
+                    return SharpRuleEngine.CheckResult.Disallow;
                 })
                 .Name("Can't pull people rule.");
         }

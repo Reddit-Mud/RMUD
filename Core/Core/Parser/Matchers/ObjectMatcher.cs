@@ -28,19 +28,26 @@ namespace RMUD
 
     public partial class CommandFactory
     {
-        public static CommandTokenMatcher Object(String CaptureName, IObjectSource Source, ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
+        public static CommandTokenMatcher Object(
+            String CaptureName,
+            IObjectSource Source,
+            ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
         {
             return new ObjectMatcher(CaptureName, Source, Settings);
         }
 
-        public static CommandTokenMatcher Object(String CaptureName, IObjectSource Source, Func<Actor, MudObject, MatchPreference> ScoreFunc, ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
+        public static CommandTokenMatcher Object(
+            String CaptureName, 
+            IObjectSource Source,
+            Func<MudObject, MudObject, MatchPreference> ScoreFunc, 
+            ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
         {
             return new ObjectMatcher(CaptureName, Source, ScoreFunc, Settings);
         }
 
         public static IObjectSource InScope { get { return new InScopeObjectSource(); } }
-        public static Func<Actor, MudObject, MatchPreference> PreferHeld { get { return ObjectMatcher.PreferHeld; } }
-        public static Func<Actor, MudObject, MatchPreference> PreferWorn { get { return ObjectMatcher.PreferWOrn; } }
+        public static Func<MudObject, MudObject, MatchPreference> PreferHeld { get { return ObjectMatcher.PreferHeld; } }
+        public static Func<MudObject, MudObject, MatchPreference> PreferWorn { get { return ObjectMatcher.PreferWOrn; } }
     }
 
     public class ObjectMatcher : CommandTokenMatcher
@@ -49,21 +56,21 @@ namespace RMUD
 
 		public ObjectMatcherSettings Settings;
 		public IObjectSource ObjectSource;
-		public Func<Actor, MudObject, MatchPreference> ScoreResults = null;
+		public Func<MudObject, MudObject, MatchPreference> ScoreResults = null;
 
-		public static MatchPreference PreferNotHeld(Actor Actor, MudObject Object)
+		public static MatchPreference PreferNotHeld(MudObject Actor, MudObject Object)
 		{
 			if (Actor.Contains(Object, RelativeLocations.Held)) return MatchPreference.Unlikely;
 			return MatchPreference.Plausible;
 		}
 
-		public static MatchPreference PreferHeld(Actor Actor, MudObject Object)
+		public static MatchPreference PreferHeld(MudObject Actor, MudObject Object)
 		{
 			if (Actor.Contains(Object, RelativeLocations.Held)) return MatchPreference.Likely;
 			return MatchPreference.Plausible;
 		}
 
-        public static MatchPreference PreferWOrn(Actor Actor, MudObject Object)
+        public static MatchPreference PreferWOrn(MudObject Actor, MudObject Object)
         {
             if (Actor.Contains(Object, RelativeLocations.Worn)) return MatchPreference.Likely;
             return MatchPreference.Plausible;
@@ -82,7 +89,7 @@ namespace RMUD
         public ObjectMatcher(
             String CaptureName,
             IObjectSource ObjectSource,
-            Func<Actor, MudObject, MatchPreference> ScoreResults,
+            Func<MudObject, MudObject, MatchPreference> ScoreResults,
             ObjectMatcherSettings Settings = ObjectMatcherSettings.UnderstandMe)
         {
             this.CaptureName = CaptureName;
@@ -113,7 +120,7 @@ namespace RMUD
 			{
                 PossibleMatch possibleMatch = State;
 				bool matched = false;
-				while (possibleMatch.Next != null && matchableMudObject.Nouns.Match(possibleMatch.Next.Value.ToUpper(), Context.ExecutingActor))
+				while (possibleMatch.Next != null && matchableMudObject.GetProperty<NounList>("nouns").Match(possibleMatch.Next.Value.ToUpper(), Context.ExecutingActor))
 				{
                     if (matched == false) possibleMatch = State.Clone();
 					matched = true;

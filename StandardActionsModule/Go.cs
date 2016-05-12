@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace StandardActionsModule
 {
@@ -20,11 +21,11 @@ namespace StandardActionsModule
                 .ProceduralRule((match, actor) =>
                 {
                     var direction = match["DIRECTION"] as Direction?;
-                    var location = actor.Location as Room;
-                    var link = location.EnumerateObjects().FirstOrDefault(thing => thing.GetPropertyOrDefault<bool>("portal?", false) && thing.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE) == direction.Value);
+                    var link = actor.Location.EnumerateObjects().FirstOrDefault(thing => thing.GetProperty<bool>("portal?") && thing.GetProperty<Direction>("link direction") == direction.Value);
                     match.Upsert("LINK", link);
                     return PerformResult.Continue;
                 }, "lookup link rule")
+                .ID("StandardActions:Go")
                 .Check("can go?", "ACTOR", "LINK")
                 .BeforeActing()
                 .Perform("go", "ACTOR", "LINK")
@@ -37,7 +38,7 @@ namespace StandardActionsModule
                 }, "Mark both sides of link for update rule");
 		}
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             Core.StandardMessage("unmatched cardinal", "What way was that?");
             Core.StandardMessage("go to null link", "You can't go that way.");
@@ -59,8 +60,8 @@ namespace StandardActionsModule
                 })
                 .Name("No link found rule.");
 
-            GlobalRules.Check<Actor, MudObject>("can go?")
-                .When((actor, link) => link != null && link.GetBooleanProperty("openable?") && !link.GetBooleanProperty("open?"))
+            GlobalRules.Check<MudObject, MudObject>("can go?")
+                .When((actor, link) => link != null && link.GetProperty<bool>("openable?") && !link.GetProperty<bool>("open?"))
                 .Do((actor, link) =>
                 {
                     MudObject.SendMessage(actor, "@first opening", link);
@@ -80,7 +81,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("go")
                 .Do((actor, link) =>
                 {
-                    var direction = link.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE);
+                    var direction = link.GetProperty<Direction>("link direction");
                     MudObject.SendMessage(actor, "@you went", direction.ToString().ToLower());
                     MudObject.SendExternalMessage(actor, "@they went", actor, direction.ToString().ToLower());
                     return PerformResult.Continue;
@@ -90,7 +91,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("go")
                 .Do((actor, link) =>
                 {
-                    var destination = MudObject.GetObject(link.GetProperty<String>("link destination")) as Room;
+                    var destination = MudObject.GetObject(link.GetProperty<String>("link destination"));
                     if (destination == null)
                     {
                         MudObject.SendMessage(actor, "@bad link");
@@ -104,7 +105,7 @@ namespace StandardActionsModule
             GlobalRules.Perform<MudObject, MudObject>("go")
                 .Do((actor, link) =>
                 {
-                    var direction = link.GetPropertyOrDefault<Direction>("link direction", Direction.NOWHERE);
+                    var direction = link.GetProperty<Direction>("link direction");
                     var arriveMessage = Link.FromMessage(Link.Opposite(direction));
                     MudObject.SendExternalMessage(actor, "@they arrive", actor, arriveMessage);
                     return PerformResult.Continue;
@@ -112,10 +113,10 @@ namespace StandardActionsModule
                 .Name("Report arrival rule.");
 
             GlobalRules.Perform<MudObject, MudObject>("go")
-                .When((actor, link) => actor is Player && (actor as Player).ConnectedClient != null)
+                .When((actor, link) => actor.GetProperty<Client>("client") != null)
                 .Do((actor, link) =>
                 {
-                    Core.EnqueuActorCommand(actor as Actor, "look", HelperExtensions.MakeDictionary("AUTO", true));
+                    Core.EnqueuActorCommand(actor, "look", HelperExtensions.MakeDictionary("AUTO", true));
                     return PerformResult.Continue;
                 })
                 .Name("Players look after going rule.");

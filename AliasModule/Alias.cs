@@ -8,6 +8,11 @@ namespace AliasModule
 {
 	internal class Alias : CommandFactory
 	{
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
+        {
+            PropertyManifest.RegisterProperty("aliases", typeof(Dictionary<String, String>), null, new DefaultSerializer());
+        }
+
         public override void Create(CommandParser Parser)
         {
             Parser.AddCommand(
@@ -18,19 +23,19 @@ namespace AliasModule
                 .Manual("Create an alias for another command, or a series of them.")
                 .ProceduralRule((match, actor) =>
                 {
-                    if (!actor.HasProperty<Dictionary<String, String>>("aliases"))
+                    if (!actor.HasProperty("aliases"))
                         actor.SetProperty("aliases", new Dictionary<String, String>());
                     var aliases = actor.GetProperty<Dictionary<String, String>>("aliases");
                     aliases.Add(match["NAME"].ToString().ToUpper(), match["RAW-COMMAND"].ToString());
                     MudObject.SendMessage(actor, "Alias added.");
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
 
             Parser.AddCommand(
                 Generic((match, context) =>
                 {   
                     var r = new List<PossibleMatch>();
-                    if (!context.ExecutingActor.HasProperty<Dictionary<String, String>>("aliases"))
+                    if (!context.ExecutingActor.HasProperty("aliases"))
                         return r;
                     var aliases = context.ExecutingActor.GetProperty<Dictionary<String, String>>("aliases");
                     if (aliases.ContainsKey(match.Next.Value.ToUpper()))
@@ -43,7 +48,7 @@ namespace AliasModule
                     var commands = match["ALIAS"].ToString().Split(';');
                     foreach (var command in commands)
                         Core.EnqueuActorCommand(actor, command);
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
 	}

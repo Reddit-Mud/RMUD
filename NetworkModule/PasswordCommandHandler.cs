@@ -11,11 +11,11 @@ namespace NetworkModule
 	{
 		public ClientCommandHandler ParentHandler;
         public String UserName;
-        public Action<Actor, String, String> AuthenticatingCommand;
+        public Action<MudObject, String, String> AuthenticatingCommand;
 
-        public PasswordCommandHandler(Actor Actor, Action<Actor, String, String> AuthenticatingCommand, String UserName)
+        public PasswordCommandHandler(MudObject Actor, Action<MudObject, String, String> AuthenticatingCommand, String UserName)
 		{
-            this.ParentHandler = Actor.CommandHandler;
+            this.ParentHandler = Actor.GetProperty<ClientCommandHandler>("command handler");
             this.AuthenticatingCommand = AuthenticatingCommand;
             this.UserName = UserName;
 
@@ -24,7 +24,7 @@ namespace NetworkModule
 
         public void HandleCommand(PendingCommand Command)
         {
-            Command.Actor.CommandHandler = ParentHandler;
+            Command.Actor.SetProperty("command handler", ParentHandler);
             AuthenticatingCommand(Command.Actor, UserName, Command.RawCommand);
         }
     }

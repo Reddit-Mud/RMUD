@@ -27,7 +27,7 @@ namespace AdminModule
                         MudObject.Move(newObject, actor);
                         MudObject.SendMessage(actor, "Instanced " + path + ".");
                     }
-                    return PerformResult.Continue;
+                    return SharpRuleEngine.PerformResult.Continue;
                 });
         }
     }

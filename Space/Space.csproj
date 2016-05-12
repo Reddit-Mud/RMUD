@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{75D0C5C6-EFB9-4B45-86FF-F83ABC943D78}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Space</RootNamespace>
     <AssemblyName>Space</AssemblyName>
@@ -30,7 +30,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SharpRuleEngine">
+      <HintPath>..\packages\SharpRuleEngine.1.0.5\lib\SharpRuleEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,8 +49,10 @@
     <Compile Include="CargoBayHallway.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="ControlPanel.cs" />
+    <Compile Include="GameInfo.cs" />
     <Compile Include="Hatch.cs" />
     <Compile Include="Hit.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Tape.cs" />
     <Compile Include="Extinquisher.cs" />
     <Compile Include="DuctTape.cs" />
@@ -82,6 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Outline.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RMUD;
+using SharpRuleEngine;
 
 namespace ClothingModule
 {
@@ -23,7 +24,7 @@ namespace ClothingModule
                 .AfterActing();
         }
 
-        public static void AtStartup(RuleEngine GlobalRules)
+        public static void AtStartup(RMUD.RuleEngine GlobalRules)
         {
             GlobalRules.DeclareCheckRuleBook<MudObject, MudObject>("can wear?", "[Actor, Item] : Can the actor wear the item?", "actor", "item");
             GlobalRules.DeclarePerformRuleBook<MudObject, MudObject>("worn", "[Actor, Item] : Handle the actor wearing the item.", "actor", "item");
@@ -37,7 +38,7 @@ namespace ClothingModule
                 });
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((a, b) => a is Actor && (a as Actor).RelativeLocationOf(b) == RelativeLocations.Worn)
+                .When((a, b) => a.RelativeLocationOf(b) == RelativeLocations.Worn)
                 .Do((a, b) =>
                 {
                     MudObject.SendMessage(a, "@clothing already wearing");
@@ -45,7 +46,8 @@ namespace ClothingModule
                 });
 
             GlobalRules.Check<MudObject, MudObject>("can wear?")
-                .When((actor, item) => !item.GetPropertyOrDefault<bool>("wearable?", false))
+                .When((actor, item) => !item.GetProperty<bool>("wearable?"))
+                .When((actor, item) => !actor.GetProperty<bool>("actor?"))
                 .Do((actor, item) =>
                 {
                     MudObject.SendMessage(actor, "@clothing cant wear");

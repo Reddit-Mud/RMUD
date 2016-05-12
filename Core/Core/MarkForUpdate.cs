@@ -13,21 +13,21 @@ namespace RMUD
         {
             GlobalRules.DeclarePerformRuleBook<MudObject>("update", "[Thing] : Considered for all things that have been marked for update.", "item");
 
-            GlobalRules.Perform<Actor>("after every command")
+            GlobalRules.Perform<MudObject>("after every command")
                 .First
                 .Do((actor) =>
                     {
                         Core.UpdateMarkedObjects();
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     })
                 .Name("Update marked objects at end of turn rule.");
 
-            GlobalRules.Perform<Actor>("after every command")
+            GlobalRules.Perform<MudObject>("after every command")
                 .Last
                 .Do((actor) =>
                     {
                         Core.SendPendingMessages();
-                        return PerformResult.Continue;
+                        return SharpRuleEngine.PerformResult.Continue;
                     })
                .Name("Send pending messages at end of turn rule.");
         }
